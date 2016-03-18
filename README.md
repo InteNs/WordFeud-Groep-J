@@ -1,2 +1,3 @@
-# Wordfeud_StarUML
-for all staruml stuff for Wordfeud
+# WordFeud
+
+For the project Avans
