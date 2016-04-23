@@ -24,7 +24,7 @@ public final class Database {
 
 	static private Connection con = null;
 	static private Statement st = null;
-	static private ResultSet rs = null;
+	static public ResultSet rs = null;
 
 	static private String url = "jdbc:mysql://77.172.146.212:3306/wordfeud";
 	static private String user = "wordfeud";
@@ -47,39 +47,18 @@ public final class Database {
 
 	}
 
-	public static ArrayList<String> query(String query) throws SQLException {
-		ArrayList<String> resultList = new ArrayList<String>();
+	public static void select(String query) throws SQLException {
+		/* Do not forget to call the close methode after using this methode! */
 		try {
 			st = connect();
 			rs = st.executeQuery(query);
-			while (rs.next()) {
-				resultList.add(rs.getString(1));
-			}
-			rs.close();
-			return resultList;
 		} catch (SQLException e) {
 			rs.close();
 			System.out.println(e.getMessage());
-			return null;
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-				if (st != null) {
-					st.close();
-				}
-				if (con != null) {
-					con.close();
-				}
-
-			} catch (SQLException ex) {
-				System.out.println(ex.getMessage());
-			}
 		}
 	}
 
-	public static ArrayList<String> query(String query, String column) throws SQLException {
+	public static ArrayList<String> select(String query, String column) throws SQLException {
 		ArrayList<String> resultList = new ArrayList<String>();
 		try {
 			st = connect();
@@ -123,6 +102,23 @@ public final class Database {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			return null;
+		}
+	}
+
+	public static void close() {
+		try {
+			if (rs != null) {
+				rs.close();
+			}
+			if (st != null) {
+				st.close();
+			}
+			if (con != null) {
+				con.close();
+			}
+
+		} catch (SQLException ex) {
+			System.out.println(ex.getMessage());
 		}
 	}
 
