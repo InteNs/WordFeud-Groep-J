@@ -1,24 +1,11 @@
 package wordfeud.statics;
 
-import java.net.DatagramSocket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.sql.rowset.WebRowSet;
-
-import org.omg.CORBA.PUBLIC_MEMBER;
-
-import com.sun.corba.se.impl.util.Version;
-import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
-import javafx.scene.chart.PieChart.Data;
 
 public final class Database {
 
