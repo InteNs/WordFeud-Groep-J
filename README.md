@@ -1,6 +1,13 @@
 # WordFeud
 Informatie over alles wat met de applicatie te maken heeft.
 
+## Database connection info
+Server ip 	: 77.172.146.212  
+Server port : 3306  
+Username 	: wordfeud  
+Password 	: wordfeud01  
+Database 	: wordfeud  
+
 ## Java FX
 [documentatie](https://docs.oracle.com/javase/8/javase-clienttechnologies.htm)
 Voor opdrachten: zie drive.
