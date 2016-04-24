@@ -43,7 +43,7 @@ public final class Database {
 		}
 	}
 
-	public static ArrayList<String> select(String query,ArrayList<String> list) throws SQLException {
+	public static ArrayList<String> select(String query, ArrayList<String> list) throws SQLException {
 		try {
 			st = connect();
 			rs = st.executeQuery(query);
@@ -86,6 +86,16 @@ public final class Database {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			return null;
+		}
+	}
+
+	public static void query(String query) {
+		try {
+			st = connect();
+			st.execute(query);
+			close();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 
