@@ -44,6 +44,7 @@ rs.close();
  ```
  >**Let op**
  > Vergeet niet de Database.close(); methode aan te roepen na het gebruik van deze functie!
+ 
  output
  ```
  0lesley0:les
