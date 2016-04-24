@@ -11,15 +11,11 @@ public final class Database {
 
 	static private Connection con = null;
 	static private Statement st = null;
-	static public ResultSet rs = null;
+	static private ResultSet rs = null;
 
 	static private String url = "jdbc:mysql://77.172.146.212:3306/wordfeud";
 	static private String user = "wordfeud";
 	static private String password = "wordfeud01";
-
-	public Database() {
-
-	}
 
 	public static Statement connect() throws SQLException {
 		try {
@@ -34,30 +30,31 @@ public final class Database {
 
 	}
 
-	public static void select(String query) throws SQLException {
+	public static ResultSet select(String query, ResultSet result) throws SQLException {
 		/* Do not forget to call the close methode after using this methode! */
 		try {
 			st = connect();
-			rs = st.executeQuery(query);
+			result = st.executeQuery(query);
+			return result;
 		} catch (SQLException e) {
-			rs.close();
 			System.out.println(e.getMessage());
+			close();
+			return result;
 		}
 	}
 
-	public static ArrayList<String> select(String query, String column) throws SQLException {
-		ArrayList<String> resultList = new ArrayList<String>();
+	public static ArrayList<String> select(String query,ArrayList<String> list) throws SQLException {
 		try {
 			st = connect();
 			rs = st.executeQuery(query);
 			while (rs.next()) {
-				resultList.add(rs.getString(column));
+				list.add(rs.getString(1));
 			}
-			rs.close();
-			return resultList;
+			close();
+			return list;
 		} catch (SQLException e) {
-			rs.close();
 			System.out.println(e.getMessage());
+			close();
 			return null;
 		} finally {
 			try {
@@ -77,7 +74,7 @@ public final class Database {
 		}
 	}
 
-	public static String readColumn(String query) {
+	public static String selectColumn(String query) {
 		try {
 			st = connect();
 			rs = st.executeQuery(query);
