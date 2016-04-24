@@ -19,15 +19,17 @@ er zijn 3 verschillende select methodes
  ```
  Database.select(String);
  ```
+ 
 
  Voorbeeld
-	 ```String s;
+  ```
+ 	 String s;
 	 s = Database.select("SELECT naam FROM account WHERE wachtwoord='les'");
 	 System.out.println(s);
-	 ```
- output
  ```
- 0lesley0
+ output
+ 
+ ```0lesley0
  ```
  
 5. Syntax
