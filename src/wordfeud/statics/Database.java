@@ -9,9 +9,9 @@ import java.util.ArrayList;
 
 public final class Database {
 
-	static private Connection con = null;
-	static private Statement st = null;
-	static private ResultSet rs = null;
+	static private Connection con;
+	static private Statement st;
+	static private ResultSet rs;
 
 	static private String url = "jdbc:mysql://77.172.146.212:3306/wordfeud";
 	static private String user = "wordfeud";
