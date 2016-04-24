@@ -30,6 +30,21 @@ public final class Database {
 
 	}
 
+	public static String select(String query) {
+		try {
+			st = connect();
+			rs = st.executeQuery(query);
+			if (rs.next()) {
+				return rs.getString(1);
+			} else {
+				return null;
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
 	public static ResultSet select(String query, ResultSet result) throws SQLException {
 		/* Do not forget to call the close methode after using this methode! */
 		try {
@@ -71,21 +86,6 @@ public final class Database {
 			} catch (SQLException ex) {
 				System.out.println(ex.getMessage());
 			}
-		}
-	}
-
-	public static String selectColumn(String query) {
-		try {
-			st = connect();
-			rs = st.executeQuery(query);
-			if (rs.next()) {
-				return rs.getString(1);
-			} else {
-				return null;
-			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			return null;
 		}
 	}
 
