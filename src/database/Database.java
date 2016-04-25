@@ -219,8 +219,8 @@ public class Database {
 				con.close();
 			}
 
-		} catch (SQLException ex) {
-			System.out.println(ex.getMessage());
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
