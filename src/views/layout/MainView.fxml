@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="views.MainView" stylesheets="@style.css">
+    <ToolBar prefHeight="40.0" prefWidth="200.0">
+        <Button mnemonicParsing="false" onAction="#switchLayout" text="switch"/>
+    </ToolBar>
+    <SplitPane fx:id="content" minWidth="1000.0">
+        <TabPane minHeight="600.0" minWidth="300.0" tabClosingPolicy="UNAVAILABLE"
+                 SplitPane.resizableWithParent="false">
+            <Tab text="Chats"/>
+        </TabPane>
+        <VBox minHeight="600.0" minWidth="600.0" SplitPane.resizableWithParent="false">
+            <HBox alignment="CENTER_LEFT" minHeight="28.0" styleClass="tab-aligned"/>
+            <StackPane VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </SplitPane>
+</VBox>
