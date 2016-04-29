@@ -1,33 +1,42 @@
 package views;
 
-import controllers.LoginController;
+import controllers.UserController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-/**
- * Created by markhavekes on 29/04/16.
- */
 public class LoginView implements Initializable {
     @FXML private TextField userNameField;
     @FXML private PasswordField userPassField;
     @FXML private Label label;
+    @FXML private MainView parent;
+    @FXML private VBox root;
 
-    private LoginController loginController;
+    private UserController userController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loginController = new LoginController();
+        userController = new UserController();
     }
 
 
+    public void setParent(MainView parent) {
+        this.parent = parent;
+    }
+
     @FXML
     public void login(){
-         label.setText(userPassField.getText());
+        if (userController.verifyUserInformation(userNameField.getText(),userPassField.getText())){
+            parent.removeLoginScreen();
+
+        }
+
+
     }
 }

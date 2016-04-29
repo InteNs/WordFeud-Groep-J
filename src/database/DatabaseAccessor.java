@@ -97,4 +97,24 @@ public class DatabaseAccessor {
     private static Timestamp currentTimeStamp() {
         return new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
     }
+
+    public static User selectUser(String userName, String passWord) {
+        User verifiedUser=null;
+        int validUser=0;
+        ResultSet records= database.select(SQL.SELECT.FINDUSER,Arrays.asList(userName,passWord));
+
+        try {
+            if (records.next())
+           validUser= records.getInt("Gebruikersnamen");
+            if (validUser>0){
+                verifiedUser=new User(userName);
+        } records.close();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+
+        return verifiedUser;
+    }
 }
