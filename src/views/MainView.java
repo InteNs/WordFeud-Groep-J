@@ -17,6 +17,12 @@ public class MainView implements Initializable {
     @FXML private GameListView gameListController;
     @FXML private LoginView loginViewController;
 
+    //some sort of session placeholder
+    private User currentUser;
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -29,13 +35,10 @@ public class MainView implements Initializable {
         Collections.swap(content.getItems(), 0, 1);
     }
 
-    public User getCurrentUser() {
-        //TODO return current user
-        return new User("jager684");
-    }
-    @FXML
-    public void removeLoginScreen() {
+    public void login(User user) {
+        currentUser = user;
         stackPane.getChildren().clear();
+        refresh();
     }
 
     @FXML

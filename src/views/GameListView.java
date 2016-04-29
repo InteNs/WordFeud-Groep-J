@@ -27,7 +27,7 @@ public class GameListView extends View implements Initializable {
     public void refresh() {
         gameController.setCurrentUser(parent.getCurrentUser());
         gameController.refresh(); // touches database
-        myGamesList.setItems(FXCollections.observableArrayList(gameController.getOwnedGames()));
-        allGamesList.setItems(FXCollections.observableArrayList(gameController.getGames()));
+        myGamesList.getItems().addAll(gameController.getOwnedGames());
+        allGamesList.getItems().addAll(gameController.getGames());
     }
 }

@@ -17,5 +17,7 @@ public class Main extends Application {
         window.setMinHeight(window.getHeight());
     }
 
-    public static void main(String[] args) { launch(args); }
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
