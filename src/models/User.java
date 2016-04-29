@@ -1,6 +1,8 @@
 package models;
 
 
+import database.DatabaseAccessor;
+
 public class User {
 
     private String name;
@@ -25,5 +27,9 @@ public class User {
     @Override
     public String toString() {
         return getName();
+    }
+
+    public static User getUser(String userName, String passWord) {
+        return DatabaseAccessor.selectUser(userName,passWord);
     }
 }
