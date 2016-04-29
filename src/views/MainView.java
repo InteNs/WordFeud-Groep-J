@@ -9,7 +9,11 @@ import java.util.Collections;
 import java.util.ResourceBundle;
 
 public class MainView implements Initializable {
-    @FXML private SplitPane content;
+    @FXML
+    private SplitPane content;
+    @FXML
+    private GameList gameListController;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -17,7 +21,13 @@ public class MainView implements Initializable {
     }
 
     @FXML
-    public void switchLayout(){
+    public void switchLayout() {
         Collections.swap(content.getItems(), 0, 1);
     }
+
+    @FXML
+    public void refresh() {
+        gameListController.refresh();
+    }
+
 }
