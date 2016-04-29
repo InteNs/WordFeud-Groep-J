@@ -29,7 +29,7 @@ public class User {
         return getName();
     }
 
-    public static User getUser(String userName, String passWord) {
+    public static User getFor(String userName, String passWord) {
         return DatabaseAccessor.selectUser(userName,passWord);
     }
 }
