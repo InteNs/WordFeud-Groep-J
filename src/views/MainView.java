@@ -24,7 +24,7 @@ public class MainView implements Initializable {
     @FXML private SplitPane mainContent;
     @FXML private StackPane content;
 
-
+    @FXML private UserListView userListViewController;
     @FXML private GameListView gameListViewController;
     @FXML private LoginView    loginViewController;   //1st child of Stackpane
     @FXML private WelcomeView  welcomeViewController; //2nd child of Stackpane
@@ -58,6 +58,7 @@ public class MainView implements Initializable {
     public void refresh() {
         gameListViewController.refresh();
         welcomeViewController.refresh();
+        userListViewController.refresh();
     }
 
     @FXML

@@ -1,6 +1,8 @@
 package database;
 
-import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+
+
+import com.mysql.jdbc.CommunicationsException;
 
 import java.sql.*;
 import java.util.ArrayList;
