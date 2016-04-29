@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TitledPane?>
+
+<Accordion fx:controller="views.GameList" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+           minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1"
+           xmlns="http://javafx.com/javafx/8.0.65">
+    <panes>
+        <TitledPane animated="true" text="Mijn spellen">
+            <content>
+                <ListView fx:id="myGamesList" prefHeight="200.0" prefWidth="200.0"/>
+            </content>
+        </TitledPane>
+        <TitledPane animated="true" text="Mijn voltooide spellen">
+            <content>
+                <ListView fx:id="myFinishedGamesList" prefHeight="200.0" prefWidth="200.0"/>
+            </content>
+        </TitledPane>
+        <TitledPane animated="true" text="Alle spellen">
+            <content>
+                <ListView fx:id="allGamesList" prefHeight="200.0" prefWidth="200.0"/>
+            </content>
+        </TitledPane>
+        <TitledPane animated="true" text="Alle voltooide spellen">
+            <content>
+                <ListView fx:id="allFinishedGamesList" prefHeight="200.0" prefWidth="200.0"/>
+            </content>
+
+        </TitledPane>
+    </panes>
+</Accordion>
