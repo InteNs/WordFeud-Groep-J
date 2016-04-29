@@ -4,11 +4,11 @@ import models.User;
 
 public class UserController {
 
-    public boolean verifyUserInformation(String userName, String passWord) {
-        if (User.getUser(userName,passWord)==null) {
-            return false;
-        }
-        return true;
+    public User currentUser;
+
+    public boolean login(String userName, String passWord) {
+        currentUser = User.getFor(userName, passWord);
+        return currentUser != null;
     }
 
 }

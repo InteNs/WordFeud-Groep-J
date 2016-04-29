@@ -3,7 +3,6 @@ package views;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.SplitPane;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import models.User;
 
@@ -15,7 +14,7 @@ public class MainView implements Initializable {
     @FXML private SplitPane content;
     @FXML private StackPane stackPane;
 
-    @FXML private GameList gameListController;
+    @FXML private GameListView gameListController;
     @FXML private LoginView loginViewController;
 
 

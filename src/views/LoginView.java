@@ -26,7 +26,7 @@ public class LoginView extends View implements Initializable {
 
     @FXML
     public void login(){
-        if (userController.verifyUserInformation(userNameField.getText(),userPassField.getText())){
+        if (userController.login(userNameField.getText(),userPassField.getText())){
             parent.removeLoginScreen();
         }
     }

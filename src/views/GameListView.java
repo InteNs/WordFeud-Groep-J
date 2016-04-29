@@ -5,13 +5,15 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import models.Game;
 import models.User;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class GameList extends View implements Initializable {
+public class GameListView extends View implements Initializable {
 
+    @FXML public TextField filterField;
     @FXML private ListView<Game> myGamesList;
     @FXML private ListView<Game> allGamesList;
 
@@ -24,6 +26,7 @@ public class GameList extends View implements Initializable {
 
     public void refresh() {
         gameController.setCurrentUser(parent.getCurrentUser());
+        gameController.refresh(); // touches database
         myGamesList.setItems(FXCollections.observableArrayList(gameController.getOwnedGames()));
         allGamesList.setItems(FXCollections.observableArrayList(gameController.getGames()));
     }

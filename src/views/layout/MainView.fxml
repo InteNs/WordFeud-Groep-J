@@ -17,7 +17,7 @@
         <TabPane minHeight="600.0" minWidth="300.0" tabClosingPolicy="UNAVAILABLE" SplitPane.resizableWithParent="false">
             <Tab text="test" />
             <Tab onSelectionChanged="#refresh" text="Games">
-                <fx:include fx:id="gameList" source="GameList.fxml" />
+                <fx:include fx:id="gameList" source="GameListView.fxml" />
             </Tab>
         </TabPane>
         <VBox minHeight="600.0" minWidth="600.0" SplitPane.resizableWithParent="false">
