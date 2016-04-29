@@ -14,13 +14,7 @@ public class GameController {
     private User currentUser;
 
     public GameController() {
-
-    }
-    public GameController(User user) {
-        this.currentUser = user;
         this.games = Game.getAll();
-        System.out.println(currentUser);
-        System.out.println(getOwnedGames());
     }
 
     public void setCurrentUser(User user) {
@@ -39,6 +33,5 @@ public class GameController {
 
     public void refresh() {
         this.games = Game.getAll();
-        System.out.println(games);
     }
 }

@@ -9,24 +9,22 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox stylesheets="@style.css" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="views.MainView">
+<VBox stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.MainView">
     <ToolBar prefHeight="40.0" prefWidth="200.0">
-        <Button mnemonicParsing="false" onAction="#switchLayout" text="switch"/>
+        <Button mnemonicParsing="false" onAction="#switchLayout" text="switch" />
     </ToolBar>
     <SplitPane fx:id="content" dividerPositions="0.5" minWidth="1000.0">
-        <TabPane minHeight="600.0" minWidth="300.0" tabClosingPolicy="UNAVAILABLE"
-                 SplitPane.resizableWithParent="false">
-            <Tab text="test"/>
+        <TabPane minHeight="600.0" minWidth="300.0" tabClosingPolicy="UNAVAILABLE" SplitPane.resizableWithParent="false">
+            <Tab text="test" />
             <Tab onSelectionChanged="#refresh" text="Games">
-                <fx:include fx:id="gameList" source="GameList.fxml"/>
+                <fx:include fx:id="gameList" source="GameList.fxml" />
             </Tab>
         </TabPane>
         <VBox minHeight="600.0" minWidth="600.0" SplitPane.resizableWithParent="false">
-            <HBox alignment="CENTER_LEFT" minHeight="28.0" styleClass="tab-aligned"/>
+            <HBox alignment="CENTER_LEFT" minHeight="28.0" styleClass="tab-aligned" />
             <StackPane fx:id="stackPane" VBox.vgrow="ALWAYS">
                 <children>
-                    <fx:include fx:id="loginView" source="LoginView.fxml"/>
+                    <fx:include fx:id="loginView" source="LoginView.fxml" />
                 </children>
             </StackPane>
         </VBox>

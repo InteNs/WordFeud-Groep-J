@@ -11,11 +11,10 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class LoginView implements Initializable {
+public class LoginView extends View implements Initializable {
     @FXML private TextField userNameField;
     @FXML private PasswordField userPassField;
     @FXML private Label label;
-    @FXML private MainView parent;
     @FXML private VBox root;
 
     private UserController userController;
@@ -25,18 +24,15 @@ public class LoginView implements Initializable {
         userController = new UserController();
     }
 
-
-    public void setParent(MainView parent) {
-        this.parent = parent;
-    }
-
     @FXML
     public void login(){
         if (userController.verifyUserInformation(userNameField.getText(),userPassField.getText())){
             parent.removeLoginScreen();
-
         }
+    }
 
-
+    @Override
+    public void refresh() {
+        //nothing to refresh(yet)
     }
 }
