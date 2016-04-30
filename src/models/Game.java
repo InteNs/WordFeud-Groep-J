@@ -5,6 +5,7 @@ import enumerations.GameState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Game {
@@ -21,7 +22,7 @@ public class Game {
 
     public Game(int ID, List<String> players, String state) {
         this.ID = ID;
-        this.players = players.stream().map(User::new).collect(Collectors.toCollection(ArrayList<User>::new));
+        this.players = players.stream().limit(2).map(User::new).collect(Collectors.toCollection(ArrayList<User>::new));
         this.gameState = GameState.stateFor(state);
     }
 
@@ -29,9 +30,14 @@ public class Game {
         return ID;
     }
 
-    public User getOpponent(User currentUser) {
-        if(opponent == null)
-            this.opponent = players.stream().filter(user -> !user.equals(currentUser)).findFirst().get();
+    /**
+     * flags the opponent of this game
+     * @param currentUser the user that is not the opponent
+     * @return the opponent
+     */
+    public User flagOpponent(User currentUser) {
+        if(players.contains(currentUser))
+            opponent = players.stream().filter(user -> !user.equals(currentUser)).collect(Collectors.toList()).get(0);
         return opponent;
     }
 
@@ -62,6 +68,13 @@ public class Game {
 
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
+    }
+
+    public String toString() {
+        if(opponent != null)
+            return "["+ID+"] spel tegen "+opponent.getName();
+        else
+            return "["+ID+"] spel tussen "+players.get(0)+" en "+players.get(1);
     }
 
     public static ArrayList<Game> getFor(User user) {

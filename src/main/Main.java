@@ -1,3 +1,5 @@
+package main;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -5,9 +7,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+
     @Override
     public void start(Stage window) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("views/layout/MainView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/views/layout/MainView.fxml"));
         window.setTitle("WordFeud");
         window.setScene(new Scene(root));
         window.show();
