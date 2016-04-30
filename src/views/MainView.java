@@ -2,7 +2,9 @@ package views;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
 import models.User;
 
@@ -11,13 +13,18 @@ import java.util.Collections;
 import java.util.ResourceBundle;
 
 public class MainView implements Initializable {
-    @FXML private SplitPane content;
-    @FXML private StackPane stackPane;
+    @FXML private VBox loginView;
+    @FXML private VBox welcomeView;
 
 
-    @FXML private GameListView gameListController;
-    @FXML private LoginView loginViewController; //1st child of Stackpane
-    @FXML private WelcomeView welcomeViewController; //2nd child of Stackpane
+    @FXML private TabPane control;
+    @FXML private SplitPane mainContent;
+    @FXML private StackPane content;
+
+
+    @FXML private GameListView gameListViewController;
+    @FXML private LoginView    loginViewController;   //1st child of Stackpane
+    @FXML private WelcomeView  welcomeViewController; //2nd child of Stackpane
 
     //some sort of session placeholder
     private User currentUser;
@@ -29,25 +36,38 @@ public class MainView implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loginViewController.setParent(this);
-        gameListController.setParent(this);
         welcomeViewController.setParent(this);
+        gameListViewController.setParent(this);
     }
 
     @FXML
     public void switchLayout() {
-        Collections.swap(content.getItems(), 0, 1);
+        Collections.swap(mainContent.getItems(), 0, 1);
     }
 
     public void login(User user) {
         currentUser = user;
-        welcomeViewController.setUserLabel(currentUser);
-        stackPane.getChildren().get(0).setVisible(false);
-        stackPane.getChildren().get(1).setVisible(true);
+        control.setDisable(false);
+        setContent(welcomeView);
         refresh();
+    }
+
+    /**
+     * set set or add content to app's view (clears content if node == null)
+     * @param node the node to set as content
+     */
+    public void setContent(Node node) {
+        content.getChildren().forEach(child -> child.setVisible(false));
+
+        if(content.getChildren().contains(node))
+            content.getChildren().get(content.getChildren().indexOf(node)).setVisible(true);
+        else
+            content.getChildren().add(node);
     }
 
     @FXML
     public void refresh() {
-        gameListController.refresh();
+        gameListViewController.refresh();
+        welcomeViewController.refresh();
     }
 }
