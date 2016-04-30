@@ -1,7 +1,9 @@
 package database;
 
 
+import enumerations.Language;
 import models.Game;
+import models.Letter;
 import models.Message;
 import models.User;
 
@@ -56,7 +58,10 @@ public class DatabaseAccessor {
                                 records.getString("account_naam_uitdager"),
                                 records.getString("account_naam_tegenstander")
                         ),
-                        records.getString("toestand_type")
+                        records.getString("toestand_type"),
+                        records.getString("bord_naam"),
+                        records.getString("letterset_naam")
+
                 ));
             }
             records.close();
@@ -81,7 +86,9 @@ public class DatabaseAccessor {
                                 records.getString("account_naam_uitdager"),
                                 records.getString("account_naam_tegenstander")
                         ),
-                        records.getString("toestand_type")
+                        records.getString("toestand_type"),
+                        records.getString("bord_naam"),
+                        records.getString("letterset_naam")
                 ));
             }
             records.close();
@@ -116,5 +123,24 @@ public class DatabaseAccessor {
 
 
         return verifiedUser;
+    }
+
+    public static ArrayList<Letter> SelectLetters(Language language) {
+        ArrayList<Letter>lettersInPot = new ArrayList<>();
+        ResultSet records = database.select(SQL.SELECT.SELECTLETTERS,Arrays.asList(language));
+
+        try {
+            if (records.next()){
+                for (int i = 0; i <records.getInt("aantal") ; i++) {
+                    lettersInPot.add(new Letter(records.getInt("waarde"),
+                            records.getString("karakter").charAt(0)));
+                }
+
+            }
+            records.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lettersInPot;
     }
 }
