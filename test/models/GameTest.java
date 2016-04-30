@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class GameTest {
     private Game game;
@@ -26,6 +25,7 @@ public class GameTest {
         List<String> playerNames = new ArrayList<>();
         playerNames.add(user1.getName());
         playerNames.add(user2.getName());
+        playerNames.add("user that shouldn't be added");
 
         game = new Game(1, playerNames, "playing");
 
@@ -34,13 +34,15 @@ public class GameTest {
     @Test
     public void getID() throws Exception {
         assertEquals("returns game ID",
-                game.getID(), 1);
+                game.getID(),
+                1);
     }
 
     @Test
     public void getGameState() throws Exception {
         assertEquals("returns game state",
-                game.getGameState(), GameState.PLAYING);
+                game.getGameState(),
+                GameState.PLAYING);
     }
 
     @Test
@@ -52,13 +54,17 @@ public class GameTest {
     }
 
     @Test
-    public void getOpponent() throws Exception {
+    public void flagOpponent() throws Exception {
         assertEquals("returns the other player",
-                game.getOpponent(user1), user2);
+                game.flagOpponent(user1),
+                user2);
     }
 
     @Test
     public void getPlayers() throws Exception {
+        assertEquals("third player can't be added",
+                game.getPlayers().size(),
+                2);
         assertTrue("returns all players",
                 game.getPlayers().containsAll(Arrays.asList(user1, user2)));
     }

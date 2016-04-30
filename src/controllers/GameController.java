@@ -22,16 +22,28 @@ public class GameController {
     }
 
     public ArrayList<Game> getGames() {
-        return games;
+        if(currentUser != null)
+            return games;
+        return new ArrayList<>();
+    }
+
+    public ArrayList<Game> getGames(GameState state) {
+        return getGames().stream().filter(game -> game.getGameState() == state).collect(Collectors.toCollection(ArrayList<Game>::new));
     }
 
     public ArrayList<Game> getOwnedGames() {
-        return games.stream()
+        return getGames().stream()
                 .filter(game -> game.hasPlayer(currentUser))
+                .collect(Collectors.toCollection(ArrayList<Game>::new));
+    }
+    public ArrayList<Game> getOwnedGames(GameState state) {
+        return getOwnedGames().stream()
+                .filter(game -> game.getGameState() == state)
                 .collect(Collectors.toCollection(ArrayList<Game>::new));
     }
 
     public void refresh() {
         this.games = Game.getAll();
+        for (Game game : games) game.flagOpponent(currentUser);
     }
 }
