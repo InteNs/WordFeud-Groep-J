@@ -12,10 +12,12 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class LoginView extends View implements Initializable {
+
+    @FXML private Label invalidUserLabel;
     @FXML private TextField userNameField;
     @FXML private PasswordField userPassField;
-    @FXML private Label label;
-    @FXML private VBox root;
+
+
 
     private UserController userController;
 
@@ -28,6 +30,9 @@ public class LoginView extends View implements Initializable {
     public void login(){
         if (userController.login(userNameField.getText(),userPassField.getText())){
             parent.login(userController.getCurrentUser());
+            invalidUserLabel.setVisible(false);
+        } else {
+            invalidUserLabel.setVisible(true);
         }
     }
 
