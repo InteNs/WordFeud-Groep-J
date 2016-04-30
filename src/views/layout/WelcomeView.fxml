@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="232.0" prefWidth="422.0" visible="false" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.WelcomeView">
+   <children>
+      <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label fx:id="helloUserLabel" alignment="TOP_CENTER" text="Hello 'User'!">
+               <font>
+                  <Font size="29.0" />
+               </font>
+               <effect>
+                  <InnerShadow />
+               </effect>
+               <HBox.margin>
+                  <Insets bottom="10.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+      <Separator prefWidth="200.0" />
+      <Label text="You can navigate this application by using the tabs">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </Label>
+      <Label text="Thank you for playing Wordfeud!" wrapText="true">
+         <VBox.margin>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </VBox.margin>
+      </Label>
+   </children>
+</VBox>
