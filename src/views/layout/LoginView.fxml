@@ -8,20 +8,24 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox fx:controller="views.LoginView" alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="246.0" prefWidth="339.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="225.0" prefWidth="339.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.LoginView">
    <children>
-      <Label fx:id="label" text="Inloggen">
+      <Label fx:id="label" text="Welkom bij WordFeud">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
       <TextField fx:id="userNameField" alignment="CENTER" prefHeight="30.0" prefWidth="200.0" promptText="Gebruikersnaam" />
       <PasswordField fx:id="userPassField" alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" promptText="Wachtwoord" />
-      <HBox alignment="CENTER" prefHeight="60.0" prefWidth="600.0" spacing="30.0">
+      <Label fx:id="invalidUserLabel" text="Uw ingevoerde gegevens komen niet overeen" textAlignment="CENTER" textFill="#f50202" visible="false">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font>
+      </Label>
+      <HBox alignment="TOP_CENTER" prefHeight="60.0" prefWidth="600.0" spacing="30.0">
          <children>
-            <Button mnemonicParsing="false" prefWidth="100.0" text="Login" onAction="#login" />
-            <Button mnemonicParsing="false" prefWidth="100.0" text="Registreer" />
+            <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#login" prefWidth="120.0" text="Inloggen" />
+            <Button alignment="TOP_CENTER" mnemonicParsing="false" prefWidth="120.0" text="Nog geen account?" />
          </children>
       </HBox>
    </children>
