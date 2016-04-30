@@ -25,6 +25,7 @@
             <StackPane fx:id="stackPane" VBox.vgrow="ALWAYS">
                 <children>
                     <fx:include fx:id="loginView" source="LoginView.fxml" />
+                    <fx:include fx:id="welcomeView" source="WelcomeView.fxml" />
                 </children>
             </StackPane>
         </VBox>
