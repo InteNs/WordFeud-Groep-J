@@ -19,12 +19,8 @@ public class WelcomeView extends View implements Initializable {
 
     }
 
-    public void setUserLabel(User currentUser){
-        helloUserLabel.setText("Hello "+currentUser.getName()+"!");
-    }
-
     @Override
     public void refresh() {
-
+        helloUserLabel.setText("Hello "+ parent.getCurrentUser().getName() + "!");
     }
 }
