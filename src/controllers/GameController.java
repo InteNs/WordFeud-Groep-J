@@ -1,11 +1,9 @@
 package controllers;
 
-
 import database.access.GameDAO;
 import enumerations.GameState;
 import models.Game;
 import models.User;
-
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -46,7 +44,5 @@ public class GameController {
 
     public void refresh() {
         this.games = GameDAO.selectGames();
-        for (Game game : games) game.flagOpponent(currentUser);
-
     }
 }

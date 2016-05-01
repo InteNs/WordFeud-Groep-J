@@ -1,6 +1,8 @@
 package models;
 
+import enumerations.BoardType;
 import enumerations.GameState;
+import enumerations.Language;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,27 +24,8 @@ public class GameTest {
         user1 = new User("current");
         user2 = new User("other");
 
-        List<String> playerNames = new ArrayList<>();
-        playerNames.add(user1.getName());
-        playerNames.add(user2.getName());
-        playerNames.add("user that shouldn't be added");
+        game = new Game(1, user1, user2, GameState.FINISHED, BoardType.STANDARD, Language.NL);
 
-        game = new Game(1, playerNames, "playing");
-
-    }
-
-    @Test
-    public void getID() throws Exception {
-        assertEquals("returns game ID",
-                game.getID(),
-                1);
-    }
-
-    @Test
-    public void getGameState() throws Exception {
-        assertEquals("returns game state",
-                game.getGameState(),
-                GameState.PLAYING);
     }
 
     @Test
@@ -54,17 +37,7 @@ public class GameTest {
     }
 
     @Test
-    public void flagOpponent() throws Exception {
-        assertEquals("returns the other player",
-                game.flagOpponent(user1),
-                user2);
-    }
-
-    @Test
     public void getPlayers() throws Exception {
-        assertEquals("third player can't be added",
-                game.getPlayers().size(),
-                2);
         assertTrue("returns all players",
                 game.getPlayers().containsAll(Arrays.asList(user1, user2)));
     }

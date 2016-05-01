@@ -3,15 +3,24 @@ package database.access;
 import database.SQL;
 import models.User;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class UserDAO extends DAO {
 
     public static ArrayList<User> selectUsers() {
-        return database.selectFirstColumn(SQL.ALL.USERS, "naam").stream()
-                .map(User::new)
-                .collect(Collectors.toCollection(ArrayList<User>::new));
+        ArrayList<User> users = new ArrayList<>();
+        ResultSet records = database.select(SQL.ALL.USERS);
+        try {
+            while (records.next()) {
+                users.add(new User(records.getString("naam")));
+            }
+        } catch (SQLException e) {
+            printError(e);
+        }
+        database.close();
+        return users;
     }
 
     public static User selectUser(String username, String password) {

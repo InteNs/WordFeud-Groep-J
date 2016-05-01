@@ -3,8 +3,9 @@ package database;
 
 public class SQL {
     public class SELECT {
-        public static final String GAMESFORUSER =    "SELECT * FROM spel WHERE account_naam_tegenstander = ? OR account_naam_uitdager = ?;";
+        public static final String GAMESFORUSER = "SELECT * FROM spel WHERE account_naam_tegenstander = ? OR account_naam_uitdager = ?;";
         public static final String MESSAGESFORGAME = "SELECT * FROM chatregel WHERE spel_id = ? ORDER BY tijdstip;";
+        public static final String SELECTLETTERS = "SELECT * FROM wordfeud.lettertype WHERE letterset_code = ?";
     }
 
     public class ALL {
