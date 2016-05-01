@@ -44,7 +44,5 @@ public class GameController {
 
     public void refresh() {
         this.games = GameDAO.selectGames();
-        for (Game game : games) game.flagOpponent(currentUser);
-
     }
 }

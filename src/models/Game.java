@@ -6,7 +6,8 @@ import enumerations.GameState;
 import enumerations.Language;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,41 +15,24 @@ public class Game {
 
     private int ID;
     //These UserObjects are different instances then the UserObjects created in the controllers;
-    private ArrayList<User> players;
     private ArrayList<Message> messages;
     private GameState gameState;
     private User opponent;
+    private User challenger;
     private Language language;
     private BoardType boardType;
-    private ArrayList<Letter> potOfLetters;
 
-    public Game(int ID) {
+    public Game(int ID, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
         this.ID = ID;
-    }
-
-    public Game(int ID, List<String> players, String state, String boardType, String language) {
-        this.ID = ID;
-        this.players = players.stream().limit(2).map(User::new).collect(Collectors.toCollection(ArrayList<User>::new));
-        this.gameState = GameState.stateFor(state);
-        this.language=Language.languageFor(language);
-        this.boardType= BoardType.boardTypeFor(boardType);
-        potOfLetters = new ArrayList<>();
+        this.challenger = challenger;
+        this.opponent = opponent;
+        this.gameState = state;
+        this.language = language;
+        this.boardType = boardType;
     }
 
     public int getID() {
         return ID;
-    }
-
-    /**
-     * flags the opponent of this game
-     *
-     * @param currentUser the user that is not the opponent
-     * @return the opponent
-     */
-    public User flagOpponent(User currentUser) {
-        if (players.contains(currentUser))
-            opponent = players.stream().filter(user -> !user.equals(currentUser)).collect(Collectors.toList()).get(0);
-        return opponent;
     }
 
     public ArrayList<Message> getMessages(boolean refresh) {
@@ -57,11 +41,11 @@ public class Game {
     }
 
     public ArrayList<User> getPlayers() {
-        return players;
+        return new ArrayList<>(Arrays.asList(new User[]{challenger, opponent}));
     }
 
     public boolean hasPlayer(User user) {
-        return players.stream().anyMatch(e -> e.equals(user));
+        return getPlayers().contains(user);
     }
 
     public GameState getGameState() {
@@ -73,15 +57,7 @@ public class Game {
     }
 
     public String toString() {
-        if (opponent != null)
-            return "[" + ID + "] spel tegen  " + opponent.getName();
-        else
-            return "[" + ID + "] spel tussen " + players.get(0) + " en " + players.get(1);
+        return "[" + ID + "]["+language+"] " +boardType.toString().toLowerCase()
+                +" spel tussen " + challenger + " en " + opponent;
     }
-
-    public void fillPot(Language language){
-        potOfLetters=GameDAO.selectLetters(language);
-    }
-
-
 }

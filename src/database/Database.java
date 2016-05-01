@@ -52,9 +52,8 @@ public class Database {
 
     private void setStatement(String query, Object... values) throws SQLException {
         statement = connection().prepareStatement(query);
-        for (int i = 0; i < values.length; i++) {
+        for (int i = 0; i < values.length; i++)
             statement.setObject(i + 1, values[i]);
-        }
     }
 
     /**
