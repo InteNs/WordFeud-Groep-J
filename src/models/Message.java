@@ -1,7 +1,6 @@
 package models;
 
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -19,12 +18,12 @@ public class Message {
         this.user = user;
         this.message = message;
         date = timeStamp.toLocalDateTime();
-        dateFormatter = DateTimeFormatter.ofPattern("dd MMM 'om' HH:mm");
+        dateFormatter = DateTimeFormatter.ofPattern("HH:mm - ");
 
     }
 
     public String toString() {
-        return user+ " zij op "+date.format(dateFormatter)+": \n"+message;
+        return date.format(dateFormatter)+ user + ": " + message;
     }
 }
 

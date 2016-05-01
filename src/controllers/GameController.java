@@ -1,7 +1,7 @@
 package controllers;
 
-
-
+import database.access.GameDAO;
+import enumerations.GameState;
 import models.Game;
 import models.User;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class GameController {
     private User currentUser;
 
     public GameController() {
-        this.games = Game.getAll();
+        this.games = GameDAO.selectGames();
     }
 
     public void setCurrentUser(User user) {
@@ -21,16 +21,30 @@ public class GameController {
     }
 
     public ArrayList<Game> getGames() {
-        return games;
+        if (currentUser != null)
+            return games;
+        return new ArrayList<>();
+    }
+
+    public ArrayList<Game> getGames(GameState state) {
+        return getGames().stream().filter(game -> game.getGameState() == state).collect(Collectors.toCollection(ArrayList<Game>::new));
     }
 
     public ArrayList<Game> getOwnedGames() {
-        return games.stream()
+        return getGames().stream()
                 .filter(game -> game.hasPlayer(currentUser))
                 .collect(Collectors.toCollection(ArrayList<Game>::new));
     }
 
+    public ArrayList<Game> getOwnedGames(GameState state) {
+        return getOwnedGames().stream()
+                .filter(game -> game.getGameState() == state)
+                .collect(Collectors.toCollection(ArrayList<Game>::new));
+    }
+
     public void refresh() {
-        this.games = Game.getAll();
+        this.games = GameDAO.selectGames();
+        for (Game game : games) game.flagOpponent(currentUser);
+
     }
 }

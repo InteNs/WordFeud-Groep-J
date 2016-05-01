@@ -1,6 +1,6 @@
 package models;
 
-import database.DatabaseAccessor;
+import database.access.GameDAO;
 import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
@@ -13,10 +13,8 @@ import java.util.stream.Collectors;
 public class Game {
 
     private int ID;
-
     //These UserObjects are different instances then the UserObjects created in the controllers;
     private ArrayList<User> players;
-
     private ArrayList<Message> messages;
     private GameState gameState;
     private User opponent;
@@ -28,12 +26,12 @@ public class Game {
         this.ID = ID;
     }
 
-    public Game(int ID, List<String> players, String state,String boardType, String language) {
+    public Game(int ID, List<String> players, String state, String boardType, String language) {
         this.ID = ID;
-        this.players = players.stream().map(User::new).collect(Collectors.toCollection(ArrayList<User>::new));
+        this.players = players.stream().limit(2).map(User::new).collect(Collectors.toCollection(ArrayList<User>::new));
         this.gameState = GameState.stateFor(state);
         this.language=Language.languageFor(language);
-        this.boardType=BoardType.boardTypeFor(boardType);
+        this.boardType= BoardType.boardTypeFor(boardType);
         potOfLetters = new ArrayList<>();
     }
 
@@ -41,23 +39,21 @@ public class Game {
         return ID;
     }
 
-    public User getOpponent(User currentUser) {
-        if(opponent == null)
-            this.opponent = players.stream().filter(user -> !user.equals(currentUser)).findFirst().get();
+    /**
+     * flags the opponent of this game
+     *
+     * @param currentUser the user that is not the opponent
+     * @return the opponent
+     */
+    public User flagOpponent(User currentUser) {
+        if (players.contains(currentUser))
+            opponent = players.stream().filter(user -> !user.equals(currentUser)).collect(Collectors.toList()).get(0);
         return opponent;
     }
 
     public ArrayList<Message> getMessages(boolean refresh) {
-        if(refresh) this.messages = DatabaseAccessor.selectMessages(this);
+        if (refresh) this.messages = GameDAO.selectMessages(this);
         return messages;
-    }
-
-    public boolean addMessage(User user, String message) {
-        if (players.contains(user)) {
-            DatabaseAccessor.addMessage(user, this, message);
-            return true;
-        }
-        return false;
     }
 
     public ArrayList<User> getPlayers() {
@@ -76,16 +72,15 @@ public class Game {
         this.gameState = gameState;
     }
 
-    public static ArrayList<Game> getFor(User user) {
-        return DatabaseAccessor.selectGames(user);
-    }
-
-    public static ArrayList<Game> getAll() {
-        return DatabaseAccessor.selectGames();
+    public String toString() {
+        if (opponent != null)
+            return "[" + ID + "] spel tegen  " + opponent.getName();
+        else
+            return "[" + ID + "] spel tussen " + players.get(0) + " en " + players.get(1);
     }
 
     public void fillPot(Language language){
-        potOfLetters=DatabaseAccessor.SelectLetters(language);
+        potOfLetters=GameDAO.selectLetters(language);
     }
 
 

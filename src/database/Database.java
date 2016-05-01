@@ -1,251 +1,140 @@
 package database;
 
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Database {
 
-    private Connection con;
-    private Statement st;
-    private ResultSet rs;
+    private final String URL = "jdbc:mysql://77.172.146.212:3306/wordfeud";
+    private final String USERNAME = "wordfeud";
+    private final String PASSWORD = "wordfeud01";
+    private final String DRIVER = "com.mysql.jdbc.Driver";
 
-    private String url = "jdbc:mysql://77.172.146.212:3306/wordfeud";
-    private String user = "wordfeud";
-    private String password = "wordfeud01";
-    private String driver = "com.mysql.jdbc.Driver";
-
-    private Connection connection() throws SQLException {
-        return DriverManager.getConnection(url, user, password);
-    }
+    private Connection connection;
+    private PreparedStatement statement;
 
     public Database() {
         try {
-            Class.forName(driver).newInstance();
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            Class.forName(DRIVER).newInstance();
+        } catch (Exception e) {
+            System.err.println("download connector --> https://dev.mysql.com/downloads/connector/j/");
             e.printStackTrace();
         }
     }
 
     /**
-     * Returns a ResultSet of a table with conditions
-     *
-     * @param table      table you want to be returned
-     * @param conditions the mysql conditions (e.g WHERE id =...)
-     * @return
-     */
-    public ResultSet select(String table, String conditions) {
-        // Do not forget to call the close methode after using this methode!
-        try {
-            st = connection().createStatement();
-            return st.executeQuery("SELECT * FROM " + table + " WHERE " + conditions);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            close();
-            return null;
-        }
-    }
-
-    /**
-     * Returns a ResultSet of a table
-     *
-     * @param table table you want to be returned
-     * @return
-     */
-    public ResultSet select(String table) {
-        // Do not forget to call the close methode after using this methode!
-        try {
-            st = connection().createStatement();
-            return st.executeQuery("SELECT * FROM " + table);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            close();
-            return null;
-        }
-    }
-
-    /**
-     * Returns a list of a single column with conditions
-     *
-     * @param table     the name of the table in the database
-     * @param column    the column you want to select
-     * @param condition the mysql conditions (e.g WHERE id =...)
-     * @return
-     * @throws SQLException
-     */
-    public ArrayList<String> selectColumn(String table, String column, String condition) throws SQLException {
-        ResultSet rs = select(table);
-        ArrayList<String> list = new ArrayList<String>();
-        st = connection().createStatement();
-        rs = st.executeQuery("SELECT " + column + " FROM " + table + " WHERE " + condition);
-        while (rs.next()) {
-            list.add(rs.getString(1));
-        }
-        close();
-        return list;
-    }
-
-    /**
-     * Returns a list of a single column
-     *
-     * @param table  the name of the table in the database
-     * @param column the column you want to select
-     * @return
-     * @throws SQLException
-     */
-    public ArrayList<String> selectColumn(String table, String column) throws SQLException {
-        System.out.println("SELECT " + column + " FROM " + "table ");
-        ResultSet rs = select(table);
-        ArrayList<String> list = new ArrayList<String>();
-        st = connection().createStatement();
-        rs = st.executeQuery("SELECT " + column + " FROM " + table);
-        while (rs.next()) {
-            list.add(rs.getString(1));
-        }
-        close();
-        return list;
-    }
-
-    /**
-     * Inserts record in to database
-     *
-     * @param table  table name
-     * @param values insert values (e.g name='foo',password='123')
-     * @return
-     */
-    public boolean insert(String table, String values) {
-        try {
-            st = connection().createStatement();
-            st.execute("INSERT INTO " + table + " VALUES (" + values + ")");
-            //System.out.println(("INSERT INTO " + table + " VALUES (" + values + ")"));
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            close();
-            return false;
-        }
-    }
-
-    boolean insert(String table, List<Object> values) {
-        String query = "INSERT INTO " + table + " VALUES(";
-
-        for (Object object : values
-                ) {
-            query += "?,";
-        }
-        query = query.substring(0, query.length() - 1);
-        query += ")";
-
-        try {
-            PreparedStatement statement = connection().prepareStatement(query);
-            for (Object value : values) {
-                statement.setObject(values.indexOf(value) + 1, value);
-            }
-
-            statement.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            //handle errors
-            return false;
-        }
-
-    }
-
-    /**
-     * Updates a record
-     *
-     * @param table        table to be updated
-     * @param columnValues column(s) to be updated and the values
-     * @param conditions   the mysql conditions (e.g WHERE id =...)
-     * @return
-     */
-    public boolean update(String table, String columnValues, String conditions) {
-        try {
-            st = connection().createStatement();
-            st.executeUpdate("UPDATE " + table + " SET " + columnValues + " WHERE " + conditions);
-            close();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            close();
-            return false;
-        }
-
-    }
-
-    /**
-     * Deletes a record
-     *
-     * @param table      table name
-     * @param conditions the mysql conditions (e.g WHERE id =...)
-     * @return
-     */
-    public boolean delete(String table, String conditions) {
-        try {
-            st = connection().createStatement();
-            st.execute("DELETE FROM " + table + " WHERE " + conditions);
-            close();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            close();
-            return false;
-        }
-    }
-
-    /**
-     * returns a ResultSet
-     *
-     * @param query complete mysql query
-     * @return
-     */
-    public ResultSet query(String query) {
-        // Do not forget to call the close methode after using this methode!
-        try {
-            st = connection().createStatement();
-            return st.executeQuery(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            close();
-            return null;
-        }
-    }
-
-    /**
-     * Closes all connections to the database
+     * close the database connection, this will automatically
+     * close any open statement or resultSet made with this connection
      */
     public void close() {
         try {
-            if (rs != null) {
-                rs.close();
-            }
-            if (st != null) {
-                st.close();
-            }
-            if (con != null) {
-                con.close();
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            if (connection != null)
+                connection.close();
+        } catch (SQLException ignored) {
         }
     }
 
-    public ResultSet select(String query, List<Object> values) {
+    private void printError(Exception e) {
         try {
-            PreparedStatement statement = connection().prepareStatement(query);
-            for (int i = 0; i < values.size(); i++) {
-                statement.setObject(i+1, values.get(i));
-            }
-            return statement.executeQuery();
+            System.out.println(e.getMessage() + "\nquery: " + statement.toString().split(":")[1]);
+        } catch (Exception e1) {
+            if(e instanceof CommunicationsException) System.err.println("no connection to database!");
+        }
+    }
 
+    private Connection connection() throws SQLException {
+        connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        return connection;
+    }
+
+    private void setStatement(String query, Object... values) throws SQLException {
+        statement = connection().prepareStatement(query);
+        for (int i = 0; i < values.length; i++) {
+            statement.setObject(i + 1, values[i]);
+        }
+    }
+
+    /**
+     * execute a count query with x amount of question marks
+     *
+     * @param Query  must have the count result in the first column
+     * @param values values to insert into question marks
+     * @return the result of the count
+     */
+    public int count(String Query, Object... values) {
+        try {
+            setStatement(Query, values);
+            ResultSet records = statement.executeQuery();
+            records.next();
+            return records.getInt(1);
         } catch (SQLException e) {
-            e.printStackTrace();
+            printError(e);
+            return 0;
+        } finally {
+            close();
+        }
+    }
+
+    /**
+     * execute an insert query with x amount of question marks
+     *
+     * @param query  defined in static SQL class
+     * @param values values to insert into question marks
+     * @return false if the execution failed
+     */
+    public boolean insert(String query, Object... values) {
+        try {
+            setStatement(query, values);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            printError(e);
+            return false;
+        } finally {
+            close();
+        }
+    }
+
+    /**
+     * CALL close() method on database after this method
+     * execute a select query with x mount of question marks
+     *
+     * @param query  defined in static SQL class
+     * @param values to insert into question marks
+     * @return the resultset
+     */
+    public ResultSet select(String query, Object... values) {
+        try {
+            setStatement(query, values);
+            return statement.executeQuery();
+        } catch (SQLException e) {
+            printError(e);
             return null;
         }
     }
 
+    /**
+     * executes a select query and returns the first row as string array
+     *
+     * @param query  defined in static SQL class
+     * @param values to insert into question marks
+     * @return list with strings representing the first column
+     */
+    public List<String> selectFirstColumn(String query, Object... values) {
+        ArrayList<String> result = new ArrayList<>();
+        try {
+            setStatement(query, values);
+            ResultSet records = statement.executeQuery();
+            while(records.next()) {
+                result.add(records.getString(1));
+            }
+        } catch (SQLException e) {
+            printError(e);
+        }
+        close();
+        return result;
+    }
 }
