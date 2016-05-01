@@ -1,5 +1,8 @@
 # WordFeud
 Informatie over alles wat met de applicatie te maken heeft.
+## structuur van applicatie
+
+see issue [#28](https://github.com/InteNs/WordFeud-Groep-J/issues/28)
 
 ## MySql database
 Server ip 	: 77.172.146.212
