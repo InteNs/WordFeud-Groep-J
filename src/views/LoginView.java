@@ -35,6 +35,11 @@ public class LoginView extends View implements Initializable {
             invalidUserLabel.setVisible(true);
         }
     }
+    
+    @FXML
+    public void openRegisterView (){
+    	parent.register();
+    }
 
     @Override
     public void refresh() {

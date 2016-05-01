@@ -26,7 +26,8 @@
                 <children>
                     <fx:include fx:id="loginView" source="LoginView.fxml" />
                     <fx:include fx:id="welcomeView" source="WelcomeView.fxml" />
-                </children>
+                    <fx:include fx:id="registerView" source="RegisterView.fxml" />
+                  </children>
             </StackPane>
         </VBox>
     </SplitPane>

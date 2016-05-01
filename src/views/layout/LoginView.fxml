@@ -25,7 +25,7 @@
       <HBox alignment="TOP_CENTER" prefHeight="60.0" prefWidth="600.0" spacing="30.0">
          <children>
             <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#login" prefWidth="120.0" text="Inloggen" />
-            <Button alignment="TOP_CENTER" mnemonicParsing="false" prefWidth="120.0" text="Nog geen account?" />
+            <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction= "#openRegisterView" prefWidth="120.0" text="Nog geen account?" />
          </children>
       </HBox>
    </children>

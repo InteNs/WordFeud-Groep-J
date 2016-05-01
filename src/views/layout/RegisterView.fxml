@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="253.0" prefWidth="404.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.RegisterView">
+   <children>
+      <Label alignment="CENTER" prefHeight="35.0" prefWidth="120.0" text="Registeren">
+         <font>
+            <Font size="24.0" />
+         </font>
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
+      </Label>
+      <TextField fx:id="userNameField" alignment="CENTER" prefHeight="30.0" prefWidth="200.0" promptText="Vul hier uw naam in">
+         <VBox.margin>
+            <Insets bottom="15.0" />
+         </VBox.margin></TextField>
+      <PasswordField fx:id="userPassField1" alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" promptText="Vul hier uw wachtwoord in" />
+      <PasswordField fx:id="userPassField2" alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" promptText="Vul hier uw wachtwoord in" />
+      <Label fx:id="invalidUserLabel" textAlignment="CENTER" textFill="#f50202" visible="false">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font>
+      </Label>
+      <HBox alignment="TOP_CENTER" prefHeight="82.0" prefWidth="339.0" spacing="30.0">
+         <children>
+            <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#register" prefWidth="120.0" text="Bevestig" />
+            <Button mnemonicParsing="false" prefWidth="120.0" onAction= "#openLoginView" text="Annuleer" />
+         </children></HBox>
+   </children>
+</VBox>

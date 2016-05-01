@@ -13,9 +13,11 @@ import java.util.Collections;
 import java.util.ResourceBundle;
 
 public class MainView implements Initializable {
-    @FXML private VBox loginView;
+    //@FXML private VBox loginView;
     @FXML private VBox welcomeView;
-
+    @FXML private VBox registerView;
+    @FXML private VBox loginView;
+    
 
     @FXML private TabPane control;
     @FXML private SplitPane mainContent;
@@ -25,7 +27,8 @@ public class MainView implements Initializable {
     @FXML private GameListView gameListViewController;
     @FXML private LoginView    loginViewController;   //1st child of Stackpane
     @FXML private WelcomeView  welcomeViewController; //2nd child of Stackpane
-
+    @FXML private RegisterView  registerViewController; //3th child of Stackpane
+    
     //some sort of session placeholder
     private User currentUser;
 
@@ -34,10 +37,12 @@ public class MainView implements Initializable {
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL location, ResourceBundle resources) {    	
         loginViewController.setParent(this);
         welcomeViewController.setParent(this);
         gameListViewController.setParent(this);
+        registerViewController.setParent(this);
+        setContent(loginView);
     }
 
     @FXML
@@ -51,7 +56,14 @@ public class MainView implements Initializable {
         setContent(welcomeView);
         refresh();
     }
-
+    
+    public void register (){
+    	setContent(registerView);
+    }
+    
+    public void toLoginView (){
+    	setContent(loginView);
+    }
     /**
      * set set or add content to app's view (clears content if node == null)
      * @param node the node to set as content

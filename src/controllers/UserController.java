@@ -18,6 +18,18 @@ public class UserController {
         currentUser = UserDAO.selectUser(userName, passWord);
         return currentUser != null;
     }
+    
+    public boolean userExists (String username){
+		 if(UserDAO.userExists(username)){   	
+			 return true;
+		 }    	
+    	return false;    	
+    }
+    
+    public void addUser (String username, String password){
+    	UserDAO.addUser(username, password);
+    }
+    
 
     public User getCurrentUser() {
         return currentUser;
