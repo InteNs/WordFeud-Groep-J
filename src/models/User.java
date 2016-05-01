@@ -1,8 +1,6 @@
 package models;
 
 
-import database.DatabaseAccessor;
-
 public class User {
 
     private String name;
@@ -18,8 +16,8 @@ public class User {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof User)
-            return ((User)obj).getName().equals(this.getName());
+        if (obj instanceof User)
+            return ((User) obj).getName().equals(this.getName());
 
         return super.equals(obj);
     }
@@ -29,7 +27,4 @@ public class User {
         return getName();
     }
 
-    public static User getFor(String userName, String passWord) {
-        return DatabaseAccessor.selectUser(userName,passWord);
-    }
 }
