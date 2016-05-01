@@ -1,6 +1,7 @@
 package models;
 
 import javafx.util.Pair;
+import javafx.util.converter.CharacterStringConverter;
 
 public class Tile {
 
@@ -9,9 +10,13 @@ public class Tile {
     private int x;
     private int y;
 
+    public Tile(Character character) {
+        this.character= character;
+    }
+
     public Tile(int value, Character character) {
         this.value = value;
-        this.character= character;
+        this.character = character;
     }
 
     public Tile(char character, int x, int y) {

@@ -1,26 +1,23 @@
 package models;
 
-import database.access.GameDAO;
 import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.stream.Collectors;
 
 public class Game {
 
     private int id;
-    //These UserObjects are different instances then the UserObjects created in the controllers;
     private ArrayList<Message> messages;
     private GameState gameState;
     private User opponent;
     private User challenger;
     private Language language;
     private BoardType boardType;
-    private ArrayList<Turn> turns;
+    private ArrayList<Turn> turns; //TODO apply these turns to fields when building board
+    private ArrayList<Field> fields;
 
     public Game(int id, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
         this.id = id;
@@ -53,15 +50,8 @@ public class Game {
         return turns;
     }
 
-    public ArrayList<Tile> getPlacedTiles() {
-        ArrayList<Tile> tiles = new ArrayList<>();
-        if(turns != null)
-            turns.stream().map(Turn::getTiles).forEach(tiles::addAll);
-        return tiles;
-    }
-
     public ArrayList<User> getPlayers() {
-        return new ArrayList<>(Arrays.asList(new User[]{challenger, opponent}));
+        return new ArrayList<>(Arrays.asList(challenger, opponent));
     }
 
     public boolean hasPlayer(User user) {

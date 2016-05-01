@@ -56,16 +56,15 @@ public class GameDAO extends DAO {
         try {
             while (records.next()) {
                 turns.add(new Turn(
-                        records.getInt("id"),
-                        records.getInt("spel_id"),
                         records.getInt("score"),
                         new User(records.getString("account_naam")),
                         TurnType.getFor(records.getString("aktie_type")),
-                        buildTiles(
+                        buildPlacedTiles(
                                 records.getString("woorddeel"),
                                 records.getString("x-waarden"),
                                 records.getString("y-waarden")
-                        )
+                        ),
+                        buildRack(records.getString("inhoud"))
                 ));
             }
         } catch (SQLException e) {
@@ -74,8 +73,17 @@ public class GameDAO extends DAO {
         database.close();
         return turns;
     }
+    protected static ArrayList<Tile> buildRack(String values) {
+        ArrayList<Tile> rack = new ArrayList<>();
+        if(values == null)
+            return null;
+        for (String s : values.split(",")) {
+            rack.add(new Tile(s.charAt(0)));
+        }
+        return rack;
+    }
 
-    protected static ArrayList<Tile> buildTiles(String woorddeel, String x, String y) {
+    protected static ArrayList<Tile> buildPlacedTiles(String woorddeel, String x, String y) {
         if(woorddeel == null)
             return null;
         ArrayList<Tile> tiles = new ArrayList<>();

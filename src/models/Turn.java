@@ -6,51 +6,34 @@ import java.util.ArrayList;
 
 
 public class Turn {
-    private int id;
-    private int gameId;
     private int score;
+    private String woord;
     private User user;
     private TurnType type;
-    private ArrayList<Tile> tiles;
+    private ArrayList<Tile> rack;
+    private ArrayList<Tile> placedTiles;
 
-    public Turn(int id,int gameId, int score, User user, TurnType type, ArrayList<Tile> tiles) {
-        this.id = id;
-        this.gameId = gameId;
+    public Turn(int score, User user, TurnType type, ArrayList<Tile> placedTiles, ArrayList<Tile> rack) {
         this.score = score;
         this.user = user;
         this.type = type;
-        this.tiles = tiles;
+        this.placedTiles = placedTiles;
+        this.rack = rack;
     }
 
-    public Turn(int id, int gameId, int score, User user, TurnType type) {
-        this.gameId = gameId;
-        this.id = id;
-        this.score = score;
-        this.user = user;
-        this.type = type;
+    public String getWoord() {
+        return woord;
     }
 
-    public String getWord() {
-        //TODO get the complete word, not just the tiles added to an existing word
-        return tiles.toString();
+    public void setWoord(String woord) {
+        this.woord = woord;
     }
 
-    public ArrayList<Tile> getTiles() {
-        return tiles;
+    public ArrayList<Tile> getPlacedTiles() {
+        return placedTiles;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public int getGameId() {
-        return gameId;
-    }
-
-    @Override
-    public String toString() {
-        if(tiles != null)
-            return user + " speelde " + getWord() + " voor " + score + " punten.";
-        return user + " deed " + type;
+    public ArrayList<Tile> getRack() {
+        return rack;
     }
 }
