@@ -1,6 +1,7 @@
 package controllers;
 
 
+import database.access.GameDAO;
 import enumerations.GameState;
 import models.Game;
 import models.User;
@@ -14,7 +15,7 @@ public class GameController {
     private User currentUser;
 
     public GameController() {
-        this.games = Game.getAll();
+        this.games = GameDAO.selectGames();
     }
 
     public void setCurrentUser(User user) {
@@ -22,7 +23,7 @@ public class GameController {
     }
 
     public ArrayList<Game> getGames() {
-        if(currentUser != null)
+        if (currentUser != null)
             return games;
         return new ArrayList<>();
     }
@@ -36,6 +37,7 @@ public class GameController {
                 .filter(game -> game.hasPlayer(currentUser))
                 .collect(Collectors.toCollection(ArrayList<Game>::new));
     }
+
     public ArrayList<Game> getOwnedGames(GameState state) {
         return getOwnedGames().stream()
                 .filter(game -> game.getGameState() == state)
@@ -43,7 +45,8 @@ public class GameController {
     }
 
     public void refresh() {
-        this.games = Game.getAll();
+        this.games = GameDAO.selectGames();
         for (Game game : games) game.flagOpponent(currentUser);
+
     }
 }

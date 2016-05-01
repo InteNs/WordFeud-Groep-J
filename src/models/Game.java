@@ -1,11 +1,10 @@
 package models;
 
-import database.DatabaseAccessor;
+import database.access.GameDAO;
 import enumerations.GameState;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Game {
@@ -32,26 +31,19 @@ public class Game {
 
     /**
      * flags the opponent of this game
+     *
      * @param currentUser the user that is not the opponent
      * @return the opponent
      */
     public User flagOpponent(User currentUser) {
-        if(players.contains(currentUser))
+        if (players.contains(currentUser))
             opponent = players.stream().filter(user -> !user.equals(currentUser)).collect(Collectors.toList()).get(0);
         return opponent;
     }
 
     public ArrayList<Message> getMessages(boolean refresh) {
-        if(refresh) this.messages = DatabaseAccessor.selectMessages(this);
+        if (refresh) this.messages = GameDAO.selectMessages(this);
         return messages;
-    }
-
-    public boolean addMessage(User user, String message) {
-        if (players.contains(user)) {
-            DatabaseAccessor.addMessage(user, this, message);
-            return true;
-        }
-        return false;
     }
 
     public ArrayList<User> getPlayers() {
@@ -71,17 +63,9 @@ public class Game {
     }
 
     public String toString() {
-        if(opponent != null)
-            return "["+ID+"] spel tegen "+opponent.getName();
+        if (opponent != null)
+            return "[" + ID + "] spel tegen  " + opponent.getName();
         else
-            return "["+ID+"] spel tussen "+players.get(0)+" en "+players.get(1);
-    }
-
-    public static ArrayList<Game> getFor(User user) {
-        return DatabaseAccessor.selectGames(user);
-    }
-
-    public static ArrayList<Game> getAll() {
-        return DatabaseAccessor.selectGames();
+            return "[" + ID + "] spel tussen " + players.get(0) + " en " + players.get(1);
     }
 }
