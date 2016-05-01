@@ -1,8 +1,5 @@
 package enumerations;
 
-/**
- * Created by Ben on 30-4-2016.
- */
 public enum  Language {
 
     NL,
