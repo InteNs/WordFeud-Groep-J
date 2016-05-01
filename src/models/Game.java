@@ -8,12 +8,11 @@ import enumerations.Language;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class Game {
 
-    private int ID;
+    private int id;
     //These UserObjects are different instances then the UserObjects created in the controllers;
     private ArrayList<Message> messages;
     private GameState gameState;
@@ -21,9 +20,10 @@ public class Game {
     private User challenger;
     private Language language;
     private BoardType boardType;
+    private ArrayList<Turn> turns;
 
-    public Game(int ID, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
-        this.ID = ID;
+    public Game(int id, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
+        this.id = id;
         this.challenger = challenger;
         this.opponent = opponent;
         this.gameState = state;
@@ -31,13 +31,33 @@ public class Game {
         this.boardType = boardType;
     }
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
-    public ArrayList<Message> getMessages(boolean refresh) {
-        if (refresh) this.messages = GameDAO.selectMessages(this);
-        return messages;
+    public int setMessages(ArrayList<Message> messages) {
+        int diff = 0;
+        if(this.messages != null) diff = messages.size() - this.messages.size();
+        this.messages = messages;
+        return diff;
+    }
+
+    public int setTurns(ArrayList<Turn> turns) {
+        int diff = 0;
+        if(this.turns != null) diff = turns.size() - this.turns.size();
+        this.turns = turns;
+        return diff;
+    }
+
+    public ArrayList<Turn> getTurns() {
+        return turns;
+    }
+
+    public ArrayList<Tile> getPlacedTiles() {
+        ArrayList<Tile> tiles = new ArrayList<>();
+        if(turns != null)
+            turns.stream().map(Turn::getTiles).forEach(tiles::addAll);
+        return tiles;
     }
 
     public ArrayList<User> getPlayers() {
@@ -56,8 +76,25 @@ public class Game {
         this.gameState = gameState;
     }
 
+    @Override
     public String toString() {
-        return "[" + ID + "]["+language+"] " +boardType.toString().toLowerCase()
+        return "[" + id + "]["+language+"] " +boardType.toString().toLowerCase()
                 +" spel tussen " + challenger + " en " + opponent;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Game game = (Game) o;
+
+        return id == game.id;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }

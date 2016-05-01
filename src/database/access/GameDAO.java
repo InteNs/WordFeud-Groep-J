@@ -4,19 +4,18 @@ import database.SQL;
 import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
-import models.Game;
-import models.Letter;
-import models.Message;
-import models.User;
+import enumerations.TurnType;
+import models.*;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class GameDAO extends DAO {
 
     public static ArrayList<Message> selectMessages(Game game) {
         ArrayList<Message> messages = new ArrayList<>();
-        ResultSet records = database.select(SQL.SELECT.MESSAGESFORGAME, game.getID());
+        ResultSet records = database.select(SQL.SELECT.MESSAGESFORGAME, game.getId());
         try {
             while (records.next()) {
                 messages.add(new Message(
@@ -51,13 +50,55 @@ public class GameDAO extends DAO {
         database.close();
         return games;
     }
-    public static ArrayList<Letter> selectLetters(Language language) {
-        ArrayList<Letter>letters = new ArrayList<>();
-        ResultSet records = database.select(SQL.SELECT.SELECTLETTERS, language);
+    public static ArrayList<Turn> selectTurns(Game game) {
+        ArrayList<Turn> turns = new ArrayList<>();
+        ResultSet records = database.select(SQL.SELECT.TURNSFORGAME, game.getId());
+        try {
+            while (records.next()) {
+                turns.add(new Turn(
+                        records.getInt("id"),
+                        records.getInt("spel_id"),
+                        records.getInt("score"),
+                        new User(records.getString("account_naam")),
+                        TurnType.getFor(records.getString("aktie_type")),
+                        buildTiles(
+                                records.getString("woorddeel"),
+                                records.getString("x-waarden"),
+                                records.getString("y-waarden")
+                        )
+                ));
+            }
+        } catch (SQLException e) {
+            printError(e);
+        }
+        database.close();
+        return turns;
+    }
+
+    protected static ArrayList<Tile> buildTiles(String woorddeel, String x, String y) {
+        if(woorddeel == null)
+            return null;
+        ArrayList<Tile> tiles = new ArrayList<>();
+        String[] sC = woorddeel.split(",");
+        String[] sX = x.split(",");
+        String[] sY = y.split(",");
+        for (int i = 0; i < sC.length; i++) {
+            tiles.add(new Tile(
+                    sC[i].charAt(0),
+                    Integer.parseInt(sX[i]),
+                    Integer.parseInt(sY[i])
+            ));
+        }
+        return tiles;
+    }
+
+    public static ArrayList<Tile> selectTiles(Language language) {
+        ArrayList<Tile> tiles = new ArrayList<>();
+        ResultSet records = database.select(SQL.SELECT.LETTERSFORLANG, language);
         try {
             while (records.next()){
                 for (int i = 0; i <records.getInt("aantal") ; i++) {
-                    letters.add(new Letter(
+                    tiles.add(new Tile(
                             records.getInt("waarde"),
                             records.getString("karakter").charAt(0)
                     ));
@@ -67,6 +108,6 @@ public class GameDAO extends DAO {
             printError(e);
         }
         database.close();
-        return letters;
+        return tiles;
     }
 }

@@ -16,9 +16,6 @@ public class GameTest {
     private Game game;
     private User user1, user2;
 
-    public GameTest() {
-    }
-
     @Before
     public void setUp() throws Exception {
         user1 = new User("current");

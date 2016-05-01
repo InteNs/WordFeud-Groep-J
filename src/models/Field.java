@@ -4,7 +4,7 @@ import enumerations.FieldType;
 
 public class Field {
 
-    private Letter letter;
+    private Tile tile;
     private FieldType fieldType;
 
 }

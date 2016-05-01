@@ -10,6 +10,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.VBox;
 import models.Game;
 import models.User;
 import java.net.URL;
@@ -39,5 +40,8 @@ public class GameListView extends View implements Initializable {
         myFinishedGamesList.getItems().setAll(gameController.getOwnedGames(GameState.FINISHED));
         allGamesList.getItems().setAll(gameController.getGames());
         allFinishedGamesList.getItems().setAll(gameController.getGames(GameState.FINISHED));
+        allFinishedGamesList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            gameController.loadGame(observable.getValue());
+        });
     }
 }

@@ -45,4 +45,10 @@ public class GameController {
     public void refresh() {
         this.games = GameDAO.selectGames();
     }
+
+    public void loadGame(Game game) {
+        game.setMessages(GameDAO.selectMessages(game));
+        game.setTurns(GameDAO.selectTurns(game));
+        game.getTurns().forEach(System.out::println);
+    }
 }
