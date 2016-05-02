@@ -7,6 +7,7 @@ public class SQL {
         public static final String MESSAGESFORGAME = "SELECT * FROM chatregel WHERE spel_id = ? ORDER BY tijdstip;";
         public static final String LETTERSFORLANG = "SELECT * FROM lettertype WHERE letterset_code = ?;";
         public static final String TURNSFORGAME = "SELECT b.*, g.woorddeel, g.`x-waarden`, g.`y-waarden`, p.inhoud FROM beurt b LEFT JOIN gelegd g ON g.beurt_id = b.id AND g.spel_id = b.spel_id LEFT JOIN plankje p ON p.beurt_id = b.id AND p.spel_id = b.spel_id WHERE b.spel_id = ?;\n";
+        public static final String TILESFORBOARD = "SELECT * FROM wordfeud.tegel WHERE bord_naam =?";
     }
 
     public class ALL {

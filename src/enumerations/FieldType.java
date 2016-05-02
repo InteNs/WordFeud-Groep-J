@@ -15,13 +15,13 @@ public enum FieldType {
             case "DW":
                 return DW;
             case "TW":
-                return DW;
+                return TW;
             case "DL":
-                return DW;
+                return DL;
             case "TL":
-                return DW;
+                return TL;
             case "*":
-                return DW;
+                return STARTTILE;
         }
         return null;
     }

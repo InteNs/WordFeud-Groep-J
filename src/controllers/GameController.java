@@ -51,4 +51,8 @@ public class GameController {
         game.setTurns(GameDAO.selectTurns(game));
         game.getTurns().forEach(System.out::println);
     }
+
+    public void getTilesForBoard(Game game){
+        game.setBoard(GameDAO.selectFieldsForBoard(game.getBoardType()));
+    }
 }

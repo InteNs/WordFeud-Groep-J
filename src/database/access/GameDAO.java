@@ -1,10 +1,7 @@
 package database.access;
 
 import database.SQL;
-import enumerations.BoardType;
-import enumerations.GameState;
-import enumerations.Language;
-import enumerations.TurnType;
+import enumerations.*;
 import models.*;
 
 import java.sql.ResultSet;
@@ -117,5 +114,24 @@ public class GameDAO extends DAO {
         }
         database.close();
         return tiles;
+    }
+
+    //TODO: records = empty, has to do with boardtype
+    public static Field[][] selectFieldsForBoard(BoardType boardType) {
+        Field[][] fields = new Field[15][15];
+        ResultSet records = database.select(SQL.SELECT.TILESFORBOARD,boardType);
+
+        try {
+            while (records.next()){
+                System.out.println("11111111111111111111111111111111111111111111111111");
+                fields[records.getInt("x")][records.getInt("y")] =
+                        new Field(FieldType.fieldTypeFor(records.getString("tegeltype_soort")));
+
+            }
+        } catch (SQLException e) {
+            printError(e);
+        }
+        database.close();
+        return fields;
     }
 }
