@@ -6,7 +6,8 @@ public enum FieldType {
     TW,
     DL,
     TL,
-    STARTTILE;
+    STARTTILE,
+    UNDEFINED;
 
     public static FieldType fieldTypeFor(String fieldType){
         switch (fieldType){
@@ -22,8 +23,8 @@ public enum FieldType {
                 return TL;
             case "*":
                 return STARTTILE;
+            default:return UNDEFINED;
         }
-        return null;
     }
 
 

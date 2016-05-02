@@ -3,9 +3,8 @@ package models;
 import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Game {
 
@@ -17,8 +16,9 @@ public class Game {
     private Language language;
     private BoardType boardType;
     private ArrayList<Turn> turns; //TODO apply these turns to fields when building board
-//  private ArrayList<Field> fields;
-    private Field[][] fields;
+    private Field[][] defaultGameBoard; //SHOULD NOT BE OVERWRITTEN
+    private Field[][] changeableGameBoard; //USE THIS INSTEAD
+    private ArrayList<Field>fieldsChangedThisTurn;
 
     public Game(int id, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
         this.id = id;
@@ -27,6 +27,10 @@ public class Game {
         this.gameState = state;
         this.language = language;
         this.boardType = boardType;
+    }
+
+    public Game(int id) {
+        this.id = id;
     }
 
     public int getId() {
@@ -70,20 +74,37 @@ public class Game {
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
     }
-    
+
+    //Sets default board
     public void setBoard(Field[][] fields){
-        this.fields = fields;
-        for (int i = 0; i <this.fields.length ; i++) {
-            for (int j = 0; j < this.fields.length; j++) {
-                System.out.println("x="+i+" " +
-                        "y="+j+" " +
-                        "TileType="+fields[i][j].getFieldType());
-            }
-        }
+        this.defaultGameBoard = fields;
+        changeableGameBoard=defaultGameBoard;
     }
 
+    //Used to display a certain turn on the GameBoard
+    public void setBoardStateTo(Turn turnToDisplay){
+        changeableGameBoard=defaultGameBoard;
+        for (Turn turn : turns)
+            if (turn.equals(turnToDisplay))
+                break;
+            else {
+                for (Tile tile : turn.getPlacedTiles()
+                        ) {
+                    changeableGameBoard[tile.getX()-1][tile.getY()-1].setTile(tile);
+                }
+            }
+    }
 
-    public boolean verifyTilePlacement(Tile tile,Field field){
+    public ArrayList<Tile> getPlacedTiles(){
+        ArrayList<Tile> tiles = new ArrayList<>();
+        turns.stream().filter(turn -> turn.getPlacedTiles() != null).forEach(turn -> {
+            tiles.addAll(turn.getPlacedTiles());
+        });
+        return tiles;
+    }
+
+    //Check if a field already has a tile
+    public boolean placeTile(Tile tile,Field field){
         if (field.getTile()==null){
             field.setTile(tile);
             return true;
@@ -91,9 +112,93 @@ public class Game {
         return false;
     }
 
-    public int calculateWordScore(Field field){
-        return 5;
+    private void getTilesPlacedThisTurn(){
+        fieldsChangedThisTurn = new ArrayList<>();
+        for (int i = 0; i < changeableGameBoard.length; i++) {
+            for (int j = 0; j < changeableGameBoard.length; j++) {
+                if (!getPlacedTiles().contains(changeableGameBoard[i][j].getTile()) && changeableGameBoard[i][j].getTile()!= null){
+                    fieldsChangedThisTurn.add(changeableGameBoard[i][j]);
+                }
+            }
+        }
     }
+
+    public boolean verifyCurrentTurn(){
+        //check all the fields changed/Tiles placed this turn, see if their x or y values are the same, also check if tiles are connected
+        //yes --> currentTurn is still valid
+
+        boolean validTurn=true;
+        String direction; //0--HOR 1--VER
+        int x = fieldsChangedThisTurn.get(0).getTile().getX();
+        int y= fieldsChangedThisTurn.get(0).getTile().getY();
+        if (Collections.frequency(fieldsChangedThisTurn,x)!=fieldsChangedThisTurn.size()){ //Checks if all X-values are NOT the same for each placed letter
+            if ( Collections.frequency(fieldsChangedThisTurn,y)!=fieldsChangedThisTurn.size()) { //Checks if all Y-values are NOT the same for each placed letter
+                validTurn = false;
+            }
+            direction="x";
+        } else {
+            direction ="y";
+        }
+
+        fieldsChangedThisTurn.sort(Comparator.comparing(field -> field.getTile().getX()));
+
+        ArrayList<Integer> xValues=fieldsChangedThisTurn.stream()
+                .map(field -> field.getTile().getX())
+                .collect(Collectors.toCollection(ArrayList<Integer>::new));
+
+        ArrayList<Integer> yValues = fieldsChangedThisTurn.stream()
+                .map(field -> field.getTile().getY())
+                .collect(Collectors.toCollection(ArrayList<Integer>::new));
+
+        if (direction.equalsIgnoreCase("x")) {
+            for (x = Collections.min(xValues); x <= Collections.max(xValues); x++) {
+                if (changeableGameBoard[x][y].getTile() == null && !xValues.contains(x))
+                    validTurn = false;
+
+            }
+        } else {
+            for (y = Collections.min(yValues); y <= Collections.max(yValues); y++) {
+                x = fieldsChangedThisTurn.get(0).getTile().getY();
+                if (changeableGameBoard[x][y].getTile() == null && !xValues.contains(y))
+                    validTurn = false;
+
+            }
+        }
+        return validTurn;
+    }
+
+
+    //TODO:
+    public int calculateWordScore(Field field){
+        int wordScore=0;
+        //Ask which words can be made with the addition of the recently placed tile
+        
+        //HORIZONTAL CHECK --RIGHT
+        for (int x=field.getTile().getX()-1; x <changeableGameBoard.length ; x++) {
+            for (int y =field.getTile().getY()-1; y <changeableGameBoard.length ; y++) {
+
+            }
+        }
+
+        //HORIZONTAL CHECK --LEFT
+        for (int x=field.getTile().getX()-1; x >=0; x--) {
+            for (int y =field.getTile().getY()-1; y >0 ; y--) {
+
+            }
+        }
+
+        //VERTICAL CHECK --UP
+
+        //VERTICAL CHECK --DOWN
+        
+        //for each word that can be made, calculate the score of that word
+        //Add the score to the wordScore
+
+
+        return wordScore;
+    }
+
+
 
     @Override
     public String toString() {

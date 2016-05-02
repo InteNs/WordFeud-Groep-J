@@ -52,7 +52,7 @@ public class GameController {
         game.getTurns().forEach(System.out::println);
     }
 
-    public void getTilesForBoard(Game game){
+    public void loadGameBoard(Game game){
         game.setBoard(GameDAO.selectFieldsForBoard(game.getBoardType()));
     }
 }

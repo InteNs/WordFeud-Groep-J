@@ -99,7 +99,7 @@ public class GameDAO extends DAO {
 
     public static ArrayList<Tile> selectTiles(Language language) {
         ArrayList<Tile> tiles = new ArrayList<>();
-        ResultSet records = database.select(SQL.SELECT.LETTERSFORLANG, language);
+        ResultSet records = database.select(SQL.SELECT.LETTERSFORLANG, language.toString());
         try {
             while (records.next()){
                 for (int i = 0; i <records.getInt("aantal") ; i++) {
@@ -116,17 +116,16 @@ public class GameDAO extends DAO {
         return tiles;
     }
 
-    //TODO: records = empty, has to do with boardtype
     public static Field[][] selectFieldsForBoard(BoardType boardType) {
         Field[][] fields = new Field[15][15];
-        ResultSet records = database.select(SQL.SELECT.TILESFORBOARD,boardType);
+        ResultSet records = database.select(SQL.SELECT.TILESFORBOARD,boardType.toString());
 
         try {
             while (records.next()){
-                System.out.println("11111111111111111111111111111111111111111111111111");
-                fields[records.getInt("x")][records.getInt("y")] =
+                int x=records.getInt("x")-1;
+                int y = records.getInt("y")-1;
+                fields[x][y] =
                         new Field(FieldType.fieldTypeFor(records.getString("tegeltype_soort")));
-
             }
         } catch (SQLException e) {
             printError(e);
