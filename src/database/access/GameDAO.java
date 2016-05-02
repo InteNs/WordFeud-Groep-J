@@ -118,14 +118,12 @@ public class GameDAO extends DAO {
 
     public static Field[][] selectFieldsForBoard(BoardType boardType) {
         Field[][] fields = new Field[15][15];
-        ResultSet records = database.select(SQL.SELECT.TILESFORBOARD,boardType.toString());
-
+        ResultSet records = database.select(SQL.SELECT.TILESFORBOARD, boardType.toString());
         try {
             while (records.next()){
                 int x=records.getInt("x")-1;
                 int y = records.getInt("y")-1;
-                fields[x][y] =
-                        new Field(FieldType.fieldTypeFor(records.getString("tegeltype_soort")));
+                fields[x][y] = new Field(FieldType.fieldTypeFor(records.getString("tegeltype_soort")));
             }
         } catch (SQLException e) {
             printError(e);

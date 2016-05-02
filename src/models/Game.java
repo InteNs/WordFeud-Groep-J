@@ -3,7 +3,10 @@ package models;
 import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class Game {
@@ -15,10 +18,11 @@ public class Game {
     private User challenger;
     private Language language;
     private BoardType boardType;
-    private ArrayList<Turn> turns; //TODO apply these turns to fields when building board
-    private Field[][] defaultGameBoard; //SHOULD NOT BE OVERWRITTEN
-    private Field[][] changeableGameBoard; //USE THIS INSTEAD
-    private ArrayList<Field>fieldsChangedThisTurn;
+    private ArrayList<Turn> turns;
+    private Field[][] emptyGameBoard;   // SHOULD NOT BE OVERWRITTEN
+    private Field[][] gameBoard;        // USE THIS INSTEAD
+    private ArrayList<Field> fieldsChangedThisTurn;
+    private ArrayList<Tile> allTilesCache;
 
     public Game(int id, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
         this.id = id;
@@ -29,24 +33,20 @@ public class Game {
         this.boardType = boardType;
     }
 
-    public Game(int id) {
-        this.id = id;
-    }
-
     public int getId() {
         return id;
     }
 
     public int setMessages(ArrayList<Message> messages) {
         int diff = 0;
-        if(this.messages != null) diff = messages.size() - this.messages.size();
+        if (this.messages != null) diff = messages.size() - this.messages.size();
         this.messages = messages;
         return diff;
     }
 
     public int setTurns(ArrayList<Turn> turns) {
         int diff = 0;
-        if(this.turns != null) diff = turns.size() - this.turns.size();
+        if (this.turns != null) diff = turns.size() - this.turns.size();
         this.turns = turns;
         return diff;
     }
@@ -75,107 +75,112 @@ public class Game {
         this.gameState = gameState;
     }
 
-    //Sets default board
-    public void setBoard(Field[][] fields){
-        this.defaultGameBoard = fields;
-        changeableGameBoard=defaultGameBoard;
+    /**
+     * set the initial board for this game
+     * @param fields the fields for this board
+     */
+    public void setBoard(Field[][] fields) {
+        this.emptyGameBoard = fields;
+        gameBoard = emptyGameBoard;
     }
 
-    //Used to display a certain turn on the GameBoard
-    public void setBoardStateTo(Turn turnToDisplay){
-        changeableGameBoard=defaultGameBoard;
-        for (Turn turn : turns)
-            if (turn.equals(turnToDisplay))
+    /**
+     * set the board to a speficic turn that has already completed
+     * @param turnToDisplay the last turn to be added to the board
+     */
+    public void setBoardStateTo(Turn turnToDisplay) {
+        gameBoard = emptyGameBoard;
+        for (Turn turn : turns) {
+            for (Tile tile : turn.getPlacedTiles())
+                gameBoard[tile.getX() - 1][tile.getY() - 1].setTile(tile);
+            if(turn.equals(turnToDisplay)) {
                 break;
-            else {
-                for (Tile tile : turn.getPlacedTiles()
-                        ) {
-                    changeableGameBoard[tile.getX()-1][tile.getY()-1].setTile(tile);
-                }
             }
+        }
     }
 
-    public ArrayList<Tile> getPlacedTiles(){
-        ArrayList<Tile> tiles = new ArrayList<>();
-        turns.stream().filter(turn -> turn.getPlacedTiles() != null).forEach(turn -> {
-            tiles.addAll(turn.getPlacedTiles());
-        });
-        return tiles;
+    /**
+     * fetches all the tiles placed in all the completed turns
+     * @return the (cached) tiles
+     */
+    public ArrayList<Tile> getPlacedTiles() {
+        if(allTilesCache != null)
+            return allTilesCache;
+        turns.stream()
+                .filter(turn -> turn.getPlacedTiles() != null)
+                .forEach(turn -> allTilesCache.addAll(turn.getPlacedTiles()));
+        return allTilesCache;
     }
 
-    //Check if a field already has a tile
+    /**
+     * placed a tile on a field
+     * @param tile tile to place
+     * @param field field to place the tile in
+     * @return false if the field already has a tile
+     */
     public boolean placeTile(Tile tile,Field field){
         if (field.getTile()==null){
             field.setTile(tile);
+            fieldsChangedThisTurn.add(field);
             return true;
         }
         return false;
     }
 
-    private void getTilesPlacedThisTurn(){
-        fieldsChangedThisTurn = new ArrayList<>();
-        for (int i = 0; i < changeableGameBoard.length; i++) {
-            for (int j = 0; j < changeableGameBoard.length; j++) {
-                if (!getPlacedTiles().contains(changeableGameBoard[i][j].getTile()) && changeableGameBoard[i][j].getTile()!= null){
-                    fieldsChangedThisTurn.add(changeableGameBoard[i][j]);
-                }
-            }
-        }
-    }
+    /**
+     * check if the current state of the game is a valid turn
+     * @return validTurn
+     */
+    public boolean verifyCurrentTurn() {
 
-    public boolean verifyCurrentTurn(){
-        //check all the fields changed/Tiles placed this turn, see if their x or y values are the same, also check if tiles are connected
-        //yes --> currentTurn is still valid
+        boolean validTurn = true;
+        char fixedAxis;
 
-        boolean validTurn=true;
-        String direction; //0--HOR 1--VER
+        /* fetch first X and all X coords */
         int x = fieldsChangedThisTurn.get(0).getTile().getX();
-        int y= fieldsChangedThisTurn.get(0).getTile().getY();
-        if (Collections.frequency(fieldsChangedThisTurn,x)!=fieldsChangedThisTurn.size()){ //Checks if all X-values are NOT the same for each placed letter
-            if ( Collections.frequency(fieldsChangedThisTurn,y)!=fieldsChangedThisTurn.size()) { //Checks if all Y-values are NOT the same for each placed letter
-                validTurn = false;
-            }
-            direction="x";
-        } else {
-            direction ="y";
-        }
-
-        fieldsChangedThisTurn.sort(Comparator.comparing(field -> field.getTile().getX()));
-
-        ArrayList<Integer> xValues=fieldsChangedThisTurn.stream()
+        ArrayList<Integer> xValues = fieldsChangedThisTurn.stream()
                 .map(field -> field.getTile().getX())
                 .collect(Collectors.toCollection(ArrayList<Integer>::new));
 
+        /* fetch first Y and All X coords */
+        int y = fieldsChangedThisTurn.get(0).getTile().getY();
         ArrayList<Integer> yValues = fieldsChangedThisTurn.stream()
                 .map(field -> field.getTile().getY())
                 .collect(Collectors.toCollection(ArrayList<Integer>::new));
 
-        if (direction.equalsIgnoreCase("x")) {
-            for (x = Collections.min(xValues); x <= Collections.max(xValues); x++) {
-                if (changeableGameBoard[x][y].getTile() == null && !xValues.contains(x))
-                    validTurn = false;
+        /* check if placed on single axis, if not -> invalidate turn */
+        if (Collections.frequency(xValues, x) != xValues.size()) {
+            if (Collections.frequency(yValues, y) != yValues.size())
+                validTurn = false;  // Y and X are not equal for all tiles
 
-            }
+            fixedAxis = 'y';        // Y is equal for all tiles
+        } else
+            fixedAxis = 'x';        // X is equal for all tiles
+
+        /* check if there are gaps between placed letters */
+        if (fixedAxis == 'y') {
+            // check if all X coords are not null
+            for (x = Collections.min(xValues); x <= Collections.max(xValues); x++)
+                if (gameBoard[x][y].getTile() == null && !xValues.contains(x))
+                    validTurn = false;
         } else {
-            for (y = Collections.min(yValues); y <= Collections.max(yValues); y++) {
-                x = fieldsChangedThisTurn.get(0).getTile().getY();
-                if (changeableGameBoard[x][y].getTile() == null && !xValues.contains(y))
+            // check if all Y coords are not null
+            for (y = Collections.min(yValues); y <= Collections.max(yValues); y++)
+                if (gameBoard[x][y].getTile() == null && !xValues.contains(y))
                     validTurn = false;
-
-            }
         }
+
         return validTurn;
     }
-
 
     //TODO:
     public int calculateWordScore(Field field){
         int wordScore=0;
         //Ask which words can be made with the addition of the recently placed tile
-        
+
         //HORIZONTAL CHECK --RIGHT
-        for (int x=field.getTile().getX()-1; x <changeableGameBoard.length ; x++) {
-            for (int y =field.getTile().getY()-1; y <changeableGameBoard.length ; y++) {
+        for (int x = field.getTile().getX()-1; x < gameBoard.length ; x++) {
+            for (int y = field.getTile().getY()-1; y < gameBoard.length ; y++) {
 
             }
         }
@@ -190,15 +195,13 @@ public class Game {
         //VERTICAL CHECK --UP
 
         //VERTICAL CHECK --DOWN
-        
+
         //for each word that can be made, calculate the score of that word
         //Add the score to the wordScore
 
 
         return wordScore;
     }
-
-
 
     @Override
     public String toString() {
