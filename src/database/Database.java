@@ -1,10 +1,12 @@
 package database;
 
-import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.sun.jmx.snmp.daemon.CommunicationException;
 
 public class Database {
 
@@ -41,7 +43,7 @@ public class Database {
         try {
             System.out.println(e.getMessage() + "\nquery: " + statement.toString().split(":")[1]);
         } catch (Exception e1) {
-            if(e instanceof CommunicationsException) System.err.println("no connection to database!");
+            if(e instanceof CommunicationException) System.err.println("no connection to database!");
         }
     }
 
