@@ -19,6 +19,10 @@ public class CompetitionController {
 		currentUser = user;
 	}
 	
+	public User getCurrentUser(){
+		return currentUser;
+	}
+	
 	public ArrayList<Competition> getCompetitions(){
 		if(currentUser != null){
 			return competitions;

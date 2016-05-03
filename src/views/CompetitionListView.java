@@ -39,7 +39,7 @@ public class CompetitionListView extends View implements Initializable{
 	}
 	
 	public void createCompetition(){
-		
+		// create competition if player doesn't have one already
 	}
 	
 
