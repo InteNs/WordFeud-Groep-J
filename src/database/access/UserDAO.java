@@ -29,4 +29,15 @@ public class UserDAO extends DAO {
         else
             return null;
     }
+
+    public static User selectUser(String username) {
+        if (database.count(SQL.COUNT.USERCOUNT, username) > 0)
+            return new User(username);
+        else
+            return null;
+    }
+
+    public static boolean insertUser(String username, String password) {
+        return database.insert(SQL.INSERT.INSERTUSER, username, password);
+    }
 }

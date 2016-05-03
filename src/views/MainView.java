@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
 public class MainView implements Initializable {
     @FXML private VBox loginView;
     @FXML private VBox welcomeView;
-
+    @FXML private VBox registerView;
 
     @FXML private TabPane control;
     @FXML private SplitPane mainContent;
@@ -28,6 +28,7 @@ public class MainView implements Initializable {
     @FXML private GameListView gameListViewController;
     @FXML private LoginView    loginViewController;   //1st child of Stackpane
     @FXML private WelcomeView  welcomeViewController; //2nd child of Stackpane
+    @FXML private RegisterView  registerViewController; //3th child of Stackpane
 
     private int controlIndex;
     private double dividerPos;
@@ -45,6 +46,8 @@ public class MainView implements Initializable {
         loginViewController.setParent(this);
         welcomeViewController.setParent(this);
         gameListViewController.setParent(this);
+        registerViewController.setParent(this);
+        setContent(loginView);
     }
 
     public void login(User user) {
@@ -52,6 +55,14 @@ public class MainView implements Initializable {
         setControl(true);
         setContent(welcomeView);
         refresh();
+    }
+
+    public void register (){
+    	setContent(registerView);
+    }
+
+    public void toLoginView (){
+    	setContent(loginView);
     }
 
     @FXML

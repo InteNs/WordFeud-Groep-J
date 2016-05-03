@@ -22,8 +22,29 @@ public class UserController {
         return users;
     }
 
+    public boolean userExists(String username) {
+        return selectUser(username) != null;
+    }
+
+	public User selectUser(String username) {
+		return UserDAO.selectUser(username);
+	}
+
+	public boolean insertUser(String username, String password) {
+		return UserDAO.insertUser(username, password);
+	}
+
+    public boolean isValidUsername(String username) {
+        return username.length() >= 5 & username.length() <= 25
+                && username.matches("[a-zA-Z0-9]+");
+    }
+
+    public boolean isValidPassword(String password) {
+        return password.length() >= 5 && password.length() <= 25;
+    }
+
     public User getCurrentUser() {
         return currentUser;
     }
-    
+
 }
