@@ -19,12 +19,12 @@ public class MainView implements Initializable {
     @FXML private VBox loginView;
     @FXML private VBox welcomeView;
     @FXML private VBox registerView;
-    
+
     @FXML private TabPane control;
     @FXML private SplitPane mainContent;
     @FXML private StackPane content;
 
-
+    @FXML private UserListView userListViewController;
     @FXML private GameListView gameListViewController;
     @FXML private LoginView    loginViewController;   //1st child of Stackpane
     @FXML private WelcomeView  welcomeViewController; //2nd child of Stackpane
@@ -49,11 +49,6 @@ public class MainView implements Initializable {
         registerViewController.setParent(this);
         setContent(loginView);
     }
-    
-    @FXML
-    public void switchLayout() {
-        Collections.swap(mainContent.getItems(), 0, 1);
-    }
 
     public void login(User user) {
         currentUser = user;
@@ -61,11 +56,11 @@ public class MainView implements Initializable {
         setContent(welcomeView);
         refresh();
     }
-    
+
     public void register (){
     	setContent(registerView);
     }
-    
+
     public void toLoginView (){
     	setContent(loginView);
     }
@@ -74,6 +69,7 @@ public class MainView implements Initializable {
     public void refresh() {
         gameListViewController.refresh();
         welcomeViewController.refresh();
+        userListViewController.refresh();
     }
 
     @FXML

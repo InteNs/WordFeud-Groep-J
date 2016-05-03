@@ -75,7 +75,6 @@ public class RegisterView extends View implements Initializable {
 		usernameReq.setTextFill(Color.web("#ff0000"));
 		invalidUserLabel.setText("gebruikernaam voldoet niet aan de eisen");
 		invalidUserLabel.setVisible(true);
-		System.out.println("lengte");
 		return false;
 
 	}
