@@ -30,6 +30,9 @@ public class Turn {
     }
 
     public ArrayList<Tile> getPlacedTiles() {
+        if (placedTiles==null)
+            return new ArrayList<Tile>();
+
         return placedTiles;
     }
 

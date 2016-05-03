@@ -81,18 +81,18 @@ public class Game {
      */
     public void setBoard(Field[][] fields) {
         this.emptyGameBoard = fields;
-        gameBoard = emptyGameBoard;
+        gameBoard = emptyGameBoard.clone();
     }
 
     /**
-     * set the board to a speficic turn that has already completed
+     * set the board to a specific turn that has already completed
      * @param turnToDisplay the last turn to be added to the board
      */
     public void setBoardStateTo(Turn turnToDisplay) {
         gameBoard = emptyGameBoard;
         for (Turn turn : turns) {
             for (Tile tile : turn.getPlacedTiles())
-                gameBoard[tile.getX() - 1][tile.getY() - 1].setTile(tile);
+                gameBoard[tile.getY()][tile.getX()].setTile(tile);
             if(turn.equals(turnToDisplay)) {
                 break;
             }
@@ -106,6 +106,7 @@ public class Game {
     public ArrayList<Tile> getPlacedTiles() {
         if(allTilesCache != null)
             return allTilesCache;
+        allTilesCache = new ArrayList<Tile>();
         turns.stream()
                 .filter(turn -> turn.getPlacedTiles() != null)
                 .forEach(turn -> allTilesCache.addAll(turn.getPlacedTiles()));
@@ -175,33 +176,24 @@ public class Game {
 
     //TODO:
     public int calculateWordScore(Field field){
-        int wordScore=0;
-        //Ask which words can be made with the addition of the recently placed tile
-
-        //HORIZONTAL CHECK --RIGHT
-        for (int x = field.getTile().getX()-1; x < gameBoard.length ; x++) {
-            for (int y = field.getTile().getY()-1; y < gameBoard.length ; y++) {
-
-            }
-        }
-
-        //HORIZONTAL CHECK --LEFT
-        for (int x=field.getTile().getX()-1; x >=0; x--) {
-            for (int y =field.getTile().getY()-1; y >0 ; y--) {
-
-            }
-        }
-
-        //VERTICAL CHECK --UP
-
-        //VERTICAL CHECK --DOWN
-
-        //for each word that can be made, calculate the score of that word
-        //Add the score to the wordScore
-
-
-        return wordScore;
+        return 5;
     }
+
+    public boolean checkRow() {
+        String rowStr = null;
+        for (Field[] aGameBoard : gameBoard) {
+            rowStr = Arrays.toString(aGameBoard);
+            System.out.println(rowStr);
+        }
+        return false;
+    }
+
+    //TODO: This method receives a row/column from the GameBoard. It then checks if there are any words that can be made.
+    //TODO: If words can be made, crosschecks with the words in the WordsList of the Game class --> new Word found? --> add word to the WordList and calculate score.
+    private ArrayList<String> getWords(String word){
+    return null;
+    }
+
 
     @Override
     public String toString() {

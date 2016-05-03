@@ -22,4 +22,12 @@ public class Field {
     public void setTile(Tile tile) {
         this.tile = tile;
     }
+
+    @Override
+    public String toString() {
+       if (tile==null)
+           return "-";
+        else
+           return tile.toString();
+    }
 }

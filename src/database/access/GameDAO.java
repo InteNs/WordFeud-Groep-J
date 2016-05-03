@@ -90,8 +90,8 @@ public class GameDAO extends DAO {
         for (int i = 0; i < sC.length; i++) {
             tiles.add(new Tile(
                     sC[i].charAt(0),
-                    Integer.parseInt(sX[i]),
-                    Integer.parseInt(sY[i])
+                    Integer.parseInt(sX[i])-1,
+                    Integer.parseInt(sY[i])-1
             ));
         }
         return tiles;
@@ -123,7 +123,7 @@ public class GameDAO extends DAO {
             while (records.next()){
                 int x=records.getInt("x")-1;
                 int y = records.getInt("y")-1;
-                fields[x][y] = new Field(FieldType.fieldTypeFor(records.getString("tegeltype_soort")));
+                fields[y][x] = new Field(FieldType.fieldTypeFor(records.getString("tegeltype_soort")));
             }
         } catch (SQLException e) {
             printError(e);

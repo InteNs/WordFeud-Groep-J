@@ -1,6 +1,7 @@
 package controllers;
 
 import database.access.GameDAO;
+import enumerations.BoardType;
 import enumerations.GameState;
 import models.Game;
 import models.User;
@@ -49,7 +50,9 @@ public class GameController {
     public void loadGame(Game game) {
         game.setMessages(GameDAO.selectMessages(game));
         game.setTurns(GameDAO.selectTurns(game));
-        game.getTurns().forEach(System.out::println);
+        game.setBoard(GameDAO.selectFieldsForBoard(BoardType.STANDARD));
+//        game.setBoardStateTo(game.getTurns().get(game.getTurns().size()-1));
+//        game.checkRow();
     }
 
     public void loadGameBoard(Game game){
