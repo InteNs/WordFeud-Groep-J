@@ -18,8 +18,12 @@ public class UserController {
         currentUser = UserDAO.selectUser(userName, passWord);
         return currentUser != null;
     }
+    public ArrayList<User> getUsers(){
+        return users;
+    }
 
     public User getCurrentUser() {
         return currentUser;
     }
+    
 }
