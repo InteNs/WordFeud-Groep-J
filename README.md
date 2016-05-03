@@ -36,12 +36,24 @@ Doe tussen de stappen veel controle of alles goed gaat:
 git l               //lijst van commits
 git s               //lijst van bestanden
 ```
+```bash
+//zonder alias:
+git status
+```
+
+
+
 Voor problemen en vragen naar Cedric of Mark.
 
 1. ga naar master en haal de nieuwste versie op
 
    ```bash
    git co master
+   git pull
+   ```
+   ```bash
+   //zonder alias:
+   git checkout master
    git pull
    ```
 
@@ -57,19 +69,30 @@ Voor problemen en vragen naar Cedric of Mark.
 4. zet al je bestanden klaar voor de commit
 
    ```bash
-   git add <file-or-folder-name>
+   git add <file-or-folder-name> //om alleen een bepaald mapje of bestand te adden
+   git add .                     //om ALLES te adden(kan rommel meebrengen)
    ```
 
-5. maak een nieuwe branch aan voor de commit
+5. maak een nieuwe branch aan voor de commit ( verzin zelf een mooie branch naam)
 
    ```bash
    git cn name-of-branch
    ```
+   ```bash
+   //zonder alias:
+   git checkout -b name-of-branch
+   ```
 
-6. maak de commit
+   ​
+
+6. maak de commit ( verzin zelf een mooie commit message)
 
    ```bash
    git c "dit verandert er met deze commit"
+   ```
+   ```bash
+   //zonder alias:
+   git commit -m "dit verandert er met deze commit"
    ```
 
 7. push je commit naar de repository

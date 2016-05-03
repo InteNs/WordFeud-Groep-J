@@ -7,31 +7,31 @@ import java.util.ArrayList;
 
 public class UserController {
 
-    private User currentUser;
-    private ArrayList<User> users;
+	private User currentUser;
+	private ArrayList<User> users;
 
-    public UserController() {
-        users = UserDAO.selectUsers();
-    }
+	public UserController() {
+		users = UserDAO.selectUsers();
+	}
 
-    public boolean login(String userName, String passWord) {
-        currentUser = UserDAO.selectUser(userName, passWord);
-        return currentUser != null;
-    }
-    
-    public boolean userExists (String username){
-		 if(UserDAO.userExists(username)){   	
-			 return true;
-		 }    	
-    	return false;    	
-    }
-    
-    public void addUser (String username, String password){
-    	UserDAO.addUser(username, password);
-    }
-    
+	public boolean login(String userName, String passWord) {
+		currentUser = UserDAO.selectUser(userName, passWord);
+		return currentUser != null;
+	}
 
-    public User getCurrentUser() {
-        return currentUser;
-    }
+	public boolean selectUser(String username) {
+		if (UserDAO.selectUser(username)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public void insertUser(String username, String password) {
+		UserDAO.insertUser(username, password);
+	}
+
+	public User getCurrentUser() {
+		return currentUser;
+	}
 }

@@ -30,16 +30,17 @@ public class UserDAO extends DAO {
             return null;
     }
     
-    public static boolean userExists (String username){
+    public static boolean selectUser (String username){
+    	
     	if (database.count(SQL.COUNT.USERCOUNT, username) > 0){
     		return true;
-    	} else {    		
+    	} else {    		  		
     		return false;
     	}
     }
     
-    public static void addUser (String username, String password){
-    	database.insert(SQL.INSERT.ADDUSER, username, password);
+    public static void insertUser (String username, String password){
+    	database.insert(SQL.INSERT.INSERTUSER, username, password);
     }
     
 }

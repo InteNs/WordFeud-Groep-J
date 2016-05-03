@@ -19,6 +19,6 @@ public class SQL {
     }
     
     public class INSERT {
-    	public static final String ADDUSER = "INSERT INTO account (naam, wachtwoord) VALUES (?, ?)";
+    	public static final String INSERTUSER = "INSERT INTO account (naam, wachtwoord) VALUES (?, ?)";
     }
 }
