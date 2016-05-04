@@ -1,13 +1,15 @@
 package models;
+import database.access.UserDAO;
 
+import java.util.ArrayList;
 
 public class User {
 
     private String name;
 
+
     public User(String name) {
         this.name = name;
-
     }
 
     public String getName() {
@@ -27,4 +29,7 @@ public class User {
         return getName();
     }
 
+    public static ArrayList getAllUsers() {
+        return UserDAO.selectUsers();
+    }
 }

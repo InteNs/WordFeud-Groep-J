@@ -16,5 +16,10 @@ public class SQL {
 
     public class COUNT {
         public static final String USERSWITHCREDS =  "SELECT count(naam) FROM account WHERE naam = ? AND wachtwoord = ?";
+        public static final String USERCOUNT 	  =  "SELECT count(naam) FROM account WHERE naam = ?";
+    }
+    
+    public class INSERT {
+    	public static final String INSERTUSER = "INSERT INTO account (naam, wachtwoord) VALUES (?, ?)";
     }
 }

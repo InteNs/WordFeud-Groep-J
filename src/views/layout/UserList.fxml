@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.UserListView">
+   <children>
+      <TextField fx:id="filterField" promptText="Filter">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </TextField>
+      <Label text="Gebruikers">
+         <VBox.margin>
+            <Insets left="5.0" top="10.0" />
+         </VBox.margin>
+      </Label>
+      <ListView fx:id="userList" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
+   </children>
+</VBox>
