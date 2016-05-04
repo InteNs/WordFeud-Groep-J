@@ -69,4 +69,5 @@ public class GameDAO extends DAO {
         database.close();
         return letters;
     }
+    
 }

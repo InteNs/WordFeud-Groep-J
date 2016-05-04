@@ -9,8 +9,9 @@ public class SQL {
     }
 
     public class ALL {
-        public static final String USERS = "SELECT * FROM account;";
-        public static final String GAMES = "SELECT * FROM spel;";
+        public static final String USERS 		= "SELECT * FROM account;";
+        public static final String GAMES 		= "SELECT * FROM spel;";
+        public static final String COMPETITIONS = "Select * FROM competitie";
     }
 
     public class COUNT {

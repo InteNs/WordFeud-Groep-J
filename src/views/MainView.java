@@ -26,6 +26,7 @@ public class MainView implements Initializable {
 
     @FXML private UserListView userListViewController;
     @FXML private GameListView gameListViewController;
+    @FXML private CompetitionListView competitionListViewController;
     @FXML private LoginView    loginViewController;   //1st child of Stackpane
     @FXML private WelcomeView  welcomeViewController; //2nd child of Stackpane
     @FXML private RegisterView  registerViewController; //3th child of Stackpane
@@ -47,6 +48,7 @@ public class MainView implements Initializable {
         welcomeViewController.setParent(this);
         gameListViewController.setParent(this);
         registerViewController.setParent(this);
+        competitionListViewController.setParent(this);
         setContent(loginView);
     }
 
@@ -70,6 +72,7 @@ public class MainView implements Initializable {
         gameListViewController.refresh();
         welcomeViewController.refresh();
         userListViewController.refresh();
+        competitionListViewController.refresh();
     }
 
     @FXML
