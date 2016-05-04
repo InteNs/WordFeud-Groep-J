@@ -51,7 +51,7 @@ public class CompetitionListView extends View implements Initializable{
         competitionList.getItems().clear();
         //add an item if any item that exists contains any value that has been searched for
         competitionController.getCompetitions().stream()
-               	.filter(entry -> entry.getName().contains(newVal))
+             	.filter(entry -> entry.getName().contains(newVal))
                 .forEach(entry -> competitionList.getItems().add(entry));
     }
 	

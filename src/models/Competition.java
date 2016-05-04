@@ -27,6 +27,10 @@ public class Competition {
 		return players.size();
 	}
 
+	public String getName(){
+		return competitionName;
+	}
+
 	
 	
 	
