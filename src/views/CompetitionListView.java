@@ -4,7 +4,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import controllers.CompetitionController;
+import controllers.UserController;
 import enumerations.GameState;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Accordion;
@@ -27,7 +29,9 @@ public class CompetitionListView extends View implements Initializable{
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		competitionController = new CompetitionController();
-		
+		filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            search(oldValue, newValue);
+        });
 	}
 
 	@Override
@@ -37,6 +41,19 @@ public class CompetitionListView extends View implements Initializable{
 	      competitionController.refresh(); // touches database
 	      competitionList.getItems().setAll(competitionController.getCompetitions());
 	}
+	
+    private void search(String oldVal, String newVal) {
+        if (oldVal != null && (newVal.length() < oldVal.length())) {
+            //actor has deleted a character, so reset the search
+            competitionList.getItems().clear();
+            competitionList.getItems().addAll(competitionController.getCompetitions());
+        }
+        competitionList.getItems().clear();
+        //add an item if any item that exists contains any value that has been searched for
+        competitionController.getCompetitions().stream()
+                .filter(entry -> entry.getName().contains(newVal))
+                .forEach(entry -> competitionList.getItems().add(entry));
+    }
 	
 	public void createCompetition(){
 		// create competition if player doesn't have one already

@@ -2,6 +2,9 @@ package models;
 
 import java.util.ArrayList;
 
+import javafx.scene.Node;
+import sun.security.action.GetBooleanAction;
+
 public class Competition {
 
 	private int ID;
@@ -23,6 +26,8 @@ public class Competition {
 	public int getAmountOfPlayers(){
 		return players.size();
 	}
+
+	
 	
 	
 	
