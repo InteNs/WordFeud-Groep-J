@@ -190,6 +190,8 @@ public class Game {
 
     //TODO: This method receives a row/column from the GameBoard. It then checks if there are any words that can be made.
     //TODO: If words can be made, crosschecks with the words in the WordsList of the Game class --> new Word found? --> add word to the WordList and calculate score.
+    //TODO: similar to making a string from the row, we also(or instead) need a Field arraylist so we can calculate score using fieldType and letterValue,
+    //TODO: off course we already have the field array, we use it to make the string
     private ArrayList<String> getWords(String word){
     return null;
     }
