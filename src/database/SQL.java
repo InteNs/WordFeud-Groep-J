@@ -1,8 +1,6 @@
 package database;
 //language=MySQL
 
-import javax.print.DocFlavor;
-
 public class SQL {
     public class SELECT {
         public static final String GAMESFORUSER = "SELECT * FROM spel WHERE account_naam_tegenstander = ? OR account_naam_uitdager = ?;";
