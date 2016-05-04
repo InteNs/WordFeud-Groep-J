@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.UserInfoView">
+   <children>
+      <CheckBox layoutX="371.0" layoutY="305.0" mnemonicParsing="false" text="Speler" />
+      <CheckBox layoutX="467.0" layoutY="330.0" mnemonicParsing="false" text="Observer" />
+      <CheckBox layoutX="467.0" layoutY="305.0" mnemonicParsing="false" text="Administrator" />
+      <CheckBox layoutX="371.0" layoutY="330.0" mnemonicParsing="false" text="Moderator" />
+      <Label fx:id="userNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="205.0" layoutY="40.0" prefHeight="17.0" prefWidth="191.0" text="Gebruikersnaam" textAlignment="RIGHT">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <Label layoutX="74.0" layoutY="76.0" text="Competities">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Label>
+      <ListView fx:id="myCompetitions" layoutX="40.0" layoutY="124.0" prefHeight="200.0" prefWidth="200.0" />
+      <Label layoutX="425.0" layoutY="247.0" text="Rollen">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="352.0" layoutY="76.0" text="Gemiddelde score">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Label>
+      <LineChart layoutX="310.0" layoutY="110.0" prefHeight="104.0" prefWidth="268.0">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </LineChart>
+      <Button layoutX="40.0" layoutY="339.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" text="Button" />
+   </children>
+</Pane>

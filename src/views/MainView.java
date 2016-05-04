@@ -19,6 +19,7 @@ public class MainView implements Initializable {
     @FXML private VBox loginView;
     @FXML private VBox welcomeView;
     @FXML private VBox registerView;
+    @FXML private Pane userInfoView;
 
     @FXML private TabPane control;
     @FXML private SplitPane mainContent;
@@ -30,6 +31,7 @@ public class MainView implements Initializable {
     @FXML private LoginView    loginViewController;   //1st child of Stackpane
     @FXML private WelcomeView  welcomeViewController; //2nd child of Stackpane
     @FXML private RegisterView  registerViewController; //3th child of Stackpane
+    @FXML private UserInfoView userInfoViewController;
 
     private int controlIndex;
     private double dividerPos;
@@ -49,6 +51,8 @@ public class MainView implements Initializable {
         gameListViewController.setParent(this);
         registerViewController.setParent(this);
         competitionListViewController.setParent(this);
+        userInfoViewController.setParent(this);
+        userListViewController.setParent(this);
         setContent(loginView);
     }
 
@@ -59,12 +63,17 @@ public class MainView implements Initializable {
         refresh();
     }
 
-    public void register (){
-    	setContent(registerView);
+    public void register() {
+        setContent(registerView);
     }
 
     public void toLoginView (){
     	setContent(loginView);
+    }
+
+    public void showUserInfo(User user){
+        userInfoViewController.setUser(user);
+        setContent(userInfoView);
     }
 
     @FXML

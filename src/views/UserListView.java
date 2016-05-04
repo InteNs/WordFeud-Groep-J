@@ -28,6 +28,9 @@ public class UserListView extends View implements Initializable {
         filterField.textProperty().addListener((observable, oldValue, newValue) -> {
             search(oldValue, newValue);
         });
+        userList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            parent.showUserInfo(observable.getValue());
+        });
     }
     public void refresh(){
         userList.setItems(FXCollections.observableArrayList(userController.getUsers()));
@@ -44,7 +47,6 @@ public class UserListView extends View implements Initializable {
                 .filter(entry -> entry.getName().contains(newVal))
                 .forEach(entry -> userList.getItems().add(entry));
     }
-
 }
 
 

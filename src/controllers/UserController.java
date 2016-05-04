@@ -47,4 +47,8 @@ public class UserController {
         return currentUser;
     }
 
+    public ArrayList<String> getComps(User user){
+       return UserDAO.getUserComps(user.toString());
+    }
+
 }
