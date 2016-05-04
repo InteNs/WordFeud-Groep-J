@@ -1,22 +1,15 @@
 package views;
 
-import controllers.UserController;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-
 import javafx.scene.paint.Color;
-import java.net.URL;
-import java.util.ResourceBundle;
 
-public class RegisterView extends View implements Initializable {
+public class RegisterView extends View{
 
 	@FXML
 	private TextField userNameField;
-	@FXML
-	private UserController userController;
 	@FXML
 	private PasswordField userPassField1;
 	@FXML
@@ -28,16 +21,13 @@ public class RegisterView extends View implements Initializable {
 	@FXML
 	private Label passwordReq;
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		userController = new UserController();
-	}
+    @Override
+    public void refresh() {
+    }
 
-	@Override
-	public void refresh() {
-		// TODO Auto-generated method stub
-
-	}
+    @Override
+    public void constructor() {
+    }
 
 	@FXML
 	public void register() {

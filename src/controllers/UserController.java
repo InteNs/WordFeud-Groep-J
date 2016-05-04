@@ -5,9 +5,7 @@ import models.User;
 
 import java.util.ArrayList;
 
-public class UserController {
-
-    private User currentUser;
+public class UserController extends Controller {
     private ArrayList<User> users;
 
     public UserController() {
@@ -18,6 +16,7 @@ public class UserController {
         currentUser = UserDAO.selectUser(userName, passWord);
         return currentUser != null;
     }
+
     public ArrayList<User> getUsers(){
         return users;
     }
@@ -43,8 +42,7 @@ public class UserController {
         return password.length() >= 5 && password.length() <= 25;
     }
 
-    public User getCurrentUser() {
-        return currentUser;
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
-
 }

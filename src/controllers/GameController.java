@@ -3,21 +3,16 @@ package controllers;
 import database.access.GameDAO;
 import enumerations.GameState;
 import models.Game;
-import models.User;
+
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class GameController {
+public class GameController extends Controller {
 
     private ArrayList<Game> games;
-    private User currentUser;
 
     public GameController() {
         this.games = GameDAO.selectGames();
-    }
-
-    public void setCurrentUser(User user) {
-        this.currentUser = user;
     }
 
     public ArrayList<Game> getGames() {
