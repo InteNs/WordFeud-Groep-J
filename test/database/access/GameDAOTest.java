@@ -20,10 +20,10 @@ public class GameDAOTest {
                 new Character('A'));
         assertEquals("second tile should have x 1",
                 tiles.get(1).getX(),
-                1);
+                0);
         assertEquals("third tile should have y 12",
                 tiles.get(2).getY(),
-                12);
+                11);
     }
 
     @Test
