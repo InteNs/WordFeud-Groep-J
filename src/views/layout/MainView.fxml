@@ -20,7 +20,7 @@
                 <fx:include fx:id="gameListView" source="GameListView.fxml" />
             </Tab>
             <Tab onSelectionChanged="#refresh" text="Competities">
-            	<fx:include fx:id="CompetitionListView" source="CompetitionListView.fxml" />
+            	<fx:include fx:id="competitionListView" source="CompetitionListView.fxml" />
             </Tab>
         </TabPane>
         <VBox minHeight="600.0" minWidth="600.0" SplitPane.resizableWithParent="false">
