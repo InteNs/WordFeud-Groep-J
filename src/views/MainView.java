@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 public class MainView implements Initializable {
     @FXML private VBox loginView;
     @FXML private VBox welcomeView;
-
+    @FXML private VBox competionListView;
 
     @FXML private TabPane control;
     @FXML private SplitPane mainContent;
@@ -23,6 +23,7 @@ public class MainView implements Initializable {
 
 
     @FXML private GameListView gameListViewController;
+    @FXML private CompetitionListView competitionListViewController;
     @FXML private LoginView    loginViewController;   //1st child of Stackpane
     @FXML private WelcomeView  welcomeViewController; //2nd child of Stackpane
 
@@ -38,6 +39,7 @@ public class MainView implements Initializable {
         loginViewController.setParent(this);
         welcomeViewController.setParent(this);
         gameListViewController.setParent(this);
+      //  competitionListViewController.setParent(this);
     }
 
     @FXML
@@ -69,5 +71,6 @@ public class MainView implements Initializable {
     public void refresh() {
         gameListViewController.refresh();
         welcomeViewController.refresh();
+        competitionListViewController.refresh();
     }
 }

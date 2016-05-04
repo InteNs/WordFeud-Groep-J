@@ -19,6 +19,9 @@
             <Tab onSelectionChanged="#refresh" text="Games">
                 <fx:include fx:id="gameListView" source="GameListView.fxml" />
             </Tab>
+            <Tab onSelectionChanged="#refresh" text="Competities">
+            	<fx:include fx:id="CompetitionListView" source="CompetitionListView.fxml" />
+            </Tab>
         </TabPane>
         <VBox minHeight="600.0" minWidth="600.0" SplitPane.resizableWithParent="false">
             <HBox alignment="CENTER_LEFT" minHeight="28.0" styleClass="tab-aligned" />
