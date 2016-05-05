@@ -196,6 +196,9 @@ public class Game {
     return null;
     }
 
+    public Field[][] getGameBoard() {
+        return gameBoard;
+    }
 
     @Override
     public String toString() {

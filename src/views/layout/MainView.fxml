@@ -30,6 +30,7 @@
                     <fx:include fx:id="loginView" source="LoginView.fxml" />
                     <fx:include fx:id="welcomeView" source="WelcomeView.fxml" />
                     <fx:include fx:id="registerView" source="RegisterView.fxml" />
+                    <fx:include fx:id="gameBoardView" source="GameBoard.fxml"/>
                   </children>
             </StackPane>
         </VBox>
