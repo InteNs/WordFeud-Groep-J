@@ -1,87 +1,105 @@
 package views;
 
+import controllers.CompetitionController;
+import controllers.GameController;
+import controllers.UserController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.*;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import models.User;
 
 import java.net.URL;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
-public class MainView implements Initializable {
+public class MainView extends View implements Initializable {
+    /*declare your view here if you need it*/
     @FXML private VBox loginView;
     @FXML private VBox welcomeView;
     @FXML private VBox registerView;
     @FXML private Pane userInfoView;
 
+    @FXML private ProgressIndicator loadIndicator;
+    @FXML private ToolBar toolBar;
     @FXML private TabPane control;
     @FXML private SplitPane mainContent;
     @FXML private StackPane content;
 
+    /*Declare your viewControllers here*/
     @FXML private UserListView userListViewController;
     @FXML private GameListView gameListViewController;
     @FXML private CompetitionListView competitionListViewController;
-    @FXML private LoginView    loginViewController;   //1st child of Stackpane
-    @FXML private WelcomeView  welcomeViewController; //2nd child of Stackpane
-    @FXML private RegisterView  registerViewController; //3th child of Stackpane
-    @FXML private UserInfoView userInfoViewController;
-
+    @FXML private LoginView    loginViewController;
+    @FXML private WelcomeView  welcomeViewController;
+    @FXML private RegisterView  registerViewController;
+    @FXML private UserInfoView  userInfoViewController;
     private int controlIndex;
     private double dividerPos;
-
-    //some sort of session placeholder
-    private User currentUser;
-
-    public User getCurrentUser() {
-        return currentUser;
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setControl(false);
-        loginViewController.setParent(this);
-        welcomeViewController.setParent(this);
-        gameListViewController.setParent(this);
-        registerViewController.setParent(this);
-        competitionListViewController.setParent(this);
-        userInfoViewController.setParent(this);
-        userListViewController.setParent(this);
         setContent(loginView);
+
+        /*
+        instantiate your new domainControllers here
+        they are declared in the View class
+        */
+        userController = new UserController();
+        competitionController = new CompetitionController();
+        gameController = new GameController();
+
+        /*
+        Put your viewController in this list for it
+        get access to parent, and have it's constructor called
+        */
+        Arrays.asList(
+                userListViewController,
+                gameListViewController,
+                competitionListViewController,
+                loginViewController,
+                welcomeViewController,
+                registerViewController,
+                userListViewController
+        ).forEach(view -> view.init(this));
     }
 
-    public void login(User user) {
-        currentUser = user;
-        setControl(true);
+    public void login() {
         setContent(welcomeView);
-        refresh();
+        setControl(true);
+        toolBar.setDisable(false);
     }
 
-    public void register() {
-        setContent(registerView);
+    public void showRegisterView(){
+    	setContent(registerView);
     }
 
-    public void toLoginView (){
+    public void showLoginView(){
     	setContent(loginView);
     }
 
-    public void showUserInfo(User user){
-        userInfoViewController.setUser(user);
+    public void showUserInfo(){
         setContent(userInfoView);
     }
 
     @FXML
     public void refresh() {
-        gameListViewController.refresh();
-        welcomeViewController.refresh();
-        userListViewController.refresh();
-        competitionListViewController.refresh();
+        /*
+        refresh your domain controller here
+        will be done by a seperate thread later
+        */
+        loadIndicator.setVisible(true);
+
+        userController.refresh();
+        competitionController.refresh();
+        gameController.refresh();
+
+        loadIndicator.setVisible(false);
     }
 
     @FXML
@@ -90,16 +108,15 @@ public class MainView implements Initializable {
     }
 
     /**
-     * set the control (tabpane) visible or not (makes content fill window)
+     * set the control (tab pane) visible or not (makes content fill window)
      * @param visible whether the control tabs should be visible
      */
-
     public void setControl(Boolean visible) {
         if(visible){
             mainContent.getItems().add(controlIndex, control);
             mainContent.setDividerPositions(dividerPos);
         }
-        else {
+        else if(mainContent.getItems().contains(control)){
             controlIndex = mainContent.getItems().indexOf(control);
             dividerPos = mainContent.getDividerPositions()[0];
             mainContent.getItems().remove(control);
@@ -115,7 +132,12 @@ public class MainView implements Initializable {
 
         if(content.getChildren().contains(node))
             content.getChildren().get(content.getChildren().indexOf(node)).setVisible(true);
-        else
+        else if (node != null)
             content.getChildren().add(node);
+    }
+
+    @Override
+    public void constructor() {
+        //this will never be called in this view
     }
 }

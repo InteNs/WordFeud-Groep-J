@@ -14,33 +14,22 @@ import models.User;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class UserInfoView extends View implements Initializable {
-
-    @FXML private Label userNameLabel;
-    @FXML private TextField userNameField;
-    @FXML private PasswordField userPassField;
-    @FXML private ListView<String> myCompetitions;
-
-
-
-    private UserController userController;
-    private User user;
+public class UserInfoView extends View {
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-        userController = new UserController();
-
-    }
-    public void setUser(User user){
-        this.user = user;
-        userNameLabel.setText(user.toString());
-        getComps();
-    }
-    private void getComps(){
-        myCompetitions.setItems(FXCollections.observableArrayList(userController.getComps(user)));
-        //myCompetitions.getItems().setAll(userController.getMyComps(user.toString()));
+    public void constructor() {
+        userController.selectedUserProperty().addListener((observable, oldValue, newValue) ->
+                System.out.println("jaja"));
+       /* userController.selectedUserProperty().addListener((observable, oldValue, newValue) -> {
+            userNameLabel.setText(newValue.toString());
+            myCompetitions.setItems(FXCollections.observableArrayList(userController.getComps(newValue)));
+        });*/
 
     }
+
+    @FXML
+    private Label userNameLabel;
+    @FXML
+    private ListView<String> myCompetitions;
 
 
     @Override
