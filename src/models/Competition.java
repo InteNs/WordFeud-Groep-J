@@ -10,13 +10,32 @@ public class Competition {
 	private int ID;
 	private User owner;
 	private String competitionName;
+
+	public void setPlayers(ArrayList<User> players) {
+		this.players = players;
+	}
+
 	private ArrayList<User> players;
-	
-	public Competition(int ID, User owner, String competitionName){
+
+	public ArrayList<User> getPlayers() {
+		return players;
+	}
+
+	public boolean containsUser(User user){
+		for(User u : players){
+			if(u.equals(user)){
+				return true;
+			}
+		}
+		return  false;
+
+	}
+
+	public Competition(int ID, User owner, String competitionName,ArrayList<User> players){
 		this.ID 				= ID;
 		this.owner 				= owner;
 		this.competitionName 	= competitionName;
-		players					= new ArrayList<User>();
+		this.players			= players;
 	}
 	
 	public int getID(){

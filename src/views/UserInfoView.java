@@ -19,16 +19,14 @@ public class UserInfoView extends View {
     public void constructor() {
         userController.selectedUserProperty().addListener((observable, oldValue, newValue) -> {
             userNameLabel.setText(newValue.toString());
-            myCompetitions.setItems(FXCollections.observableArrayList(userController.getComps(newValue)));
+            myCompetitions.setItems(FXCollections.observableArrayList(competitionController.getComps(newValue)));
         });
-
     }
 
     @FXML
     private Label userNameLabel;
     @FXML
     private ListView<String> myCompetitions;
-
 
     @Override
     public void refresh() {
