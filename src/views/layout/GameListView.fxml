@@ -11,7 +11,7 @@
       <TextField fx:id="filterField" promptText="filter..." />
       <Accordion fx:id="accordion" VBox.vgrow="ALWAYS">
           <panes>
-              <TitledPane animated="true" text="Mijn spellen">
+              <TitledPane fx:id="myGamesPane" animated="true" text="Mijn spellen">
                   <content>
                       <ListView fx:id="myGamesList" prefHeight="200.0" prefWidth="200.0" />
                   </content>

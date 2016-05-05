@@ -48,7 +48,7 @@ public class RegisterView extends View{
 
 	@FXML
 	public void openLoginView() {
-		parent.toLoginView();
+		parent.showLoginView();
 	}
 
 	// Check if username meets the requirements (5 -25 char)

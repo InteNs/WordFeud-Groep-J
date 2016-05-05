@@ -6,13 +6,17 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import models.Game;
 import models.User;
 
 public class GameListView extends View {
 
+    @FXML private TitledPane myGamesPane;
     @FXML private Accordion accordion;
     @FXML private TextField filterField;
+
+
     @FXML private ListView<Game> myFinishedGamesList;
     @FXML private ListView<Game> allFinishedGamesList;
     @FXML private ListView<Game> myGamesList;
@@ -30,7 +34,7 @@ public class GameListView extends View {
 
         filterField.textProperty().addListener(observable ->
                 filteredGames.setPredicate(game ->
-                        game.toString().contains(filterField.getText())
+                        game.toString().toLowerCase().contains(filterField.getText().toLowerCase())
                 )
         );
 
@@ -42,6 +46,7 @@ public class GameListView extends View {
 
         userController.currentUserProperty().addListener((observable, oldValue, newValue) -> {
             showOwnedGames(newValue);
+            accordion.setExpandedPane(myGamesPane);
         });
     }
 
