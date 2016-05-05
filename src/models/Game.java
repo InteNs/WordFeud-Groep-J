@@ -57,7 +57,7 @@ public class Game {
 
     public Turn getLastTurn() {
         if (turns != null && !turns.isEmpty())
-            return arrayList.get(arrayList.size()-1);
+            return turns.get(turns.size()-1);
         else return null;
     }
 

@@ -52,8 +52,25 @@ public class GameBoardView extends View {
     @Override
     public void constructor() {
         gameController.selectedGameProperty().addListener((observable, oldValue, newValue) -> {
+            gameController.loadGame(newValue);
             newValue.setBoardStateTo(newValue.getLastTurn());
             displayGameBoard(newValue.getGameBoard());
+        });
+        final double SCALE_DELTA = 1.1;
+        final StackPane zoomPane = new StackPane();
+
+        stackPane.setOnScroll(event -> {
+            event.consume();
+            if (event.getDeltaY() == 0) {
+                return;
+            }
+            double scaleFactor =
+                    (event.getDeltaY() > 0)
+                            ? SCALE_DELTA
+                            : 1/SCALE_DELTA;
+
+            gameBoardGrid.setScaleX(gameBoardGrid.getScaleX() * scaleFactor);
+            gameBoardGrid.setScaleY(gameBoardGrid.getScaleY() * scaleFactor);
         });
     }
 }

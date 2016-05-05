@@ -28,6 +28,8 @@ public class GameController extends Controller {
     }
 
     public void loadGame(Game game) {
+        game.setBoard(GameDAO.selectFieldsForBoard(game.getBoardType()));
+        game.setTurns(GameDAO.selectTurns(game));
     }
 
     public void loadGameBoard(Game game){
