@@ -65,7 +65,8 @@ public class MainView extends View implements Initializable {
                 loginViewController,
                 welcomeViewController,
                 registerViewController,
-                userListViewController
+                userListViewController,
+                userInfoViewController
         ).forEach(view -> view.init(this));
     }
 

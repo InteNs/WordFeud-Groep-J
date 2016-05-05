@@ -53,8 +53,8 @@ public class UserController extends Controller {
         users = UserDAO.selectUsers();
     }
 
-    public ArrayList<String> getComps(User user){
-       return UserDAO.getUserComps(user.toString());
+    public ObservableList<String> getComps(User user){
+       return FXCollections.observableArrayList(UserDAO.getUserComps(user.toString()));
     }
 
 }

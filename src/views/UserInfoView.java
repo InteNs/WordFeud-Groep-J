@@ -17,12 +17,10 @@ import java.util.ResourceBundle;
 public class UserInfoView extends View {
     @Override
     public void constructor() {
-        userController.selectedUserProperty().addListener((observable, oldValue, newValue) ->
-                System.out.println("jaja"));
-       /* userController.selectedUserProperty().addListener((observable, oldValue, newValue) -> {
+        userController.selectedUserProperty().addListener((observable, oldValue, newValue) -> {
             userNameLabel.setText(newValue.toString());
             myCompetitions.setItems(FXCollections.observableArrayList(userController.getComps(newValue)));
-        });*/
+        });
 
     }
 
