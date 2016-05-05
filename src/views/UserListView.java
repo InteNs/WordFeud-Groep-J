@@ -1,6 +1,6 @@
 package views;
 
-import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -12,13 +12,23 @@ public class UserListView extends View {
     @FXML
     private TextField filterField;
 
+    private FilteredList<User> filteredUsers;
+
     public void refresh(){
-        userList.setItems(FXCollections.observableArrayList(userController.getUsers()));
+
     }
 
     @Override
     public void constructor() {
+        filteredUsers = new FilteredList<>(userController.getUsers());
 
+        userList.setItems(filteredUsers);
+
+        filterField.textProperty().addListener(observable -> {
+            filteredUsers.setPredicate(user ->
+                    user.getName().contains(filterField.getText())
+            );
+        });
     }
 }
 

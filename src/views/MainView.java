@@ -7,9 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -23,6 +21,8 @@ public class MainView extends View implements Initializable {
     @FXML private VBox welcomeView;
     @FXML private VBox registerView;
 
+    @FXML private ProgressIndicator loadIndicator;
+    @FXML private ToolBar toolBar;
     @FXML private TabPane control;
     @FXML private SplitPane mainContent;
     @FXML private StackPane content;
@@ -63,8 +63,8 @@ public class MainView extends View implements Initializable {
     }
 
     public void login() {
-        setControl(true);
         setContent(welcomeView);
+        setControl(true);
         refresh();
     }
 
@@ -78,11 +78,14 @@ public class MainView extends View implements Initializable {
 
     @FXML
     public void refresh() {
-        /* refresh your viewcontroller here(called when tab selected)*/
-        gameListViewController.refresh();
-        welcomeViewController.refresh();
-        userListViewController.refresh();
-        competitionListViewController.refresh();
+        /* refresh your domain controller here*/
+        loadIndicator.setVisible(true);
+
+        userController.refresh();
+        competitionController.refresh();
+        gameController.refresh();
+
+        loadIndicator.setVisible(false);
     }
 
     @Override
@@ -104,11 +107,13 @@ public class MainView extends View implements Initializable {
         if(visible){
             mainContent.getItems().add(controlIndex, control);
             mainContent.setDividerPositions(dividerPos);
+            toolBar.setDisable(false);
         }
-        else {
+        else if(mainContent.getItems().contains(control)){
             controlIndex = mainContent.getItems().indexOf(control);
             dividerPos = mainContent.getDividerPositions()[0];
             mainContent.getItems().remove(control);
+            toolBar.setDisable(true);
         }
     }
 

@@ -26,11 +26,9 @@ public class LoginView extends View {
 
     @Override
     public void refresh() {
-        //nothing to refresh(yet)
     }
 
     @Override
     public void constructor() {
-
     }
 }

@@ -3,6 +3,7 @@ package views;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import models.User;
 
 public class WelcomeView extends View {
 
@@ -10,11 +11,13 @@ public class WelcomeView extends View {
 
     @Override
     public void refresh() {
-        helloUserLabel.setText("Hello "+ userController.getCurrentUser().getName() + "!");
+
     }
 
     @Override
     public void constructor() {
-
+        userController.currentUserProperty().addListener((observable, oldValue, newValue) ->
+                helloUserLabel.setText("Hello "+ newValue + "!"))
+        ;
     }
 }
