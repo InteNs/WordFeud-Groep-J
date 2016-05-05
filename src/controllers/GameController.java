@@ -2,6 +2,8 @@ package controllers;
 
 import database.access.GameDAO;
 import enumerations.GameState;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import models.Game;
 
 import java.util.ArrayList;
@@ -15,26 +17,8 @@ public class GameController extends Controller {
         this.games = GameDAO.selectGames();
     }
 
-    public ArrayList<Game> getGames() {
-        if (currentUser != null)
-            return games;
-        return new ArrayList<>();
-    }
-
-    public ArrayList<Game> getGames(GameState state) {
-        return getGames().stream().filter(game -> game.getGameState() == state).collect(Collectors.toCollection(ArrayList<Game>::new));
-    }
-
-    public ArrayList<Game> getOwnedGames() {
-        return getGames().stream()
-                .filter(game -> game.hasPlayer(currentUser))
-                .collect(Collectors.toCollection(ArrayList<Game>::new));
-    }
-
-    public ArrayList<Game> getOwnedGames(GameState state) {
-        return getOwnedGames().stream()
-                .filter(game -> game.getGameState() == state)
-                .collect(Collectors.toCollection(ArrayList<Game>::new));
+    public ObservableList<Game> getGames() {
+        return FXCollections.observableArrayList(games);
     }
 
     public void refresh() {
