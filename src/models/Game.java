@@ -55,6 +55,12 @@ public class Game {
         return turns;
     }
 
+    public Turn getLastTurn() {
+        if (turns != null && !turns.isEmpty())
+            return arrayList.get(arrayList.size()-1);
+        else return null;
+    }
+
     public ArrayList<User> getPlayers() {
         return new ArrayList<>(Arrays.asList(challenger, opponent));
     }
@@ -89,7 +95,7 @@ public class Game {
      * @param turnToDisplay the last turn to be added to the board
      */
     public void setBoardStateTo(Turn turnToDisplay) {
-        gameBoard = emptyGameBoard;
+        gameBoard = emptyGameBoard.clone();
         for (Turn turn : turns) {
             for (Tile tile : turn.getPlacedTiles())
                 gameBoard[tile.getY()][tile.getX()].setTile(tile);

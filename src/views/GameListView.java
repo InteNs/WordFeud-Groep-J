@@ -48,6 +48,13 @@ public class GameListView extends View {
             showOwnedGames(newValue);
             accordion.setExpandedPane(myGamesPane);
         });
+
+        myGamesList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            gameController.setSelectedGame(newValue);
+            parent.showGameBoardView();
+        });
+
+
     }
 
     private void showOwnedGames(User user) {

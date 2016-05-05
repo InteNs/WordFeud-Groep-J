@@ -26,7 +26,7 @@ public class MainView extends View implements Initializable {
     @FXML private ToolBar toolBar;
     @FXML private TabPane control;
     @FXML private SplitPane mainContent;
-    @FXML private StackPane content;
+    @FXML public StackPane content;
 
     /*Declare your viewControllers here*/
     @FXML private UserListView userListViewController;
@@ -63,7 +63,8 @@ public class MainView extends View implements Initializable {
                 competitionListViewController,
                 loginViewController,
                 welcomeViewController,
-                registerViewController
+                registerViewController,
+                gameBoardViewController
         ).forEach(view -> view.init(this));
     }
 
@@ -133,5 +134,9 @@ public class MainView extends View implements Initializable {
     @Override
     public void constructor() {
         //this will never be called in this view
+    }
+
+    public void showGameBoardView() {
+        setContent(gameBoardView);
     }
 }

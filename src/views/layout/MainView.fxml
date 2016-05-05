@@ -13,8 +13,8 @@
 
 <VBox stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.MainView">
     <ToolBar disable="true" fx:id="toolBar" prefHeight="40.0" prefWidth="200.0">
-        <ToggleButton mnemonicParsing="false" onAction="#toggleControl" prefWidth="60.0" text="hide" />
-        <Button mnemonicParsing="false" onAction="#refresh" prefWidth="60.0" text="refresh" />
+        <ToggleButton mnemonicParsing="false" onAction="#toggleControl" text="hide" />
+        <Button mnemonicParsing="false" onAction="#refresh" text="refresh" />
       <ProgressIndicator fx:id="loadIndicator" prefHeight="20.0" prefWidth="20.0" visible="false" />
     </ToolBar>
     <SplitPane fx:id="mainContent" dividerPositions="0.5" minWidth="1000.0" VBox.vgrow="ALWAYS">
@@ -29,16 +29,13 @@
                 <fx:include fx:id="competitionListView" source="CompetitionListView.fxml" />
             </Tab>
         </TabPane>
-        <VBox minHeight="600.0" minWidth="600.0" SplitPane.resizableWithParent="false">
-            <HBox alignment="CENTER_LEFT" minHeight="28.0" styleClass="tab-aligned" />
-            <StackPane fx:id="content" VBox.vgrow="ALWAYS">
+            <StackPane fx:id="content" VBox.vgrow="ALWAYS" >
                 <children>
                     <fx:include fx:id="loginView" source="LoginView.fxml" />
                     <fx:include fx:id="welcomeView" source="WelcomeView.fxml" />
                     <fx:include fx:id="registerView" source="RegisterView.fxml" />
-                    <fx:include fx:id="gameBoardView" source="GameBoard.fxml"/>
+                    <fx:include fx:id="gameBoardView" source="GameBoardView.fxml"/>
                   </children>
             </StackPane>
-        </VBox>
     </SplitPane>
 </VBox>
