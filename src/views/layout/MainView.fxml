@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -10,17 +12,21 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.MainView">
-    <ToolBar prefHeight="40.0" prefWidth="200.0">
+    <ToolBar disable="true" fx:id="toolBar" prefHeight="40.0" prefWidth="200.0">
         <ToggleButton mnemonicParsing="false" onAction="#toggleControl" prefWidth="60.0" text="hide" />
+        <Button mnemonicParsing="false" onAction="#refresh" prefWidth="60.0" text="refresh" />
+      <ProgressIndicator fx:id="loadIndicator" prefHeight="20.0" prefWidth="20.0" visible="false" />
     </ToolBar>
     <SplitPane fx:id="mainContent" dividerPositions="0.5" minWidth="1000.0" VBox.vgrow="ALWAYS">
         <TabPane fx:id="control" minHeight="600.0" minWidth="300.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" SplitPane.resizableWithParent="false">
-            <Tab text="test" />
-            <Tab onSelectionChanged="#refresh" text="Games">
+            <Tab text="Games">
                 <fx:include fx:id="gameListView" source="GameListView.fxml" />
             </Tab>
-            <Tab onSelectionChanged="#refresh" text="Gebruikers">
+            <Tab text="Gebruikers">
                 <fx:include fx:id="userListView" source="UserList.fxml" />
+            </Tab>
+            <Tab text="Competities">
+                <fx:include fx:id="competitionListView" source="CompetitionListView.fxml" />
             </Tab>
         </TabPane>
         <VBox minHeight="600.0" minWidth="600.0" SplitPane.resizableWithParent="false">

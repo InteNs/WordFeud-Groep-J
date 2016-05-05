@@ -1,13 +1,13 @@
 package controllers;
 
 import database.access.UserDAO;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import models.User;
 
-import java.util.ArrayList;
+import java.util.*;
 
-public class UserController {
-
-    private User currentUser;
+public class UserController extends Controller {
     private ArrayList<User> users;
 
     public UserController() {
@@ -15,23 +15,28 @@ public class UserController {
     }
 
     public boolean login(String userName, String passWord) {
-        currentUser = UserDAO.selectUser(userName, passWord);
+        setCurrentUser(UserDAO.selectUser(userName, passWord));
         return currentUser != null;
     }
-    public ArrayList<User> getUsers(){
-        return users;
+
+    public ObservableList<User> getUsers(){
+        return FXCollections.observableArrayList(users);
     }
 
     public boolean userExists(String username) {
-        return selectUser(username) != null;
+        return selectUser(username).isPresent();
     }
 
-	public User selectUser(String username) {
-		return UserDAO.selectUser(username);
+	public Optional<User> selectUser(String username) {
+		return users.stream().filter(user -> user.getName().equals(username)).findFirst();
 	}
 
 	public boolean insertUser(String username, String password) {
-		return UserDAO.insertUser(username, password);
+		if(UserDAO.insertUser(username, password)){
+            users.add(new User(username));
+            return true;
+        }
+        return false;
 	}
 
     public boolean isValidUsername(String username) {
@@ -43,8 +48,8 @@ public class UserController {
         return password.length() >= 5 && password.length() <= 25;
     }
 
-    public User getCurrentUser() {
-        return currentUser;
+    @Override
+    public void refresh() {
+        users = UserDAO.selectUsers();
     }
-
 }
