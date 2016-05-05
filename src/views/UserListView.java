@@ -26,7 +26,7 @@ public class UserListView extends View {
 
         filterField.textProperty().addListener(observable -> {
             filteredUsers.setPredicate(user ->
-                    user.getName().contains(filterField.getText())
+                    user.getName().toLowerCase().contains(filterField.getText().toLowerCase())
             );
         });
     }

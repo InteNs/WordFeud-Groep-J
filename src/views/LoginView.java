@@ -20,8 +20,8 @@ public class LoginView extends View {
             invalidUserLabel.setVisible(true);
     }
     @FXML
-    public void openRegisterView (){
-    	parent.register();
+    public void openRegisterView () {
+        parent.showRegisterView();
     }
 
     @Override

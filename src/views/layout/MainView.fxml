@@ -19,7 +19,6 @@
     </ToolBar>
     <SplitPane fx:id="mainContent" dividerPositions="0.5" minWidth="1000.0" VBox.vgrow="ALWAYS">
         <TabPane fx:id="control" minHeight="600.0" minWidth="300.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" SplitPane.resizableWithParent="false">
-            <Tab text="test" />
             <Tab text="Games">
                 <fx:include fx:id="gameListView" source="GameListView.fxml" />
             </Tab>

@@ -43,7 +43,10 @@ public class MainView extends View implements Initializable {
         setControl(false);
         setContent(loginView);
 
-        /* instantiate your new domainControllers here*/
+        /*
+        instantiate your new domainControllers here
+        they are declared in the View class
+        */
         userController = new UserController();
         competitionController = new CompetitionController();
         gameController = new GameController();
@@ -65,20 +68,23 @@ public class MainView extends View implements Initializable {
     public void login() {
         setContent(welcomeView);
         setControl(true);
-        refresh();
+        toolBar.setDisable(false);
     }
 
-    public void register (){
+    public void showRegisterView(){
     	setContent(registerView);
     }
 
-    public void toLoginView (){
+    public void showLoginView(){
     	setContent(loginView);
     }
 
     @FXML
     public void refresh() {
-        /* refresh your domain controller here*/
+        /*
+        refresh your domain controller here
+        will be done by a seperate thread later
+        */
         loadIndicator.setVisible(true);
 
         userController.refresh();
@@ -88,32 +94,24 @@ public class MainView extends View implements Initializable {
         loadIndicator.setVisible(false);
     }
 
-    @Override
-    public void constructor() {
-        //this will never be called in this view
-    }
-
     @FXML
     public void toggleControl(ActionEvent actionEvent) {
         setControl(!((ToggleButton)actionEvent.getSource()).isSelected());
     }
 
     /**
-     * set the control (tabpane) visible or not (makes content fill window)
+     * set the control (tab pane) visible or not (makes content fill window)
      * @param visible whether the control tabs should be visible
      */
-
     public void setControl(Boolean visible) {
         if(visible){
             mainContent.getItems().add(controlIndex, control);
             mainContent.setDividerPositions(dividerPos);
-            toolBar.setDisable(false);
         }
         else if(mainContent.getItems().contains(control)){
             controlIndex = mainContent.getItems().indexOf(control);
             dividerPos = mainContent.getDividerPositions()[0];
             mainContent.getItems().remove(control);
-            toolBar.setDisable(true);
         }
     }
 
@@ -126,7 +124,12 @@ public class MainView extends View implements Initializable {
 
         if(content.getChildren().contains(node))
             content.getChildren().get(content.getChildren().indexOf(node)).setVisible(true);
-        else
+        else if (node != null)
             content.getChildren().add(node);
+    }
+
+    @Override
+    public void constructor() {
+        //this will never be called in this view
     }
 }
