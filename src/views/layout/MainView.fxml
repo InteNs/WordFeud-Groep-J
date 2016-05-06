@@ -15,6 +15,7 @@
     <ToolBar disable="true" fx:id="toolBar" prefHeight="40.0" prefWidth="200.0">
         <ToggleButton mnemonicParsing="false" onAction="#toggleControl" prefWidth="60.0" text="hide" />
         <Button mnemonicParsing="false" onAction="#refresh" prefWidth="60.0" text="refresh" />
+        <Button mnemonicParsing="false" onAction="#logOut" prefWidth="75.0" text="log out" />
       <ProgressIndicator fx:id="loadIndicator" prefHeight="20.0" prefWidth="20.0" visible="false" />
     </ToolBar>
     <SplitPane fx:id="mainContent" dividerPositions="0.5" minWidth="1000.0" VBox.vgrow="ALWAYS">
