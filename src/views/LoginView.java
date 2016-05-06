@@ -31,4 +31,9 @@ public class LoginView extends View {
     @Override
     public void constructor() {
     }
+    
+    public void resetFields(){
+    	userNameField.setText(null);
+    	userPassField.setText(null);
+    }
 }

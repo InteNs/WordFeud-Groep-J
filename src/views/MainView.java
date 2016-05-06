@@ -107,7 +107,15 @@ public class MainView extends View implements Initializable {
     public void toggleControl(ActionEvent actionEvent) {
         setControl(!((ToggleButton)actionEvent.getSource()).isSelected());
     }
-
+    
+    @FXML
+    public void logOut(){
+    	this.showLoginView();
+    	toolBar.setDisable(true);
+    	this.setControl(false);
+    	loginViewController.resetFields();
+    }
+    
     /**
      * set the control (tab pane) visible or not (makes content fill window)
      * @param visible whether the control tabs should be visible
@@ -136,7 +144,7 @@ public class MainView extends View implements Initializable {
         else if (node != null)
             content.getChildren().add(node);
     }
-
+    
     @Override
     public void constructor() {
         //this will never be called in this view
