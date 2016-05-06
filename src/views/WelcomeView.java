@@ -17,7 +17,6 @@ public class WelcomeView extends View {
     @Override
     public void constructor() {
         userController.currentUserProperty().addListener((observable, oldValue, newValue) ->
-                helloUserLabel.setText("Hallo "+ newValue + "!"))
-        ;
+                helloUserLabel.setText("Hallo "+ newValue + "!"));
     }
 }

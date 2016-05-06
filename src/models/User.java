@@ -1,4 +1,5 @@
 package models;
+
 import database.access.UserDAO;
 
 import java.util.ArrayList;
@@ -6,13 +7,16 @@ import java.util.ArrayList;
 public class User {
 
     private String name;
+    private ArrayList<String> roles; //will be finished
 
 
     public User(String name) {
+
         this.name = name;
     }
 
     public String getName() {
+
         return name;
     }
 
@@ -31,5 +35,14 @@ public class User {
 
     public static ArrayList getAllUsers() {
         return UserDAO.selectUsers();
+    }
+
+    public ArrayList<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(ArrayList<String> roles) {
+
+        this.roles = roles;
     }
 }

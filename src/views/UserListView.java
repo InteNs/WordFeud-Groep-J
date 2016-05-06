@@ -1,5 +1,6 @@
 package views;
 
+import controllers.Controller;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
@@ -26,8 +27,12 @@ public class UserListView extends View {
 
         filterField.textProperty().addListener(observable -> {
             filteredUsers.setPredicate(user ->
-                    user.getName().toLowerCase().contains(filterField.getText().toLowerCase())
+                            user.getName().toLowerCase().contains(filterField.getText().toLowerCase())
             );
+        });
+        userList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            userController.setSelectedUser(newValue);
+            parent.showUserInfo();
         });
     }
 }

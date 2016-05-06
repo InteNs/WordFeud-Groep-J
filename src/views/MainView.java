@@ -8,8 +8,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import models.User;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -20,6 +22,7 @@ public class MainView extends View implements Initializable {
     @FXML private VBox loginView;
     @FXML private VBox welcomeView;
     @FXML private VBox registerView;
+    @FXML private Pane userInfoView;
 
     @FXML private ProgressIndicator loadIndicator;
     @FXML private ToolBar toolBar;
@@ -34,7 +37,7 @@ public class MainView extends View implements Initializable {
     @FXML private LoginView    loginViewController;
     @FXML private WelcomeView  welcomeViewController;
     @FXML private RegisterView  registerViewController;
-
+    @FXML private UserInfoView  userInfoViewController;
     private int controlIndex;
     private double dividerPos;
 
@@ -61,7 +64,9 @@ public class MainView extends View implements Initializable {
                 competitionListViewController,
                 loginViewController,
                 welcomeViewController,
-                registerViewController
+                registerViewController,
+                userListViewController,
+                userInfoViewController
         ).forEach(view -> view.init(this));
     }
 
@@ -77,6 +82,10 @@ public class MainView extends View implements Initializable {
 
     public void showLoginView(){
     	setContent(loginView);
+    }
+
+    public void showUserInfo(){
+        setContent(userInfoView);
     }
 
     @FXML

@@ -10,6 +10,21 @@ public abstract class Controller {
 
     protected static ObjectProperty<User> currentUser = new SimpleObjectProperty<>();
 
+    protected static ObjectProperty<User> selectedUser = new SimpleObjectProperty<>();
+
+    public void setSelectedUser(User user) {
+        selectedUser.set(user);
+    }
+
+    public User getSelectedUser() {
+        return selectedUser.get();
+    }
+
+    public ObjectProperty<User> selectedUserProperty() {
+        return selectedUser;
+    }
+
+
     public ObjectProperty<User> currentUserProperty() {
         return currentUser;
     }
