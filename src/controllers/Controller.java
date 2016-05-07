@@ -55,7 +55,6 @@ public abstract class Controller {
         return selectedUser;
     }
 
-
     //current user (from logged in)
     private static ObjectProperty<User> currentUser = new SimpleObjectProperty<>();
 
