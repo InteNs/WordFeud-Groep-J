@@ -40,4 +40,23 @@ public class UserDAO extends DAO {
     public static boolean insertUser(String username, String password) {
         return database.insert(SQL.INSERT.INSERTUSER, username, password);
     }
+
+    public static void setAllRoles(ArrayList<User> users) {
+        for (User u : users) {
+            ArrayList<String> roles = database.selectFirstColumn(SQL.SELECT.SELECTUSERROLES, u.toString());
+            for (String r : roles) {
+                u.addRole(r);
+            }
+
+        }
+    }
+
+    public static void setRole(User user, String role) {
+        database.insert(SQL.INSERT.SETROLE, user.getName(), role);
+    }
+
+    public static void removeRole(User user, String role) {
+        database.insert(SQL.DELETE.REMOVEROLE, user.getName(), role);
+    }
 }
+

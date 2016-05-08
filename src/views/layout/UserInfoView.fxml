@@ -12,10 +12,22 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.UserInfoView">
    <children>
-      <CheckBox layoutX="371.0" layoutY="305.0" mnemonicParsing="false" text="Speler" />
-      <CheckBox layoutX="467.0" layoutY="330.0" mnemonicParsing="false" text="Observer" />
-      <CheckBox layoutX="467.0" layoutY="305.0" mnemonicParsing="false" text="Administrator" />
-      <CheckBox layoutX="371.0" layoutY="330.0" mnemonicParsing="false" text="Moderator" />
+      <CheckBox fx:id="checkPlayer" layoutX="371.0" layoutY="305.0" mnemonicParsing="false" onMouseClicked="#setPlayer" text="Speler">
+         <font>
+            <Font size="13.0" />
+         </font></CheckBox>
+      <CheckBox fx:id="checkObserver" layoutX="467.0" layoutY="330.0" mnemonicParsing="false" onMouseClicked="#setObserver" text="Observer">
+         <font>
+            <Font size="13.0" />
+         </font></CheckBox>
+      <CheckBox fx:id="checkAdmin" layoutX="467.0" layoutY="305.0" mnemonicParsing="false" onMouseClicked="#setAdmin" text="Administrator">
+         <font>
+            <Font size="13.0" />
+         </font></CheckBox>
+      <CheckBox fx:id="checkModerator" layoutX="371.0" layoutY="330.0" mnemonicParsing="false" onMouseClicked="#setModerator" text="Moderator">
+         <font>
+            <Font size="13.0" />
+         </font></CheckBox>
       <Label fx:id="userNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="205.0" layoutY="40.0" prefHeight="17.0" prefWidth="191.0" text="Gebruikersnaam" textAlignment="RIGHT">
          <font>
             <Font size="25.0" />
@@ -45,6 +57,6 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </LineChart>
-      <Button layoutX="40.0" layoutY="339.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" text="Button" />
+      <Button layoutX="40.0" layoutY="339.0" mnemonicParsing="false" onAction="#getRoles" prefHeight="25.0" prefWidth="200.0" text="Button" />
    </children>
 </Pane>

@@ -1,5 +1,6 @@
 package models;
 
+import controllers.UserController;
 import database.access.UserDAO;
 
 import java.util.ArrayList;
@@ -7,16 +8,14 @@ import java.util.ArrayList;
 public class User {
 
     private String name;
-    private ArrayList<String> roles; //will be finished
+    private ArrayList<String> roles = new ArrayList<>();
 
 
     public User(String name) {
-
         this.name = name;
     }
 
     public String getName() {
-
         return name;
     }
 
@@ -37,12 +36,25 @@ public class User {
         return UserDAO.selectUsers();
     }
 
+    public void addRole(String role) {
+        roles.add(role);
+    }
+
+    public void removeRole(String role) {
+        roles.remove(role);
+    }
+
     public ArrayList<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(ArrayList<String> roles) {
-
-        this.roles = roles;
+    public boolean hasRole(String roleString) {
+        Boolean result = false;
+        for (String role : roles) {
+            if (role.equals(roleString)) {
+                result = true;
+            }
+        }
+        return result;
     }
 }
