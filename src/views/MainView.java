@@ -114,6 +114,7 @@ public class MainView extends View implements Initializable {
     	toolBar.setDisable(true);
     	this.setControl(false);
     	loginViewController.resetFields();
+    	userController.setCurrentUser(null);
     }
     
     /**
