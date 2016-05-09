@@ -3,10 +3,10 @@ package controllers;
 import database.access.UserDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import models.Competition;
 import models.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Optional;
 
 public class UserController extends Controller {
     private ArrayList<User> users;
@@ -18,7 +18,7 @@ public class UserController extends Controller {
 
     public boolean login(String userName, String passWord) {
         setCurrentUser(UserDAO.selectUser(userName, passWord));
-        return currentUser != null;
+        return getCurrentUser() != null;
     }
 
     public ObservableList<User> getUsers() {
