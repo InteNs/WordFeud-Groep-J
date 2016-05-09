@@ -8,8 +8,15 @@ import java.util.ArrayList;
 public class User {
 
     private String name;
-    private ArrayList<String> roles = new ArrayList<>();
 
+    public enum Role {
+        player,
+        administrator,
+        moderator,
+        observer
+    }
+
+    private ArrayList<Role> roles = new ArrayList<Role>();
 
     public User(String name) {
         this.name = name;
@@ -36,22 +43,23 @@ public class User {
         return UserDAO.selectUsers();
     }
 
-    public void addRole(String role) {
+    public void addRole(Role role) {
         roles.add(role);
     }
 
-    public void removeRole(String role) {
+    public void removeRole(Role role) {
         roles.remove(role);
     }
 
-    public ArrayList<String> getRoles() {
+    public ArrayList<Role> getRoles() {
         return roles;
     }
 
-    public boolean hasRole(String roleString) {
+
+    public boolean hasRole(Role role) {
         Boolean result = false;
-        for (String role : roles) {
-            if (role.equals(roleString)) {
+        for (Role r : roles) {
+            if (r.equals(role)) {
                 result = true;
             }
         }

@@ -45,14 +45,25 @@ public class UserDAO extends DAO {
         for (User u : users) {
             ArrayList<String> roles = database.selectFirstColumn(SQL.SELECT.SELECTUSERROLES, u.toString());
             for (String r : roles) {
-                u.addRole(r);
+                if (r.equals("player")) {
+                    u.addRole(User.Role.player);
+                }
+                if (r.equals("administrator")) {
+                    u.addRole(User.Role.administrator);
+                }
+                if (r.equals("moderator")) {
+                    u.addRole(User.Role.moderator);
+                }
+                if (r.equals("observer")) {
+                    u.addRole(User.Role.observer);
+                }
             }
 
         }
     }
 
-    public static void setRole(User user, String role) {
-        database.insert(SQL.INSERT.SETROLE, user.getName(), role);
+    public static void setRole(User user, User.Role role) {
+        database.insert(SQL.INSERT.SETROLE, user.getName(), role.toString());
     }
 
     public static void removeRole(User user, String role) {

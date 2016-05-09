@@ -34,7 +34,7 @@ public class UserInfoView extends View {
 
 
     public void getRoles() {
-        if (!userController.getCurrentUser().hasRole("administrator")) {
+        if (!userController.getCurrentUser().hasRole(User.Role.administrator)) {
             checkAdmin.setDisable(true);
             checkPlayer.setDisable(true);
             checkObserver.setDisable(true);
@@ -46,49 +46,50 @@ public class UserInfoView extends View {
         checkObserver.setSelected(false);
         checkAdmin.setSelected(false);
 
-        if (selectedUser.hasRole("player")) {
+        if (selectedUser.hasRole(User.Role.player)) {
             checkPlayer.setSelected(true);
         }
-        if (selectedUser.hasRole("moderator")) {
+        if (selectedUser.hasRole(User.Role.moderator)){
             checkModerator.setSelected(true);
         }
-        if (selectedUser.hasRole("administrator")) {
+        if (selectedUser.hasRole(User.Role.administrator)) {
             checkAdmin.setSelected(true);
         }
-        if (selectedUser.hasRole("observer")) {
+        if (selectedUser.hasRole(User.Role.observer)) {
             checkObserver.setSelected(true);
         }
     }
 
     public void setPlayer() {
-        if (selectedUser.hasRole("player")) {
-            userController.removeRole(selectedUser, "player");
+        if (selectedUser.hasRole(User.Role.player)) {
+            userController.removeRole(selectedUser, User.Role.player);
         } else {
-            userController.setRole(selectedUser, "player");
+            userController.setRole(selectedUser, User.Role.player);
         }
     }
 
     public void setAdmin() {
-        if (selectedUser.hasRole("administrator")) {
-            userController.removeRole(selectedUser, "administrator");
+        if (selectedUser.hasRole(User.Role.administrator)) {
+            userController.removeRole(selectedUser, User.Role.administrator);
         } else {
-            userController.setRole(selectedUser, "administrator");
+            userController.setRole(selectedUser, User.Role.administrator);
         }
     }
 
     public void setModerator() {
-        if (selectedUser.hasRole("moderator")) {
-            userController.removeRole(selectedUser, "moderator");
+        if (selectedUser.hasRole(User.Role.moderator)) {
+            userController.removeRole(selectedUser, User.Role.moderator);
         } else {
-            userController.setRole(selectedUser, "moderator");
+            userController.setRole(selectedUser, User.Role.moderator);
         }
     }
 
+
     public void setObserver() {
-        if (selectedUser.hasRole("observer")) {
-            userController.removeRole(selectedUser, "observer");
+        if (selectedUser.hasRole(User.Role.observer)) {
+            userController.removeRole(selectedUser, User.Role.observer);
         } else {
-            userController.setRole(selectedUser, "observer");
+            userController.setRole(selectedUser, User.Role.observer);
         }
     }
 

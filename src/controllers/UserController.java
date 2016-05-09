@@ -50,18 +50,30 @@ public class UserController extends Controller {
     }
 
 
-    public ArrayList<String> getRoles(User user) {
+    public ArrayList<User.Role> getRoles(User user) {
         return user.getRoles();
     }
 
-    public void setRole(User user, String role) {
+    public void setRole(User user, User.Role role) {
         UserDAO.setRole(user, role);
         user.addRole(role);
     }
 
-    public void removeRole(User user, String role) {
-        UserDAO.removeRole(user, role);
-        user.removeRole(role);
+    public void removeRole(User user, User.Role role) {
+        UserDAO.removeRole(user, role.toString());
+        if(role.equals(role.player)) {
+            user.removeRole(role.player);
+        }
+          if(role.equals(role.administrator)) {
+              user.removeRole(role.administrator);
+          }
+            if(role.equals(role.moderator)){
+                user.removeRole(role.moderator);
+            if(role.equals(role.observer)) {
+                user.removeRole(role.observer);
+            }
+        }
+
     }
 
     @Override
