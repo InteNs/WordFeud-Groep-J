@@ -21,8 +21,8 @@ public class CompetitionController extends Controller {
         return comp.getPlayers();
     }
 
-    public ArrayList<Competition> getCompetitions() {
-        return competitions;
+    public ObservableList<Competition> getCompetitions() {
+        return FXCollections.observableArrayList(competitions);
     }
 
     public ObservableList<String> getComps(User user) {

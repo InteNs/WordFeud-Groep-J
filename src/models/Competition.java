@@ -2,6 +2,8 @@ package models;
 
 import java.util.ArrayList;
 
+import com.sun.org.apache.xml.internal.resolver.helpers.PublicId;
+
 import javafx.scene.Node;
 import sun.security.action.GetBooleanAction;
 
@@ -48,6 +50,10 @@ public class Competition {
 
 	public String getName(){
 		return competitionName;
+	}
+	
+	public String toString(){
+		return owner.getName() + " - " + competitionName;
 	}
 
 	
