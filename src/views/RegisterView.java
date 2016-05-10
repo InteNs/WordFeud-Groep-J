@@ -35,9 +35,11 @@ public class RegisterView extends View{
 			if (checkUserName(userNameField.getText())
 					&& checkPassword(userPassField1.getText(), userPassField2.getText())) {
 				userController.insertUser(userNameField.getText(), userPassField1.getText());
-				invalidUserLabel.setTextFill(Color.web("#00ff00"));
-				invalidUserLabel.setText("registreren geslaagd");
-				invalidUserLabel.setVisible(true);
+		    	userNameField.clear();
+				userPassField1.clear();
+				userPassField2.clear();
+				invalidUserLabel.setVisible(false);
+				parent.showLoginView();
 			}
 		} else {
 			invalidUserLabel.setText("gebruikersnaam niet beschikbaar");
