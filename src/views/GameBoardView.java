@@ -6,10 +6,18 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import models.Field;
+import models.Tile;
+
+import java.awt.*;
+import java.util.ArrayList;
 
 
 public class GameBoardView extends View {
@@ -17,7 +25,7 @@ public class GameBoardView extends View {
     @FXML private VBox root;
     @FXML private StackPane stackPane;
     @FXML private GridPane gameBoardGrid;
-    @FXML private GridPane playerRackGrid;
+    @FXML private TilePane playerRackGrid;
     @FXML private ChoiceBox<String> playerActionChoiceBox;
     @FXML private Button playerConfirmActionButton;
     @FXML private Label player1ScoreLabel;
@@ -35,13 +43,38 @@ public class GameBoardView extends View {
                 if(field.getTile() == null)
                     s = field.getFieldType().toString();
                 else
-                    s = field.getTile().getCharacter().toString().toUpperCase();
+                    s = field.getTile().toString().toUpperCase();
 
+                String myString ="resources/"+s+".png";
                 ImageView imageField = new ImageView(
-                        new Image("resources/"+s+".png",40,40,true,true,false));
+                        new Image(myString,40,40,true,true,true));
                 GridPane.setConstraints(imageField,y,x);
                 gameBoardGrid.getChildren().add(imageField);
             }
+    }
+
+    public void displayPlayerRack(ArrayList<Tile>playerRack){
+        playerRack.add(new Tile(1,'A'));
+        playerRack.add(new Tile(1,'A'));
+        playerRack.add(new Tile(1,'A'));
+        playerRack.add(new Tile(1,'A'));
+        playerRack.add(new Tile(1,'A'));
+        playerRack.add(new Tile(1,'A'));
+        playerRack.add(new Tile(1,'A'));
+
+        playerRack.forEach( e -> {
+            String s = e.toString();
+            playerRackGrid.getChildren().add(new ImageView(new Image("resources/" + s + ".png", 40, 40, true, true, true)));
+        });
+
+        playerRackGrid.getChildren().forEach(e -> e.setOnDragDetected(event -> {
+            Dragboard db = e.startDragAndDrop(TransferMode.MOVE);
+            ClipboardContent content = new ClipboardContent();
+            content.putString(e.getId());
+            db.setContent(content);
+            event.consume();
+        }));
+
     }
 
     @Override
@@ -58,7 +91,6 @@ public class GameBoardView extends View {
         });
         final double SCALE_DELTA = 1.1;
         final StackPane zoomPane = new StackPane();
-
         stackPane.setOnScroll(event -> {
             event.consume();
             if (event.getDeltaY() == 0) {
@@ -71,6 +103,8 @@ public class GameBoardView extends View {
 
             gameBoardGrid.setScaleX(gameBoardGrid.getScaleX() * scaleFactor);
             gameBoardGrid.setScaleY(gameBoardGrid.getScaleY() * scaleFactor);
+
+            displayPlayerRack(new ArrayList<Tile>());//PLACEHOLDER
         });
     }
 }

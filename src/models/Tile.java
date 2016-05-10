@@ -39,6 +39,9 @@ public class Tile {
 
     @Override
     public String toString() {
+        if (character=='?')
+            return "A" ;  //Placeholder value for Joker
+
         return character.toString();
     }
 }
