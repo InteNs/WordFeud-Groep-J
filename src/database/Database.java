@@ -124,7 +124,7 @@ public class Database {
      * @param values to insert into question marks
      * @return list with strings representing the first column
      */
-    public List<String> selectFirstColumn(String query, Object... values) {
+    public ArrayList<String> selectFirstColumn(String query, Object... values) {
         ArrayList<String> result = new ArrayList<>();
         try {
             setStatement(query, values);

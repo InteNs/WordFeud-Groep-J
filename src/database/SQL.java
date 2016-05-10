@@ -7,6 +7,7 @@ public class SQL {
         public static final String MESSAGESFORGAME = "SELECT * FROM chatregel WHERE spel_id = ? ORDER BY tijdstip;";
         public static final String SELECTLETTERS = "SELECT * FROM wordfeud.lettertype WHERE letterset_code = ?";
         public static final String SELECTUSERINCOMP = "SELECT naam FROM account a JOIN deelnemer d ON a.naam = d.account_naam JOIN competitie c ON c.id = d.competitie_id WHERE c.id = ?";
+        public static final String SELECTUSERROLES = "SELECT rol_type FROM accountrol WHERE account_naam = ?";
 
     }
 
@@ -23,5 +24,10 @@ public class SQL {
 
     public class INSERT {
         public static final String INSERTUSER = "INSERT INTO account (naam, wachtwoord) VALUES (?, ?)";
+        public static final String  SETROLE = "INSERT INTO `wordfeud`.`accountrol` (`account_naam`, `rol_type`) VALUES (?, ?);";
+
+    }
+    public class DELETE {
+        public static final String REMOVEROLE = "DELETE FROM `wordfeud`.`accountrol` WHERE `accountrol`.`account_naam` = ? AND `accountrol`.`rol_type` = ? ";
     }
 }

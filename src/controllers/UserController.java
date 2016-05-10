@@ -1,24 +1,25 @@
 package controllers;
 
 import database.access.UserDAO;
+import enumerations.Role;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import models.Competition;
 import models.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Optional;
 
 public class UserController extends Controller {
     private ArrayList<User> users;
 
     public UserController() {
-
-        users = UserDAO.selectUsers();
+        refresh();
     }
 
     public boolean login(String userName, String passWord) {
-        setCurrentUser(UserDAO.selectUser(userName, passWord));
+        User optionalUser = UserDAO.selectUser(userName, passWord);
+        if(users.contains(optionalUser))
+            setCurrentUser(users.get(users.indexOf(optionalUser)));
         return getCurrentUser() != null;
     }
 
@@ -48,14 +49,22 @@ public class UserController extends Controller {
     }
 
     public boolean isValidPassword(String password) {
-
         return password.length() >= 5 && password.length() <= 25;
+    }
+
+    public void setRole(User user, Role role) {
+        UserDAO.setRole(user, role);
+        user.addRole(role);
+    }
+
+    public void removeRole(User user, Role role) {
+        UserDAO.removeRole(user, role);
+        user.removeRole(role);
     }
 
     @Override
     public void refresh() {
         users = UserDAO.selectUsers();
+        UserDAO.setAllRoles(users);
     }
-
-
 }

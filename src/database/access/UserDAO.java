@@ -1,6 +1,7 @@
 package database.access;
 
 import database.SQL;
+import enumerations.Role;
 import models.User;
 
 import java.sql.ResultSet;
@@ -40,4 +41,22 @@ public class UserDAO extends DAO {
     public static boolean insertUser(String username, String password) {
         return database.insert(SQL.INSERT.INSERTUSER, username, password);
     }
+
+    public static void setAllRoles(ArrayList<User> users) {
+        for (User user : users) {
+            ArrayList<String> roles = database.selectFirstColumn(SQL.SELECT.SELECTUSERROLES, user.toString());
+            for (String role : roles) {
+                user.addRole(Role.parse(role));
+            }
+        }
+    }
+
+    public static void setRole(User user, Role role) {
+        database.insert(SQL.INSERT.SETROLE, user.getName(), role.toString().toLowerCase());
+    }
+
+    public static void removeRole(User user, Role role) {
+        database.insert(SQL.DELETE.REMOVEROLE, user.getName(), role.toString().toLowerCase());
+    }
 }
+
