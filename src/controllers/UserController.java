@@ -14,12 +14,13 @@ public class UserController extends Controller {
 
     public UserController() {
         refresh();
-
     }
 
     public boolean login(String userName, String passWord) {
-        setCurrentUser(users.get(users.indexOf(UserDAO.selectUser(userName, passWord))));
-        return currentUser != null;
+        User optionalUser = UserDAO.selectUser(userName, passWord);
+        if(users.contains(optionalUser))
+            setCurrentUser(users.get(users.indexOf(optionalUser)));
+        return getCurrentUser() != null;
     }
 
     public ObservableList<User> getUsers() {

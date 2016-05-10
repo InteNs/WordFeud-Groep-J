@@ -28,6 +28,7 @@ Database 	: wordfeud
 [tutorial ssh](https://help.github.com/articles/generating-an-ssh-key/)
 
 [alias config voor commands](http://pastebin.com/CaAkZmDJ)   **Sterk aan te raden!**
+
 Alias plakken in `/Users/<naam>/.gitconfig`.
 
 ### GitFlow: (met alias)
