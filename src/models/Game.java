@@ -227,4 +227,14 @@ public class Game {
     public int hashCode() {
         return id;
     }
+
+    public ArrayList<Tile> getAllTiles() {
+        ArrayList<Tile> allTiles = new ArrayList<>();
+        fieldsChangedThisTurn.forEach(e ->{
+            allTiles.add(e.getTile());
+        });
+        allTiles.addAll(getLastTurn().getRack());
+        System.out.println("YO WE ZIJN IN GETALLTILES");
+        return allTiles;
+    }
 }

@@ -6,6 +6,8 @@ import enumerations.GameState;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.Game;
+import models.Tile;
+import models.User;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -33,5 +35,16 @@ public class GameController extends Controller {
     }
 
     public void loadGameBoard(Game game){
+    }
+
+    public Tile getTile(Game selectedGame,String hashcode) {
+        for (Tile tile:selectedGame.getAllTiles()
+             ) {
+            if (tile.hashCode()==Integer.valueOf(hashcode)){
+                return tile;
+            }
+
+        }
+        return null;
     }
 }
