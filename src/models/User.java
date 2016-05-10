@@ -1,7 +1,6 @@
 package models;
 
-import controllers.UserController;
-import database.access.UserDAO;
+import enumerations.Role;
 
 import java.util.ArrayList;
 
@@ -9,17 +8,11 @@ public class User {
 
     private String name;
 
-    public enum Role {
-        player,
-        administrator,
-        moderator,
-        observer
-    }
-
-    private ArrayList<Role> roles = new ArrayList<Role>();
+    private ArrayList<Role> roles;
 
     public User(String name) {
         this.name = name;
+        roles = new ArrayList<>();
     }
 
     public String getName() {
@@ -37,10 +30,6 @@ public class User {
     @Override
     public String toString() {
         return getName();
-    }
-
-    public static ArrayList getAllUsers() {
-        return UserDAO.selectUsers();
     }
 
     public void addRole(Role role) {

@@ -1,10 +1,11 @@
 package views;
 
+import enumerations.Role;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.CheckBox;
 import models.User;
 
 public class UserInfoView extends View {
@@ -32,9 +33,8 @@ public class UserInfoView extends View {
         });
     }
 
-
     public void getRoles() {
-        if (!userController.getCurrentUser().hasRole(User.Role.administrator)) {
+        if (!userController.getCurrentUser().hasRole(Role.ADMINISTRATOR)) {
             checkAdmin.setDisable(true);
             checkPlayer.setDisable(true);
             checkObserver.setDisable(true);
@@ -46,56 +46,53 @@ public class UserInfoView extends View {
         checkObserver.setSelected(false);
         checkAdmin.setSelected(false);
 
-        if (selectedUser.hasRole(User.Role.player)) {
+        if (selectedUser.hasRole(Role.PLAYER)) {
             checkPlayer.setSelected(true);
         }
-        if (selectedUser.hasRole(User.Role.moderator)){
+        if (selectedUser.hasRole(Role.MODERATOR)){
             checkModerator.setSelected(true);
         }
-        if (selectedUser.hasRole(User.Role.administrator)) {
+        if (selectedUser.hasRole(Role.ADMINISTRATOR)) {
             checkAdmin.setSelected(true);
         }
-        if (selectedUser.hasRole(User.Role.observer)) {
+        if (selectedUser.hasRole(Role.OBSERVER)) {
             checkObserver.setSelected(true);
         }
     }
 
     public void setPlayer() {
-        if (selectedUser.hasRole(User.Role.player)) {
-            userController.removeRole(selectedUser, User.Role.player);
+        if (selectedUser.hasRole(Role.PLAYER)) {
+            userController.removeRole(selectedUser, Role.PLAYER);
         } else {
-            userController.setRole(selectedUser, User.Role.player);
+            userController.setRole(selectedUser, Role.PLAYER);
         }
     }
 
     public void setAdmin() {
-        if (selectedUser.hasRole(User.Role.administrator)) {
-            userController.removeRole(selectedUser, User.Role.administrator);
+        if (selectedUser.hasRole(Role.ADMINISTRATOR)) {
+            userController.removeRole(selectedUser, Role.ADMINISTRATOR);
         } else {
-            userController.setRole(selectedUser, User.Role.administrator);
+            userController.setRole(selectedUser, Role.ADMINISTRATOR);
         }
     }
 
     public void setModerator() {
-        if (selectedUser.hasRole(User.Role.moderator)) {
-            userController.removeRole(selectedUser, User.Role.moderator);
+        if (selectedUser.hasRole(Role.MODERATOR)) {
+            userController.removeRole(selectedUser, Role.MODERATOR);
         } else {
-            userController.setRole(selectedUser, User.Role.moderator);
+            userController.setRole(selectedUser, Role.MODERATOR);
         }
     }
-
 
     public void setObserver() {
-        if (selectedUser.hasRole(User.Role.observer)) {
-            userController.removeRole(selectedUser, User.Role.observer);
+        if (selectedUser.hasRole(Role.OBSERVER)) {
+            userController.removeRole(selectedUser, Role.OBSERVER);
         } else {
-            userController.setRole(selectedUser, User.Role.observer);
+            userController.setRole(selectedUser, Role.OBSERVER);
         }
     }
 
-
     @Override
-
     public void refresh() {
 
     }

@@ -1,6 +1,7 @@
 package database.access;
 
 import database.SQL;
+import enumerations.Role;
 import models.User;
 
 import java.sql.ResultSet;
@@ -42,32 +43,20 @@ public class UserDAO extends DAO {
     }
 
     public static void setAllRoles(ArrayList<User> users) {
-        for (User u : users) {
-            ArrayList<String> roles = database.selectFirstColumn(SQL.SELECT.SELECTUSERROLES, u.toString());
-            for (String r : roles) {
-                if (r.equals("player")) {
-                    u.addRole(User.Role.player);
-                }
-                if (r.equals("administrator")) {
-                    u.addRole(User.Role.administrator);
-                }
-                if (r.equals("moderator")) {
-                    u.addRole(User.Role.moderator);
-                }
-                if (r.equals("observer")) {
-                    u.addRole(User.Role.observer);
-                }
+        for (User user : users) {
+            ArrayList<String> roles = database.selectFirstColumn(SQL.SELECT.SELECTUSERROLES, user.toString());
+            for (String role : roles) {
+                user.addRole(Role.parse(role));
             }
-
         }
     }
 
-    public static void setRole(User user, User.Role role) {
-        database.insert(SQL.INSERT.SETROLE, user.getName(), role.toString());
+    public static void setRole(User user, Role role) {
+        database.insert(SQL.INSERT.SETROLE, user.getName(), role.toString().toLowerCase());
     }
 
-    public static void removeRole(User user, String role) {
-        database.insert(SQL.DELETE.REMOVEROLE, user.getName(), role);
+    public static void removeRole(User user, Role role) {
+        database.insert(SQL.DELETE.REMOVEROLE, user.getName(), role.toString().toLowerCase());
     }
 }
 
