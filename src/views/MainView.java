@@ -1,8 +1,6 @@
 package views;
 
-import controllers.CompetitionController;
-import controllers.GameController;
-import controllers.UserController;
+import controllers.ControllerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,7 +9,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import models.User;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -38,6 +35,8 @@ public class MainView extends View implements Initializable {
     @FXML private WelcomeView  welcomeViewController;
     @FXML private RegisterView  registerViewController;
     @FXML private UserInfoView  userInfoViewController;
+
+    private ControllerFactory controllerFactory;
     private int controlIndex;
     private double dividerPos;
 
@@ -45,14 +44,8 @@ public class MainView extends View implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setControl(false);
         setContent(loginView);
+        controllerFactory = new ControllerFactory();
 
-        /*
-        instantiate your new domainControllers here
-        they are declared in the View class
-        */
-        userController = new UserController();
-        competitionController = new CompetitionController();
-        gameController = new GameController();
 
         /*
         Put your viewController in this list for it
@@ -95,12 +88,12 @@ public class MainView extends View implements Initializable {
         will be done by a seperate thread later
         */
         loadIndicator.setVisible(true);
-
-        userController.refresh();
-        competitionController.refresh();
-        gameController.refresh();
-
+        controllerFactory.getControllers();
         loadIndicator.setVisible(false);
+    }
+
+    public ControllerFactory getControllerFactory() {
+        return controllerFactory;
     }
 
     @FXML
@@ -114,7 +107,7 @@ public class MainView extends View implements Initializable {
     	toolBar.setDisable(true);
     	this.setControl(false);
     	loginViewController.resetFields();
-    	userController.setCurrentUser(null);
+        controllerFactory.GetUserController().logOut();
     }
     
     /**

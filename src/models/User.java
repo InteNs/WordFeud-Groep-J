@@ -44,7 +44,6 @@ public class User {
         return roles;
     }
 
-
     public boolean hasRole(Role role) {
         Boolean result = false;
         for (Role r : roles) {

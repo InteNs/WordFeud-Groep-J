@@ -1,6 +1,6 @@
 package views;
 
-import controllers.Controller;
+import controllers.UserController;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
@@ -15,23 +15,27 @@ public class UserListView extends View {
 
     private FilteredList<User> filteredUsers;
 
+    private UserController controller;
+
     public void refresh(){
 
     }
 
     @Override
     public void constructor() {
-        filteredUsers = new FilteredList<>(userController.getUsers());
+        controller = controllerFactory.GetUserController();
+        filteredUsers = new FilteredList<>(controller.getUsers());
 
         userList.setItems(filteredUsers);
 
         filterField.textProperty().addListener(observable -> {
             filteredUsers.setPredicate(user ->
-                            user.getName().toLowerCase().contains(filterField.getText().toLowerCase())
+                    user.getName().toLowerCase().contains(filterField.getText().toLowerCase())
             );
         });
+
         userList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            userController.setSelectedUser(newValue);
+            controller.setSelectedUser(newValue);
             parent.showUserInfo();
         });
     }
