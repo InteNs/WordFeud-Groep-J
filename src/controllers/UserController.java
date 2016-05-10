@@ -2,6 +2,8 @@ package controllers;
 
 import database.access.UserDAO;
 import enumerations.Role;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.User;
@@ -10,17 +12,35 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public class UserController extends Controller {
-    private ArrayList<User> users;
 
-    public UserController() {
-        refresh();
+    private ArrayList<User> users;
+    private ObjectProperty<User> selectedUser = new SimpleObjectProperty<>();
+
+    public UserController(ControllerFactory factory) {
+        super(factory);
+    }
+
+    public ObjectProperty<User> selectedUserProperty() {
+        return selectedUser;
+    }
+
+    public void setSelectedUser(User user) {
+        selectedUser.set(user);
+    }
+
+    public User getSelectedUser() {
+        return selectedUser.get();
     }
 
     public boolean login(String userName, String passWord) {
         User optionalUser = UserDAO.selectUser(userName, passWord);
         if(users.contains(optionalUser))
-            setCurrentUser(users.get(users.indexOf(optionalUser)));
-        return getCurrentUser() != null;
+            getSession().setCurrentUser(users.get(users.indexOf(optionalUser)));
+        return getSession().getCurrentUser() != null;
+    }
+
+    public void logOut() {
+        getSession().setCurrentUser(null);
     }
 
     public ObservableList<User> getUsers() {

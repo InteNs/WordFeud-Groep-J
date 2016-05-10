@@ -1,5 +1,6 @@
 package views;
 
+import controllers.UserController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -11,9 +12,11 @@ public class LoginView extends View {
     @FXML private TextField userNameField;
     @FXML private PasswordField userPassField;
 
+    private UserController controller;
+
     @FXML
     public void login(){
-        if (userController.login(userNameField.getText(),userPassField.getText())){
+        if (controller.login(userNameField.getText(),userPassField.getText())){
             parent.login();
             invalidUserLabel.setVisible(false);
         } else
@@ -30,6 +33,7 @@ public class LoginView extends View {
 
     @Override
     public void constructor() {
+        controller = controllerFactory.GetUserController();
     }
     
     public void resetFields(){
