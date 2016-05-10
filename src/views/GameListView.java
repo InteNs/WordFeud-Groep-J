@@ -1,6 +1,5 @@
 package views;
 
-import controllers.GameController;
 import enumerations.GameState;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -24,16 +23,13 @@ public class GameListView extends View {
     @FXML private ListView<Game> allGamesList;
 
     private FilteredList<Game> filteredGames;
-    private GameController controller;
-
 
     public void refresh() {
     }
 
     @Override
     public void constructor() {
-        controller = controllerFactory.getGameController();
-        filteredGames = new FilteredList<>(controller.getGames());
+        filteredGames = new FilteredList<>(gameController.getGames());
 
         filterField.textProperty().addListener(observable ->
                 filteredGames.setPredicate(game ->
@@ -47,7 +43,7 @@ public class GameListView extends View {
                 game.getGameState() == GameState.FINISHED)
         );
 
-        getSession().currentUserProperty().addListener((observable, oldValue, newValue) -> {
+        session.currentUserProperty().addListener((observable, oldValue, newValue) -> {
             showOwnedGames(newValue);
             accordion.setExpandedPane(myGamesPane);
         });

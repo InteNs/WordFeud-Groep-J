@@ -1,6 +1,5 @@
 package views;
 
-import controllers.CompetitionController;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
@@ -27,17 +26,13 @@ public class CompetitionListView extends View {
 
     private FilteredList<Competition> filteredCompetitions;
 
-    private CompetitionController controller;
-
     @Override
     public void refresh() {
     }
 
     @Override
     public void constructor() {
-        controller = controllerFactory.getCompetitionController();
-
-        filteredCompetitions = new FilteredList<>(controller.getCompetitions());
+        filteredCompetitions = new FilteredList<>(competitionController.getCompetitions());
 
         filterField.textProperty().addListener(observable ->
                 filteredCompetitions.setPredicate(competition ->
@@ -47,7 +42,7 @@ public class CompetitionListView extends View {
 
         competitionList.setItems(filteredCompetitions);
 
-        getSession().currentUserProperty().addListener((observable, oldValue, newValue) -> {
+        session.currentUserProperty().addListener((observable, oldValue, newValue) -> {
             showOwnedCompetition(newValue);
             // accordion.setExpandedPane(myCompetition);
         });

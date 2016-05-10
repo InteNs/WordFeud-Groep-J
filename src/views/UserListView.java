@@ -1,6 +1,5 @@
 package views;
 
-import controllers.UserController;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
@@ -15,16 +14,12 @@ public class UserListView extends View {
 
     private FilteredList<User> filteredUsers;
 
-    private UserController controller;
-
     public void refresh(){
-
     }
 
     @Override
     public void constructor() {
-        controller = controllerFactory.GetUserController();
-        filteredUsers = new FilteredList<>(controller.getUsers());
+        filteredUsers = new FilteredList<>(userController.getUsers());
 
         userList.setItems(filteredUsers);
 
@@ -35,7 +30,7 @@ public class UserListView extends View {
         });
 
         userList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            controller.setSelectedUser(newValue);
+            userController.setSelectedUser(newValue);
             parent.showUserInfo();
         });
     }
