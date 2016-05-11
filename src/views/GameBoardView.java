@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import models.Field;
 import models.Game;
 import models.Tile;
+import views.components.DraggableNode;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -26,51 +27,49 @@ import java.util.ArrayList;
 
 public class GameBoardView extends View {
 
-    @FXML private VBox root;
-    @FXML private StackPane stackPane;
-    @FXML private GridPane gameBoardGrid;
-    @FXML private TilePane playerRackGrid;
-    @FXML private ChoiceBox<String> playerActionChoiceBox;
-    @FXML private Button playerConfirmActionButton;
-    @FXML private Label player1ScoreLabel;
-    @FXML private Label player2ScoreLabel;
+    @FXML
+    private VBox root;
+    @FXML
+    private StackPane stackPane;
+    @FXML
+    private GridPane gameBoardGrid;
+    @FXML
+    private TilePane playerRackGrid;
+    @FXML
+    private ChoiceBox<String> playerActionChoiceBox;
+    @FXML
+    private Button playerConfirmActionButton;
+    @FXML
+    private Label player1ScoreLabel;
+    @FXML
+    private Label player2ScoreLabel;
     private Game selectedGame;
 
-    public void displayGameBoard(Field[][] gameBoard){
-        if(gameBoard == null) {
+    public void displayGameBoard(Field[][] gameBoard) {
+        if (gameBoard == null) {
             gameBoardGrid.getChildren().removeAll();
             return;
         }
         for (int y = 0; y < gameBoard.length; y++)
             for (int x = 0; x < gameBoard.length; x++) {
                 Field field = gameBoard[x][y];
-                String s;
-                if(field.getTile() == null)
-                    s = field.getFieldType().toString();
-                else
-                    s = field.getTile().toString().toUpperCase();
+                DraggableNode draggableNode = new DraggableNode(field);
 
-                String myString ="resources/"+s+".png";
-                ImageView imageField = new ImageView(
-                        new Image(myString,40,40,true,true,true));
-                GridPane.setConstraints(imageField,y,x);
-                gameBoardGrid.getChildren().add(imageField);
-                imageField.setOnDragOver(event -> {
+                GridPane.setConstraints(draggableNode, y, x);
+                gameBoardGrid.getChildren().add(draggableNode);
+                draggableNode.setOnDragOver(event -> {
                     event.consume();
-                    if (event.getSource()!=imageField && event.getDragboard().hasImage())
+                   // if (event.getSource() != draggableNode && event.getDragboard().hasImage())
                         event.acceptTransferModes(TransferMode.MOVE);
 
                 });
-                imageField.setOnDragDropped(event -> {
-                    int xTarget;
-                    int yTarget;
+                draggableNode.setOnDragDropped(event -> {
                     Dragboard db = event.getDragboard();
                     boolean succes = false;
                     if (db.hasImage()) {
-                        imageField.setImage(db.getImage());
-                        xTarget = GridPane.getColumnIndex(imageField);
-                        yTarget = GridPane.getRowIndex(imageField);
-                        gameBoard[xTarget][yTarget].setTile(gameController.getTile(selectedGame, db.getString()));
+                        draggableNode.setImage(db.getImage());
+                        draggableNode.getField().setTile(((DraggableNode)event.getSource()).getTile());
+                        System.out.println(draggableNode.getField().getTile());
                         succes = true;
                     }
                     event.setDropCompleted(succes);
@@ -78,30 +77,23 @@ public class GameBoardView extends View {
             }
     }
 
-    public void displayPlayerRack(ArrayList<Tile>playerRack){
-//        playerRack.add(new Tile(1,'A'));
-//        playerRack.add(new Tile(1,'A'));
-//        playerRack.add(new Tile(1,'A'));
-//        playerRack.add(new Tile(1,'A'));
-//        playerRack.add(new Tile(1,'A'));
-//        playerRack.add(new Tile(1,'A'));
-//        playerRack.add(new Tile(1,'A'));
-
-
-        playerRack.forEach( e -> {
-            ImageView imageView;
+    public void displayPlayerRack(ArrayList<Tile> playerRack) {
+        playerRack.forEach(e -> {
             String s = e.toString();
-            imageView = new ImageView((new Image("resources/" + s + ".png", 40, 40, true, true, true)));
-            playerRackGrid.getChildren().add(imageView);
+            DraggableNode draggableNode = new DraggableNode(e);
+            playerRackGrid.getChildren().add(draggableNode);
 
-            imageView.setOnDragDetected(event -> {
+            draggableNode.setOnDragDetected(event -> {
                 event.consume();
-                ((Node)event.getSource()).setCursor(Cursor.HAND);
-                Dragboard db = imageView.startDragAndDrop(TransferMode.MOVE);
+                ((Node) event.getSource()).setCursor(Cursor.HAND);
+                Dragboard db = draggableNode.startDragAndDrop(TransferMode.MOVE);
                 ClipboardContent content = new ClipboardContent();
-                content.putImage(imageView.getImage());
-                content.putString(String.valueOf(e.hashCode()));
+                content.putImage(draggableNode.getImage());
                 db.setContent(content);
+            });
+
+            draggableNode.setOnDragDone(event -> {
+                playerRackGrid.getChildren().remove(draggableNode);
             });
 
         });
@@ -116,7 +108,7 @@ public class GameBoardView extends View {
     public void constructor() {
         gameController.selectedGameProperty().addListener((observable, oldValue, newValue) -> {
             gameController.loadGame(newValue);
-            selectedGame=newValue;
+            selectedGame = newValue;
 //            newValue.setBoardStateTo(newValue.getLastTurn());
             newValue.setBoardStateTo(newValue.getTurns().get(20));
             displayPlayerRack(newValue.getTurns().get(20).getRack());//PLACEHOLDER
