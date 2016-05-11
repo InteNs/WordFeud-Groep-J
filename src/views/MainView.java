@@ -95,11 +95,6 @@ public class MainView extends View implements Initializable {
         */
         loadIndicator.setVisible(true);
         controllerFactory.getControllers();
-
-
-        userController.refresh();
-        competitionController.refresh();
-        gameController.refresh();
         loadIndicator.setVisible(false);
     }
 
