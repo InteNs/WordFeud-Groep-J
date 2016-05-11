@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
 public class RegisterView extends View {
@@ -83,4 +85,10 @@ public class RegisterView extends View {
         invalidUserLabel.setVisible(true);
         return false;
     }
+    
+    public void keyListener(KeyEvent event){
+        if(  event.getCode() == KeyCode.ENTER){
+            register();
+        }
+      }
 }
