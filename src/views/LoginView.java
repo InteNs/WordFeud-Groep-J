@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 public class LoginView extends View {
 
@@ -31,6 +33,12 @@ public class LoginView extends View {
     @Override
     public void constructor() {
     }
+    
+    public void keyListener(KeyEvent event){
+        if(  event.getCode() == KeyCode.ENTER){
+            this.login();
+        }
+      }
     
     public void resetFields(){
     	userNameField.setText(null);
