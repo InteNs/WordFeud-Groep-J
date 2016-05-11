@@ -1,22 +1,25 @@
 package views;
 
-import controllers.CompetitionController;
-import controllers.GameController;
-import controllers.UserController;
-
+import controllers.*;
 
 abstract class View {
     protected MainView parent;
-
-    /* declare your new Domain Controllers here*/
-    protected static UserController userController;
-    protected static CompetitionController competitionController;
-    protected static GameController gameController;
+    protected ControllerFactory controllerFactory;
+    protected UserController userController;
+    protected GameController gameController;
+    protected CompetitionController competitionController;
+    protected SessionController session;
 
     public abstract void refresh();
     public abstract void constructor();
 
     protected void init(MainView parent) {
+        controllerFactory = parent.getControllerFactory();
+        userController = controllerFactory.GetUserController();
+        gameController = controllerFactory.getGameController();
+        competitionController = controllerFactory.getCompetitionController();
+        session = controllerFactory.getSessionController();
+
         this.parent = parent;
         constructor();
     }

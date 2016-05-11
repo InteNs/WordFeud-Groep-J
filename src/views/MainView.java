@@ -1,13 +1,12 @@
 package views;
 
-import controllers.CompetitionController;
-import controllers.GameController;
-import controllers.UserController;
+import controllers.ControllerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -20,13 +19,14 @@ public class MainView extends View implements Initializable {
     @FXML private VBox loginView;
     @FXML private VBox welcomeView;
     @FXML private VBox registerView;
+    @FXML private Pane userInfoView;
     @FXML private VBox gameBoardView;
 
     @FXML private ProgressIndicator loadIndicator;
     @FXML private ToolBar toolBar;
     @FXML private TabPane control;
     @FXML private SplitPane mainContent;
-    @FXML public StackPane content;
+    @FXML private StackPane content;
 
     /*Declare your viewControllers here*/
     @FXML private UserListView userListViewController;
@@ -35,8 +35,10 @@ public class MainView extends View implements Initializable {
     @FXML private LoginView    loginViewController;
     @FXML private WelcomeView  welcomeViewController;
     @FXML private RegisterView  registerViewController;
+    @FXML private UserInfoView  userInfoViewController;
     @FXML private GameBoardView gameBoardViewController;
 
+    private ControllerFactory controllerFactory;
     private int controlIndex;
     private double dividerPos;
 
@@ -44,14 +46,8 @@ public class MainView extends View implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setControl(false);
         setContent(loginView);
+        controllerFactory = new ControllerFactory();
 
-        /*
-        instantiate your new domainControllers here
-        they are declared in the View class
-        */
-        userController = new UserController();
-        competitionController = new CompetitionController();
-        gameController = new GameController();
 
         /*
         Put your viewController in this list for it
@@ -64,6 +60,8 @@ public class MainView extends View implements Initializable {
                 loginViewController,
                 welcomeViewController,
                 registerViewController,
+                userListViewController,
+                userInfoViewController,
                 gameBoardViewController
         ).forEach(view -> view.init(this));
     }
@@ -82,6 +80,10 @@ public class MainView extends View implements Initializable {
     	setContent(loginView);
     }
 
+    public void showUserInfo(){
+        setContent(userInfoView);
+    }
+
     @FXML
     public void refresh() {
         /*
@@ -89,17 +91,26 @@ public class MainView extends View implements Initializable {
         will be done by a seperate thread later
         */
         loadIndicator.setVisible(true);
-
-        userController.refresh();
-        competitionController.refresh();
-        gameController.refresh();
-
+        controllerFactory.getControllers();
         loadIndicator.setVisible(false);
+    }
+
+    public ControllerFactory getControllerFactory() {
+        return controllerFactory;
     }
 
     @FXML
     public void toggleControl(ActionEvent actionEvent) {
         setControl(!((ToggleButton)actionEvent.getSource()).isSelected());
+    }
+
+    @FXML
+    public void logOut(){
+    	this.showLoginView();
+    	toolBar.setDisable(true);
+    	this.setControl(false);
+    	loginViewController.resetFields();
+        controllerFactory.getSessionController().setCurrentUser(null);
     }
 
     /**

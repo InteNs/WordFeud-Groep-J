@@ -15,7 +15,6 @@ public class UserListView extends View {
     private FilteredList<User> filteredUsers;
 
     public void refresh(){
-
     }
 
     @Override
@@ -28,6 +27,11 @@ public class UserListView extends View {
             filteredUsers.setPredicate(user ->
                     user.getName().toLowerCase().contains(filterField.getText().toLowerCase())
             );
+        });
+
+        userList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            userController.setSelectedUser(newValue);
+            parent.showUserInfo();
         });
     }
 }

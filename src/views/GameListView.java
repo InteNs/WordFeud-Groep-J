@@ -24,7 +24,6 @@ public class GameListView extends View {
 
     private FilteredList<Game> filteredGames;
 
-
     public void refresh() {
     }
 
@@ -44,14 +43,16 @@ public class GameListView extends View {
                 game.getGameState() == GameState.FINISHED)
         );
 
-        userController.currentUserProperty().addListener((observable, oldValue, newValue) -> {
+        session.currentUserProperty().addListener((observable, oldValue, newValue) -> {
             showOwnedGames(newValue);
             accordion.setExpandedPane(myGamesPane);
         });
 
         myGamesList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            gameController.setSelectedGame(newValue);
-            parent.showGameBoardView();
+            if (newValue != null) {
+                gameController.setSelectedGame(newValue);
+                parent.showGameBoardView();
+            }
         });
 
 
