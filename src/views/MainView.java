@@ -20,6 +20,7 @@ public class MainView extends View implements Initializable {
     @FXML private VBox welcomeView;
     @FXML private VBox registerView;
     @FXML private Pane userInfoView;
+    @FXML private VBox createCompetitionView;
 
     @FXML private ProgressIndicator loadIndicator;
     @FXML private ToolBar toolBar;
@@ -35,7 +36,7 @@ public class MainView extends View implements Initializable {
     @FXML private WelcomeView  welcomeViewController;
     @FXML private RegisterView  registerViewController;
     @FXML private UserInfoView  userInfoViewController;
-
+    @FXML private CreateCompetitionView createCompetitionViewController;
     private ControllerFactory controllerFactory;
     private int controlIndex;
     private double dividerPos;
@@ -59,7 +60,8 @@ public class MainView extends View implements Initializable {
                 welcomeViewController,
                 registerViewController,
                 userListViewController,
-                userInfoViewController
+                userInfoViewController,
+                createCompetitionViewController
         ).forEach(view -> view.init(this));
     }
 
@@ -80,6 +82,10 @@ public class MainView extends View implements Initializable {
     public void showUserInfo(){
         setContent(userInfoView);
     }
+    
+    public void showCreateCompetition(){
+    	setContent(createCompetitionView);
+    }
 
     @FXML
     public void refresh() {
@@ -89,6 +95,11 @@ public class MainView extends View implements Initializable {
         */
         loadIndicator.setVisible(true);
         controllerFactory.getControllers();
+
+
+        userController.refresh();
+        competitionController.refresh();
+        gameController.refresh();
         loadIndicator.setVisible(false);
     }
 

@@ -44,7 +44,7 @@ public class CompetitionListView extends View {
 
         session.currentUserProperty().addListener((observable, oldValue, newValue) -> {
             showOwnedCompetition(newValue);
-            // accordion.setExpandedPane(myCompetition);
+         
         });
     }
 
@@ -56,6 +56,7 @@ public class CompetitionListView extends View {
 
     public void createCompetition() {
         //TODO create competition if player doesn't have one already
+    	parent.showCreateCompetition();
     }
 
 

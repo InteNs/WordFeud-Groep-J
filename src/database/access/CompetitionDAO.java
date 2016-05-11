@@ -28,6 +28,14 @@ public class CompetitionDAO extends DAO {
         database.close();
         return competitions;
     }
+    
+    public static boolean insertCompetition(String compName, User user) {
+        return database.insert(SQL.INSERT.INSERTCOMPETITION, compName, user.getName());
+    }
+    
+    public static boolean insertPlayer(String username, int ID) {
+        return database.insert(SQL.INSERT.INSERTPLAYER, username, ID);
+    }
 
     public static ArrayList<User> selectAllUsers(Integer comp_id) {
         List<String> usernames;

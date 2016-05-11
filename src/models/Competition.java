@@ -12,15 +12,24 @@ public class Competition {
 	private int ID;
 	private User owner;
 	private String competitionName;
-
+    private ArrayList<User> players;
+    
+    
 	public void setPlayers(ArrayList<User> players) {
 		this.players = players;
 	}
+	
+	public void addPlayer(User user){
+	    players.add(user);
+	}
 
-	private ArrayList<User> players;
 
 	public ArrayList<User> getPlayers() {
 		return players;
+	}
+	
+	public User getOwner(){
+	    return owner;
 	}
 
 	public boolean containsUser(User user){
@@ -31,6 +40,12 @@ public class Competition {
 		}
 		return  false;
 
+	}
+	
+	public Competition(User user, String competitionName){
+	    this.owner             = user;
+	    this.competitionName   = competitionName;
+	    
 	}
 
 	public Competition(int ID, User owner, String competitionName,ArrayList<User> players){

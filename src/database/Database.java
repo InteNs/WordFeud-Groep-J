@@ -9,12 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Database {
-
+	/*
     private final String URL = "jdbc:mysql://77.172.146.212:3306/wordfeud";
     private final String USERNAME = "wordfeud";
     private final String PASSWORD = "wordfeud01";
     private final String DRIVER = "com.mysql.jdbc.Driver";
-
+	*/
+	
+    private final String URL = "jdbc:mysql://127.0.01:3306/wordfeud";
+    private final String USERNAME = "root";
+    private final String PASSWORD = "";
+    private final String DRIVER = "com.mysql.jdbc.Driver";
+    
     private Connection connection;
     private PreparedStatement statement;
 
