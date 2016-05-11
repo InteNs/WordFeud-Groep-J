@@ -15,6 +15,7 @@ public class SQL {
         public static final String USERS = "SELECT * FROM account;";
         public static final String GAMES = "SELECT * FROM spel;";
         public static final String COMPETITIONS = "SELECT * FROM competitie";
+        public static final String ROLES = "SELECT * FROM accountrol";
     }
 
     public class COUNT {

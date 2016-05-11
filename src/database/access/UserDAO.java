@@ -43,12 +43,19 @@ public class UserDAO extends DAO {
     }
 
     public static void setAllRoles(ArrayList<User> users) {
-        for (User user : users) {
-            ArrayList<String> roles = database.selectFirstColumn(SQL.SELECT.SELECTUSERROLES, user.toString());
-            for (String role : roles) {
-                user.addRole(Role.parse(role));
+        ResultSet rs = database.select(SQL.ALL.ROLES);
+        try {
+            while (rs.next()) {
+                for (User user : users) {
+                    if (user.getName().equals(rs.getString("account_naam"))) {
+                        user.addRole(Role.parse(rs.getString("rol_type")));
+                    }
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        database.close();
     }
 
     public static void setRole(User user, Role role) {
