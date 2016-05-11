@@ -1,5 +1,6 @@
 package views;
 
+import controllers.Controller;
 import controllers.ControllerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -88,7 +89,7 @@ public class MainView extends View implements Initializable {
         will be done by a seperate thread later
         */
         loadIndicator.setVisible(true);
-        controllerFactory.getControllers();
+        controllerFactory.getControllers().forEach(Controller::refresh);
         loadIndicator.setVisible(false);
     }
 

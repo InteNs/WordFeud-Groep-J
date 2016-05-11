@@ -13,9 +13,9 @@
 
 <VBox stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.MainView">
     <ToolBar disable="true" fx:id="toolBar" prefHeight="40.0" prefWidth="200.0">
-        <ToggleButton mnemonicParsing="false" onAction="#toggleControl" prefWidth="60.0" text="hide" />
-        <Button mnemonicParsing="false" onAction="#refresh" prefWidth="60.0" text="refresh" />
-        <Button mnemonicParsing="false" onAction="#logOut" prefWidth="75.0" text="log out" />
+        <ToggleButton mnemonicParsing="false" onAction="#toggleControl" text="verstop tabs" />
+        <Button mnemonicParsing="false" onAction="#refresh" text="herladen" />
+        <Button mnemonicParsing="false" onAction="#logOut" text="uitloggen" />
       <ProgressIndicator fx:id="loadIndicator" prefHeight="20.0" prefWidth="20.0" visible="false" />
     </ToolBar>
     <SplitPane fx:id="mainContent" dividerPositions="0.5" minWidth="1000.0" VBox.vgrow="ALWAYS">

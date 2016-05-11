@@ -7,15 +7,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.Game;
 
-import java.util.ArrayList;
-
 public class GameController extends Controller {
 
-    private ArrayList<Game> games;
-    private ObjectProperty<Game> selectedGame = new SimpleObjectProperty<>();
+    private ObservableList<Game> games;
+    private ObjectProperty<Game> selectedGame;
 
     public GameController(ControllerFactory factory) {
         super(factory);
+        games = FXCollections.observableArrayList(GameDAO.selectGames());
+        selectedGame = new SimpleObjectProperty<>();
     }
 
     public ObjectProperty<Game> selectedGameProperty() {
@@ -26,15 +26,15 @@ public class GameController extends Controller {
         return selectedGame.get();
     }
 
-    public void setSelectedGamee(Game game) {
+    public void setSelectedGame(Game game) {
         selectedGame.set(game);
     }
 
     public ObservableList<Game> getGames() {
-        return FXCollections.observableArrayList(games);
+        return games;
     }
 
     public void refresh() {
-        this.games = GameDAO.selectGames();
+        games.setAll(GameDAO.selectGames());
     }
 }

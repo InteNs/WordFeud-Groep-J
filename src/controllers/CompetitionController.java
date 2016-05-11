@@ -12,11 +12,13 @@ import java.util.ArrayList;
 
 public class CompetitionController extends Controller {
 
-    private ArrayList<Competition> competitions;
-    private ObjectProperty<Competition> selectedCompetition = new SimpleObjectProperty<>();
+    private ObservableList<Competition> competitions;
+    private ObjectProperty<Competition> selectedCompetition;
 
     public CompetitionController(ControllerFactory factory) {
         super(factory);
+        competitions = FXCollections.observableArrayList(CompetitionDAO.selectCompetitions());
+        selectedCompetition = new SimpleObjectProperty<>();
     }
 
     public Competition getSelectedCompetition() {
@@ -36,7 +38,7 @@ public class CompetitionController extends Controller {
     }
 
     public ObservableList<Competition> getCompetitions() {
-        return FXCollections.observableArrayList(competitions);
+        return competitions;
     }
 
     public ObservableList<String> getCompetitions(User user) {
@@ -51,6 +53,6 @@ public class CompetitionController extends Controller {
 
     @Override
     public void refresh() {
-        this.competitions = CompetitionDAO.selectCompetition();
+        competitions.setAll(CompetitionDAO.selectCompetitions());
     }
 }

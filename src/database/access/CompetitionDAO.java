@@ -1,19 +1,16 @@
 package database.access;
 
+import database.SQL;
+import models.Competition;
+import models.User;
+
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import database.SQL;
-import models.Competition;
-import models.Game;
-import models.User;
-
-import javax.management.openmbean.CompositeType;
-
 public class CompetitionDAO extends DAO {
 
-    public static ArrayList<Competition> selectCompetition() {
+    public static ArrayList<Competition> selectCompetitions() {
         ResultSet rs = database.select(SQL.ALL.COMPETITIONS);
         ArrayList<Competition> competitions = new ArrayList<>();
         try {
