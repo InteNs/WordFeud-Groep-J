@@ -1,6 +1,5 @@
 package views;
 
-import controllers.UserController;
 import enumerations.Role;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -23,21 +22,19 @@ public class UserInfoView extends View {
     private CheckBox checkObserver;
 
     private User selectedUser;
-    private UserController controller;
 
     @Override
     public void constructor() {
-        controller = controllerFactory.GetUserController();
-        controller.selectedUserProperty().addListener((observable, oldValue, newValue) -> {
+        userController.selectedUserProperty().addListener((observable, oldValue, newValue) -> {
             userNameLabel.setText(newValue.toString());
             selectedUser = newValue;
-            myCompetitions.setItems(controllerFactory.getCompetitionController().getCompetitions(newValue));
+            myCompetitions.setItems(competitionController.getCompetitions(newValue));
             getRoles();
         });
     }
 
     public void getRoles() {
-        if (!getSession().getCurrentUser().hasRole(Role.ADMINISTRATOR)) {
+        if (!session.getCurrentUser().hasRole(Role.ADMINISTRATOR)) {
             checkAdmin.setDisable(true);
             checkPlayer.setDisable(true);
             checkObserver.setDisable(true);
@@ -65,33 +62,33 @@ public class UserInfoView extends View {
 
     public void setPlayer() {
         if (selectedUser.hasRole(Role.PLAYER)) {
-            controller.removeRole(selectedUser, Role.PLAYER);
+            userController.removeRole(selectedUser, Role.PLAYER);
         } else {
-            controller.setRole(selectedUser, Role.PLAYER);
+            userController.setRole(selectedUser, Role.PLAYER);
         }
     }
 
     public void setAdmin() {
         if (selectedUser.hasRole(Role.ADMINISTRATOR)) {
-            controller.removeRole(selectedUser, Role.ADMINISTRATOR);
+            userController.removeRole(selectedUser, Role.ADMINISTRATOR);
         } else {
-            controller.setRole(selectedUser, Role.ADMINISTRATOR);
+            userController.setRole(selectedUser, Role.ADMINISTRATOR);
         }
     }
 
     public void setModerator() {
         if (selectedUser.hasRole(Role.MODERATOR)) {
-            controller.removeRole(selectedUser, Role.MODERATOR);
+            userController.removeRole(selectedUser, Role.MODERATOR);
         } else {
-            controller.setRole(selectedUser, Role.MODERATOR);
+            userController.setRole(selectedUser, Role.MODERATOR);
         }
     }
 
     public void setObserver() {
         if (selectedUser.hasRole(Role.OBSERVER)) {
-            controller.removeRole(selectedUser, Role.OBSERVER);
+            userController.removeRole(selectedUser, Role.OBSERVER);
         } else {
-            controller.setRole(selectedUser, Role.OBSERVER);
+            userController.setRole(selectedUser, Role.OBSERVER);
         }
     }
 

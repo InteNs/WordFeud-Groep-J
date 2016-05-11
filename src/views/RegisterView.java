@@ -1,6 +1,5 @@
 package views;
 
-import controllers.UserController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -22,23 +21,20 @@ public class RegisterView extends View {
     @FXML
     private Label passwordReq;
 
-    private UserController controller;
-
     @Override
     public void refresh() {
     }
 
     @Override
     public void constructor() {
-        this.controller = controllerFactory.GetUserController();
     }
 
     @FXML
     public void register() {
-        if (!controller.userExists(userNameField.getText())) {
+        if (!userController.userExists(userNameField.getText())) {
             if (checkUserName(userNameField.getText())
                     && checkPassword(userPassField1.getText(), userPassField2.getText())) {
-                controller.insertUser(userNameField.getText(), userPassField1.getText());
+                userController.insertUser(userNameField.getText(), userPassField1.getText());
                 invalidUserLabel.setTextFill(Color.web("#00ff00"));
                 invalidUserLabel.setText("registreren geslaagd");
                 invalidUserLabel.setVisible(true);
@@ -57,7 +53,7 @@ public class RegisterView extends View {
 
     // Check if username meets the requirements (5 -25 char)
     private boolean checkUserName(String username) {
-        if (controller.isValidUsername(username)) {
+        if (userController.isValidUsername(username)) {
             usernameReq.setTextFill(Color.web("#000000"));
             invalidUserLabel.setVisible(false);
             return true;
@@ -72,7 +68,7 @@ public class RegisterView extends View {
     // Check if username meets the requirements (pass 1 = pass2, length: 5 - 25 )
     private boolean checkPassword(String password1, String password2) {
         if (password1.equals(password2)) {
-            if (controller.isValidPassword(password1)) {
+            if (userController.isValidPassword(password1)) {
                 passwordReq.setTextFill(Color.web("#000000"));
                 invalidUserLabel.setVisible(false);
                 return true;

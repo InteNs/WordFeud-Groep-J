@@ -1,21 +1,25 @@
 package views;
 
-import controllers.ControllerFactory;
-import controllers.SessionController;
+import controllers.*;
 
 abstract class View {
     protected MainView parent;
     protected ControllerFactory controllerFactory;
+    protected UserController userController;
+    protected GameController gameController;
+    protected CompetitionController competitionController;
+    protected SessionController session;
 
     public abstract void refresh();
     public abstract void constructor();
 
-    protected SessionController getSession() {
-        return controllerFactory.getSessionController();
-    }
-
     protected void init(MainView parent) {
-        this.controllerFactory = parent.getControllerFactory();
+        controllerFactory = parent.getControllerFactory();
+        userController = controllerFactory.GetUserController();
+        gameController = controllerFactory.getGameController();
+        competitionController = controllerFactory.getCompetitionController();
+        session = controllerFactory.getSessionController();
+
         this.parent = parent;
         constructor();
     }
