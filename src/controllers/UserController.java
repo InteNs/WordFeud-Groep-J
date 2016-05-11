@@ -65,11 +65,11 @@ public class UserController extends Controller {
 
     public boolean isValidUsername(String username) {
         return username.length() >= 5 & username.length() <= 25
-                && username.matches("[a-zA-Z0-9]+");
+                && username.matches("[a-zA-Z0-9]+" );
     }
 
     public boolean isValidPassword(String password) {
-        return password.length() >= 5 && password.length() <= 25;
+        return password.length() >= 5 && password.length() <= 25 && (!password.contains(" "));
     }
 
     public void setRole(User user, Role role) {
