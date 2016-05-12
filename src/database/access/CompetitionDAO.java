@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CompetitionDAO extends DAO {
 
-    public static ArrayList<Competition> selectCompetition() {
+    public static ArrayList<Competition> selectCompetitions() {
         ResultSet rs = database.select(SQL.ALL.COMPETITIONS);
         ArrayList<Competition> competitions = new ArrayList<>();
         try {
