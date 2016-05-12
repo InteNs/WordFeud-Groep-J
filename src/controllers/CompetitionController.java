@@ -31,8 +31,29 @@ public class CompetitionController extends Controller {
         selectedCompetition.set(competition);
     }
 
-    public ArrayList<User> getUser(Competition comp) {
-        return comp.getPlayers();
+    public Competition getCompetition(User user) {
+        for (Competition competition : competitions)
+            if (competition.getOwner().equals(user)) return competition;
+        return null;
+    }
+    
+    public boolean isValidCompetitionName(String competitionName) {
+        return competitionName.length() >= 5 & competitionName.length() <= 25
+                && competitionName.matches("[a-zA-Z0-9]+");
+    }
+
+    public boolean createCompetition(String competitionName) {
+        if (getCompetition(getSession().getCurrentUser()) != null) {
+            return false;
+        }
+        Competition newComp = new Competition(getSession().getCurrentUser(), competitionName);
+        CompetitionDAO.insertCompetition(newComp);
+        //add owner as player
+        refresh();
+        competitions.stream()
+                .filter(competition -> competition.getOwner().equals(newComp.getOwner()))
+                .forEach(competition -> CompetitionDAO.insertPlayer(competition.getOwner(), competition));
+        return true;
     }
 
     public ObservableList<Competition> getCompetitions() {

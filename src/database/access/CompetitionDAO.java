@@ -1,15 +1,12 @@
 package database.access;
 
+import database.SQL;
+import models.Competition;
+import models.User;
+
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-
-import database.SQL;
-import models.Competition;
-import models.Game;
-import models.User;
-
-import javax.management.openmbean.CompositeType;
 
 public class CompetitionDAO extends DAO {
 
@@ -27,6 +24,17 @@ public class CompetitionDAO extends DAO {
         }
         database.close();
         return competitions;
+    }
+
+    public static boolean insertCompetition(Competition competition) {
+        return database.insert(SQL.INSERT.INSERTCOMPETITION,
+                competition.getName(),
+                competition.getOwner().getName()
+        );
+    }
+
+    public static boolean insertPlayer(User user, Competition competition) {
+        return database.insert(SQL.INSERT.INSERTPLAYER, user.getName(), competition.getId());
     }
 
     public static ArrayList<User> selectAllUsers(Integer comp_id) {
