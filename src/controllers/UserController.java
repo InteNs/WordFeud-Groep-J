@@ -19,6 +19,7 @@ public class UserController extends Controller {
         super(factory);
         users = FXCollections.observableArrayList(UserDAO.selectUsers());
         selectedUser = new SimpleObjectProperty<>();
+        UserDAO.setAllRoles(users);
     }
 
     public ObjectProperty<User> selectedUserProperty() {
