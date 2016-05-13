@@ -8,16 +8,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.User;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 public class UserController extends Controller {
 
-    private ArrayList<User> users;
-    private ObjectProperty<User> selectedUser = new SimpleObjectProperty<>();
+    private ObservableList<User> users;
+    private ObjectProperty<User> selectedUser;
 
     public UserController(ControllerFactory factory) {
         super(factory);
+        users = FXCollections.observableArrayList(UserDAO.selectUsers());
+        selectedUser = new SimpleObjectProperty<>();
     }
 
     public ObjectProperty<User> selectedUserProperty() {
@@ -44,7 +45,7 @@ public class UserController extends Controller {
     }
 
     public ObservableList<User> getUsers() {
-        return FXCollections.observableArrayList(users);
+        return users;
     }
 
     public boolean userExists(String username) {
@@ -65,11 +66,11 @@ public class UserController extends Controller {
 
     public boolean isValidUsername(String username) {
         return username.length() >= 5 & username.length() <= 25
-                && username.matches("[a-zA-Z0-9]+");
+                && username.matches("[a-zA-Z0-9]+" );
     }
 
     public boolean isValidPassword(String password) {
-        return password.length() >= 5 && password.length() <= 25;
+        return password.length() >= 5 && password.length() <= 25 && (!password.contains(" "));
     }
 
     public void setRole(User user, Role role) {
@@ -84,7 +85,7 @@ public class UserController extends Controller {
 
     @Override
     public void refresh() {
-        users = UserDAO.selectUsers();
+        users.setAll(UserDAO.selectUsers());
         UserDAO.setAllRoles(users);
     }
 }

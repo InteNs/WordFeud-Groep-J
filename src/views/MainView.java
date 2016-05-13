@@ -1,5 +1,6 @@
 package views;
 
+import controllers.Controller;
 import controllers.ControllerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +21,7 @@ public class MainView extends View implements Initializable {
     @FXML private VBox welcomeView;
     @FXML private VBox registerView;
     @FXML private Pane userInfoView;
+    @FXML private VBox createCompetitionView;
 
     @FXML private ProgressIndicator loadIndicator;
     @FXML private ToolBar toolBar;
@@ -35,7 +37,7 @@ public class MainView extends View implements Initializable {
     @FXML private WelcomeView  welcomeViewController;
     @FXML private RegisterView  registerViewController;
     @FXML private UserInfoView  userInfoViewController;
-
+    @FXML private CreateCompetitionView createCompetitionViewController;
     private ControllerFactory controllerFactory;
     private int controlIndex;
     private double dividerPos;
@@ -59,7 +61,8 @@ public class MainView extends View implements Initializable {
                 welcomeViewController,
                 registerViewController,
                 userListViewController,
-                userInfoViewController
+                userInfoViewController,
+                createCompetitionViewController
         ).forEach(view -> view.init(this));
     }
 
@@ -80,6 +83,10 @@ public class MainView extends View implements Initializable {
     public void showUserInfo(){
         setContent(userInfoView);
     }
+    
+    public void showCreateCompetition(){
+    	setContent(createCompetitionView);
+    }
 
     @FXML
     public void refresh() {
@@ -88,7 +95,7 @@ public class MainView extends View implements Initializable {
         will be done by a seperate thread later
         */
         loadIndicator.setVisible(true);
-        controllerFactory.getControllers();
+        controllerFactory.getControllers().forEach(Controller::refresh);
         loadIndicator.setVisible(false);
     }
 
@@ -107,7 +114,7 @@ public class MainView extends View implements Initializable {
     	toolBar.setDisable(true);
     	this.setControl(false);
     	loginViewController.resetFields();
-        userController.logOut();
+        controllerFactory.getSessionController().setCurrentUser(null);
     }
     
     /**

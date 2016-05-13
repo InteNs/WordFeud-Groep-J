@@ -12,11 +12,13 @@ import java.util.ArrayList;
 
 public class CompetitionController extends Controller {
 
-    private ArrayList<Competition> competitions;
-    private ObjectProperty<Competition> selectedCompetition = new SimpleObjectProperty<>();
+    private ObservableList<Competition> competitions;
+    private ObjectProperty<Competition> selectedCompetition;
 
     public CompetitionController(ControllerFactory factory) {
         super(factory);
+        competitions = FXCollections.observableArrayList(CompetitionDAO.selectCompetitions());
+        selectedCompetition = new SimpleObjectProperty<>();
     }
 
     public Competition getSelectedCompetition() {
@@ -31,12 +33,33 @@ public class CompetitionController extends Controller {
         selectedCompetition.set(competition);
     }
 
-    public ArrayList<User> getUser(Competition comp) {
-        return comp.getPlayers();
+    public Competition getCompetition(User user) {
+        for (Competition competition : competitions)
+            if (competition.getOwner().equals(user)) return competition;
+        return null;
+    }
+    
+    public boolean isValidCompetitionName(String competitionName) {
+        return competitionName.length() >= 5 & competitionName.length() <= 25
+                && competitionName.matches("[a-zA-Z0-9]+");
+    }
+
+    public boolean createCompetition(String competitionName) {
+        if (getCompetition(getSession().getCurrentUser()) != null) {
+            return false;
+        }
+        Competition newComp = new Competition(getSession().getCurrentUser(), competitionName);
+        CompetitionDAO.insertCompetition(newComp);
+        //add owner as player
+        refresh();
+        competitions.stream()
+                .filter(competition -> competition.getOwner().equals(newComp.getOwner()))
+                .forEach(competition -> CompetitionDAO.insertPlayer(competition.getOwner(), competition));
+        return true;
     }
 
     public ObservableList<Competition> getCompetitions() {
-        return FXCollections.observableArrayList(competitions);
+        return competitions;
     }
 
     public ObservableList<String> getCompetitions(User user) {
@@ -51,6 +74,6 @@ public class CompetitionController extends Controller {
 
     @Override
     public void refresh() {
-        this.competitions = CompetitionDAO.selectCompetition();
+        competitions.setAll(CompetitionDAO.selectCompetitions());
     }
 }
