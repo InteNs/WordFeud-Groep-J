@@ -22,6 +22,7 @@ public class MainView extends View implements Initializable {
     @FXML private VBox registerView;
     @FXML private Pane userInfoView;
     @FXML private VBox createCompetitionView;
+    @FXML private VBox passwordChangeView;
 
     @FXML private ProgressIndicator loadIndicator;
     @FXML private ToolBar toolBar;
@@ -38,7 +39,10 @@ public class MainView extends View implements Initializable {
     @FXML private RegisterView  registerViewController;
     @FXML private UserInfoView  userInfoViewController;
     @FXML private CreateCompetitionView createCompetitionViewController;
+    @FXML private PasswordChangeView passwordChangeViewController;
+
     private ControllerFactory controllerFactory;
+
     private int controlIndex;
     private double dividerPos;
 
@@ -62,7 +66,9 @@ public class MainView extends View implements Initializable {
                 registerViewController,
                 userListViewController,
                 userInfoViewController,
-                createCompetitionViewController
+                createCompetitionViewController,
+                passwordChangeViewController
+
         ).forEach(view -> view.init(this));
     }
 
@@ -84,9 +90,15 @@ public class MainView extends View implements Initializable {
         setContent(userInfoView);
     }
     
+
     public void showCreateCompetition(){
     	setContent(createCompetitionView);
     }
+    
+    public void showPasswordChangeView(){
+        setContent(passwordChangeView);
+    }
+
 
     @FXML
     public void refresh() {

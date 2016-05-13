@@ -86,6 +86,22 @@ public class UserController extends Controller {
         user.removeRole(role);
     }
 
+    public boolean checkPassword(String oldPassword) {
+        String userName = getSession().getCurrentUser().getName();
+        User optionalUser = UserDAO.selectUser(userName, oldPassword);
+
+        if (!(optionalUser == null)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void changePassword(String password) {
+        User user = getSession().getCurrentUser();
+        UserDAO.updatePassword(user, password);
+    }
+
     @Override
     public void refresh() {
         users.setAll(UserDAO.selectUsers());
