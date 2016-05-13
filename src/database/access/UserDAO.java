@@ -26,17 +26,19 @@ public class UserDAO extends DAO {
     }
 
     public static User selectUser(String username, String password) {
-        if (database.count(SQL.COUNT.USERSWITHCREDS, username, password) > 0)
-            return new User(username);
-        else
-            return null;
-    }
-
-    public static User selectUser(String username) {
-        if (database.count(SQL.COUNT.USERCOUNT, username) > 0)
-            return new User(username);
-        else
-            return null;
+        ResultSet records = database.select(SQL.ALL.USERS);
+        try {
+            while (records.next()){
+                if (records.getString("naam").equals(username) &
+                        records.getString("wachtwoord").equals(password)) {
+                    return new User(username, password);
+                }
+            }
+        } catch (SQLException e) {
+            printError(e);
+        }
+        database.close();
+        return null;
     }
 
     public static boolean insertUser(String username, String password) {
