@@ -29,10 +29,9 @@ public class UserDAO extends DAO {
         ResultSet records = database.select(SQL.ALL.USERS);
         try {
             while (records.next()){
-                if (records.getString("naam").equals(username)){
-                    if (records.getString("wachtwoord").equals(password)){
-                        return new User(username,password);
-                    }
+                if (records.getString("naam").equals(username) &
+                        records.getString("wachtwoord").equals(password)) {
+                    return new User(username, password);
                 }
             }
         } catch (SQLException e) {

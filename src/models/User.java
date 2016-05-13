@@ -15,9 +15,9 @@ public class User {
         roles = new ArrayList<>();
     }
 
-    public User(String name,String passWord) {
+    public User(String name, String passWord) {
         this.name = name;
-        this.passWord=passWord;
+        this.passWord = passWord;
         roles = new ArrayList<>();
     }
 
