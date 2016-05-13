@@ -1,5 +1,6 @@
 package views;
 
+import controllers.Controller;
 import controllers.ControllerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,6 +22,8 @@ public class MainView extends View implements Initializable {
     @FXML private VBox registerView;
     @FXML private Pane userInfoView;
     @FXML private VBox gameBoardView;
+    @FXML private VBox createCompetitionView;
+    @FXML private VBox passwordChangeView;
 
     @FXML private ProgressIndicator loadIndicator;
     @FXML private ToolBar toolBar;
@@ -37,8 +40,11 @@ public class MainView extends View implements Initializable {
     @FXML private RegisterView  registerViewController;
     @FXML private UserInfoView  userInfoViewController;
     @FXML private GameBoardView gameBoardViewController;
+    @FXML private CreateCompetitionView createCompetitionViewController;
+    @FXML private PasswordChangeView passwordChangeViewController;
 
     private ControllerFactory controllerFactory;
+
     private int controlIndex;
     private double dividerPos;
 
@@ -61,8 +67,11 @@ public class MainView extends View implements Initializable {
                 welcomeViewController,
                 registerViewController,
                 userListViewController,
+                gameBoardViewController,
                 userInfoViewController,
-                gameBoardViewController
+                createCompetitionViewController,
+                passwordChangeViewController
+
         ).forEach(view -> view.init(this));
     }
 
@@ -84,6 +93,15 @@ public class MainView extends View implements Initializable {
         setContent(userInfoView);
     }
 
+    public void showCreateCompetition(){
+    	setContent(createCompetitionView);
+    }
+
+    public void showPasswordChangeView(){
+        setContent(passwordChangeView);
+    }
+
+
     @FXML
     public void refresh() {
         /*
@@ -91,7 +109,7 @@ public class MainView extends View implements Initializable {
         will be done by a seperate thread later
         */
         loadIndicator.setVisible(true);
-        controllerFactory.getControllers();
+        controllerFactory.getControllers().forEach(Controller::refresh);
         loadIndicator.setVisible(false);
     }
 
