@@ -1,18 +1,16 @@
 package models;
 
+import controllers.ControllerFactory;
 import controllers.GameController;
-import database.access.GameDAO;
 import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class GameTest {
 
@@ -43,8 +41,8 @@ public class GameTest {
 
     @Test
     public void checkRow() throws Exception {
-        GameController gameController = new GameController();
+        GameController gameController = new ControllerFactory().getGameController();
         gameController.loadGame(game);
-        game.setBoardStateTo(game.getTurns().get(game.getTurns().size()-1));
+        game.setBoardStateTo(game.getTurns().get(game.getTurns().size() - 1));
     }
 }
