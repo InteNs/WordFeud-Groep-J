@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class User {
 
     private String name;
-
+    private String passWord;
     private ArrayList<Role> roles;
 
     public User(String name) {
@@ -15,8 +15,18 @@ public class User {
         roles = new ArrayList<>();
     }
 
+    public User(String name,String passWord) {
+        this.name = name;
+        this.passWord=passWord;
+        roles = new ArrayList<>();
+    }
+
     public String getName() {
         return name;
+    }
+
+    public String getPassWord() {
+        return passWord;
     }
 
     @Override
