@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="225.0" prefWidth="339.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.CreateCompetitionView">
+   <children>
+      <TextField fx:id="competitionName" alignment="CENTER" prefHeight="30.0" prefWidth="200.0" promptText="Competitienaam" />
+      <Label fx:id="competitionNameReq" text="Competitienaam mag bestaan uit 5 - 25 tekens" textAlignment="CENTER" textFill="#778899" visible="true"/>
+      <Label fx:id="invalidCompetitionNameLabel" text="Competitienaam voldoet niet aan de bovenstaande eisen" textAlignment="CENTER" textFill="#f50202" visible="false">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font>
+      </Label>
+      <HBox alignment="TOP_CENTER" prefHeight="60.0" prefWidth="600.0" spacing="30.0">
+         <children>
+            <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#createCompetition" text="Competitie aanmaken" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

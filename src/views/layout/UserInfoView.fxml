@@ -28,7 +28,7 @@
          <font>
             <Font size="13.0" />
          </font></CheckBox>
-      <Label fx:id="userNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="205.0" layoutY="40.0" prefHeight="17.0" prefWidth="191.0" text="Gebruikersnaam" textAlignment="RIGHT">
+      <Label fx:id="userNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="205.0" layoutY="40.0" prefHeight="17.0" text="Gebruikersnaam" textAlignment="RIGHT">
          <font>
             <Font size="25.0" />
          </font>

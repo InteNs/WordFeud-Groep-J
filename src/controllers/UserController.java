@@ -8,16 +8,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.User;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 public class UserController extends Controller {
 
-    private ArrayList<User> users;
-    private ObjectProperty<User> selectedUser = new SimpleObjectProperty<>();
+    private ObservableList<User> users;
+    private ObjectProperty<User> selectedUser;
 
     public UserController(ControllerFactory factory) {
         super(factory);
+        users = FXCollections.observableArrayList(UserDAO.selectUsers());
+        selectedUser = new SimpleObjectProperty<>();
+        UserDAO.setAllRoles(users);
     }
 
     public ObjectProperty<User> selectedUserProperty() {
@@ -44,7 +46,7 @@ public class UserController extends Controller {
     }
 
     public ObservableList<User> getUsers() {
-        return FXCollections.observableArrayList(users);
+        return users;
     }
 
     public boolean userExists(String username) {
@@ -57,7 +59,9 @@ public class UserController extends Controller {
 
     public boolean insertUser(String username, String password) {
         if (UserDAO.insertUser(username, password)) {
-            users.add(new User(username));
+            User user = new User(username);
+            users.add(user);
+            setRole(user,(Role.PLAYER));
             return true;
         }
         return false;
@@ -82,9 +86,25 @@ public class UserController extends Controller {
         user.removeRole(role);
     }
 
+    public boolean checkPassword(String oldPassword) {
+        String userName = getSession().getCurrentUser().getName();
+        User optionalUser = UserDAO.selectUser(userName, oldPassword);
+
+        if (!(optionalUser == null)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void changePassword(String password) {
+        User user = getSession().getCurrentUser();
+        UserDAO.updatePassword(user, password);
+    }
+
     @Override
     public void refresh() {
-        users = UserDAO.selectUsers();
+        users.setAll(UserDAO.selectUsers());
         UserDAO.setAllRoles(users);
     }
 }

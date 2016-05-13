@@ -9,15 +9,16 @@ import models.Game;
 import models.Tile;
 import models.User;
 
-import java.util.ArrayList;
-
 public class GameController extends Controller {
 
-    private ArrayList<Game> games;
-    private ObjectProperty<Game> selectedGame = new SimpleObjectProperty<>();
+    private ObservableList<Game> games;
+    private ObjectProperty<Game> selectedGame;
 
     public GameController(ControllerFactory factory) {
         super(factory);
+        selectedGame = new SimpleObjectProperty<>();
+        games = FXCollections.observableArrayList(GameDAO.selectGames());
+        games.forEach(game -> game.setMessages(GameDAO.selectMessages(game)));
     }
 
     public ObjectProperty<Game> selectedGameProperty() {
@@ -33,12 +34,7 @@ public class GameController extends Controller {
     }
 
     public ObservableList<Game> getGames() {
-        return FXCollections.observableArrayList(games);
-    }
-
-    public void refresh() {
-        this.games = GameDAO.selectGames();
-        games.forEach(game -> game.setMessages(GameDAO.selectMessages(game)));
+        return games;
     }
 
     public void loadGame(Game game) {
@@ -51,12 +47,18 @@ public class GameController extends Controller {
 
     public Tile getTile(Game selectedGame,String hashcode) {
         for (Tile tile:selectedGame.getAllTiles()
-             ) {
+                ) {
             if (tile.hashCode()==Integer.valueOf(hashcode)){
                 return tile;
             }
 
         }
         return null;
+    }
+
+    public void refresh() {
+        games.setAll(GameDAO.selectGames());
+        games.forEach(game -> game.setMessages(GameDAO.selectMessages(game)));
+
     }
 }

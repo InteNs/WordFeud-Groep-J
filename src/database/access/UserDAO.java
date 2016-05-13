@@ -7,6 +7,7 @@ import models.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAO extends DAO {
 
@@ -42,13 +43,17 @@ public class UserDAO extends DAO {
         return database.insert(SQL.INSERT.INSERTUSER, username, password);
     }
 
-    public static void setAllRoles(ArrayList<User> users) {
-        for (User user : users) {
-            ArrayList<String> roles = database.selectFirstColumn(SQL.SELECT.SELECTUSERROLES, user.toString());
-            for (String role : roles) {
-                user.addRole(Role.parse(role));
-            }
+    public static void setAllRoles(List<User> users) {
+        ResultSet rs = database.select(SQL.ALL.ROLES);
+        try {
+            while (rs.next())
+                for (User user : users)
+                    if (user.getName().equals(rs.getString("account_naam")))
+                        user.addRole(Role.parse(rs.getString("rol_type")));
+        } catch (SQLException e) {
+            printError(e);
         }
+        database.close();
     }
 
     public static void setRole(User user, Role role) {
@@ -58,5 +63,9 @@ public class UserDAO extends DAO {
     public static void removeRole(User user, Role role) {
         database.insert(SQL.DELETE.REMOVEROLE, user.getName(), role.toString().toLowerCase());
     }
+    
+    public static void updatePassword(User user, String password){
+        database.update(SQL.UPDATE.UPDATEPASSWORD, password, user.getName());
+    }
+    
 }
-
