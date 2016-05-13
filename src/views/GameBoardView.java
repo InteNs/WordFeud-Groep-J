@@ -44,6 +44,7 @@ public class GameBoardView extends View {
     @FXML
     private Label player2ScoreLabel;
     private Game selectedGame;
+    private Tile tileBeingDragged;
 
     public void displayGameBoard(Field[][] gameBoard) {
         if (gameBoard == null) {
@@ -59,19 +60,18 @@ public class GameBoardView extends View {
                 gameBoardGrid.getChildren().add(draggableNode);
                 draggableNode.setOnDragOver(event -> {
                     event.consume();
-                   // if (event.getSource() != draggableNode && event.getDragboard().hasImage())
                         event.acceptTransferModes(TransferMode.MOVE);
-
                 });
                 draggableNode.setOnDragDropped(event -> {
                     Dragboard db = event.getDragboard();
                     boolean succes = false;
-                    if (db.hasImage()) {
-                        draggableNode.setImage(db.getImage());
-                        draggableNode.getField().setTile(((DraggableNode)event.getSource()).getTile());
+                    // if (db.hasImage()) {
+                    draggableNode.setImage(db.getDragView());
+                    draggableNode.getField().setTile(tileBeingDragged);
                         System.out.println(draggableNode.getField().getTile());
                         succes = true;
-                    }
+                    //  }
+                    //TODO: Check this value with Source setOnDropDone method
                     event.setDropCompleted(succes);
                 });
             }
@@ -88,12 +88,20 @@ public class GameBoardView extends View {
                 ((Node) event.getSource()).setCursor(Cursor.HAND);
                 Dragboard db = draggableNode.startDragAndDrop(TransferMode.MOVE);
                 ClipboardContent content = new ClipboardContent();
-                content.putImage(draggableNode.getImage());
+                //content.putImage(draggableNode.getImage());
+                //TODO: setDragView not working as intended
+                db.setDragView(draggableNode.getImage());
+                content.putString(draggableNode.getId());
+                tileBeingDragged = draggableNode.getTile();
+                playerRackGrid.getChildren().remove(draggableNode);
                 db.setContent(content);
             });
 
             draggableNode.setOnDragDone(event -> {
-                playerRackGrid.getChildren().remove(draggableNode);
+                if (!event.isDropCompleted()) {
+                    playerRackGrid.getChildren().add(draggableNode);
+                }
+                tileBeingDragged = null;
             });
 
         });
