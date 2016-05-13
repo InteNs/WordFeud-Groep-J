@@ -58,7 +58,9 @@ public class UserController extends Controller {
 
     public boolean insertUser(String username, String password) {
         if (UserDAO.insertUser(username, password)) {
-            users.add(new User(username));
+            User user = new User(username);
+            users.add(user);
+            setRole(user,(Role.PLAYER));
             return true;
         }
         return false;
