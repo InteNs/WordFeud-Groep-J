@@ -99,6 +99,17 @@ public class Database {
     }
 
     /**
+     * execute an update query with x amount of question marks
+     *
+     * @param query  defined in static SQL class
+     * @param values values to insert into question marks
+     * @return false if the execution failed
+     */
+    public boolean update(String query, Object... values) {
+       return insert(query, values);
+    }
+
+    /**
      * CALL close() method on database after this method
      * execute a select query with x mount of question marks
      *
