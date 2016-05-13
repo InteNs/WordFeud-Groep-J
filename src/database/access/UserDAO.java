@@ -63,7 +63,7 @@ public class UserDAO extends DAO {
     }
 
     public static void removeRole(User user, Role role) {
-        database.insert(SQL.DELETE.REMOVEROLE, user.getName(), role.toString().toLowerCase());
+        database.delete(SQL.DELETE.REMOVEROLE, user.getName(), role.toString().toLowerCase());
     }
     
     public static void updatePassword(User user, String password){
