@@ -38,25 +38,6 @@ public class Database {
         }
     }
 
-    private void printError(Exception e) {
-        try {
-            System.out.println(e.getMessage() + "\nquery: " + statement.toString().split(":")[1]);
-        } catch (Exception e1) {
-            if(e instanceof CommunicationsException) System.err.println("no connection to database!");
-        }
-    }
-
-    private Connection connection() throws SQLException {
-        connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        return connection;
-    }
-
-    private void setStatement(String query, Object... values) throws SQLException {
-        statement = connection().prepareStatement(query);
-        for (int i = 0; i < values.length; i++)
-            statement.setObject(i + 1, values[i]);
-    }
-
     /**
      * execute a count query with x amount of question marks
      *
@@ -79,6 +60,16 @@ public class Database {
     }
 
     /**
+     * execute a delete query with x amount of question marks
+     *
+     * @param query  defined in static SQL class
+     * @param values values to insert into question marks
+     * @return false if the execution failed
+     */
+    public boolean delete(String query, Object... values) {
+        return execute(query, values);
+    }
+    /**
      * execute an insert query with x amount of question marks
      *
      * @param query  defined in static SQL class
@@ -86,16 +77,7 @@ public class Database {
      * @return false if the execution failed
      */
     public boolean insert(String query, Object... values) {
-        try {
-            setStatement(query, values);
-            statement.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            printError(e);
-            return false;
-        } finally {
-            close();
-        }
+        return execute(query, values);
     }
 
     /**
@@ -106,7 +88,7 @@ public class Database {
      * @return false if the execution failed
      */
     public boolean update(String query, Object... values) {
-       return insert(query, values);
+       return execute(query, values);
     }
 
     /**
@@ -147,5 +129,37 @@ public class Database {
         }
         close();
         return result;
+    }
+
+    private void printError(Exception e) {
+        try {
+            System.out.println(e.getMessage() + "\nquery: " + statement.toString().split(":")[1]);
+        } catch (Exception e1) {
+            if(e instanceof CommunicationsException) System.err.println("no connection to database!");
+        }
+    }
+
+    private Connection connection() throws SQLException {
+        connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        return connection;
+    }
+
+    private void setStatement(String query, Object... values) throws SQLException {
+        statement = connection().prepareStatement(query);
+        for (int i = 0; i < values.length; i++)
+            statement.setObject(i + 1, values[i]);
+    }
+
+    private boolean execute(String query, Object... values) {
+        try {
+            setStatement(query, values);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            printError(e);
+            return false;
+        } finally {
+            close();
+        }
     }
 }
