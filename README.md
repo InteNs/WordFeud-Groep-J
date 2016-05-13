@@ -32,6 +32,8 @@ Database 	: wordfeud
 Alias plakken in `/Users/<naam>/.gitconfig`.
 
 ### GitFlow: (met alias)
+resultaat van een ideale Pull Request: [#63](https://github.com/InteNs/WordFeud-Groep-J/pull/63)
+
 Doe tussen de stappen veel controle of alles goed gaat:
 ```bash
 git l               //lijst van commits

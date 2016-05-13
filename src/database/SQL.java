@@ -21,11 +21,6 @@ public class SQL {
         public static final String ROLES = "SELECT * FROM accountrol";
     }
 
-    public class COUNT {
-        public static final String USERSWITHCREDS = "SELECT count(naam) FROM account WHERE naam = ? AND wachtwoord = ?";
-        public static final String USERCOUNT = "SELECT count(naam) FROM account WHERE naam = ?";
-    }
-
     public class INSERT {
         public static final String INSERTUSER = "INSERT INTO account (naam, wachtwoord) VALUES (?, ?)";
         public static final String  SETROLE = "INSERT INTO `wordfeud`.`accountrol` (`account_naam`, `rol_type`) VALUES (?, ?);";
