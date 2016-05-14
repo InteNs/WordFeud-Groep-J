@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class GameDAO extends DAO {
 
-    public static ArrayList<Message> selectMessages(Game game) {
+    public ArrayList<Message> selectMessages(Game game) {
         ArrayList<Message> messages = new ArrayList<>();
         ResultSet records = database.select(SQL.SELECT.MESSAGESFORGAME, game.getId());
         try {
@@ -27,7 +27,7 @@ public class GameDAO extends DAO {
         return messages;
     }
 
-    public static ArrayList<Game> selectGames() {
+    public ArrayList<Game> selectGames() {
         ResultSet records = database.select(SQL.ALL.GAMES);
         ArrayList<Game> games = new ArrayList<>();
         try {
@@ -47,7 +47,7 @@ public class GameDAO extends DAO {
         database.close();
         return games;
     }
-    public static ArrayList<Turn> selectTurns(Game game) {
+    public ArrayList<Turn> selectTurns(Game game) {
         ArrayList<Turn> turns = new ArrayList<>();
         ResultSet records = database.select(SQL.SELECT.TURNSFORGAME, game.getId());
         try {
@@ -70,7 +70,7 @@ public class GameDAO extends DAO {
         database.close();
         return turns;
     }
-    protected static ArrayList<Tile> buildRack(String values) {
+    protected ArrayList<Tile> buildRack(String values) {
         ArrayList<Tile> rack = new ArrayList<>();
         if(values == null)
             return null;
@@ -80,7 +80,7 @@ public class GameDAO extends DAO {
         return rack;
     }
 
-    protected static ArrayList<Tile> buildPlacedTiles(String woorddeel, String x, String y) {
+    protected ArrayList<Tile> buildPlacedTiles(String woorddeel, String x, String y) {
         if(woorddeel == null)
             return null;
         ArrayList<Tile> tiles = new ArrayList<>();
@@ -97,7 +97,7 @@ public class GameDAO extends DAO {
         return tiles;
     }
 
-    public static ArrayList<Tile> selectTiles(Language language) {
+    public ArrayList<Tile> selectTiles(Language language) {
         ArrayList<Tile> tiles = new ArrayList<>();
         ResultSet records = database.select(SQL.SELECT.LETTERSFORLANG, language.toString());
         try {
@@ -116,7 +116,7 @@ public class GameDAO extends DAO {
         return tiles;
     }
 
-    public static Field[][] selectFieldsForBoard(BoardType boardType) {
+    public Field[][] selectFieldsForBoard(BoardType boardType) {
         Field[][] fields = new Field[15][15];
         ResultSet records = database.select(SQL.SELECT.TILESFORBOARD, boardType.toString());
         try {

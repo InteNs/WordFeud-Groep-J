@@ -4,3 +4,11 @@
     -fx-border-width:     0 0 1 0;
     -fx-border-insets:    0 0 -1 0;
 }
+
+.tab-pane .tab-header-area .tab {
+    -fx-pref-height: 30;
+}
+
+.user-info .check-box {
+    -fx-font-size: 13;
+}

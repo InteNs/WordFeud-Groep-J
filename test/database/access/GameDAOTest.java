@@ -14,7 +14,7 @@ public class GameDAOTest {
         String woorddeel = "A,B,C";
         String xCords = "1,1,1";
         String yCords = "10,11,12";
-        ArrayList<Tile> tiles = GameDAO.buildPlacedTiles(woorddeel,xCords,yCords);
+        ArrayList<Tile> tiles = new GameDAO().buildPlacedTiles(woorddeel,xCords,yCords);
         assertEquals("first tile should have char A",
                 tiles.get(0).getCharacter(),
                 new Character('A'));
@@ -30,7 +30,7 @@ public class GameDAOTest {
     public void buildRack() {
         String chars = "F,O,O,B,A,R,Z";
         assertEquals("it should have 7 tile objects",
-                GameDAO.buildRack(chars).size(),
+                new GameDAO().buildRack(chars).size(),
                 7);
     }
 }

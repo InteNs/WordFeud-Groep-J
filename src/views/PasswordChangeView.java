@@ -70,12 +70,6 @@ public class PasswordChangeView extends View {
         }
     }
 
-    public void keyListener(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER) {
-            this.changePassword();
-        }
-    }
-
     private void resetFields() {
         oldPassField.setText(null);
         newPassField1.setText(null);

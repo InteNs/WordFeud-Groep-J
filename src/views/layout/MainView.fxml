@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ProgressIndicator?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <VBox stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.MainView">
     <ToolBar fx:id="toolBar" disable="true" prefHeight="40.0" prefWidth="200.0">
         <ToggleButton mnemonicParsing="false" onAction="#toggleControl" text="verstop tabs" />
@@ -20,27 +11,23 @@
       <ProgressIndicator fx:id="loadIndicator" prefHeight="20.0" prefWidth="20.0" visible="false" />
     </ToolBar>
     <SplitPane fx:id="mainContent" dividerPositions="0.5" minWidth="1000.0" VBox.vgrow="ALWAYS">
-        <TabPane fx:id="control" minHeight="600.0" minWidth="300.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" SplitPane.resizableWithParent="false">
-            <Tab text="Games">
-                <fx:include fx:id="gameListView" source="GameListView.fxml" />
-            </Tab>
-            <Tab text="Gebruikers">
-                <fx:include fx:id="userListView" source="UserList.fxml" />
-            </Tab>
-            <Tab text="Competities">
-                <fx:include fx:id="competitionListView" source="CompetitionListView.fxml" />
-            </Tab>
+        <TabPane fx:id="control" minHeight="600.0" minWidth="300.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE"
+                 SplitPane.resizableWithParent="false">
+            <fx:include fx:id="gameListView" source="GameListView.fxml"/>
+            <fx:include fx:id="userListView" source="UserList.fxml"/>
+            <fx:include fx:id="competitionListView" source="CompetitionListView.fxml"/>
         </TabPane>
-            <StackPane fx:id="content" VBox.vgrow="ALWAYS" >
-                <children>
-                    <fx:include fx:id="loginView" source="LoginView.fxml" />
-                    <fx:include fx:id="welcomeView" source="WelcomeView.fxml" />
-                    <fx:include fx:id="registerView" source="RegisterView.fxml" />
-                    <fx:include fx:id="userInfoView" source="UserInfoView.fxml" />
-                    <fx:include fx:id="createCompetitionView" source="CreateCompetitionView.fxml" />
-                    <fx:include fx:id="passwordChangeView" source="PasswordChangeView.fxml" />
-                    <fx:include fx:id="gameBoardView" source="GameBoardView.fxml"/>
-                </children>
+        <VBox minHeight="600.0" minWidth="600.0" SplitPane.resizableWithParent="false">
+            <Region maxHeight="-Infinity" minHeight="-Infinity" prefHeight="34.0" styleClass="tab-aligned" />
+            <StackPane fx:id="content" VBox.vgrow="ALWAYS">
+                <fx:include fx:id="loginView" source="LoginView.fxml"/>
+                <fx:include fx:id="welcomeView" source="WelcomeView.fxml"/>
+                <fx:include fx:id="gameBoardView" source="GameBoardView.fxml"/>
+                <fx:include fx:id="registerView" source="RegisterView.fxml"/>
+                <fx:include fx:id="userInfoView" source="UserInfoView.fxml"/>
+                <fx:include fx:id="createCompetitionView" source="CreateCompetitionView.fxml"/>
+                <fx:include fx:id="passwordChangeView" source="PasswordChangeView.fxml"/>
             </StackPane>
+        </VBox>
     </SplitPane>
 </VBox>

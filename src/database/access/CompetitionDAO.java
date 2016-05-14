@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CompetitionDAO extends DAO {
 
-    public static ArrayList<Competition> selectCompetitions() {
+    public ArrayList<Competition> selectCompetitions() {
         ResultSet rs = database.select(SQL.ALL.COMPETITIONS);
         ArrayList<Competition> competitions = new ArrayList<>();
         try {
@@ -26,18 +26,18 @@ public class CompetitionDAO extends DAO {
         return competitions;
     }
 
-    public static boolean insertCompetition(Competition competition) {
+    public boolean insertCompetition(Competition competition) {
         return database.insert(SQL.INSERT.INSERTCOMPETITION,
                 competition.getName(),
                 competition.getOwner().getName()
         );
     }
 
-    public static boolean insertPlayer(User user, Competition competition) {
+    public boolean insertPlayer(User user, Competition competition) {
         return database.insert(SQL.INSERT.INSERTPLAYER, user.getName(), competition.getId());
     }
 
-    public static ArrayList<User> selectAllUsers(Integer comp_id) {
+    public ArrayList<User> selectAllUsers(Integer comp_id) {
         List<String> usernames;
         ArrayList<User> users = new ArrayList<>();
         usernames = database.selectFirstColumn(SQL.SELECT.SELECTUSERINCOMP, comp_id);

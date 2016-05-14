@@ -1,6 +1,5 @@
 package controllers;
 
-import database.access.CompetitionDAO;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -17,7 +16,7 @@ public class CompetitionController extends Controller {
 
     public CompetitionController(ControllerFactory factory) {
         super(factory);
-        competitions = FXCollections.observableArrayList(CompetitionDAO.selectCompetitions());
+        competitions = FXCollections.observableArrayList(competitionDAO.selectCompetitions());
         selectedCompetition = new SimpleObjectProperty<>();
     }
 
@@ -49,12 +48,12 @@ public class CompetitionController extends Controller {
             return false;
         }
         Competition newComp = new Competition(getSession().getCurrentUser(), competitionName);
-        CompetitionDAO.insertCompetition(newComp);
+        competitionDAO.insertCompetition(newComp);
         //add owner as player
         refresh();
         competitions.stream()
                 .filter(competition -> competition.getOwner().equals(newComp.getOwner()))
-                .forEach(competition -> CompetitionDAO.insertPlayer(competition.getOwner(), competition));
+                .forEach(competition -> competitionDAO.insertPlayer(competition.getOwner(), competition));
         return true;
     }
 
@@ -74,6 +73,6 @@ public class CompetitionController extends Controller {
 
     @Override
     public void refresh() {
-        competitions.setAll(CompetitionDAO.selectCompetitions());
+        competitions.setAll(competitionDAO.selectCompetitions());
     }
 }

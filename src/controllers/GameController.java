@@ -1,6 +1,5 @@
 package controllers;
 
-import database.access.GameDAO;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -16,9 +15,10 @@ public class GameController extends Controller {
 
     public GameController(ControllerFactory factory) {
         super(factory);
+        games = FXCollections.observableArrayList(gameDAO.selectGames());
         selectedGame = new SimpleObjectProperty<>();
-        games = FXCollections.observableArrayList(GameDAO.selectGames());
-        games.forEach(game -> game.setMessages(GameDAO.selectMessages(game)));
+        games = FXCollections.observableArrayList(gameDAO.selectGames());
+        games.forEach(game -> game.setMessages(gameDAO.selectMessages(game)));
     }
 
     public ObjectProperty<Game> selectedGameProperty() {
@@ -38,8 +38,8 @@ public class GameController extends Controller {
     }
 
     public void loadGame(Game game) {
-        game.setBoard(GameDAO.selectFieldsForBoard(game.getBoardType()));
-        game.setTurns(GameDAO.selectTurns(game));
+        game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
+        game.setTurns(gameDAO.selectTurns(game));
     }
 
     public void loadGameBoard(Game game){
@@ -57,8 +57,8 @@ public class GameController extends Controller {
     }
 
     public void refresh() {
-        games.setAll(GameDAO.selectGames());
-        games.forEach(game -> game.setMessages(GameDAO.selectMessages(game)));
+        games.setAll(gameDAO.selectGames());
+        games.forEach(game -> game.setMessages(gameDAO.selectMessages(game)));
 
     }
 }
