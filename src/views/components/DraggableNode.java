@@ -57,8 +57,6 @@ public class DraggableNode extends ImageView {
         String s;
         s = tile.toString().toUpperCase();
         String myString = "resources/" + s + ".png";
-        return new Image(myString, 40, 40, true, true, true);
+        return new Image(myString, 80, 80, true, true, true);
     }
-
-
 }

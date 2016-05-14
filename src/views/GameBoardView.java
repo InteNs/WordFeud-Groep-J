@@ -1,27 +1,20 @@
 package views;
 
 import javafx.fxml.FXML;
-import javafx.scene.*;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import models.Field;
 import models.Game;
 import models.Tile;
 import views.components.DraggableNode;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 
@@ -34,7 +27,7 @@ public class GameBoardView extends View {
     @FXML
     private GridPane gameBoardGrid;
     @FXML
-    private TilePane playerRackGrid;
+    private HBox playerRackGrid;
     @FXML
     private ChoiceBox<String> playerActionChoiceBox;
     @FXML
@@ -78,8 +71,8 @@ public class GameBoardView extends View {
     }
 
     public void displayPlayerRack(ArrayList<Tile> playerRack) {
+        playerRackGrid.getChildren().clear();
         playerRack.forEach(e -> {
-            String s = e.toString();
             DraggableNode draggableNode = new DraggableNode(e);
             playerRackGrid.getChildren().add(draggableNode);
 
