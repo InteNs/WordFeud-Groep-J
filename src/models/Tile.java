@@ -1,8 +1,5 @@
 package models;
 
-import javafx.util.Pair;
-import javafx.util.converter.CharacterStringConverter;
-
 public class Tile {
 
     private int value;
@@ -23,6 +20,10 @@ public class Tile {
         this.character = character;
         this.x = x;
         this.y = y;
+    }
+
+    public Tile() {
+
     }
 
     public Character getCharacter() {

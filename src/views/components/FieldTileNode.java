@@ -9,7 +9,6 @@ public class FieldTileNode extends ImageView {
 
     private Field field;
     private Tile tile;
-    private boolean placed;
 
     public Field getField() {
         return field;
@@ -17,20 +16,6 @@ public class FieldTileNode extends ImageView {
 
     public Tile getTile() {
         return tile;
-    }
-
-    public void setPlacedTile(Tile tile) {
-        if(tile == null) {
-            field.setTile(null);
-            placed = false;
-        } else {
-            field.setTile(tile);
-            placed = true;
-        }
-    }
-
-    public boolean isPlaced() {
-        return placed;
     }
 
     /**
@@ -45,8 +30,13 @@ public class FieldTileNode extends ImageView {
      * Used to build the playerRack
      */
     public FieldTileNode(Tile tile) {
-        this.setImage(getImage(tile));
-        this.tile = tile;
+        if (tile.getCharacter() == null) {
+            this.setFitHeight(80);
+            this.setFitWidth(80);
+        } else {
+            this.setImage(getImage(tile));
+            this.tile = tile;
+        }
     }
 
     public void redrawImage() {

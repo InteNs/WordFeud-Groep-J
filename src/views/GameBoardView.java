@@ -17,6 +17,8 @@ import models.Game;
 import models.Tile;
 import views.components.FieldTileNode;
 
+import java.util.Collections;
+
 
 public class GameBoardView extends View {
 
@@ -32,6 +34,7 @@ public class GameBoardView extends View {
 
     private Game selectedGame;
     private Tile tileBeingDragged;
+    private int previousRackIndex;
 
     public void displayGameBoard(Field[][] gameBoard) {
         if (gameBoard == null) {
@@ -87,11 +90,7 @@ public class GameBoardView extends View {
             event.consume();
             event.acceptTransferModes(TransferMode.MOVE);
         });
-        playerRackGrid.setOnDragDropped(event -> {
-            playerRack.add(tileBeingDragged);
-            tileBeingDragged = null;
-            event.setDropCompleted(true);
-        });
+
         buildNodeRack(playerRack);
         playerRack.addListener((ListChangeListener<? super Tile>) observable -> buildNodeRack(playerRack));
     }
@@ -110,13 +109,27 @@ public class GameBoardView extends View {
                 content.putImage(tileNode.getImage());
                 db.setContent(content);
                 tileBeingDragged = tileNode.getTile();
-                playerRack.remove(tileBeingDragged);
+                previousRackIndex = playerRack.indexOf(tileBeingDragged);
+                Collections.replaceAll(playerRack, tileBeingDragged, new Tile());
             });
             tileNode.setOnDragDone(event -> {
                 event.consume();
-                if (event.getTransferMode() != TransferMode.MOVE)
-                    playerRack.add(tileBeingDragged);
+                if (event.getTransferMode() != TransferMode.MOVE) {
+                    playerRack.remove(previousRackIndex);
+                    playerRack.add(previousRackIndex, tileBeingDragged);
+                }
                 tileBeingDragged = null;
+            });
+
+            tileNode.setOnDragDropped(event -> {
+                if(tileNode.getTile().getCharacter() == null)
+                    Collections.replaceAll(playerRack, tileNode.getTile(), tileBeingDragged);
+                else {
+                    playerRack.remove(playerRack.filtered(tile1 -> tile1.getCharacter() == null).get(0));
+                    playerRack.add(playerRack.indexOf(tileNode.getTile()), tileBeingDragged);
+                }
+                tileBeingDragged = null;
+                event.setDropCompleted(true);
             });
         });
     }
