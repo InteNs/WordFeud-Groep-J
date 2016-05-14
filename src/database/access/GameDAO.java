@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class GameDAO extends DAO {
 
-    public static ArrayList<Message> selectMessages(Game game) {
+    public ArrayList<Message> selectMessages(Game game) {
         ArrayList<Message> messages = new ArrayList<>();
         ResultSet records = database.select(SQL.SELECT.MESSAGESFORGAME, game.getID());
         try {
@@ -31,7 +31,7 @@ public class GameDAO extends DAO {
         return messages;
     }
 
-    public static ArrayList<Game> selectGames() {
+    public ArrayList<Game> selectGames() {
         ResultSet records = database.select(SQL.ALL.GAMES);
         ArrayList<Game> games = new ArrayList<>();
         try {
@@ -51,7 +51,7 @@ public class GameDAO extends DAO {
         database.close();
         return games;
     }
-    public static ArrayList<Letter> selectLetters(Language language) {
+    public ArrayList<Letter> selectLetters(Language language) {
         ArrayList<Letter>letters = new ArrayList<>();
         ResultSet records = database.select(SQL.SELECT.SELECTLETTERS, language);
         try {

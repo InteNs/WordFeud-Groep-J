@@ -1,6 +1,5 @@
 package controllers;
 
-import database.access.GameDAO;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -14,7 +13,7 @@ public class GameController extends Controller {
 
     public GameController(ControllerFactory factory) {
         super(factory);
-        games = FXCollections.observableArrayList(GameDAO.selectGames());
+        games = FXCollections.observableArrayList(gameDAO.selectGames());
         selectedGame = new SimpleObjectProperty<>();
     }
 
@@ -35,6 +34,6 @@ public class GameController extends Controller {
     }
 
     public void refresh() {
-        games.setAll(GameDAO.selectGames());
+        games.setAll(gameDAO.selectGames());
     }
 }
