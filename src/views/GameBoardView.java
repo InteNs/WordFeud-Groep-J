@@ -9,7 +9,10 @@ import javafx.scene.control.Label;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import models.Field;
 import models.Game;
 import models.Tile;
@@ -37,7 +40,7 @@ public class GameBoardView extends View {
     @FXML
     private Label player2ScoreLabel;
     private Game selectedGame;
-    private Tile tileBeingDragged;
+    private DraggableNode tileBeingDragged;
 
     public void displayGameBoard(Field[][] gameBoard) {
         if (gameBoard == null) {
@@ -53,27 +56,24 @@ public class GameBoardView extends View {
                 gameBoardGrid.getChildren().add(draggableNode);
                 draggableNode.setOnDragOver(event -> {
                     event.consume();
+                    if(draggableNode.getField().getTile() == null)
                         event.acceptTransferModes(TransferMode.MOVE);
+                    else
+                        event.acceptTransferModes(TransferMode.NONE);
                 });
                 draggableNode.setOnDragDropped(event -> {
-                    Dragboard db = event.getDragboard();
-                    boolean succes = false;
-                    // if (db.hasImage()) {
-                    draggableNode.setImage(db.getDragView());
-                    draggableNode.getField().setTile(tileBeingDragged);
-                        System.out.println(draggableNode.getField().getTile());
-                        succes = true;
-                    //  }
-                    //TODO: Check this value with Source setOnDropDone method
-                    event.setDropCompleted(succes);
+                    event.consume();
+                    draggableNode.getField().setTile(tileBeingDragged.getTile());
+                    draggableNode.redrawImage();
+                    event.setDropCompleted(true);
                 });
             }
     }
 
     public void displayPlayerRack(ArrayList<Tile> playerRack) {
         playerRackGrid.getChildren().clear();
-        playerRack.forEach(e -> {
-            DraggableNode draggableNode = new DraggableNode(e);
+        playerRack.forEach(tile -> {
+            DraggableNode draggableNode = new DraggableNode(tile);
             playerRackGrid.getChildren().add(draggableNode);
 
             draggableNode.setOnDragDetected(event -> {
@@ -81,22 +81,17 @@ public class GameBoardView extends View {
                 ((Node) event.getSource()).setCursor(Cursor.HAND);
                 Dragboard db = draggableNode.startDragAndDrop(TransferMode.MOVE);
                 ClipboardContent content = new ClipboardContent();
-                //content.putImage(draggableNode.getImage());
-                //TODO: setDragView not working as intended
-                db.setDragView(draggableNode.getImage());
-                content.putString(draggableNode.getId());
-                tileBeingDragged = draggableNode.getTile();
-                playerRackGrid.getChildren().remove(draggableNode);
+                content.putImage(draggableNode.getImage());
                 db.setContent(content);
+                tileBeingDragged = draggableNode;
+                playerRackGrid.getChildren().remove(draggableNode);
             });
-
             draggableNode.setOnDragDone(event -> {
-                if (!event.isDropCompleted()) {
-                    playerRackGrid.getChildren().add(draggableNode);
-                }
+                event.consume();
+                if(event.getTransferMode() != TransferMode.MOVE)
+                    playerRackGrid.getChildren().add(tileBeingDragged);
                 tileBeingDragged = null;
             });
-
         });
     }
 

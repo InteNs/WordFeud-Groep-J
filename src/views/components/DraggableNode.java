@@ -42,6 +42,10 @@ public class DraggableNode extends ImageView {
         this.tile = tile;
     }
 
+    public void redrawImage() {
+        this.setImage(getImage(field));
+    }
+
     private Image getImage(Field field) {
         String s;
         if (field.getTile() == null)
