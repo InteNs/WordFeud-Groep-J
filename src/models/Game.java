@@ -1,15 +1,11 @@
 package models;
 
-import database.access.GameDAO;
 import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Game {
 
@@ -33,11 +29,6 @@ public class Game {
 
     public int getID() {
         return ID;
-    }
-
-    public ArrayList<Message> getMessages(boolean refresh) {
-        if (refresh) this.messages = GameDAO.selectMessages(this);
-        return messages;
     }
 
     public ArrayList<User> getPlayers() {
