@@ -19,18 +19,18 @@
             <Insets bottom="5.0" />
          </padding>
       </Label>
-      <TextField fx:id="userNameField" onKeyPressed="#keyListener" alignment="CENTER" prefHeight="30.0" prefWidth="200.0" promptText="Vul hier uw naam in">
+      <TextField fx:id="userNameField" alignment="CENTER" prefHeight="30.0" prefWidth="200.0" promptText="Vul hier uw naam in">
          <VBox.margin>
             <Insets />
          </VBox.margin></TextField>
       <Label fx:id="usernameReq" prefHeight="21.0" prefWidth="216.0" text="eisen naam: 5 - 25 letters/ cijfers" />
-      <PasswordField fx:id="userPassField1" onKeyPressed="#keyListener" alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" promptText="Vul hier uw wachtwoord in" />
-      <PasswordField fx:id="userPassField2" onKeyPressed="#keyListener" alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" promptText="Vul hier uw wachtwoord in" />
+      <PasswordField fx:id="userPassField1" alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" promptText="Vul hier uw wachtwoord in" />
+      <PasswordField fx:id="userPassField2" alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" promptText="Vul hier uw wachtwoord in" />
       <Label fx:id="passwordReq" contentDisplay="CENTER" prefHeight="21.0" prefWidth="217.0" text="eisen wachtwoord: 5 - 25 tekens" />
       <HBox alignment="TOP_CENTER" prefHeight="82.0" prefWidth="339.0" spacing="30.0">
          <children>
-            <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#register" prefWidth="120.0" text="Bevestig" />
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#openLoginView" prefWidth="120.0" text="Terug" />
+            <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#register" prefWidth="120.0" defaultButton="true" text="Bevestig" />
+            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#openLoginView" cancelButton="true" prefWidth="120.0" text="Terug" />
          </children></HBox>
       <Label fx:id="invalidUserLabel" textAlignment="CENTER" textFill="#f50202" visible="false">
          <font>

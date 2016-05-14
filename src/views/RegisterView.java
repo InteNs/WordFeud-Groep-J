@@ -85,10 +85,4 @@ public class RegisterView extends View {
         invalidUserLabel.setVisible(true);
         return false;
     }
-    
-    public void keyListener(KeyEvent event){
-        if(  event.getCode() == KeyCode.ENTER){
-            register();
-        }
-      }
 }

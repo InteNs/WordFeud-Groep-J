@@ -20,15 +20,12 @@
         <VBox minHeight="600.0" minWidth="600.0" SplitPane.resizableWithParent="false">
             <Region maxHeight="-Infinity" minHeight="-Infinity" prefHeight="34.0" styleClass="tab-aligned" />
             <StackPane fx:id="content" VBox.vgrow="ALWAYS">
-                <children>
-                    <fx:include fx:id="loginView" source="LoginView.fxml" />
-                    <fx:include fx:id="welcomeView" source="WelcomeView.fxml" />
-                    <fx:include fx:id="registerView" source="RegisterView.fxml" />
-                    <fx:include fx:id="userInfoView" source="UserInfoView.fxml" />
-                    <fx:include fx:id="createCompetitionView" source="CreateCompetitionView.fxml" />
-                    <fx:include fx:id="passwordChangeView" source="PasswordChangeView.fxml" />
-
-                  </children>
+                <fx:include fx:id="loginView" source="LoginView.fxml"/>
+                <fx:include fx:id="welcomeView" source="WelcomeView.fxml"/>
+                <fx:include fx:id="registerView" source="RegisterView.fxml"/>
+                <fx:include fx:id="userInfoView" source="UserInfoView.fxml"/>
+                <fx:include fx:id="createCompetitionView" source="CreateCompetitionView.fxml"/>
+                <fx:include fx:id="passwordChangeView" source="PasswordChangeView.fxml"/>
             </StackPane>
         </VBox>
     </SplitPane>

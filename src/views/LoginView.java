@@ -34,12 +34,6 @@ public class LoginView extends View {
     public void constructor() {
     }
     
-    public void keyListener(KeyEvent event){
-        if(  event.getCode() == KeyCode.ENTER){
-            this.login();
-        }
-      }
-    
     public void resetFields(){
     	userNameField.setText(null);
     	userPassField.setText(null);
