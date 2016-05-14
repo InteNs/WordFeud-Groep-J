@@ -15,8 +15,8 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <TextField fx:id="userNameField" alignment="CENTER" prefHeight="30.0" prefWidth="200.0" onKeyPressed="#keyListener" promptText="Gebruikersnaam" />
-      <PasswordField fx:id="userPassField" alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" onKeyPressed="#keyListener" promptText="Wachtwoord" />
+      <TextField fx:id="userNameField" alignment="CENTER" prefHeight="30.0" prefWidth="200.0" promptText="Gebruikersnaam" />
+      <PasswordField fx:id="userPassField" alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" promptText="Wachtwoord" />
       <Label fx:id="invalidUserLabel" text="Uw ingevoerde gegevens komen niet overeen" textAlignment="CENTER" textFill="#f50202" visible="false">
          <font>
             <Font name="System Bold Italic" size="12.0" />
@@ -24,7 +24,7 @@
       </Label>
       <HBox alignment="TOP_CENTER" prefHeight="60.0" prefWidth="600.0" spacing="30.0">
          <children>
-            <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#login" onKeyPressed="#keyListener" prefWidth="120.0" text="Inloggen" />
+            <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#login" prefWidth="120.0" text="Inloggen" defaultButton="true" />
             <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction= "#openRegisterView" prefWidth="120.0" text="Nog geen account?" />
          </children>
       </HBox>

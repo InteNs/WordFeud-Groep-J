@@ -150,12 +150,8 @@ public class MainView extends View implements Initializable {
      * @param node the node to set as content
      */
     public void setContent(Node node) {
-        content.getChildren().forEach(child -> child.setVisible(false));
-
-        if(content.getChildren().contains(node))
-            content.getChildren().get(content.getChildren().indexOf(node)).setVisible(true);
-        else if (node != null)
-            content.getChildren().add(node);
+        content.getChildren().clear();
+        content.getChildren().add(node);
     }
     
     @Override
