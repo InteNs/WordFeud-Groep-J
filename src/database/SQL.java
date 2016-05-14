@@ -7,8 +7,6 @@ public class SQL {
         public static final String MESSAGESFORGAME = "SELECT * FROM chatregel WHERE spel_id = ? ORDER BY tijdstip;";
         public static final String SELECTLETTERS = "SELECT * FROM wordfeud.lettertype WHERE letterset_code = ?";
         public static final String SELECTUSERINCOMP = "SELECT naam FROM account a JOIN deelnemer d ON a.naam = d.account_naam JOIN competitie c ON c.id = d.competitie_id WHERE c.id = ?";
-        public static final String SELECTUSERROLES = "SELECT rol_type FROM accountrol WHERE account_naam = ?";
-
     }
 
     public class ALL {
@@ -16,6 +14,7 @@ public class SQL {
         public static final String GAMES = "SELECT * FROM spel;";
         public static final String COMPETITIONS = "SELECT * FROM competitie";
         public static final String ROLES = "SELECT * FROM accountrol";
+        public static final String WINSLOSES = "SELECT w.account_naam, wins,lost FROM rank_nr_wins w JOIN rank_nr_lost l ON w.account_naam = l.account_naam";
     }
 
     public class INSERT {
