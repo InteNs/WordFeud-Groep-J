@@ -3,6 +3,8 @@ package models;
 import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +23,8 @@ public class Game {
     private ArrayList<Turn> turns;
     private Field[][] emptyGameBoard;   // SHOULD NOT BE OVERWRITTEN
     private Field[][] gameBoard;        // USE THIS INSTEAD
-    private ArrayList<Field> fieldsChangedThisTurn;
+    private ObservableList<Tile> currentRack;
+    private ObservableList<Field> fieldsChangedThisTurn;
     private ArrayList<Tile> allTilesCache;
 
     public Game(int id, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
@@ -31,6 +34,8 @@ public class Game {
         this.gameState = state;
         this.language = language;
         this.boardType = boardType;
+        this.fieldsChangedThisTurn = FXCollections.observableArrayList();
+        this.currentRack = FXCollections.observableArrayList();
     }
 
     public int getId() {
@@ -100,9 +105,14 @@ public class Game {
             for (Tile tile : turn.getPlacedTiles())
                 gameBoard[tile.getY()][tile.getX()].setTile(tile);
             if(turn.equals(turnToDisplay)) {
+                currentRack = FXCollections.observableArrayList(turn.getRack());
                 break;
             }
         }
+    }
+
+    public ObservableList<Tile> getCurrentRack() {
+        return currentRack;
     }
 
     /**
@@ -119,19 +129,18 @@ public class Game {
         return allTilesCache;
     }
 
-    /**
-     * placed a tile on a field
-     * @param tile tile to place
-     * @param field field to place the tile in
-     * @return false if the field already has a tile
-     */
-    public boolean placeTile(Tile tile,Field field){
-        if (field.getTile()==null){
-            field.setTile(tile);
-            fieldsChangedThisTurn.add(field);
-            return true;
-        }
-        return false;
+    public void addPlacedTile(Field field, Tile tile) {
+        field.setTile(tile);
+        fieldsChangedThisTurn.add(field);
+    }
+
+    public void removePlacedTile(Field field) {
+        field.setTile(null);
+        fieldsChangedThisTurn.remove(field);
+    }
+
+    public ObservableList<Field> getFieldsChangedThisTurn() {
+        return fieldsChangedThisTurn;
     }
 
     /**

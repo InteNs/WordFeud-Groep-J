@@ -5,31 +5,38 @@ import javafx.scene.image.ImageView;
 import models.Field;
 import models.Tile;
 
-public class DraggableNode extends ImageView {
+public class FieldTileNode extends ImageView {
 
     private Field field;
     private Tile tile;
+    private boolean placed;
 
     public Field getField() {
         return field;
-    }
-
-    public void setField(Field field) {
-        this.field = field;
     }
 
     public Tile getTile() {
         return tile;
     }
 
-    public void setTile(Tile tile) {
-        this.tile = tile;
+    public void setPlacedTile(Tile tile) {
+        if(tile == null) {
+            field.setTile(null);
+            placed = false;
+        } else {
+            field.setTile(tile);
+            placed = true;
+        }
+    }
+
+    public boolean isPlaced() {
+        return placed;
     }
 
     /**
      * Used to create nodes representing the gameBoard
      */
-    public DraggableNode(Field field) {
+    public FieldTileNode(Field field) {
         this.setImage(getImage(field));
         this.field = field;
     }
@@ -37,7 +44,7 @@ public class DraggableNode extends ImageView {
     /**
      * Used to build the playerRack
      */
-    public DraggableNode(Tile tile) {
+    public FieldTileNode(Tile tile) {
         this.setImage(getImage(tile));
         this.tile = tile;
     }

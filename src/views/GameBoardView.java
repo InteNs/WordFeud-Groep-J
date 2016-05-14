@@ -1,11 +1,10 @@
 package views;
 
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -16,9 +15,7 @@ import javafx.scene.layout.VBox;
 import models.Field;
 import models.Game;
 import models.Tile;
-import views.components.DraggableNode;
-
-import java.util.ArrayList;
+import views.components.FieldTileNode;
 
 
 public class GameBoardView extends View {
@@ -32,15 +29,9 @@ public class GameBoardView extends View {
     @FXML
     private HBox playerRackGrid;
     @FXML
-    private ChoiceBox<String> playerActionChoiceBox;
-    @FXML
-    private Button playerConfirmActionButton;
-    @FXML
-    private Label player1ScoreLabel;
-    @FXML
-    private Label player2ScoreLabel;
+
     private Game selectedGame;
-    private DraggableNode tileBeingDragged;
+    private Tile tileBeingDragged;
 
     public void displayGameBoard(Field[][] gameBoard) {
         if (gameBoard == null) {
@@ -50,46 +41,81 @@ public class GameBoardView extends View {
         for (int y = 0; y < gameBoard.length; y++)
             for (int x = 0; x < gameBoard.length; x++) {
                 Field field = gameBoard[x][y];
-                DraggableNode draggableNode = new DraggableNode(field);
+                FieldTileNode fieldNode = new FieldTileNode(field);
 
-                GridPane.setConstraints(draggableNode, y, x);
-                gameBoardGrid.getChildren().add(draggableNode);
-                draggableNode.setOnDragOver(event -> {
+                GridPane.setConstraints(fieldNode, y, x);
+                gameBoardGrid.getChildren().add(fieldNode);
+                fieldNode.setOnDragOver(event -> {
                     event.consume();
-                    if(draggableNode.getField().getTile() == null)
+                    if (fieldNode.getField().getTile() == null)
                         event.acceptTransferModes(TransferMode.MOVE);
                     else
                         event.acceptTransferModes(TransferMode.NONE);
                 });
-                draggableNode.setOnDragDropped(event -> {
+                fieldNode.setOnDragDropped(event -> {
                     event.consume();
-                    draggableNode.getField().setTile(tileBeingDragged.getTile());
-                    draggableNode.redrawImage();
+                    selectedGame.addPlacedTile(fieldNode.getField(), tileBeingDragged);
+                    fieldNode.redrawImage();
                     event.setDropCompleted(true);
+                });
+                fieldNode.setOnDragDetected(event -> {
+                    event.consume();
+                    if (!selectedGame.getFieldsChangedThisTurn().contains(fieldNode.getField()))
+                        return;
+                    ((Node) event.getSource()).setCursor(Cursor.HAND);
+                    Dragboard db = fieldNode.startDragAndDrop(TransferMode.MOVE);
+                    ClipboardContent content = new ClipboardContent();
+                    content.putImage(fieldNode.getImage());
+                    db.setContent(content);
+                    tileBeingDragged = fieldNode.getField().getTile();
+                    selectedGame.removePlacedTile(fieldNode.getField());
+                    fieldNode.redrawImage();
+                });
+                fieldNode.setOnDragDone(event -> {
+                    event.consume();
+                    if (event.getTransferMode() != TransferMode.MOVE) {
+                        selectedGame.addPlacedTile(fieldNode.getField(), tileBeingDragged);
+                        fieldNode.redrawImage();
+                    }
+                    tileBeingDragged = null;
                 });
             }
     }
 
-    public void displayPlayerRack(ArrayList<Tile> playerRack) {
+    public void displayPlayerRack(ObservableList<Tile> playerRack) {
+        playerRackGrid.setOnDragOver(event -> {
+            event.consume();
+            event.acceptTransferModes(TransferMode.MOVE);
+        });
+        playerRackGrid.setOnDragDropped(event -> {
+            playerRack.add(tileBeingDragged);
+            tileBeingDragged = null;
+            event.setDropCompleted(true);
+        });
+        buildNodeRack(playerRack);
+        playerRack.addListener((ListChangeListener<? super Tile>) observable -> buildNodeRack(playerRack));
+    }
+
+    private void buildNodeRack(ObservableList<Tile> playerRack) {
         playerRackGrid.getChildren().clear();
         playerRack.forEach(tile -> {
-            DraggableNode draggableNode = new DraggableNode(tile);
-            playerRackGrid.getChildren().add(draggableNode);
+            FieldTileNode tileNode = new FieldTileNode(tile);
+            playerRackGrid.getChildren().add(tileNode);
 
-            draggableNode.setOnDragDetected(event -> {
+            tileNode.setOnDragDetected(event -> {
                 event.consume();
                 ((Node) event.getSource()).setCursor(Cursor.HAND);
-                Dragboard db = draggableNode.startDragAndDrop(TransferMode.MOVE);
+                Dragboard db = tileNode.startDragAndDrop(TransferMode.MOVE);
                 ClipboardContent content = new ClipboardContent();
-                content.putImage(draggableNode.getImage());
+                content.putImage(tileNode.getImage());
                 db.setContent(content);
-                tileBeingDragged = draggableNode;
-                playerRackGrid.getChildren().remove(draggableNode);
+                tileBeingDragged = tileNode.getTile();
+                playerRack.remove(tileBeingDragged);
             });
-            draggableNode.setOnDragDone(event -> {
+            tileNode.setOnDragDone(event -> {
                 event.consume();
-                if(event.getTransferMode() != TransferMode.MOVE)
-                    playerRackGrid.getChildren().add(tileBeingDragged);
+                if (event.getTransferMode() != TransferMode.MOVE)
+                    playerRack.add(tileBeingDragged);
                 tileBeingDragged = null;
             });
         });
@@ -105,26 +131,9 @@ public class GameBoardView extends View {
         gameController.selectedGameProperty().addListener((observable, oldValue, newValue) -> {
             gameController.loadGame(newValue);
             selectedGame = newValue;
-//            newValue.setBoardStateTo(newValue.getLastTurn());
             newValue.setBoardStateTo(newValue.getTurns().get(20));
-            displayPlayerRack(newValue.getTurns().get(20).getRack());//PLACEHOLDER
-
             displayGameBoard(newValue.getGameBoard());
+            displayPlayerRack(newValue.getCurrentRack());
         });
-//        final double SCALE_DELTA = 1.1;
-//        final StackPane zoomPane = new StackPane();
-//        stackPane.setOnScroll(event -> {
-//            event.consume();
-//            if (event.getDeltaY() == 0) {
-//                return;
-//            }
-//            double scaleFactor =
-//                    (event.getDeltaY() > 0)
-//                            ? SCALE_DELTA
-//                            : 1/SCALE_DELTA;
-//
-//            gameBoardGrid.setScaleX(gameBoardGrid.getScaleX() * scaleFactor);
-//            gameBoardGrid.setScaleY(gameBoardGrid.getScaleY() * scaleFactor);
-//        });
     }
 }
