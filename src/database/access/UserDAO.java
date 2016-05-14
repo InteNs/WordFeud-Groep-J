@@ -16,7 +16,7 @@ public class UserDAO extends DAO {
         ResultSet records = database.select(SQL.ALL.USERS);
         try {
             while (records.next()) {
-                users.add(new User(records.getString("naam")));
+                users.add(new User(records.getString("naam"), records.getString("wachtwoord")));
             }
         } catch (SQLException e) {
             printError(e);
@@ -28,7 +28,7 @@ public class UserDAO extends DAO {
     public static User selectUser(String username, String password) {
         ResultSet records = database.select(SQL.ALL.USERS);
         try {
-            while (records.next()){
+            while (records.next()) {
                 if (records.getString("naam").equals(username) &
                         records.getString("wachtwoord").equals(password)) {
                     return new User(username, password);
@@ -65,9 +65,26 @@ public class UserDAO extends DAO {
     public static void removeRole(User user, Role role) {
         database.delete(SQL.DELETE.REMOVEROLE, user.getName(), role.toString().toLowerCase());
     }
-    
-    public static void updatePassword(User user, String password){
+
+    public static void setAllStats(List<User> users) {
+        ResultSet rs = database.select(SQL.ALL.WINSLOSES);
+        try {
+            while (rs.next()) {
+                for (User user : users) {
+                    if (user.getName().equals(rs.getString("account_naam"))) {
+                        user.setWins(rs.getInt("wins"));
+                        user.setLoses(rs.getInt("lost"));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            printError(e);
+        }
+        database.close();
+    }
+
+    public static void updatePassword(User user, String password) {
         database.update(SQL.UPDATE.UPDATEPASSWORD, password, user.getName());
     }
-    
+
 }

@@ -9,10 +9,15 @@ import java.util.ArrayList;
 
 public class Database {
 
-    private final String URL = "jdbc:mysql://77.172.146.212:3306/wordfeud";
+/*    private final String URL = "jdbc:mysql://77.172.146.212:3306/wordfeud";
     private final String USERNAME = "wordfeud";
-    private final String PASSWORD = "wordfeud01";
+    private final String PASSWORD = "wordfeud01";*/
+
+    private final String URL = "jdbc:mysql://127.0.0.1:3306/wordfeud";
+    private final String USERNAME = "root";
+    private final String PASSWORD = "";
     private final String DRIVER = "com.mysql.jdbc.Driver";
+
 
     private Connection connection;
     private PreparedStatement statement;
@@ -129,6 +134,20 @@ public class Database {
         }
         close();
         return result;
+    }
+    /**
+     * executes a select query and returns the first row as string
+     *
+     * @param query  defined in static SQL class
+     * @param values to insert into question marks
+     * @return String of first row
+     */
+    public String selectFirstColumnRow(String query, Object... values) {
+        if (selectFirstColumn(query, values).size() > 0) {
+            return selectFirstColumn(query, values).get(0);
+        } else {
+            return null;
+        }
     }
 
     private void printError(Exception e) {

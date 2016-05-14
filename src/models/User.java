@@ -9,11 +9,16 @@ public class User {
     private String name;
     private String passWord;
     private ArrayList<Role> roles;
+    private int wins;
+    private int loses;
 
     public User(String name) {
         this.name = name;
         roles = new ArrayList<>();
+        wins = 0;
+        loses = 0;
     }
+
 
     public User(String name, String passWord) {
         this.name = name;
@@ -62,5 +67,20 @@ public class User {
             }
         }
         return result;
+    }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public int getLoses() {
+        return loses;
+    }
+    public void setWins(Integer wins) {
+        this.wins = wins;
+    }
+
+    public void setLoses(Integer loses) {
+        this.loses = loses;
     }
 }

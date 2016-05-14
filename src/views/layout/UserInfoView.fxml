@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
@@ -10,25 +8,10 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.UserInfoView">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="449.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.UserInfoView">
    <children>
-      <CheckBox fx:id="checkPlayer" layoutX="371.0" layoutY="305.0" mnemonicParsing="false" onMouseClicked="#setPlayer" text="Speler">
-         <font>
-            <Font size="13.0" />
-         </font></CheckBox>
-      <CheckBox fx:id="checkObserver" layoutX="467.0" layoutY="330.0" mnemonicParsing="false" onMouseClicked="#setObserver" text="Observer">
-         <font>
-            <Font size="13.0" />
-         </font></CheckBox>
-      <CheckBox fx:id="checkAdmin" layoutX="467.0" layoutY="305.0" mnemonicParsing="false" onMouseClicked="#setAdmin" text="Administrator">
-         <font>
-            <Font size="13.0" />
-         </font></CheckBox>
-      <CheckBox fx:id="checkModerator" layoutX="371.0" layoutY="330.0" mnemonicParsing="false" onMouseClicked="#setModerator" text="Moderator">
-         <font>
-            <Font size="13.0" />
-         </font></CheckBox>
-      <Label fx:id="userNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="205.0" layoutY="40.0" prefHeight="17.0" text="Gebruikersnaam" textAlignment="RIGHT">
+      <Label fx:id="userNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="6.0" prefHeight="36.0" prefWidth="600.0" text="Gebruikersnaam" textAlignment="RIGHT">
+         >>>>>>> Stashed changes:src/views/layout/UserInfoView.fxml
          <font>
             <Font size="25.0" />
          </font>
@@ -38,25 +21,48 @@
             <Font size="23.0" />
          </font>
       </Label>
-      <ListView fx:id="myCompetitions" layoutX="40.0" layoutY="124.0" prefHeight="200.0" prefWidth="200.0" />
-      <Label layoutX="425.0" layoutY="247.0" text="Rollen">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
-      <Label layoutX="352.0" layoutY="76.0" text="Gemiddelde score">
+      <ListView fx:id="myCompetitions" layoutX="40.0" layoutY="124.0" prefHeight="263.0" prefWidth="200.0" />
+      <Label alignment="CENTER" layoutX="239.0" layoutY="76.0" prefHeight="34.0" prefWidth="361.0" text="Gewonnen/Verloren">
          <font>
             <Font size="23.0" />
          </font>
       </Label>
-      <LineChart layoutX="310.0" layoutY="110.0" prefHeight="104.0" prefWidth="268.0">
-        <xAxis>
-          <CategoryAxis side="BOTTOM" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis side="LEFT" />
-        </yAxis>
-      </LineChart>
-      <Button layoutX="40.0" layoutY="339.0" mnemonicParsing="false" onAction="#getRoles" prefHeight="25.0" prefWidth="200.0" text="Button" />
+      <PieChart fx:id="winloseChart" labelsVisible="false" layoutX="238.0" layoutY="122.0" prefHeight="203.0" prefWidth="361.0" />
+      <Label fx:id="lNoStats" alignment="CENTER" contentDisplay="CENTER" layoutX="235.0" layoutY="203.0" prefHeight="43.0" prefWidth="361.0" text="Geen statistieken beschikbaar!" textFill="RED">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Pane fx:id="rolesPane" layoutX="241.0" layoutY="325.0" prefHeight="102.0" prefWidth="361.0">
+         <children>
+            <CheckBox fx:id="checkPlayer" alignment="CENTER" contentDisplay="CENTER" layoutX="85.0" layoutY="58.0" mnemonicParsing="false" onMouseClicked="#setPlayer" text="Speler" textAlignment="CENTER">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="checkObserver" alignment="CENTER" contentDisplay="CENTER" layoutX="214.0" layoutY="83.0" mnemonicParsing="false" onMouseClicked="#setObserver" text="Observer" textAlignment="CENTER">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="checkAdmin" alignment="CENTER" contentDisplay="CENTER" layoutX="214.0" layoutY="58.0" mnemonicParsing="false" onMouseClicked="#setAdmin" text="Administrator" textAlignment="CENTER">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="checkModerator" alignment="CENTER" contentDisplay="CENTER" layoutX="85.0" layoutY="83.0" mnemonicParsing="false" onMouseClicked="#setModerator" text="Moderator" textAlignment="CENTER">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </CheckBox>
+            <Label alignment="CENTER" layoutY="23.0" prefHeight="35.0" prefWidth="361.0" text="Rollen">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Button alignment="CENTER" layoutX="40.0" layoutY="402.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" text="Uitnodigen" />
+      <Label fx:id="passwordLabel" alignment="CENTER" layoutX="-1.0" layoutY="42.0" prefHeight="17.0" prefWidth="600.0" text="wachtwoord" />
    </children>
 </Pane>

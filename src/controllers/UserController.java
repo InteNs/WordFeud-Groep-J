@@ -20,6 +20,7 @@ public class UserController extends Controller {
         users = FXCollections.observableArrayList(UserDAO.selectUsers());
         selectedUser = new SimpleObjectProperty<>();
         UserDAO.setAllRoles(users);
+        UserDAO.setAllStats(users);
     }
 
     public ObjectProperty<User> selectedUserProperty() {
@@ -106,5 +107,6 @@ public class UserController extends Controller {
     public void refresh() {
         users.setAll(UserDAO.selectUsers());
         UserDAO.setAllRoles(users);
+        UserDAO.setAllStats(users);
     }
 }
