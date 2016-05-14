@@ -1,47 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.Pane?>
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="449.0"
-      prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.UserInfoView">
-    <Label style="-fx-font-size: 25" fx:id="userNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="6.0"
-           prefHeight="36.0"
-           prefWidth="600.0" text="Gebruikersnaam" textAlignment="RIGHT">
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="449.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.UserInfoView">
+    <Label fx:id="userNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="6.0" prefHeight="36.0" prefWidth="600.0" style="-fx-font-size: 25" text="Gebruikersnaam" textAlignment="RIGHT">
     </Label>
-    <Label style="-fx-font-size: 25" layoutX="74.0" layoutY="76.0" text="Competities">
+    <Label layoutX="74.0" layoutY="76.0" style="-fx-font-size: 25" text="Competities">
     </Label>
-    <ListView fx:id="myCompetitions" layoutX="40.0" layoutY="124.0" prefHeight="263.0" prefWidth="200.0"/>
-    <Label style="-fx-font-size: 25" alignment="CENTER" layoutX="238.0" layoutY="74.0" prefHeight="34.0"
-           prefWidth="361.0"
-           text="Gewonnen/Verloren">
+    <ListView fx:id="myCompetitions" layoutX="40.0" layoutY="124.0" prefHeight="263.0" prefWidth="200.0" />
+    <Label alignment="CENTER" layoutX="238.0" layoutY="74.0" prefHeight="34.0" prefWidth="361.0" style="-fx-font-size: 25" text="Gewonnen/Verloren">
     </Label>
-    <PieChart fx:id="winloseChart" labelsVisible="false" layoutX="238.0" layoutY="122.0" prefHeight="203.0"
-              prefWidth="361.0"/>
-    <Label style="-fx-font-size: 25" fx:id="lNoStats" alignment="CENTER" contentDisplay="CENTER" layoutX="241.0"
-           layoutY="202.0" prefHeight="43.0"
-           prefWidth="361.0" text="Geen statistieken beschikbaar!" textFill="RED">
+    <PieChart fx:id="winloseChart" labelsVisible="false" layoutX="238.0" layoutY="122.0" prefHeight="203.0" prefWidth="361.0" />
+    <Label fx:id="lNoStats" alignment="CENTER" contentDisplay="CENTER" layoutX="241.0" layoutY="202.0" prefHeight="43.0" prefWidth="361.0" style="-fx-font-size: 18;" text="Geen statistieken beschikbaar!" textFill="RED">
     </Label>
     <Pane fx:id="rolesPane" layoutX="241.0" layoutY="325.0" prefHeight="102.0" prefWidth="361.0" styleClass="user-info">
-        <CheckBox fx:id="checkPlayer" alignment="CENTER" contentDisplay="CENTER" layoutX="85.0" layoutY="58.0"
-                  mnemonicParsing="false" onMouseClicked="#setPlayer" text="Speler" textAlignment="CENTER">
+        <CheckBox fx:id="checkPlayer" alignment="CENTER" contentDisplay="CENTER" layoutX="85.0" layoutY="58.0" mnemonicParsing="false" onMouseClicked="#setPlayer" text="Speler" textAlignment="CENTER">
         </CheckBox>
-        <CheckBox fx:id="checkObserver" alignment="CENTER" contentDisplay="CENTER" layoutX="214.0" layoutY="83.0"
-                  mnemonicParsing="false" onMouseClicked="#setObserver" text="Observer" textAlignment="CENTER">
+        <CheckBox fx:id="checkObserver" alignment="CENTER" contentDisplay="CENTER" layoutX="214.0" layoutY="83.0" mnemonicParsing="false" onMouseClicked="#setObserver" text="Observer" textAlignment="CENTER">
         </CheckBox>
-        <CheckBox fx:id="checkAdmin" alignment="CENTER" contentDisplay="CENTER" layoutX="214.0" layoutY="58.0"
-                  mnemonicParsing="false" onMouseClicked="#setAdmin" text="Administrator" textAlignment="CENTER">
+        <CheckBox fx:id="checkAdmin" alignment="CENTER" contentDisplay="CENTER" layoutX="214.0" layoutY="58.0" mnemonicParsing="false" onMouseClicked="#setAdmin" text="Administrator" textAlignment="CENTER">
         </CheckBox>
-        <CheckBox fx:id="checkModerator" alignment="CENTER" contentDisplay="CENTER" layoutX="85.0" layoutY="83.0"
-                  mnemonicParsing="false" onMouseClicked="#setModerator" text="Moderator" textAlignment="CENTER">
+        <CheckBox fx:id="checkModerator" alignment="CENTER" contentDisplay="CENTER" layoutX="85.0" layoutY="83.0" mnemonicParsing="false" onMouseClicked="#setModerator" text="Moderator" textAlignment="CENTER">
         </CheckBox>
-        <Label style="-fx-font-size: 25" alignment="CENTER" layoutY="14.0" prefHeight="35.0" prefWidth="361.0"
-               text="Rollen">
+        <Label alignment="CENTER" layoutY="14.0" prefHeight="35.0" prefWidth="361.0" style="-fx-font-size: 25" text="Rollen">
         </Label>
     </Pane>
-    <Button alignment="CENTER" layoutX="40.0" layoutY="402.0" mnemonicParsing="false" prefHeight="25.0"
-            prefWidth="200.0" text="Uitnodigen"/>
-    <Label fx:id="passwordLabel" alignment="CENTER" layoutX="-1.0" layoutY="42.0" prefHeight="17.0" prefWidth="600.0"
-           text="wachtwoord"/>
+    <Button alignment="CENTER" layoutX="40.0" layoutY="402.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" text="Uitnodigen" />
+    <Label fx:id="passwordLabel" alignment="CENTER" layoutX="-1.0" layoutY="42.0" prefHeight="17.0" prefWidth="600.0" text="wachtwoord" />
 </Pane>
