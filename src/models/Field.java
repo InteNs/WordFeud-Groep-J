@@ -20,6 +20,14 @@ public class Field {
         this.y=y;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     public FieldType getFieldType() {
         return fieldType;
     }

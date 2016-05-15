@@ -156,19 +156,24 @@ public class Game {
      */
     public boolean verifyCurrentTurn() {
 
+        //TODO: validTurn =false when StartTile doesn't have a Tile.
+        if (fieldsChangedThisTurn.size()==0){
+            return false;
+        }
+        
         boolean validTurn = true;
         char fixedAxis;
 
         /* fetch first X and all X coords */
-        int x = fieldsChangedThisTurn.get(0).getTile().getX();
+        int x = fieldsChangedThisTurn.get(0).getX();
         ArrayList<Integer> xValues = fieldsChangedThisTurn.stream()
-                .map(field -> field.getTile().getX())
+                .map(Field::getX)
                 .collect(Collectors.toCollection(ArrayList<Integer>::new));
 
         /* fetch first Y and All X coords */
-        int y = fieldsChangedThisTurn.get(0).getTile().getY();
+        int y = fieldsChangedThisTurn.get(0).getY();
         ArrayList<Integer> yValues = fieldsChangedThisTurn.stream()
-                .map(field -> field.getTile().getY())
+                .map(Field::getY)
                 .collect(Collectors.toCollection(ArrayList<Integer>::new));
 
         /* check if placed on single axis, if not -> invalidate turn */
@@ -189,7 +194,7 @@ public class Game {
         } else {
             // check if all Y coords are not null
             for (y = Collections.min(yValues); y <= Collections.max(yValues); y++)
-                if (gameBoard[x][y].getTile() == null && !xValues.contains(y))
+                if (gameBoard[x][y].getTile() == null && !yValues.contains(y))
                     validTurn = false;
         }
 
