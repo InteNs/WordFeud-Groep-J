@@ -17,7 +17,7 @@
             <fx:include fx:id="userListView" source="UserList.fxml"/>
             <fx:include fx:id="competitionListView" source="CompetitionListView.fxml"/>
         </TabPane>
-        <VBox minHeight="730.0" minWidth="600.0" SplitPane.resizableWithParent="false">
+        <VBox minHeight="710.0" minWidth="604.0" SplitPane.resizableWithParent="false">
             <Region maxHeight="-Infinity" minHeight="-Infinity" styleClass="tab-aligned" />
             <StackPane fx:id="content" VBox.vgrow="ALWAYS">
                 <fx:include fx:id="loginView" source="LoginView.fxml"/>

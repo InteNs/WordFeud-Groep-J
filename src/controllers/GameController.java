@@ -6,7 +6,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.Game;
 import models.Tile;
-import models.User;
 
 public class GameController extends Controller {
 

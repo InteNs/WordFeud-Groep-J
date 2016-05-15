@@ -22,10 +22,6 @@ public class Tile {
         this.y = y;
     }
 
-    public Tile() {
-
-    }
-
     public Character getCharacter() {
         return character;
     }
