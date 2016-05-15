@@ -10,31 +10,23 @@ import java.util.HashMap;
 
 public class Resource {
 
-    public Resource() {initialize();}
+    private HashMap<String, Image> images;
 
-    private HashMap<String, Image> images = new HashMap<>();
+    public Resource() {
+        images = new HashMap<>();
+    }
+
+
 
     public Image getImage(String name) {
+        if(!images.keySet().contains(name))
+            try {
+                File file = new File(getClass().getResource(name).getFile());
+                images.put(name, new Image(new FileInputStream(file)));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
         return images.get(name);
     }
-
-    public void initialize() {
-        File dir = new File("src/resources");
-        File[] directoryListing = dir.listFiles();
-        if(directoryListing!=null)
-        {
-            for (File child : directoryListing) {
-                String name = child.getName();
-                if(name.endsWith(".png")) {
-                    try {
-                        images.put(name, new Image(new FileInputStream(child), 80, 80, true, true));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    }
-
-
 }
