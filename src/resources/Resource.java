@@ -22,7 +22,7 @@ public class Resource {
         if(!images.keySet().contains(name))
             try {
                 File file = new File(getClass().getResource(name).getFile());
-                images.put(name, new Image(new FileInputStream(file)));
+                images.put(name, new Image(new FileInputStream(file), 80, 80, true, true));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
