@@ -6,13 +6,18 @@ public class Field {
 
     private Tile tile;
     private FieldType fieldType;
+    private int x;
+    private int y;
 
     public Tile getTile() {
         return tile;
     }
 
-    public Field(FieldType fieldType) {
+    public Field(FieldType fieldType, int x, int y) {
+
         this.fieldType = fieldType;
+        this.x=x;
+        this.y=y;
     }
 
     public FieldType getFieldType() {

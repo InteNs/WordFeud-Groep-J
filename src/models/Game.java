@@ -261,7 +261,7 @@ public class Game {
         Field[][] clonedGameBoard = new Field[15][15];
         for (int y = 0; y < emptyGameBoard.length; y++) {
             for (int x = 0; x < emptyGameBoard.length; x++) {
-                clonedGameBoard[y][x] = new Field(emptyGameBoard[y][x].getFieldType());
+                clonedGameBoard[y][x] = new Field(emptyGameBoard[y][x].getFieldType(),x,y);
             }
         }
         return clonedGameBoard;

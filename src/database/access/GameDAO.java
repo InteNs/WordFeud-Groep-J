@@ -123,7 +123,7 @@ public class GameDAO extends DAO {
             while (records.next()){
                 int x=records.getInt("x")-1;
                 int y = records.getInt("y")-1;
-                fields[y][x] = new Field(FieldType.fieldTypeFor(records.getString("tegeltype_soort")));
+                fields[(y)][x] = new Field(FieldType.fieldTypeFor(records.getString("tegeltype_soort")),x,y);
             }
         } catch (SQLException e) {
             printError(e);
