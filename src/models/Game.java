@@ -250,7 +250,6 @@ public class Game {
             allTiles.add(e.getTile());
         });
         allTiles.addAll(getLastTurn().getRack());
-        System.out.println("YO WE ZIJN IN GETALLTILES");
         return allTiles;
     }
 
@@ -266,5 +265,9 @@ public class Game {
             }
         }
         return clonedGameBoard;
+    }
+
+    public boolean isLastTurn(Turn selectedTurn) {
+        return selectedTurn==getLastTurn();
     }
 }

@@ -18,6 +18,8 @@ public class gameControlView extends View {
     @FXML private ContextMenu contextMenu;
     @FXML private Label potLabel;
     @FXML private Spinner<Turn> turnSpinner;
+    @FXML private Label player1ScoreLabel;
+    @FXML private Label player2ScoreLabel;
 
 
     @Override
@@ -29,6 +31,7 @@ public class gameControlView extends View {
     public void constructor() {
         turnList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             gameController.setSelectedTurn(newValue);
+            turnSpinner.getValueFactory().setValue(newValue);
         });
 
         extraFunctionsButton.setOnMouseClicked(event -> {
@@ -38,9 +41,14 @@ public class gameControlView extends View {
         gameController.selectedGameProperty().addListener((observable, oldValue, newValue) -> {
             chatList.setItems(newValue.getMessages());
             turnList.setItems(newValue.getTurns());
+            turnSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(newValue.getTurns()));
             newValue.getFieldsChangedThisTurn().addListener((ListChangeListener<? super Field>) observable1 -> {
                 System.out.println(newValue.verifyCurrentTurn());
             });
+        });
+
+        turnSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            gameController.setSelectedTurn(newValue);
         });
 
     }

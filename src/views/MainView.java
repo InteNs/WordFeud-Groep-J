@@ -29,6 +29,7 @@ public class MainView extends View implements Initializable {
     @FXML private TabPane control;
     @FXML private SplitPane mainContent;
     @FXML private StackPane content;
+    @FXML private Tab gameControlView;
 
     /*Declare your viewControllers here*/
     @FXML private UserListView userListViewController;
@@ -163,5 +164,8 @@ public class MainView extends View implements Initializable {
 
     public void showGameBoardView() {
         setContent(gameBoardView);
+    }
+
+    public void showGameControlView() {control.getSelectionModel().select(gameControlView);
     }
 }

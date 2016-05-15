@@ -53,6 +53,7 @@ public class GameListView extends View {
             if (newValue != null) {
                 gameController.setSelectedGame(newValue);
                 parent.showGameBoardView();
+                parent.showGameControlView();
             }
         });
     }

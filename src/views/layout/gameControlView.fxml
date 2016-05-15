@@ -59,8 +59,8 @@
         </HBox>
         <HBox alignment="CENTER" prefWidth="0.0" VBox.vgrow="NEVER">
             <VBox alignment="CENTER">
-                <Label text="Player1:Score" />
-                <Label text="Player2:Score" />
+                <Label fx:id="player1ScoreLabel" text="Player1:Score" />
+                <Label fx:id="player2ScoreLabel" text="Player2:Score" />
             </VBox>
             <Region HBox.hgrow="ALWAYS" />
             <Label fx:id="potLabel" text="Aantal letters in pot:15" />
