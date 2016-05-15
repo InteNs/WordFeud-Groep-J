@@ -8,7 +8,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import models.Game;
-import models.User;
+
+import java.util.function.Predicate;
 
 public class GameListView extends View {
 
@@ -23,6 +24,7 @@ public class GameListView extends View {
     @FXML private ListView<Game> allGamesList;
 
     private FilteredList<Game> filteredGames;
+    private Predicate<Game> filterText, filterUser, filterOwned, filterFinished;
 
     public void refresh() {
     }
@@ -31,30 +33,26 @@ public class GameListView extends View {
     public void constructor() {
         filteredGames = new FilteredList<>(gameController.getGames());
 
-        filterField.textProperty().addListener(observable ->
-                filteredGames.setPredicate(game ->
-                        game.toString().toLowerCase().contains(filterField.getText().toLowerCase())
-                )
-        );
+        filterText      = game -> game.toString().toLowerCase().contains(filterField.getText().toLowerCase());
+        filterUser      = game -> userController.getSelectedUser() == null
+                                    || game.getPlayers().contains(userController.getSelectedUser());
+        filterOwned     = game -> game.getPlayers().contains(session.getCurrentUser());
+        filterFinished  = game -> game.getGameState() == GameState.FINISHED;
 
-        allGamesList.setItems(filteredGames);
+        allGamesList.setItems           (filteredGames);
+        allFinishedGamesList.setItems   (filteredGames.filtered(filterFinished));
 
-        allFinishedGamesList.setItems(filteredGames.filtered(game ->
-                game.getGameState() == GameState.FINISHED)
-        );
-
-        session.currentUserProperty().addListener((observable, oldValue, newValue) -> {
-            showOwnedGames(newValue);
+        session.currentUserProperty().addListener(e -> {
+            myGamesList.setItems        (filteredGames.filtered(filterOwned));
+            myFinishedGamesList.setItems(filteredGames.filtered(filterOwned.and(filterFinished)));
             accordion.setExpandedPane(myGamesPane);
         });
+
+        filterField.textProperty().addListener(e -> setGlobalFilter(filteredGames));
+        userController.selectedUserProperty().addListener(e -> setGlobalFilter(filteredGames));
     }
 
-    private void showOwnedGames(User user) {
-        myGamesList.setItems(filteredGames.filtered(game ->
-                game.getPlayers().contains(user)
-        ));
-        myFinishedGamesList.setItems(filteredGames.filtered(game ->
-                game.getPlayers().contains(user) && game.getGameState() == GameState.FINISHED
-        ));
+    private void setGlobalFilter( FilteredList<Game> list) {
+        list.setPredicate(filterText.and(filterUser));
     }
 }
