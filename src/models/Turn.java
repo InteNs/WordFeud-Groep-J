@@ -37,6 +37,14 @@ public class Turn {
     }
 
     public ArrayList<Tile> getRack() {
-        return rack;
+        if (rack != null) {
+            return rack;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+    @Override
+    public String toString() {
+        return "Speler: "+user+" -Actie:"+type+" -Beurtscore:"+score;
     }
 }

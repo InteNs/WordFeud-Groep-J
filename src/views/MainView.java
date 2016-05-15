@@ -24,7 +24,6 @@ public class MainView extends View implements Initializable {
     @FXML private VBox gameBoardView;
     @FXML private VBox createCompetitionView;
     @FXML private VBox passwordChangeView;
-
     @FXML private ProgressIndicator loadIndicator;
     @FXML private ToolBar toolBar;
     @FXML private TabPane control;
@@ -42,6 +41,7 @@ public class MainView extends View implements Initializable {
     @FXML private GameBoardView gameBoardViewController;
     @FXML private CreateCompetitionView createCompetitionViewController;
     @FXML private PasswordChangeView passwordChangeViewController;
+    @FXML private gameControlView gameControlViewController;
 
     private ControllerFactory controllerFactory;
 
@@ -53,7 +53,6 @@ public class MainView extends View implements Initializable {
         setControl(false);
         setContent(loginView);
         controllerFactory = new ControllerFactory();
-
 
         /*
         Put your viewController in this list for it
@@ -70,7 +69,8 @@ public class MainView extends View implements Initializable {
                 gameBoardViewController,
                 userInfoViewController,
                 createCompetitionViewController,
-                passwordChangeViewController
+                passwordChangeViewController,
+                gameControlViewController
 
         ).forEach(view -> view.init(this));
     }

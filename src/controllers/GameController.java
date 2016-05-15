@@ -6,16 +6,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.Game;
 import models.Tile;
+import models.Turn;
 
 public class GameController extends Controller {
 
     private ObservableList<Game> games;
     private ObjectProperty<Game> selectedGame;
+    private ObjectProperty<Turn> selectedTurn;
+
 
     public GameController(ControllerFactory factory) {
         super(factory);
         games = FXCollections.observableArrayList(gameDAO.selectGames());
         selectedGame = new SimpleObjectProperty<>();
+        selectedTurn = new SimpleObjectProperty<>();
         games = FXCollections.observableArrayList(gameDAO.selectGames());
         games.forEach(game -> game.setMessages(gameDAO.selectMessages(game)));
     }
@@ -32,6 +36,18 @@ public class GameController extends Controller {
         selectedGame.set(game);
     }
 
+    public Turn getSelectedTurn() {
+        return selectedTurn.get();
+    }
+
+    public void setSelectedTurn(Turn selectedTurn) {
+        this.selectedTurn.set(selectedTurn);
+    }
+
+    public ObjectProperty<Turn> selectedTurnProperty() {
+        return selectedTurn;
+    }
+
     public ObservableList<Game> getGames() {
         return games;
     }
@@ -39,6 +55,7 @@ public class GameController extends Controller {
     public void loadGame(Game game) {
         game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
         game.setTurns(gameDAO.selectTurns(game));
+        game.setMessages(gameDAO.selectMessages(game));
     }
 
     public void loadGameBoard(Game game){
@@ -60,4 +77,5 @@ public class GameController extends Controller {
         games.forEach(game -> game.setMessages(gameDAO.selectMessages(game)));
 
     }
+
 }

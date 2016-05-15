@@ -85,7 +85,8 @@ public class GameBoardView extends View {
 
     private void displayPlayerRack(ObservableList<Tile> playerRack) {
         ObservableList<FieldTileNode> nodes = FXCollections.observableArrayList();
-        playerRackGrid.getChildren().addAll(nodes);
+        playerRackGrid.getChildren().setAll(nodes);
+
         nodes.addListener((ListChangeListener<? super FieldTileNode>) observable -> playerRackGrid.getChildren().setAll(nodes));
 
         playerRack.forEach(tile -> {
@@ -150,9 +151,15 @@ public class GameBoardView extends View {
         gameController.selectedGameProperty().addListener((observable, oldValue, newValue) -> {
             gameController.loadGame(newValue);
             selectedGame = newValue;
-            newValue.setBoardStateTo(newValue.getTurns().get(20));
+            newValue.setBoardStateTo(newValue.getLastTurn());
             displayGameBoard(newValue.getGameBoard());
             displayPlayerRack(newValue.getCurrentRack());
+        });
+
+        gameController.selectedTurnProperty().addListener((observable, oldValue, newValue) -> {
+            selectedGame.setBoardStateTo(newValue);
+            displayGameBoard(selectedGame.getGameBoard());
+            displayPlayerRack(selectedGame.getCurrentRack());
         });
     }
 }

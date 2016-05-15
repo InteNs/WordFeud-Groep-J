@@ -14,13 +14,13 @@ import java.util.stream.Collectors;
 public class Game {
 
     private int id;
-    private ArrayList<Message> messages;
+    private ObservableList<Message> messages;
     private GameState gameState;
     private User opponent;
     private User challenger;
     private Language language;
     private BoardType boardType;
-    private ArrayList<Turn> turns;
+    private ObservableList<Turn> turns;
     private Field[][] emptyGameBoard;   // SHOULD NOT BE OVERWRITTEN
     private Field[][] gameBoard;        // USE THIS INSTEAD
     private ObservableList<Tile> currentRack;
@@ -36,6 +36,8 @@ public class Game {
         this.boardType = boardType;
         this.fieldsChangedThisTurn = FXCollections.observableArrayList();
         this.currentRack = FXCollections.observableArrayList();
+        this.messages = FXCollections.observableArrayList();
+        this.turns = FXCollections.observableArrayList();
     }
 
     public int getId() {
@@ -44,19 +46,24 @@ public class Game {
 
     public int setMessages(ArrayList<Message> messages) {
         int diff = 0;
-        if (this.messages != null) diff = messages.size() - this.messages.size();
-        this.messages = messages;
+        if (this.messages != null) {
+            diff = messages.size() - this.messages.size();
+            this.messages.setAll(messages);
+        }
+
         return diff;
     }
 
     public int setTurns(ArrayList<Turn> turns) {
         int diff = 0;
-        if (this.turns != null) diff = turns.size() - this.turns.size();
-        this.turns = turns;
+        if (this.turns != null){
+            diff = turns.size() - this.turns.size();
+            this.turns.setAll(turns);
+        }
         return diff;
     }
 
-    public ArrayList<Turn> getTurns() {
+    public ObservableList<Turn> getTurns() {
         return turns;
     }
 
@@ -92,7 +99,7 @@ public class Game {
      */
     public void setBoard(Field[][] fields) {
         this.emptyGameBoard = fields;
-        gameBoard = emptyGameBoard.clone();
+        gameBoard = cloneGameBoard(emptyGameBoard);
     }
 
     /**
@@ -100,13 +107,13 @@ public class Game {
      * @param turnToDisplay the last turn to be added to the board
      */
     public void setBoardStateTo(Turn turnToDisplay) {
-        gameBoard = emptyGameBoard.clone();
+        gameBoard = cloneGameBoard(emptyGameBoard);
         for (Turn turn : turns) {
             for (Tile tile : turn.getPlacedTiles())
                 gameBoard[tile.getY()][tile.getX()].setTile(tile);
             if(turn.equals(turnToDisplay)) {
                 currentRack = FXCollections.observableArrayList(turn.getRack());
-                break;
+                return;
             }
         }
     }
@@ -245,5 +252,19 @@ public class Game {
         allTiles.addAll(getLastTurn().getRack());
         System.out.println("YO WE ZIJN IN GETALLTILES");
         return allTiles;
+    }
+
+    public ObservableList<Message> getMessages() {
+        return messages;
+    }
+
+    private Field[][] cloneGameBoard(Field[][] emptyGameBoard){
+        Field[][] clonedGameBoard = new Field[15][15];
+        for (int y = 0; y < emptyGameBoard.length; y++) {
+            for (int x = 0; x < emptyGameBoard.length; x++) {
+                clonedGameBoard[y][x] = new Field(emptyGameBoard[y][x].getFieldType());
+            }
+        }
+        return clonedGameBoard;
     }
 }

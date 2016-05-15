@@ -15,8 +15,6 @@ public class GameListView extends View {
     @FXML private TitledPane myGamesPane;
     @FXML private Accordion accordion;
     @FXML private TextField filterField;
-
-
     @FXML private ListView<Game> myFinishedGamesList;
     @FXML private ListView<Game> allFinishedGamesList;
     @FXML private ListView<Game> myGamesList;
