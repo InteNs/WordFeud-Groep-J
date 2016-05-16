@@ -3,6 +3,7 @@ package views;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.effect.SepiaTone;
@@ -19,6 +20,9 @@ import models.Tile;
 import models.Turn;
 import resources.Resource;
 import views.components.FieldTileNode;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 
 public class GameBoardView extends View {
@@ -126,16 +130,33 @@ public class GameBoardView extends View {
                 });
 
                 tileNode.setOnDragDropped(event -> {
-                    if (tileNode.isPlaceHolder())
+                    if (tileNode.isPlaceHolder()) {
                         tileNode.setTile(tileBeingDragged);
-                    else {
-                        FieldTileNode place = nodes.filtered(FieldTileNode::isPlaceHolder).get(0);
-                        nodes.remove(place);
-                        nodes.add(nodes.indexOf(tileNode) + 1, place);
-                        place.setTile(tileBeingDragged);
                     }
 
-                    playerRack.add(nodes.indexOf(tileNode), tileBeingDragged);
+                    else {
+                        FilteredList<FieldTileNode> emptys = nodes.filtered(FieldTileNode::isPlaceHolder);
+                        ArrayList<FieldTileNode> sorted = emptys.stream().sorted((o1, o2) -> {
+                            int diff1 = Math.abs(nodes.indexOf(o1) - nodes.indexOf(tileNode));
+                            int diff2 = Math.abs(nodes.indexOf(o2) - nodes.indexOf(tileNode));
+                            if(diff1 > diff2) return 1;
+                            else return -1;
+                        }).collect(Collectors.toCollection(ArrayList<FieldTileNode>::new));
+
+                        FieldTileNode place = sorted.get(0);
+                        if(nodes.indexOf(place) > nodes.indexOf(tileNode)) {
+                            nodes.remove(place);
+                            nodes.add(nodes.indexOf(tileNode), place);
+                            place.setTile(tileBeingDragged);
+
+                        } else {
+                            nodes.remove(place);
+                            nodes.add(nodes.indexOf(tileNode)+1, place);
+                            place.setTile(tileBeingDragged);
+                        }
+                    }
+
+                    playerRack.add(tileBeingDragged);
                     event.setDropCompleted(true);
                     event.consume();
                 });

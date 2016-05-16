@@ -54,13 +54,17 @@ public class FieldTileNode extends ImageView {
 
     public void redrawImage() {
         if (isPlaceHolder) {
-            this.setImage(new Image("resources/blank.png"));
+            this.setImage(getImage("blank.png"));
             this.setOpacity(0);
         } else {
             this.setOpacity(1);
             if (tile != null) this.setImage(getImage(tile));
             if (field != null) this.setImage(getImage(field));
         }
+    }
+
+    private Image getImage(String image) {
+        return resource.getImage(image, true);
     }
 
     private Image getImage(Field field) {
@@ -71,17 +75,25 @@ public class FieldTileNode extends ImageView {
             s = field.getTile().toString().toUpperCase();
 
         String myString = s + ".png";
-        return resource.getImage(myString);
+        return resource.getImage(myString, false);
     }
 
     private Image getImage(Tile tile) {
         String s;
         s = tile.toString().toUpperCase();
         String myString = s + ".png";
-        return resource.getImage(myString);
+        return resource.getImage(myString, true);
     }
 
     public boolean isPlaceHolder() {
         return isPlaceHolder;
+    }
+
+    @Override
+    public String toString() {
+        return "FieldTileNode{" +
+                "field=" + field +
+                ", tile=" + tile +
+                '}';
     }
 }

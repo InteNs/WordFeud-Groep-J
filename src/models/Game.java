@@ -4,6 +4,7 @@ import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
@@ -38,6 +39,8 @@ public class Game {
         this.currentRack = FXCollections.observableArrayList();
         this.messages = FXCollections.observableArrayList();
         this.turns = FXCollections.observableArrayList();
+
+        this.currentRack.addListener((ListChangeListener<? super Tile>) observable -> System.out.println(currentRack));
     }
 
     public int getId() {
@@ -112,7 +115,7 @@ public class Game {
             for (Tile tile : turn.getPlacedTiles())
                 gameBoard[tile.getY()][tile.getX()].setTile(tile);
             if(turn.equals(turnToDisplay)) {
-                currentRack = FXCollections.observableArrayList(turn.getRack());
+                currentRack.setAll(turn.getRack());
                 return;
             }
         }
@@ -273,6 +276,7 @@ public class Game {
     }
 
     public boolean isLastTurn(Turn selectedTurn) {
-        return selectedTurn==getLastTurn();
+        //return selectedTurn==getLastTurn();
+        return true;
     }
 }
