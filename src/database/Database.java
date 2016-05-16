@@ -1,7 +1,6 @@
 package database;
 
 
-
 import com.mysql.jdbc.CommunicationsException;
 
 import java.sql.*;
@@ -70,6 +69,7 @@ public class Database {
     public boolean delete(String query, Object... values) {
         return execute(query, values);
     }
+
     /**
      * execute an insert query with x amount of question marks
      *
@@ -89,7 +89,7 @@ public class Database {
      * @return false if the execution failed
      */
     public boolean update(String query, Object... values) {
-       return execute(query, values);
+        return execute(query, values);
     }
 
     /**
@@ -122,7 +122,7 @@ public class Database {
         try {
             setStatement(query, values);
             ResultSet records = statement.executeQuery();
-            while(records.next()) {
+            while (records.next()) {
                 result.add(records.getString(1));
             }
         } catch (SQLException e) {
@@ -131,6 +131,7 @@ public class Database {
         close();
         return result;
     }
+
     /**
      * executes a select query and returns the first row as string
      *
@@ -139,18 +140,17 @@ public class Database {
      * @return String of first row
      */
     public String selectFirstColumnRow(String query, Object... values) {
-        if (selectFirstColumn(query, values).size() > 0) {
-            return selectFirstColumn(query, values).get(0);
-        } else {
-            return null;
-        }
+        ArrayList<String> column = selectFirstColumn(query, values);
+        if (column.size() > 0)
+            return column.get(0);
+        return null;
     }
 
     private void printError(Exception e) {
         try {
             System.out.println(e.getMessage() + "\nquery: " + statement.toString().split(":")[1]);
         } catch (Exception e1) {
-            if(e instanceof CommunicationsException) System.err.println("no connection to database!");
+            if (e instanceof CommunicationsException) System.err.println("no connection to database!");
         }
     }
 

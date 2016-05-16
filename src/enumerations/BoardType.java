@@ -5,7 +5,7 @@ public enum BoardType {
     RANDOM,
     UNDEFINED;
 
-    public static BoardType boardTypeFor(String boardType){
+    public static BoardType parse(String boardType) {
         switch (boardType){
             case "standard":
                 return STANDARD;

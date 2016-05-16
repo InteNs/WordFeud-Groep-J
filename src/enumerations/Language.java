@@ -6,7 +6,7 @@ public enum  Language {
     EN,
     UNDEFINED;
 
-    public static Language languageFor(String language){
+    public static Language parse(String language) {
         switch (language){
             case "NL":
                 return NL;

@@ -1,37 +1,38 @@
 package models;
 
-import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Competition {
 
     private int id;
     private User owner;
     private String competitionName;
-    private ArrayList<User> players;
+    private ObservableList<User> players;
 
-    public Competition(int id, User owner, String competitionName, ArrayList<User> players) {
+    public Competition(int id, User owner, String competitionName) {
         this.id = id;
         this.owner = owner;
         this.competitionName = competitionName;
-        this.players = players;
+        this.players = FXCollections.observableArrayList();
     }
 
     public Competition(User owner, String competitionName) {
         this.owner = owner;
         this.competitionName = competitionName;
+        this.players = FXCollections.observableArrayList();
     }
 
-    public ArrayList<User> getPlayers() {
+    public ObservableList<User> getPlayers() {
         return players;
     }
 
+    public void addPlayer(User user) {
+        players.add(user);
+    }
+
     public boolean containsUser(User user) {
-        for (User u : players) {
-            if (u.equals(user)) {
-                return true;
-            }
-        }
-        return false;
+        return players.contains(user);
     }
 
     public int getAmountOfPlayers() {
@@ -51,7 +52,23 @@ public class Competition {
         return owner;
     }
 
-    public Object getId() {
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Competition that = (Competition) o;
+
+        return id == that.id;
+
+    }
+
+    @Override
+    public int hashCode() {
         return id;
     }
 }
