@@ -56,7 +56,10 @@ public class CompetitionController extends Controller {
         refresh();
         competitions.stream()
                 .filter(competition -> competition.getOwner().equals(newComp.getOwner()))
-                .forEach(competition -> competitionDAO.insertPlayer(competition.getOwner(), competition));
+                .forEach(competition -> {
+                    competitionDAO.insertPlayer(competition.getOwner(), competition);
+                    competition.addPlayer(competition.getOwner());
+                });
         return true;
     }
 
