@@ -7,8 +7,6 @@ import javafx.collections.ObservableList;
 import models.Competition;
 import models.User;
 
-import java.util.ArrayList;
-
 public class CompetitionController extends Controller {
 
     private ObservableList<Competition> competitions;
@@ -17,6 +15,7 @@ public class CompetitionController extends Controller {
     public CompetitionController(ControllerFactory factory) {
         super(factory);
         competitions = FXCollections.observableArrayList(competitionDAO.selectCompetitions());
+        mapPlayers();
         selectedCompetition = new SimpleObjectProperty<>();
     }
 
@@ -36,6 +35,10 @@ public class CompetitionController extends Controller {
         for (Competition competition : competitions)
             if (competition.getOwner().equals(user)) return competition;
         return null;
+    }
+
+    public Competition getCompetition(int id) {
+        return competitions.filtered(competition -> competition.getId() == id).get(0);
     }
     
     public boolean isValidCompetitionName(String competitionName) {
@@ -61,18 +64,19 @@ public class CompetitionController extends Controller {
         return competitions;
     }
 
-    public ObservableList<String> getCompetitions(User user) {
-        ArrayList<String> competitionList = new ArrayList<>();
-        for (Competition c : getCompetitions()) {
-            if (c.containsUser(user)) {
-                competitionList.add(c.getName());
-            }
-        }
-        return FXCollections.observableArrayList(competitionList);
+    public ObservableList<Competition> getCompetitions(User user) {
+        return competitions.filtered(competition -> competition.getPlayers().contains(user));
+    }
+
+    public void mapPlayers() {
+        competitionDAO.getPlayerMap().entrySet().forEach(set -> {
+            getCompetition(set.getValue()).addPlayer(getUserController().getUser(set.getKey()));
+        });
     }
 
     @Override
     public void refresh() {
         competitions.setAll(competitionDAO.selectCompetitions());
+        mapPlayers();
     }
 }

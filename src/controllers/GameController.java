@@ -5,7 +5,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.Game;
-import models.Tile;
 import models.Turn;
 
 public class GameController extends Controller {
@@ -21,7 +20,8 @@ public class GameController extends Controller {
         selectedGame = new SimpleObjectProperty<>();
         selectedTurn = new SimpleObjectProperty<>();
         games = FXCollections.observableArrayList(gameDAO.selectGames());
-        games.forEach(game -> game.setMessages(gameDAO.selectMessages(game)));
+
+        selectedGameProperty().addListener((observable, oldValue, newValue) -> loadGame(newValue));
     }
 
     public ObjectProperty<Game> selectedGameProperty() {
@@ -58,24 +58,7 @@ public class GameController extends Controller {
         game.setMessages(gameDAO.selectMessages(game));
     }
 
-    public void loadGameBoard(Game game){
-    }
-
-    public Tile getTile(Game selectedGame,String hashcode) {
-        for (Tile tile:selectedGame.getAllTiles()
-                ) {
-            if (tile.hashCode()==Integer.valueOf(hashcode)){
-                return tile;
-            }
-
-        }
-        return null;
-    }
-
     public void refresh() {
         games.setAll(gameDAO.selectGames());
-        games.forEach(game -> game.setMessages(gameDAO.selectMessages(game)));
-
     }
-
 }

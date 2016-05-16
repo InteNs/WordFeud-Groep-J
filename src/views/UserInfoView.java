@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+import models.Competition;
 import models.User;
 
 public class UserInfoView extends View {
@@ -21,7 +22,7 @@ public class UserInfoView extends View {
     @FXML
     private Label passwordLabel;
     @FXML
-    private ListView<String> myCompetitions;
+    private ListView<Competition> myCompetitions;
     @FXML
     private CheckBox checkPlayer;
     @FXML
@@ -41,16 +42,25 @@ public class UserInfoView extends View {
     @Override
     public void constructor() {
         userController.selectedUserProperty().addListener((observable, oldValue, newValue) -> {
-            userNameLabel.setText( newValue.toString());
-            passwordLabel.setText("wachtwoord: " + newValue.getPassWord());
+            if (newValue == null) {
+                return;
+            }
             selectedUser = newValue;
-            myCompetitions.setItems(competitionController.getCompetitions(newValue));
-            getRoles();
-            setStats();
+
+            userNameLabel.setText( newValue.toString());
+            passwordLabel.setText("wachtwoord: " + selectedUser.getPassword());
+            myCompetitions.setItems(competitionController.getCompetitions(selectedUser));
+
+            if (!session.getCurrentUser().hasRole(Role.ADMINISTRATOR)) {
+                rolesPane.setVisible(false);
+                passwordLabel.setVisible(false);
+            }
+            getRoles(selectedUser);
+            setStats(selectedUser);
         });
     }
 
-    public void setStats() {
+    private void setStats(User selectedUser) {
         FadeTransition ft = new FadeTransition(Duration.millis(1000), lNoStats);
         ft.setFromValue(0.0);
         ft.setToValue(1.0);
@@ -73,61 +83,31 @@ public class UserInfoView extends View {
         }
     }
 
-    public void getRoles() {
-        if (!session.getCurrentUser().hasRole(Role.ADMINISTRATOR)) {
-            rolesPane.setVisible(false);
-            passwordLabel.setVisible(false);
-        }
-
-        checkPlayer.setSelected(false);
-        checkModerator.setSelected(false);
-        checkObserver.setSelected(false);
-        checkAdmin.setSelected(false);
-
-        if (selectedUser.hasRole(Role.PLAYER)) {
-            checkPlayer.setSelected(true);
-        }
-        if (selectedUser.hasRole(Role.MODERATOR)) {
-            checkModerator.setSelected(true);
-        }
-        if (selectedUser.hasRole(Role.ADMINISTRATOR)) {
-            checkAdmin.setSelected(true);
-        }
-        if (selectedUser.hasRole(Role.OBSERVER)) {
-            checkObserver.setSelected(true);
-        }
+    private void getRoles(User selectedUser) {
+        checkPlayer.setSelected(selectedUser.hasRole(Role.PLAYER));
+        checkModerator.setSelected(selectedUser.hasRole(Role.MODERATOR));
+        checkAdmin.setSelected(selectedUser.hasRole(Role.ADMINISTRATOR));
+        checkObserver.setSelected(selectedUser.hasRole(Role.OBSERVER));
     }
 
+    @FXML
     public void setPlayer() {
-        if (selectedUser.hasRole(Role.PLAYER)) {
-            userController.removeRole(selectedUser, Role.PLAYER);
-        } else {
-            userController.setRole(selectedUser, Role.PLAYER);
-        }
+        userController.setRole(selectedUser, Role.PLAYER, checkPlayer.isSelected());
     }
 
+    @FXML
     public void setAdmin() {
-        if (selectedUser.hasRole(Role.ADMINISTRATOR)) {
-            userController.removeRole(selectedUser, Role.ADMINISTRATOR);
-        } else {
-            userController.setRole(selectedUser, Role.ADMINISTRATOR);
-        }
+        userController.setRole(selectedUser, Role.ADMINISTRATOR, checkAdmin.isSelected());
     }
 
+    @FXML
     public void setModerator() {
-        if (selectedUser.hasRole(Role.MODERATOR)) {
-            userController.removeRole(selectedUser, Role.MODERATOR);
-        } else {
-            userController.setRole(selectedUser, Role.MODERATOR);
-        }
+        userController.setRole(selectedUser, Role.MODERATOR, checkModerator.isSelected());
     }
 
+    @FXML
     public void setObserver() {
-        if (selectedUser.hasRole(Role.OBSERVER)) {
-            userController.removeRole(selectedUser, Role.OBSERVER);
-        } else {
-            userController.setRole(selectedUser, Role.OBSERVER);
-        }
+        userController.setRole(selectedUser, Role.OBSERVER, checkObserver.isSelected());
     }
 
     @Override

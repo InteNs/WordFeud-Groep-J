@@ -16,6 +16,8 @@ public class GameListView extends View {
     @FXML private TitledPane myGamesPane;
     @FXML private Accordion accordion;
     @FXML private TextField filterField;
+
+
     @FXML private ListView<Game> myFinishedGamesList;
     @FXML private ListView<Game> allFinishedGamesList;
     @FXML private ListView<Game> myGamesList;
@@ -50,15 +52,23 @@ public class GameListView extends View {
         userController.selectedUserProperty().addListener(e -> setGlobalFilter(filteredGames));
 
         myGamesList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                gameController.setSelectedGame(newValue);
-                parent.showGameBoardView();
-                parent.showGameControlView();
-            }
+            selectGame(newValue);
+        });
+
+        allGamesList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            selectGame(newValue);
         });
     }
 
+    private void selectGame(Game game){
+        if (game != null) {
+            gameController.setSelectedGame(game);
+            parent.showGameBoardView();
+            parent.showGameControlView();
+        }
+    }
+
     private void setGlobalFilter( FilteredList<Game> list) {
-        list.setPredicate(filterText.and(filterUser));
+        list.setPredicate(filterText);
     }
 }

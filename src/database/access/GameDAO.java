@@ -36,9 +36,9 @@ public class GameDAO extends DAO {
                         records.getInt("id"),
                         new User(records.getString("account_naam_uitdager")),
                         new User(records.getString("account_naam_tegenstander")),
-                        GameState.stateFor(records.getString("toestand_type")),
-                        BoardType.boardTypeFor(records.getString("bord_naam")),
-                        Language.languageFor(records.getString("letterset_naam"))
+                        GameState.parse(records.getString("toestand_type")),
+                        BoardType.parse(records.getString("bord_naam")),
+                        Language.parse(records.getString("letterset_naam"))
                 ));
             }
         } catch (Exception e) {
@@ -123,7 +123,7 @@ public class GameDAO extends DAO {
             while (records.next()){
                 int x=records.getInt("x")-1;
                 int y = records.getInt("y")-1;
-                fields[(y)][x] = new Field(FieldType.fieldTypeFor(records.getString("tegeltype_soort")),x,y);
+                fields[(y)][x] = new Field(FieldType.parse(records.getString("tegeltype_soort")),x,y);
             }
         } catch (SQLException e) {
             printError(e);

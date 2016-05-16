@@ -41,12 +41,12 @@ public class UserController extends Controller {
         return getSession().getCurrentUser() != null;
     }
 
-    public void logOut() {
-        getSession().setCurrentUser(null);
-    }
-
     public ObservableList<User> getUsers() {
         return users;
+    }
+
+    public User getUser(String name) {
+        return users.filtered(user -> user.getName().equals(name)).get(0);
     }
 
     public boolean userExists(String username) {
@@ -61,7 +61,7 @@ public class UserController extends Controller {
         if (userDAO.insertUser(username, password)) {
             User user = new User(username);
             users.add(user);
-            setRole(user,(Role.PLAYER));
+            setRole(user, Role.PLAYER, true);
             return true;
         }
         return false;
@@ -76,25 +76,20 @@ public class UserController extends Controller {
         return password.length() >= 5 && password.length() <= 25 && (!password.contains(" "));
     }
 
-    public void setRole(User user, Role role) {
-        userDAO.setRole(user, role);
-        user.addRole(role);
-    }
-
-    public void removeRole(User user, Role role) {
-        userDAO.removeRole(user, role);
-        user.removeRole(role);
+    public void setRole(User user, Role role, Boolean enabled) {
+        if (enabled) {
+            userDAO.setRole(user, role);
+            user.addRole(role);
+        } else {
+            userDAO.removeRole(user, role);
+            user.removeRole(role);
+        }
     }
 
     public boolean checkPassword(String oldPassword) {
         String userName = getSession().getCurrentUser().getName();
         User optionalUser = userDAO.selectUser(userName, oldPassword);
-
-        if (!(optionalUser == null)) {
-            return true;
-        } else {
-            return false;
-        }
+        return !(optionalUser == null);
     }
 
     public void changePassword(String password) {

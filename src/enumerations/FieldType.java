@@ -9,7 +9,7 @@ public enum FieldType {
     STARTTILE,
     UNDEFINED;
 
-    public static FieldType fieldTypeFor(String fieldType){
+    public static FieldType parse(String fieldType) {
         switch (fieldType){
             case "--":
                 return NORMAL;
