@@ -41,12 +41,14 @@ public class UserInfoView extends View {
     @Override
     public void constructor() {
         userController.selectedUserProperty().addListener((observable, oldValue, newValue) -> {
-            userNameLabel.setText( newValue.toString());
-            passwordLabel.setText("wachtwoord: " + newValue.getPassWord());
-            selectedUser = newValue;
-            myCompetitions.setItems(competitionController.getCompetitions(newValue));
-            getRoles();
-            setStats();
+            if(newValue != null) {
+                userNameLabel.setText(newValue.toString());
+                passwordLabel.setText("wachtwoord: " + newValue.getPassWord());
+                selectedUser = newValue;
+                myCompetitions.setItems(competitionController.getCompetitions(newValue));
+                getRoles();
+                setStats();
+            }
         });
     }
 
