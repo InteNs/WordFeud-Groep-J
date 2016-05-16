@@ -49,10 +49,12 @@ public class GameListView extends View {
         });
 
         filterField.textProperty().addListener(e -> setGlobalFilter(filteredGames));
-        userController.selectedUserProperty().addListener(e -> setGlobalFilter(filteredGames));
+        userController.selectedUserProperty().addListener(e -> {
+            setGlobalFilter(filteredGames);
+        });
     }
 
     private void setGlobalFilter( FilteredList<Game> list) {
-        list.setPredicate(filterText.and(filterUser));
+        list.setPredicate(filterText);
     }
 }

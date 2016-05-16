@@ -10,6 +10,8 @@ public class UserListView extends View {
     @FXML
     private ListView<User> userList;
     @FXML
+    private ListView<User> currentUserList;
+    @FXML
     private TextField filterField;
 
     private FilteredList<User> filteredUsers;
@@ -29,10 +31,19 @@ public class UserListView extends View {
             );
         });
 
-        userList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            userController.setSelectedUser(newValue);
-            parent.showUserInfo();
+        session.currentUserProperty().addListener((observable, oldValue, newValue) -> {
+            currentUserList.getItems().setAll(newValue);
         });
+
+        currentUserList.setOnMouseClicked(e -> select(session.getCurrentUser()));
+
+        userList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+                select(newValue));
+    }
+
+    private void select(User user) {
+        userController.setSelectedUser(user);
+        parent.showUserInfo();
     }
 }
 

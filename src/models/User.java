@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class User {
 
     private String name;
-    private String passWord;
+    private String password;
     private ArrayList<Role> roles;
     private int wins;
     private int loses;
@@ -20,26 +20,20 @@ public class User {
     }
 
 
-    public User(String name, String passWord) {
+    public User(String name, String password) {
         this.name = name;
-        this.passWord = passWord;
+        this.password = password;
         roles = new ArrayList<>();
+        wins = 0;
+        loses = 0;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getPassWord() {
-        return passWord;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof User)
-            return ((User) obj).getName().equals(this.getName());
-
-        return super.equals(obj);
+    public String getPassword() {
+        return password;
     }
 
     @Override
@@ -60,13 +54,7 @@ public class User {
     }
 
     public boolean hasRole(Role role) {
-        Boolean result = false;
-        for (Role r : roles) {
-            if (r.equals(role)) {
-                result = true;
-            }
-        }
-        return result;
+        return roles.contains(role);
     }
 
     public int getWins() {
@@ -76,11 +64,28 @@ public class User {
     public int getLoses() {
         return loses;
     }
+
     public void setWins(Integer wins) {
         this.wins = wins;
     }
 
     public void setLoses(Integer loses) {
         this.loses = loses;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return name.equals(user.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 }

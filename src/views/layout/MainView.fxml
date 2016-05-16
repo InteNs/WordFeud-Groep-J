@@ -14,7 +14,7 @@
         <TabPane fx:id="control" minHeight="600.0" minWidth="300.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE"
                  SplitPane.resizableWithParent="false">
             <fx:include fx:id="gameListView" source="GameListView.fxml"/>
-            <fx:include fx:id="userListView" source="UserList.fxml"/>
+            <fx:include fx:id="userListView" source="UserListView.fxml"/>
             <fx:include fx:id="competitionListView" source="CompetitionListView.fxml"/>
         </TabPane>
         <VBox minHeight="600.0" minWidth="600.0" SplitPane.resizableWithParent="false">

@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
 <Tab text="spellen" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
      fx:controller="views.GameListView">
-    <VBox>
-        <TextField fx:id="filterField" promptText="filter..."/>
+    <VBox spacing="5">
+        <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+        </padding>
+        <TextField fx:id="filterField" promptText="zoeken..."/>
         <Accordion fx:id="accordion" VBox.vgrow="ALWAYS">
             <panes>
                 <TitledPane fx:id="myGamesPane" animated="true" text="Mijn spellen">
-                    <ListView fx:id="myGamesList" prefHeight="200.0" prefWidth="200.0"/>
+                    <ListView fx:id="myGamesList"/>
                 </TitledPane>
                 <TitledPane animated="true" text="Mijn voltooide spellen">
-                    <ListView fx:id="myFinishedGamesList" prefHeight="200.0" prefWidth="200.0"/>
+                    <ListView fx:id="myFinishedGamesList"/>
                 </TitledPane>
                 <TitledPane animated="true" text="Alle spellen">
-                    <ListView fx:id="allGamesList" prefHeight="200.0" prefWidth="200.0"/>
+                    <ListView fx:id="allGamesList"/>
                 </TitledPane>
                 <TitledPane animated="true" text="Alle voltooide spellen">
-                    <ListView fx:id="allFinishedGamesList" prefHeight="200.0" prefWidth="200.0"/>
+                    <ListView fx:id="allFinishedGamesList"/>
                 </TitledPane>
             </panes>
         </Accordion>

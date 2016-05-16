@@ -6,8 +6,8 @@ public enum GameState {
     REQUEST,
     PLAYING;
 
-    public static GameState stateFor(String state) {
-        switch (state) {
+    public static GameState parse(String gameState) {
+        switch (gameState) {
             case "finished": return FINISHED;
             case "request" : return REQUEST;
             case "playing" : return PLAYING;
