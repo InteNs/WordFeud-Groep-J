@@ -4,7 +4,6 @@ import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
@@ -39,12 +38,71 @@ public class Game {
         this.currentRack = FXCollections.observableArrayList();
         this.messages = FXCollections.observableArrayList();
         this.turns = FXCollections.observableArrayList();
-
-        this.currentRack.addListener((ListChangeListener<? super Tile>) observable -> System.out.println(currentRack));
     }
 
     public int getId() {
         return id;
+    }
+
+    public ObservableList<Message> getMessages() {
+        return messages;
+    }
+
+    public ObservableList<Turn> getTurns() {
+        return turns;
+    }
+
+    public Turn getLastTurn() {
+        if (turns != null && !turns.isEmpty())
+            return turns.get(turns.size()-1);
+        else return null;
+    }
+
+    public ArrayList<User> getPlayers() {
+        return new ArrayList<>(Arrays.asList(challenger, opponent));
+    }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    public BoardType getBoardType() {
+        return boardType;
+    }
+
+    public ObservableList<Tile> getCurrentRack() {
+        return currentRack;
+    }
+
+    public ObservableList<Field> getFieldsChangedThisTurn() {
+        return fieldsChangedThisTurn;
+    }
+
+    public Field[][] getGameBoard() {
+        return gameBoard;
+    }
+
+    public ArrayList<Tile> getAllTiles() {
+        ArrayList<Tile> allTiles = new ArrayList<>();
+        fieldsChangedThisTurn.forEach(e ->{
+            allTiles.add(e.getTile());
+        });
+        allTiles.addAll(getLastTurn().getRack());
+        return allTiles;
+    }
+
+    /**
+     * fetches all the tiles placed in all the completed turns
+     * @return the (cached) tiles
+     */
+    public ArrayList<Tile> getPlacedTiles() {
+        if(allTilesCache != null)
+            return allTilesCache;
+        allTilesCache = new ArrayList<Tile>();
+        turns.stream()
+                .filter(turn -> turn.getPlacedTiles() != null)
+                .forEach(turn -> allTilesCache.addAll(turn.getPlacedTiles()));
+        return allTilesCache;
     }
 
     public int setMessages(ArrayList<Message> messages) {
@@ -66,36 +124,6 @@ public class Game {
         return diff;
     }
 
-    public ObservableList<Turn> getTurns() {
-        return turns;
-    }
-
-    public Turn getLastTurn() {
-        if (turns != null && !turns.isEmpty())
-            return turns.get(turns.size()-1);
-        else return null;
-    }
-
-    public ArrayList<User> getPlayers() {
-        return new ArrayList<>(Arrays.asList(challenger, opponent));
-    }
-
-    public boolean hasPlayer(User user) {
-        return getPlayers().contains(user);
-    }
-
-    public GameState getGameState() {
-        return gameState;
-    }
-
-    public BoardType getBoardType() {
-        return boardType;
-    }
-
-    public void setGameState(GameState gameState) {
-        this.gameState = gameState;
-    }
-
     /**
      * set the initial board for this game
      * @param fields the fields for this board
@@ -103,6 +131,15 @@ public class Game {
     public void setBoard(Field[][] fields) {
         this.emptyGameBoard = fields;
         gameBoard = cloneGameBoard(emptyGameBoard);
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+
+    public void addPlacedTile(Field field, Tile tile) {
+        field.setTile(tile);
+        fieldsChangedThisTurn.add(field);
     }
 
     /**
@@ -121,36 +158,17 @@ public class Game {
         }
     }
 
-    public ObservableList<Tile> getCurrentRack() {
-        return currentRack;
-    }
-
-    /**
-     * fetches all the tiles placed in all the completed turns
-     * @return the (cached) tiles
-     */
-    public ArrayList<Tile> getPlacedTiles() {
-        if(allTilesCache != null)
-            return allTilesCache;
-        allTilesCache = new ArrayList<Tile>();
-        turns.stream()
-                .filter(turn -> turn.getPlacedTiles() != null)
-                .forEach(turn -> allTilesCache.addAll(turn.getPlacedTiles()));
-        return allTilesCache;
-    }
-
-    public void addPlacedTile(Field field, Tile tile) {
-        field.setTile(tile);
-        fieldsChangedThisTurn.add(field);
-    }
-
     public void removePlacedTile(Field field) {
         field.setTile(null);
         fieldsChangedThisTurn.remove(field);
     }
 
-    public ObservableList<Field> getFieldsChangedThisTurn() {
-        return fieldsChangedThisTurn;
+    public boolean hasPlayer(User user) {
+        return getPlayers().contains(user);
+    }
+
+    public boolean isLastTurn(Turn selectedTurn) {
+        return selectedTurn == getLastTurn();
     }
 
     /**
@@ -163,7 +181,7 @@ public class Game {
         if (fieldsChangedThisTurn.size()==0){
             return false;
         }
-        
+
         boolean validTurn = true;
         char fixedAxis;
 
@@ -226,8 +244,14 @@ public class Game {
     return null;
     }
 
-    public Field[][] getGameBoard() {
-        return gameBoard;
+    private Field[][] cloneGameBoard(Field[][] emptyGameBoard){
+        Field[][] clonedGameBoard = new Field[15][15];
+        for (int y = 0; y < emptyGameBoard.length; y++) {
+            for (int x = 0; x < emptyGameBoard.length; x++) {
+                clonedGameBoard[y][x] = new Field(emptyGameBoard[y][x].getFieldType(),x,y);
+            }
+        }
+        return clonedGameBoard;
     }
 
     @Override
@@ -250,33 +274,5 @@ public class Game {
     @Override
     public int hashCode() {
         return id;
-    }
-
-    public ArrayList<Tile> getAllTiles() {
-        ArrayList<Tile> allTiles = new ArrayList<>();
-        fieldsChangedThisTurn.forEach(e ->{
-            allTiles.add(e.getTile());
-        });
-        allTiles.addAll(getLastTurn().getRack());
-        return allTiles;
-    }
-
-    public ObservableList<Message> getMessages() {
-        return messages;
-    }
-
-    private Field[][] cloneGameBoard(Field[][] emptyGameBoard){
-        Field[][] clonedGameBoard = new Field[15][15];
-        for (int y = 0; y < emptyGameBoard.length; y++) {
-            for (int x = 0; x < emptyGameBoard.length; x++) {
-                clonedGameBoard[y][x] = new Field(emptyGameBoard[y][x].getFieldType(),x,y);
-            }
-        }
-        return clonedGameBoard;
-    }
-
-    public boolean isLastTurn(Turn selectedTurn) {
-        //return selectedTurn==getLastTurn();
-        return true;
     }
 }

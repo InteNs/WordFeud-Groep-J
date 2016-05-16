@@ -18,7 +18,6 @@ import models.Field;
 import models.Game;
 import models.Tile;
 import models.Turn;
-import resources.Resource;
 import views.components.FieldTileNode;
 
 import java.util.ArrayList;
@@ -36,20 +35,14 @@ public class GameBoardView extends View {
     @FXML
     private HBox playerRackGrid;
     @FXML
-
-    private Game selectedGame;
-    private Turn selectedTurn;
     private Tile tileBeingDragged;
-    private Resource resource;
 
-    private void displayGameBoard(Field[][] gameBoard) {
-        if (gameBoard == null) {
-            gameBoardGrid.getChildren().removeAll();
-            return;
-        }
+    private void displayGameBoard(Game selectedGame, Turn selectedTurn) {
+        Field[][] gameBoard = selectedGame.getGameBoard();
+        gameBoardGrid.getChildren().removeAll();
         for (int y = 0; y < gameBoard.length; y++)
             for (int x = 0; x < gameBoard.length; x++) {
-                FieldTileNode fieldNode = new FieldTileNode(gameBoard[x][y], resource);
+                FieldTileNode fieldNode = new FieldTileNode(gameBoard[x][y], resourceFactory);
                 GridPane.setConstraints(fieldNode, y, x);
                 gameBoardGrid.getChildren().add(fieldNode);
 
@@ -69,7 +62,7 @@ public class GameBoardView extends View {
 
                     fieldNode.setOnDragDropped(event -> {
                         fieldNode.setCursor(Cursor.OPEN_HAND);
-                        selectedGame.addPlacedTile(fieldNode.getField(), tileBeingDragged);
+                        gameController.placeTile(selectedGame, fieldNode.getField(), tileBeingDragged);
                         fieldNode.redrawImage();
                         event.setDropCompleted(true);
                         event.consume();
@@ -80,33 +73,31 @@ public class GameBoardView extends View {
                             return;
                         prepareDrag(fieldNode);
                         tileBeingDragged = fieldNode.getField().getTile();
-                        selectedGame.removePlacedTile(fieldNode.getField());
+                        gameController.removeTile(selectedGame, fieldNode.getField());
                         fieldNode.redrawImage();
                         event.consume();
                     });
 
                     fieldNode.setOnDragDone(event -> {
                         if (event.getTransferMode() != TransferMode.MOVE) {
-                            selectedGame.addPlacedTile(fieldNode.getField(), tileBeingDragged);
+                            gameController.placeTile(selectedGame, fieldNode.getField(), tileBeingDragged);
                             fieldNode.redrawImage();
                             fieldNode.setCursor(Cursor.DEFAULT);
                         }
                         event.consume();
                     });
                 }
-
-
             }
     }
 
-    private void displayPlayerRack(ObservableList<Tile> playerRack) {
+    private void displayPlayerRack(Game selectedGame, Turn selectedTurn) {
         ObservableList<FieldTileNode> nodes = FXCollections.observableArrayList();
         playerRackGrid.getChildren().setAll(nodes);
 
         nodes.addListener((ListChangeListener<? super FieldTileNode>) observable -> playerRackGrid.getChildren().setAll(nodes));
 
-        playerRack.forEach(tile -> {
-            FieldTileNode tileNode = new FieldTileNode(tile, resource);
+        selectedGame.getCurrentRack().forEach(tile -> {
+            FieldTileNode tileNode = new FieldTileNode(tile, resourceFactory);
             nodes.add(tileNode);
             tileNode.setCursor(Cursor.OPEN_HAND);
 
@@ -116,47 +107,41 @@ public class GameBoardView extends View {
                         return;
                     prepareDrag(tileNode);
                     tileBeingDragged = tileNode.getTile();
-                    playerRack.remove(tileBeingDragged);
                     tileNode.setTile(null);
                     event.consume();
                 });
 
                 tileNode.setOnDragDone(event -> {
-                    if (event.getTransferMode() != TransferMode.MOVE) {
-                        playerRack.add(tileBeingDragged);
-                        tileNode.setTile(tileBeingDragged);
-                    }
+                    setCurrentRack(selectedGame, nodes);
                     event.consume();
                 });
 
                 tileNode.setOnDragDropped(event -> {
                     if (tileNode.isPlaceHolder()) {
                         tileNode.setTile(tileBeingDragged);
-                    }
-
-                    else {
+                    } else {
                         FilteredList<FieldTileNode> emptys = nodes.filtered(FieldTileNode::isPlaceHolder);
                         ArrayList<FieldTileNode> sorted = emptys.stream().sorted((o1, o2) -> {
                             int diff1 = Math.abs(nodes.indexOf(o1) - nodes.indexOf(tileNode));
                             int diff2 = Math.abs(nodes.indexOf(o2) - nodes.indexOf(tileNode));
-                            if(diff1 > diff2) return 1;
+                            if (diff1 > diff2) return 1;
                             else return -1;
                         }).collect(Collectors.toCollection(ArrayList<FieldTileNode>::new));
 
                         FieldTileNode place = sorted.get(0);
-                        if(nodes.indexOf(place) > nodes.indexOf(tileNode)) {
+                        if (nodes.indexOf(place) > nodes.indexOf(tileNode)) {
                             nodes.remove(place);
                             nodes.add(nodes.indexOf(tileNode), place);
                             place.setTile(tileBeingDragged);
 
                         } else {
                             nodes.remove(place);
-                            nodes.add(nodes.indexOf(tileNode)+1, place);
+                            nodes.add(nodes.indexOf(tileNode) + 1, place);
                             place.setTile(tileBeingDragged);
                         }
                     }
 
-                    playerRack.add(tileBeingDragged);
+                    setCurrentRack(selectedGame, nodes);
                     event.setDropCompleted(true);
                     event.consume();
                 });
@@ -169,6 +154,12 @@ public class GameBoardView extends View {
 
         });
 
+    }
+
+    private void setCurrentRack(Game game, ObservableList<FieldTileNode> tileNodes) {
+        gameController.setPlayerRack(game, tileNodes.stream()
+                .filter(fieldTileNode -> !fieldTileNode.isPlaceHolder())
+                .map(FieldTileNode::getTile).collect(Collectors.toList()));
     }
 
     private void prepareDrag(FieldTileNode fieldTileNode) {
@@ -184,22 +175,15 @@ public class GameBoardView extends View {
 
     @Override
     public void constructor() {
-        resource = new Resource();
-        gameController.selectedGameProperty().addListener((observable, oldValue, newValue) -> {
-
-            selectedGame = newValue;
+        gameController.selectedGameProperty().addListener((observable, oldValue, selectedGame) -> {
             gameController.loadGame(selectedGame);
-            selectedTurn = selectedGame.getLastTurn();
-            selectedGame.setBoardStateTo(selectedTurn);
-            displayGameBoard(selectedGame.getGameBoard());
-            displayPlayerRack(selectedGame.getCurrentRack());
+            gameController.setSelectedTurn(selectedGame.getLastTurn());
         });
 
-        gameController.selectedTurnProperty().addListener((observable, oldValue, newValue) -> {
-            selectedTurn = newValue;
-            selectedGame.setBoardStateTo(selectedTurn);
-            displayGameBoard(selectedGame.getGameBoard());
-            displayPlayerRack(selectedGame.getCurrentRack());
+        gameController.selectedTurnProperty().addListener((observable, oldValue, selectedTurn) -> {
+            gameController.setBoardState(gameController.getSelectedGame(), selectedTurn);
+            displayGameBoard(gameController.getSelectedGame(), selectedTurn);
+            displayPlayerRack(gameController.getSelectedGame(), selectedTurn);
         });
     }
 }

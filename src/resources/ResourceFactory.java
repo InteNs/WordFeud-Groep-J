@@ -8,12 +8,12 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 
 
-public class Resource {
+public class ResourceFactory {
 
     private HashMap<String, Image> imagesHighRes;
     private HashMap<String, Image> imagesLowRes;
 
-    public Resource() {
+    public ResourceFactory() {
         imagesHighRes = new HashMap<>();
         imagesLowRes = new HashMap<>();
     }

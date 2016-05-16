@@ -1,6 +1,7 @@
 package views;
 
 import controllers.*;
+import resources.ResourceFactory;
 
 abstract class View {
     protected MainView parent;
@@ -9,6 +10,7 @@ abstract class View {
     protected GameController gameController;
     protected CompetitionController competitionController;
     protected SessionController session;
+    protected ResourceFactory resourceFactory;
 
     public abstract void refresh();
     public abstract void constructor();
@@ -19,6 +21,7 @@ abstract class View {
         gameController = controllerFactory.getGameController();
         competitionController = controllerFactory.getCompetitionController();
         session = controllerFactory.getSessionController();
+        resourceFactory = new ResourceFactory();
 
         this.parent = parent;
         constructor();

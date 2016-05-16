@@ -4,8 +4,12 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import models.Field;
 import models.Game;
+import models.Tile;
 import models.Turn;
+
+import java.util.List;
 
 public class GameController extends Controller {
 
@@ -60,5 +64,21 @@ public class GameController extends Controller {
 
     public void refresh() {
         games.setAll(gameDAO.selectGames());
+    }
+
+    public void setPlayerRack(Game game, List<Tile> tiles) {
+        game.getCurrentRack().setAll(tiles);
+    }
+
+    public void setBoardState(Game game, Turn turn) {
+        game.setBoardStateTo(turn);
+    }
+
+    public void placeTile(Game game, Field field, Tile tile) {
+        game.addPlacedTile(field, tile);
+    }
+
+    public void removeTile(Game game, Field field) {
+        game.removePlacedTile(field);
     }
 }

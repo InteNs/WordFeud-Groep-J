@@ -4,13 +4,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import models.Field;
 import models.Tile;
-import resources.Resource;
+import resources.ResourceFactory;
 
 public class FieldTileNode extends ImageView {
 
     private Field field;
     private Tile tile;
-    private Resource resource;
+    private ResourceFactory resourceFactory;
     private boolean isPlaceHolder = false;
 
     public Field getField() {
@@ -30,8 +30,8 @@ public class FieldTileNode extends ImageView {
     /**
      * Used to create nodes representing the gameBoard
      */
-    public FieldTileNode(Field field, Resource resource) {
-        this.resource = resource;
+    public FieldTileNode(Field field, ResourceFactory resourceFactory) {
+        this.resourceFactory = resourceFactory;
         this.setFitWidth(40);
         this.setFitHeight(40);
         this.setImage(getImage(field));
@@ -42,10 +42,10 @@ public class FieldTileNode extends ImageView {
     /**
      * Used to build the playerRack
      */
-    public FieldTileNode(Tile tile, Resource resource) {
+    public FieldTileNode(Tile tile, ResourceFactory resourceFactory) {
         this.setFitHeight(80);
         this.setFitWidth(80);
-        this.resource = resource;
+        this.resourceFactory = resourceFactory;
         this.tile = tile;
         if (tile != null)
             this.setImage(getImage(tile));
@@ -64,7 +64,7 @@ public class FieldTileNode extends ImageView {
     }
 
     private Image getImage(String image) {
-        return resource.getImage(image, true);
+        return resourceFactory.getImage(image, true);
     }
 
     private Image getImage(Field field) {
@@ -75,14 +75,14 @@ public class FieldTileNode extends ImageView {
             s = field.getTile().toString().toUpperCase();
 
         String myString = s + ".png";
-        return resource.getImage(myString, false);
+        return resourceFactory.getImage(myString, false);
     }
 
     private Image getImage(Tile tile) {
         String s;
         s = tile.toString().toUpperCase();
         String myString = s + ".png";
-        return resource.getImage(myString, true);
+        return resourceFactory.getImage(myString, true);
     }
 
     public boolean isPlaceHolder() {
