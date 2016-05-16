@@ -21,14 +21,15 @@ public class MainView extends View implements Initializable {
     @FXML private VBox welcomeView;
     @FXML private VBox registerView;
     @FXML private Pane userInfoView;
+    @FXML private VBox gameBoardView;
     @FXML private VBox createCompetitionView;
     @FXML private VBox passwordChangeView;
-
     @FXML private ProgressIndicator loadIndicator;
     @FXML private ToolBar toolBar;
     @FXML private TabPane control;
     @FXML private SplitPane mainContent;
     @FXML private StackPane content;
+    @FXML private Tab gameControlView;
 
     /*Declare your viewControllers here*/
     @FXML private UserListView userListViewController;
@@ -38,8 +39,10 @@ public class MainView extends View implements Initializable {
     @FXML private WelcomeView  welcomeViewController;
     @FXML private RegisterView  registerViewController;
     @FXML private UserInfoView  userInfoViewController;
+    @FXML private GameBoardView gameBoardViewController;
     @FXML private CreateCompetitionView createCompetitionViewController;
     @FXML private PasswordChangeView passwordChangeViewController;
+    @FXML private gameControlView gameControlViewController;
 
     private ControllerFactory controllerFactory;
 
@@ -51,7 +54,6 @@ public class MainView extends View implements Initializable {
         setControl(false);
         setContent(loginView);
         controllerFactory = new ControllerFactory();
-
 
         /*
         Put your viewController in this list for it
@@ -65,9 +67,11 @@ public class MainView extends View implements Initializable {
                 welcomeViewController,
                 registerViewController,
                 userListViewController,
+                gameBoardViewController,
                 userInfoViewController,
                 createCompetitionViewController,
-                passwordChangeViewController
+                passwordChangeViewController,
+                gameControlViewController
 
         ).forEach(view -> view.init(this));
     }
@@ -89,12 +93,11 @@ public class MainView extends View implements Initializable {
     public void showUserInfo(){
         setContent(userInfoView);
     }
-    
 
     public void showCreateCompetition(){
     	setContent(createCompetitionView);
     }
-    
+
     public void showPasswordChangeView(){
         setContent(passwordChangeView);
     }
@@ -119,7 +122,7 @@ public class MainView extends View implements Initializable {
     public void toggleControl(ActionEvent actionEvent) {
         setControl(!((ToggleButton)actionEvent.getSource()).isSelected());
     }
-    
+
     @FXML
     public void logOut(){
     	this.showLoginView();
@@ -128,7 +131,7 @@ public class MainView extends View implements Initializable {
     	loginViewController.resetFields();
         controllerFactory.getSessionController().setCurrentUser(null);
     }
-    
+
     /**
      * set the control (tab pane) visible or not (makes content fill window)
      * @param visible whether the control tabs should be visible
@@ -153,9 +156,16 @@ public class MainView extends View implements Initializable {
         content.getChildren().clear();
         content.getChildren().add(node);
     }
-    
+
     @Override
     public void constructor() {
         //this will never be called in this view
+    }
+
+    public void showGameBoardView() {
+        setContent(gameBoardView);
+    }
+
+    public void showGameControlView() {control.getSelectionModel().select(gameControlView);
     }
 }

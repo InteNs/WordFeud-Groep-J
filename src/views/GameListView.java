@@ -49,9 +49,23 @@ public class GameListView extends View {
         });
 
         filterField.textProperty().addListener(e -> setGlobalFilter(filteredGames));
-        userController.selectedUserProperty().addListener(e -> {
-            setGlobalFilter(filteredGames);
+        userController.selectedUserProperty().addListener(e -> setGlobalFilter(filteredGames));
+
+        myGamesList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            selectGame(newValue);
         });
+
+        allGamesList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            selectGame(newValue);
+        });
+    }
+
+    private void selectGame(Game game){
+        if (game != null) {
+            gameController.setSelectedGame(game);
+            parent.showGameBoardView();
+            parent.showGameControlView();
+        }
     }
 
     private void setGlobalFilter( FilteredList<Game> list) {

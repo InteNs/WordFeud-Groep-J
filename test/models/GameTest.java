@@ -1,31 +1,28 @@
 package models;
 
+import controllers.ControllerFactory;
+import controllers.GameController;
 import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class GameTest {
+
     private Game game;
     private User user1, user2;
-
-    public GameTest() {
-    }
 
     @Before
     public void setUp() throws Exception {
         user1 = new User("current");
         user2 = new User("other");
 
-        game = new Game(1, user1, user2, GameState.FINISHED, BoardType.STANDARD, Language.NL);
-
+        game = new Game(511, user1, user2, GameState.FINISHED, BoardType.STANDARD, Language.NL);
     }
 
     @Test
@@ -40,5 +37,12 @@ public class GameTest {
     public void getPlayers() throws Exception {
         assertTrue("returns all players",
                 game.getPlayers().containsAll(Arrays.asList(user1, user2)));
+    }
+
+    @Test
+    public void checkRow() throws Exception {
+        GameController gameController = new ControllerFactory().getGameController();
+        gameController.loadGame(game);
+        game.setBoardStateTo(game.getTurns().get(game.getTurns().size() - 1));
     }
 }

@@ -2,11 +2,11 @@
     -fx-background-color: #DDDDDD;
     -fx-border-color:     #BDBDBD;
     -fx-border-width:     0 0 1 0;
-    -fx-border-insets:    0 0 -1 0;
+    -fx-pref-height: 30;
 }
 
 .tab-pane .tab-header-area .tab {
-    -fx-pref-height: 30;
+    -fx-pref-height: 25;
 }
 
 .user-info .check-box {

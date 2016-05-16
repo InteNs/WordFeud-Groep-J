@@ -19,7 +19,6 @@ public class User {
         loses = 0;
     }
 
-
     public User(String name, String password) {
         this.name = name;
         this.password = password;

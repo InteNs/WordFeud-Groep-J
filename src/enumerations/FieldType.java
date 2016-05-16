@@ -6,7 +6,8 @@ public enum FieldType {
     TW,
     DL,
     TL,
-    STARTTILE;
+    STARTTILE,
+    UNDEFINED;
 
     public static FieldType parse(String fieldType) {
         switch (fieldType){
@@ -15,15 +16,15 @@ public enum FieldType {
             case "DW":
                 return DW;
             case "TW":
-                return DW;
+                return TW;
             case "DL":
-                return DW;
+                return DL;
             case "TL":
-                return DW;
+                return TL;
             case "*":
-                return DW;
+                return STARTTILE;
+            default:return UNDEFINED;
         }
-        return null;
     }
 
 
