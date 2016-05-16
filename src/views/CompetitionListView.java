@@ -52,6 +52,9 @@ public class CompetitionListView extends View {
     }
 
     private void showOwnedCompetition(User user) {
+        if (user == null) {
+            return;
+        }
         myCompetition.setItems(filteredCompetitions.filtered(competition ->
                 competition.getOwner().equals(user))
         );
