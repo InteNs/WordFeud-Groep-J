@@ -25,31 +25,36 @@
             <effect>
                 <DropShadow blurType="GAUSSIAN" height="9.14" radius="4.07" width="9.14" />
             </effect>
-            <Button fx:id="playButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="9999999.0" text="speel" />
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="9999999.0" text="shuffle" />
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="9999999.0" text="clear" />
-            <Button fx:id="extraFunctionsButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="9999999.0" text="overig">
+            <Button fx:id="playButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="9999999.0" text="Speel" />
+            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="9999999.0" text="Shuffle" />
+            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="9999999.0" text="Clear" />
+            <Button fx:id="extraFunctionsButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="9999999.0" text="Overig">
                 <contextMenu>
                     <ContextMenu fx:id="contextMenu" anchorLocation="CONTENT_TOP_RIGHT" anchorX="0.0" anchorY="0.0" x="0.0" y="0.0">
                         <items>
                             <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                                 <content>
-                                    <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="jokers" />
+                                    <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Jokers" />
                                 </content>
                             </CustomMenuItem>
                             <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
                                 <content>
-                                    <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="ruilen" />
+                                    <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Ruilen" />
                                 </content>
                             </CustomMenuItem>
                             <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
                                 <content>
-                                    <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="opgeven" />
+                                    <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Opgeven" />
                                 </content>
                             </CustomMenuItem>
                             <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
                                 <content>
-                                    <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="pass" />
+                                    <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Pass" />
+                                </content>
+                            </CustomMenuItem>
+                            <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                                <content>
+                                    <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Pot" />
                                 </content>
                             </CustomMenuItem>
                         </items>
