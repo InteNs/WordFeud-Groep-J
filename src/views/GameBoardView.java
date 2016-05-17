@@ -112,6 +112,9 @@ public class GameBoardView extends View {
                 });
 
                 tileNode.setOnDragDone(event -> {
+                    if (event.getTransferMode() != TransferMode.MOVE) {
+                        tileNode.setTile(tileBeingDragged);
+                    }
                     setCurrentRack(selectedGame, nodes);
                     event.consume();
                 });
