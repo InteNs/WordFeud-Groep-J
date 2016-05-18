@@ -71,7 +71,10 @@
             <Label fx:id="potLabel" text="Aantal letters in pot:15" />
         </HBox>
         <TabPane VBox.vgrow="ALWAYS">
-            <Tab closable="false" text="Chat">
+            <Tab closable="false" text="Spelhistorie">
+                <ListView fx:id="turnList" fixedCellSize="50.0" />
+            </Tab>
+            <Tab fx:id="chatTab" closable="false" text="Chat">
                 <VBox>
                     <ListView fx:id="chatList" fixedCellSize="50.0" VBox.vgrow="ALWAYS" />
                     <HBox>
@@ -79,9 +82,6 @@
                         <Button fx:id="sendMessage" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="stuur" />
                     </HBox>
                 </VBox>
-            </Tab>
-            <Tab closable="false" text="Spelhistorie">
-                <ListView fx:id="turnList" fixedCellSize="50.0" />
             </Tab>
         </TabPane>
     </VBox>
