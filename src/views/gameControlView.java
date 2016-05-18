@@ -58,23 +58,19 @@ public class gameControlView extends View {
             chatList.setItems(newValue.getMessages());
             turnList.setItems(newValue.getTurns());
             turnSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(newValue.getTurns()));
+            setButtonDisabled(newValue);
         });
 
         turnSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             gameController.setSelectedTurn(newValue);
         });
 
-       gameController.selectedGameProperty().addListener((observable, oldValue, newValue) -> {
-           setButtonDisabled(newValue);
-       });
-
         sendMessage.setOnMouseClicked(event -> {
             if (!chatTextField.getText().trim().isEmpty()) {
-                gameController.sendMessage(gameController.getSelectedGame(),userController.getSession().getCurrentUser(), chatTextField.getText());
+                gameController.sendMessage(gameController.getSelectedGame(),session.getCurrentUser(), chatTextField.getText());
                 chatTextField.setText("");
             }
         });
-
     }
 
     private void setButtonDisabled(Game newValue) {
