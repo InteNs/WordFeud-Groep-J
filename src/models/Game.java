@@ -28,8 +28,8 @@ public class Game {
     private ObservableList<Tile> currentRack;
     private ObservableList<Field> fieldsChangedThisTurn;
     private ArrayList<Tile> allTilesCache;
-    private ObservableList<Tile> startPot;
-    private ArrayList<Tile> playingPot;
+    private ObservableList<Tile> playingPot;
+    private ArrayList<Tile> startPot;
 
     public Game(int id, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
         this.id = id;
@@ -42,7 +42,7 @@ public class Game {
         this.currentRack = FXCollections.observableArrayList();
         this.messages = FXCollections.observableArrayList();
         this.turns = FXCollections.observableArrayList();
-        this.startPot = FXCollections.observableArrayList();
+        this.playingPot = FXCollections.observableArrayList();
     }
 
     public int getId() {
@@ -167,10 +167,10 @@ public class Game {
     }
 
     public void setPot(ArrayList<Tile> tilesForPot) {
-        startPot.addAll(tilesForPot);
+        startPot = tilesForPot;
     }
 
-    public ArrayList<Tile> getPot() {
+    public ObservableList<Tile> getPot() {
         return playingPot;
     }
 
@@ -270,13 +270,8 @@ public class Game {
         return clonedGameBoard;
     }
 
-    private ArrayList<Tile> clonedPot(ObservableList<Tile> startPot){
-        ArrayList<Tile> clonedPot =
-                startPot.stream().map(tile -> new Tile(tile.getCharacter(),
-                        tile.getX(),
-                        tile.getY())).collect(Collectors.
-                        toCollection(ArrayList::new));
-        return clonedPot;
+    private ObservableList<Tile> clonedPot(ArrayList<Tile> startPot){
+        return FXCollections.observableArrayList(startPot);
     }
 
     @Override
