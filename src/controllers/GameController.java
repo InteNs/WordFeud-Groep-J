@@ -5,7 +5,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.*;
-
 import java.util.List;
 
 public class GameController extends Controller {
@@ -57,6 +56,7 @@ public class GameController extends Controller {
         game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
         game.setTurns(gameDAO.selectTurns(game));
         game.setMessages(gameDAO.selectMessages(game));
+        game.setPot(gameDAO.selectPot(game.getLanguage()));
     }
 
     public void refresh() {
