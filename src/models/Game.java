@@ -6,6 +6,7 @@ import enumerations.Language;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -274,5 +275,10 @@ public class Game {
     @Override
     public int hashCode() {
         return id;
+    }
+
+    public void sendMessage(User currentUser, String text) {
+        messages.add(new Message(currentUser.getName(),text,new Timestamp(System.currentTimeMillis())));
+
     }
 }

@@ -4,10 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import models.Field;
-import models.Game;
-import models.Tile;
-import models.Turn;
+import models.*;
 
 import java.util.List;
 
@@ -80,5 +77,10 @@ public class GameController extends Controller {
 
     public void removeTile(Game game, Field field) {
         game.removePlacedTile(field);
+    }
+
+    public void sendMessage(Game selectedGame, User currentUser, String text) {
+        selectedGame.sendMessage(currentUser,text);
+        gameDAO.insertMessage(selectedGame,currentUser,text);
     }
 }

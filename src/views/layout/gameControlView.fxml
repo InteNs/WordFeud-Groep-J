@@ -75,8 +75,8 @@
                 <VBox>
                     <ListView fx:id="chatList" fixedCellSize="50.0" VBox.vgrow="ALWAYS" />
                     <HBox>
-                        <TextField prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="stuur" />
+                        <TextField fx:id="chatTextField" prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="sendMessage" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="stuur" />
                     </HBox>
                 </VBox>
             </Tab>
