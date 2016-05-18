@@ -6,6 +6,7 @@ import models.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class GameDAO extends DAO {
@@ -131,5 +132,12 @@ public class GameDAO extends DAO {
         database.close();
         return fields;
     }
-    
+
+    public void insertMessage(Game selectedGame, User currentUser, String text) {
+        database.insert(SQL.INSERT.INSERTMESSAGE,
+                selectedGame.getId(),
+                currentUser.getName(),
+                text,
+                new Timestamp(System.currentTimeMillis()));
+    }
 }
