@@ -67,11 +67,10 @@ public class gameControlView extends View {
 
         sendMessage.setOnMouseClicked(event -> {
             if (!chatTextField.getText().trim().isEmpty()) {
-                gameController.sendMessage(gameController.getSelectedGame(),userController.getSession().getCurrentUser(), chatTextField.getText());
+                gameController.sendMessage(gameController.getSelectedGame(),session.getCurrentUser(), chatTextField.getText());
                 chatTextField.setText("");
             }
         });
-
     }
 
     private void setButtonDisabled(Game newValue) {
