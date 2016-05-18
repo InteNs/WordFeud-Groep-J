@@ -98,7 +98,7 @@ public class GameDAO extends DAO {
         return tiles;
     }
 
-    public ArrayList<Tile> selectTiles(Language language) {
+    public ArrayList<Tile> selectPot(Language language) {
         ArrayList<Tile> tiles = new ArrayList<>();
         ResultSet records = database.select(SQL.SELECT.LETTERSFORLANG, language.toString());
         try {

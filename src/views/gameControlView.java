@@ -38,6 +38,9 @@ public class gameControlView extends View {
     private Tab chatTab;
 
 
+    private final String DEFAULTPOTLABELTEXT="Aantal letters in pot:";
+
+
     @Override
     public void refresh() {
 
@@ -59,6 +62,7 @@ public class gameControlView extends View {
             turnList.setItems(newValue.getTurns());
             turnSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(newValue.getTurns()));
             setButtonDisabled(newValue);
+            setPotLabel(newValue);
         });
 
         turnSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -71,6 +75,14 @@ public class gameControlView extends View {
                 chatTextField.setText("");
             }
         });
+
+        gameController.selectedTurnProperty().addListener((observable, oldValue, newValue) -> {
+            setPotLabel(gameController.getSelectedGame());
+        });
+    }
+
+    private void setPotLabel(Game newValue) {
+        potLabel.setText(DEFAULTPOTLABELTEXT+newValue.getPot().size());
     }
 
     private void setButtonDisabled(Game newValue) {

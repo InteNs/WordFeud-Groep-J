@@ -179,7 +179,6 @@ public class GameBoardView extends View {
     @Override
     public void constructor() {
         gameController.selectedGameProperty().addListener((observable, oldValue, selectedGame) -> {
-            gameController.loadGame(selectedGame);
             gameController.setSelectedTurn(selectedGame.getLastTurn());
         });
 

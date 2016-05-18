@@ -4,6 +4,7 @@ import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 
 import java.sql.Timestamp;
@@ -27,6 +28,8 @@ public class Game {
     private ObservableList<Tile> currentRack;
     private ObservableList<Field> fieldsChangedThisTurn;
     private ArrayList<Tile> allTilesCache;
+    private ObservableList<Tile> startPot;
+    private ArrayList<Tile> playingPot;
 
     public Game(int id, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
         this.id = id;
@@ -39,6 +42,7 @@ public class Game {
         this.currentRack = FXCollections.observableArrayList();
         this.messages = FXCollections.observableArrayList();
         this.turns = FXCollections.observableArrayList();
+        this.startPot = FXCollections.observableArrayList();
     }
 
     public int getId() {
@@ -71,6 +75,10 @@ public class Game {
         return boardType;
     }
 
+    public Language getLanguage() {
+        return language;
+    }
+
     public ObservableList<Tile> getCurrentRack() {
         return currentRack;
     }
@@ -81,15 +89,6 @@ public class Game {
 
     public Field[][] getGameBoard() {
         return gameBoard;
-    }
-
-    public ArrayList<Tile> getAllTiles() {
-        ArrayList<Tile> allTiles = new ArrayList<>();
-        fieldsChangedThisTurn.forEach(e ->{
-            allTiles.add(e.getTile());
-        });
-        allTiles.addAll(getLastTurn().getRack());
-        return allTiles;
     }
 
     /**
@@ -149,14 +148,30 @@ public class Game {
      */
     public void setBoardStateTo(Turn turnToDisplay) {
         gameBoard = cloneGameBoard(emptyGameBoard);
+        playingPot = clonedPot(startPot);
         for (Turn turn : turns) {
-            for (Tile tile : turn.getPlacedTiles())
+            for (Tile tile : turn.getPlacedTiles()){
                 gameBoard[tile.getY()][tile.getX()].setTile(tile);
+                for (Tile tileInPot : playingPot) {
+                    if (tileInPot.getCharacter()==tile.getCharacter()){
+                        playingPot.remove(tileInPot);
+                        break;
+                    }
+                }
+            }
             if(turn.equals(turnToDisplay)) {
                 currentRack.setAll(turn.getRack());
                 return;
             }
         }
+    }
+
+    public void setPot(ArrayList<Tile> tilesForPot) {
+        startPot.addAll(tilesForPot);
+    }
+
+    public ArrayList<Tile> getPot() {
+        return playingPot;
     }
 
     public void removePlacedTile(Field field) {
@@ -253,6 +268,15 @@ public class Game {
             }
         }
         return clonedGameBoard;
+    }
+
+    private ArrayList<Tile> clonedPot(ObservableList<Tile> startPot){
+        ArrayList<Tile> clonedPot =
+                startPot.stream().map(tile -> new Tile(tile.getCharacter(),
+                        tile.getX(),
+                        tile.getY())).collect(Collectors.
+                        toCollection(ArrayList::new));
+        return clonedPot;
     }
 
     @Override
