@@ -61,7 +61,12 @@ public class GameBoardView extends View {
                     });
 
                     fieldNode.setOnDragDropped(event -> {
-                        fieldNode.setCursor(Cursor.OPEN_HAND);
+                        fieldNode.setCursor(Cursor.OPEN_HAND);                        
+                        if(gameController.isJokerTile(tileBeingDragged)){
+                            JokerView jokerView = new JokerView();
+                            char choice = jokerView.jokerChoice();
+                            System.out.println(choice);
+                        }
                         gameController.placeTile(selectedGame, fieldNode.getField(), tileBeingDragged);
                         fieldNode.redrawImage();
                         event.setDropCompleted(true);
