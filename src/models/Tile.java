@@ -48,6 +48,5 @@ public class Tile {
 
     public void replaceJoker(char choice) {
         replacedJokerCharacter = choice;
-
     }
 }

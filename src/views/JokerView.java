@@ -51,7 +51,6 @@ public class JokerView extends View {
             });
 
             tilePane.getChildren().add(imageView);
-
         }
         VBox vBox = new VBox(tilePane);
         vBox.setPadding(new Insets(10, 10, 10, 10));
@@ -62,5 +61,4 @@ public class JokerView extends View {
 
         return returnValue;
     }
-
 }

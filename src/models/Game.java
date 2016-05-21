@@ -184,9 +184,7 @@ public class Game {
     }
 
     public boolean isLastTurn(Turn selectedTurn) {
-        return true;
-                
-                //selectedTurn == getLastTurn();
+        return selectedTurn == getLastTurn();
     }
 
     /**

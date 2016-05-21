@@ -67,7 +67,6 @@ public class GameBoardView extends View {
                             char choice = jokerView.jokerChoice();
                             tileBeingDragged.replaceJoker(choice);
                             ((FieldTileNode) event.getTarget()).redrawImage();
-
                         }
                         event.consume();
                         fieldNode.redrawImage();
