@@ -7,8 +7,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.User;
 
-import java.util.Optional;
-
 public class UserController extends Controller {
 
     private ObservableList<User> users;
@@ -16,10 +14,8 @@ public class UserController extends Controller {
 
     public UserController(ControllerFactory factory) {
         super(factory);
-        users = FXCollections.observableArrayList(userDAO.selectUsers());
+        users = FXCollections.observableArrayList();
         selectedUser = new SimpleObjectProperty<>();
-        userDAO.setAllRoles(users);
-        userDAO.setAllStats(users);
     }
 
     public ObjectProperty<User> selectedUserProperty() {
@@ -34,37 +30,32 @@ public class UserController extends Controller {
         return selectedUser.get();
     }
 
-    public boolean login(String userName, String passWord) {
-        User optionalUser = userDAO.selectUser(userName, passWord);
-        if(users.contains(optionalUser))
-           getSession().setCurrentUser(users.get(users.indexOf(optionalUser)));
-        return getSession().getCurrentUser() != null;
-    }
-
     public ObservableList<User> getUsers() {
         return users;
     }
 
     public User getUser(String name) {
-        return users.filtered(user -> user.getName().equals(name)).get(0);
+        User user = new User(name);
+        if(users.contains(user))
+            return users.get(users.indexOf(user));
+        return null;
     }
 
+    /**
+     * check if user exists, checks database if no users in memory
+     * @param username name of user to check
+     * @return true if user already exists
+     */
     public boolean userExists(String username) {
-        return selectUser(username).isPresent();
-    }
-
-    public Optional<User> selectUser(String username) {
-        return users.stream().filter(user -> user.getName().equals(username)).findFirst();
+        if(users != null)
+            return getUser(username) != null;
+        else
+            return userDAO.selectUser(username, null) != null;
     }
 
     public boolean insertUser(String username, String password) {
-        if (userDAO.insertUser(username, password)) {
-            User user = new User(username);
-            users.add(user);
-            setRole(user, Role.PLAYER, true);
-            return true;
-        }
-        return false;
+        User user = new User(username, password, Role.PLAYER);
+        return userDAO.insertUser(user);
     }
 
     public boolean isValidUsername(String username) {
@@ -87,9 +78,7 @@ public class UserController extends Controller {
     }
 
     public boolean checkPassword(String oldPassword) {
-        String userName = getSession().getCurrentUser().getName();
-        User optionalUser = userDAO.selectUser(userName, oldPassword);
-        return !(optionalUser == null);
+        return getSession().getCurrentUser().getPassword().equals(oldPassword);
     }
 
     public void changePassword(String password) {
@@ -100,7 +89,6 @@ public class UserController extends Controller {
     @Override
     public void refresh() {
         users.setAll(userDAO.selectUsers());
-        userDAO.setAllRoles(users);
         userDAO.setAllStats(users);
     }
 }

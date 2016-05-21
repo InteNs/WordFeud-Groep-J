@@ -21,6 +21,7 @@ public class Competition {
         this.owner = owner;
         this.competitionName = competitionName;
         this.players = FXCollections.observableArrayList();
+        players.add(owner);
     }
 
     public ObservableList<User> getPlayers() {

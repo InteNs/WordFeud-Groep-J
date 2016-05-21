@@ -11,7 +11,7 @@
         </padding>
         <TextField fx:id="filterField" promptText="zoeken..."/>
         <ListView maxHeight="27" fx:id="myCompetition"/>
-        <Button fx:id="createCompetition" prefWidth="Infinity" onAction="#createCompetition" alignment="CENTER"
+        <Button fx:id="createCompetition" prefHeight="27" prefWidth="Infinity" onAction="#createCompetition" alignment="CENTER"
                 mnemonicParsing="false"
                 text="Competitie aanmaken"/>
         <ListView fx:id="competitionList" VBox.vgrow="ALWAYS"/>

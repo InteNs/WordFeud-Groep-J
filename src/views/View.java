@@ -22,8 +22,6 @@ abstract class View {
         competitionController = controllerFactory.getCompetitionController();
         session = controllerFactory.getSessionController();
         resourceFactory = new ResourceFactory();
-
         this.parent = parent;
-        constructor();
     }
 }

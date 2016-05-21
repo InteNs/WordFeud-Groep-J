@@ -4,8 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
 public class RegisterView extends View {
@@ -25,6 +23,10 @@ public class RegisterView extends View {
 
     @Override
     public void refresh() {
+        userNameField.clear();
+        userPassField1.clear();
+        userPassField2.clear();
+        invalidUserLabel.setVisible(true);
     }
 
     @Override
@@ -51,6 +53,7 @@ public class RegisterView extends View {
     @FXML
     public void openLoginView() {
         parent.showLoginView();
+        refresh();
     }
 
     // Check if username meets the requirements (5 -25 char)

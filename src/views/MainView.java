@@ -13,6 +13,7 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
@@ -46,6 +47,7 @@ public class MainView extends View implements Initializable {
     @FXML private gameControlView gameControlViewController;
 
     private ControllerFactory controllerFactory;
+    private ArrayList<View> views;
 
     private int controlIndex;
     private double dividerPos;
@@ -55,12 +57,11 @@ public class MainView extends View implements Initializable {
         setControl(false);
         setContent(loginView);
         controllerFactory = new ControllerFactory();
-
         /*
         Put your viewController in this list for it
         get access to parent, and have it's constructor called
         */
-        Arrays.asList(
+        views = new ArrayList<>(Arrays.asList(
                 userListViewController,
                 gameListViewController,
                 competitionListViewController,
@@ -73,14 +74,16 @@ public class MainView extends View implements Initializable {
                 createCompetitionViewController,
                 passwordChangeViewController,
                 gameControlViewController
-
-        ).forEach(view -> view.init(this));
+        ));
+        views.forEach(view -> view.init(this));
     }
 
     public void login() {
         setContent(welcomeView);
         setControl(true);
         toolBar.setDisable(false);
+        controllerFactory.getControllers().forEach(Controller::refresh);
+        views.forEach(View::constructor);
     }
 
     public void showRegisterView(){
@@ -100,16 +103,12 @@ public class MainView extends View implements Initializable {
     }
 
     public void showPasswordChangeView(){
+        passwordChangeViewController.refresh();
         setContent(passwordChangeView);
     }
 
-
     @FXML
     public void refresh() {
-        /*
-        refresh your domain controller here
-        will be done by a seperate thread later
-        */
         loadIndicator.setVisible(true);
         controllerFactory.getControllers().forEach(Controller::refresh);
         loadIndicator.setVisible(false);
@@ -125,12 +124,12 @@ public class MainView extends View implements Initializable {
     }
 
     @FXML
-    public void logOut(){
-    	this.showLoginView();
-    	toolBar.setDisable(true);
-    	this.setControl(false);
-    	loginViewController.resetFields();
-        controllerFactory.getSessionController().setCurrentUser(null);
+    public void logOut() {
+        this.showLoginView();
+        toolBar.setDisable(true);
+        this.setControl(false);
+        loginViewController.refresh();
+        controllerFactory.resetControllers();
     }
 
     /**

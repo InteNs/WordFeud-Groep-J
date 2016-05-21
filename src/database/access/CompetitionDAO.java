@@ -26,10 +26,16 @@ public class CompetitionDAO extends DAO {
     }
 
     public boolean insertCompetition(Competition competition) {
-        return database.insert(SQL.INSERT.INSERTCOMPETITION,
+        database.insert(SQL.INSERT.INSERTCOMPETITION,
                 competition.getName(),
                 competition.getOwner().getName()
         );
+        database.insert(SQL.INSERT.INSERTPLAYER,
+                competition.getOwner().getName(),
+                Integer.parseInt(database.selectFirstColumnRow(SQL.SELECT.COMPFOROWNER,
+                        competition.getOwner().getName()))
+        );
+        return true;
     }
 
     public boolean insertPlayer(User user, Competition competition) {

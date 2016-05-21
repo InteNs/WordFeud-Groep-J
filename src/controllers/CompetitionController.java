@@ -14,8 +14,7 @@ public class CompetitionController extends Controller {
 
     public CompetitionController(ControllerFactory factory) {
         super(factory);
-        competitions = FXCollections.observableArrayList(competitionDAO.selectCompetitions());
-        mapPlayers();
+        competitions = FXCollections.observableArrayList();
         selectedCompetition = new SimpleObjectProperty<>();
     }
 
@@ -47,20 +46,12 @@ public class CompetitionController extends Controller {
     }
 
     public boolean createCompetition(String competitionName) {
-        if (getCompetition(getSession().getCurrentUser()) != null) {
+        if (getCompetition(getSession().getCurrentUser()) != null)
             return false;
-        }
         Competition newComp = new Competition(getSession().getCurrentUser(), competitionName);
-        competitionDAO.insertCompetition(newComp);
-        //add owner as player
-        refresh();
-        competitions.stream()
-                .filter(competition -> competition.getOwner().equals(newComp.getOwner()))
-                .forEach(competition -> {
-                    competitionDAO.insertPlayer(competition.getOwner(), competition);
-                    competition.addPlayer(competition.getOwner());
-                });
-        return true;
+        competitions.add(newComp);
+        return competitionDAO.insertCompetition(newComp);
+
     }
 
     public ObservableList<Competition> getCompetitions() {
@@ -72,9 +63,9 @@ public class CompetitionController extends Controller {
     }
 
     public void mapPlayers() {
-        competitionDAO.getPlayerMap().entrySet().forEach(set -> {
-            getCompetition(set.getValue()).addPlayer(getUserController().getUser(set.getKey()));
-        });
+        competitionDAO.getPlayerMap().entrySet().forEach(set ->
+            getCompetition(set.getValue()).addPlayer(getUserController().getUser(set.getKey()))
+        );
     }
 
     @Override

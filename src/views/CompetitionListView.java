@@ -8,9 +8,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import models.Competition;
-import models.User;
 
 import java.util.Collections;
+import java.util.function.Predicate;
 
 public class CompetitionListView extends View {
 
@@ -27,6 +27,8 @@ public class CompetitionListView extends View {
 
     private FilteredList<Competition> filteredCompetitions;
 
+    private Predicate<Competition> filterText, filterOwned;
+
     @Override
     public void refresh() {
     }
@@ -35,39 +37,35 @@ public class CompetitionListView extends View {
     public void constructor() {
         filteredCompetitions = new FilteredList<>(competitionController.getCompetitions());
 
+        filterText = competition -> competition.toString().toLowerCase().contains(filterField.getText().toLowerCase());
+        filterOwned = competition -> competition.getOwner().equals(session.getCurrentUser());
+
         filterField.textProperty().addListener(observable ->
-                filteredCompetitions.setPredicate(competition ->
-                        competition.toString().toLowerCase().contains(filterField.getText().toLowerCase())
-                )
+                filteredCompetitions.setPredicate(filterText)
         );
 
         competitionList.setItems(filteredCompetitions);
+        myCompetition.setItems(filteredCompetitions.filtered(filterOwned));
 
-        session.currentUserProperty().addListener((observable, oldValue, newValue) -> {
-            showOwnedCompetition(newValue);
-        });
-        competitionController.getCompetitions().addListener((ListChangeListener<? super Competition>) observable ->
-                showOwnedCompetition(session.getCurrentUser())
-        );
+        showMyCompetition();
+        myCompetition.getItems().addListener((ListChangeListener<? super Competition>) observable ->
+                showMyCompetition());
+
+        competitionList.getSelectionModel().selectedItemProperty().addListener((ig1, ig2, newValue) ->
+                selectCompetition(newValue));
+        myCompetition.setOnMouseClicked(e -> selectCompetition(competitionController.getSelectedCompetition()));
     }
 
-    private void showOwnedCompetition(User user) {
-        if (user == null) {
-            return;
-        }
-        myCompetition.setItems(filteredCompetitions.filtered(competition ->
-                competition.getOwner().equals(user))
-        );
-        if (myCompetition.getItems().size() > 0)
-            showMyCompetition(true);
-        else
-            showMyCompetition(false);
+    private void selectCompetition(Competition competition){
+        competitionController.setSelectedCompetition(competition);
     }
 
-    private void showMyCompetition(Boolean visible) {
-        if (visible) {
-            root.getChildren().remove(myCompetition);
-            Collections.replaceAll(root.getChildren(), createCompetition, myCompetition);
+    private void showMyCompetition() {
+        if (myCompetition.getItems().size() > 0) {
+            if(root.getChildren().contains(createCompetition)) {
+                root.getChildren().remove(myCompetition);
+                Collections.replaceAll(root.getChildren(), createCompetition, myCompetition);
+            }
         } else {
             root.getChildren().remove(createCompetition);
             Collections.replaceAll(root.getChildren(), myCompetition, createCompetition);
@@ -77,6 +75,5 @@ public class CompetitionListView extends View {
     public void createCompetition() {
         parent.showCreateCompetition();
     }
-
 
 }
