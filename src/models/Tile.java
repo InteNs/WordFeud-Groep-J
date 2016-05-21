@@ -4,11 +4,12 @@ public class Tile {
 
     private int value;
     private Character character;
+    private Character replacedJokerCharacter = '?';
     private int x;
     private int y;
 
     public Tile(Character character) {
-        this.character= character;
+        this.character = character;
     }
 
     public Tile(int value, Character character) {
@@ -36,9 +37,16 @@ public class Tile {
 
     @Override
     public String toString() {
-        if (character=='?')
-            return "A" ;  //Placeholder value for Joker
-
+        if (character == '?')
+            if (replacedJokerCharacter == '?') {
+                return "blank"; // Placeholder value for Joker
+            } else {
+                return replacedJokerCharacter.toString();
+            }
         return character.toString();
+    }
+
+    public void replaceJoker(char choice) {
+        replacedJokerCharacter = choice;
     }
 }
