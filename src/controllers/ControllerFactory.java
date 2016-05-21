@@ -19,6 +19,13 @@ public class ControllerFactory {
         );
     }
 
+    public void resetControllers() {
+        userController = null;
+        gameController = null;
+        competitionController = null;
+        sessionController = null;
+    }
+
     public UserController GetUserController(){
         if(userController == null)
             userController = new UserController(this);
