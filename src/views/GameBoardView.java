@@ -23,7 +23,6 @@ import views.components.FieldTileNode;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-
 public class GameBoardView extends View {
 
     @FXML
@@ -46,7 +45,6 @@ public class GameBoardView extends View {
                 GridPane.setConstraints(fieldNode, y, x);
                 gameBoardGrid.getChildren().add(fieldNode);
 
-
                 if (selectedTurn.getPlacedTiles().contains(fieldNode.getField().getTile())) {
                     fieldNode.setEffect(new SepiaTone(1));
                 }
@@ -61,16 +59,18 @@ public class GameBoardView extends View {
                     });
 
                     fieldNode.setOnDragDropped(event -> {
-                        fieldNode.setCursor(Cursor.OPEN_HAND);                        
-                        if(gameController.isJokerTile(tileBeingDragged)){
-                            JokerView jokerView = new JokerView();
-                            char choice = jokerView.jokerChoice();
-                            System.out.println(choice);
-                        }
+                        fieldNode.setCursor(Cursor.OPEN_HAND);
                         gameController.placeTile(selectedGame, fieldNode.getField(), tileBeingDragged);
-                        fieldNode.redrawImage();
                         event.setDropCompleted(true);
+                        if (gameController.isJokerTile(tileBeingDragged)) {
+                            JokerView jokerView = new JokerView(resourceFactory);
+                            char choice = jokerView.jokerChoice();
+                            tileBeingDragged.replaceJoker(choice);
+                            ((FieldTileNode) event.getTarget()).redrawImage();
+
+                        }
                         event.consume();
+                        fieldNode.redrawImage();
                     });
 
                     fieldNode.setOnDragDetected(event -> {
@@ -127,6 +127,10 @@ public class GameBoardView extends View {
                 tileNode.setOnDragDropped(event -> {
                     if (tileNode.isPlaceHolder()) {
                         tileNode.setTile(tileBeingDragged);
+                        if (tileNode.getTile().getCharacter().equals('?')) {
+                            tileBeingDragged.replaceJoker('?');
+                            tileNode.redrawImage();
+                        }
                     } else {
                         FilteredList<FieldTileNode> emptys = nodes.filtered(FieldTileNode::isPlaceHolder);
                         ArrayList<FieldTileNode> sorted = emptys.stream().sorted((o1, o2) -> {
@@ -165,8 +169,7 @@ public class GameBoardView extends View {
     }
 
     private void setCurrentRack(Game game, ObservableList<FieldTileNode> tileNodes) {
-        gameController.setPlayerRack(game, tileNodes.stream()
-                .filter(fieldTileNode -> !fieldTileNode.isPlaceHolder())
+        gameController.setPlayerRack(game, tileNodes.stream().filter(fieldTileNode -> !fieldTileNode.isPlaceHolder())
                 .map(FieldTileNode::getTile).collect(Collectors.toList()));
     }
 
