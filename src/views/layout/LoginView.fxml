@@ -30,7 +30,7 @@
       <Button alignment="TOP_CENTER" defaultButton="true" mnemonicParsing="false" onAction="#login" prefWidth="120.0"
               text="Inloggen"/>
       <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#openRegisterView" prefWidth="120.0"
-              text="Nog geen account?"/>
+              text="Geen account?"/>
    </HBox>
    <ProgressIndicator fx:id="progress" prefHeight="100.0" prefWidth="100.0" visible="false"/>
 </VBox>

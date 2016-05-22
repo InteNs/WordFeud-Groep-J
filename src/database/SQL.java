@@ -25,7 +25,7 @@ public class SQL {
         public static final String SETROLE = "INSERT INTO `wordfeud`.`accountrol` (`account_naam`, `rol_type`) VALUES (?, ?);";
         public static final String INSERTCOMPETITION = "INSERT INTO competitie (omschrijving, account_naam_eigenaar) VALUES (?, ?);";
         public static final String INSERTPLAYER = "INSERT INTO deelnemer (account_naam, competitie_id) VALUES (?, ?);";
-        public static final String INSERTMESSAGE = "INSERT INTO wordfeud.chatregel (chatregel.spel_id,chatregel.account_naam,chatregel.bericht,chatregel.tijdstip) VALUES (?,?,?,?);";
+        public static final String INSERTMESSAGE = "INSERT INTO wordfeud.chatregel (chatregel.spel_id,chatregel.account_naam,chatregel.bericht) VALUES (?,?,?);";
     }
     
     public class DELETE {
