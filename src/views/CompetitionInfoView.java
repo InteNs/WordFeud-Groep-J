@@ -10,10 +10,11 @@ import models.Competition;
 public class CompetitionInfoView extends View {
 
     private int totalGames;
-    @FXML
-    private Label competitionName;
+    @FXML private Label competitionName;
     @FXML private Label competitionInfo;
-    @FXML private BarChart<String,Integer> Chart;
+    @FXML private BarChart<String,Integer> gameChart;
+    @FXML private BarChart<String,Integer> playerChart;
+    @FXML private BarChart<String,Integer> scoreChart;
     @FXML private Button joinButton;
 
     @Override
@@ -32,15 +33,33 @@ public class CompetitionInfoView extends View {
         int averageScoreInComp = competition.getCompetitionScoreAvgerage();
         joinButton.setVisible(true);
 
-        Chart.getData().clear();
-        Chart.setBarGap(10);
-        Chart.setVerticalGridLinesVisible(false);
-        Chart.setAnimated(false);
-        XYChart.Series<String,Integer> series = new XYChart.Series<>();
-        series.getData().add(new XYChart.Data<>("Totaal spellen", totalGames));
-        series.getData().add(new XYChart.Data<>("Totaal spelers", totalPlayers));
-        series.getData().add(new XYChart.Data<>("Gemiddelde score / 10", (int)(0.1* averageScoreInComp)));
-        Chart.getData().add(series);
+        //game chart
+        gameChart.getData().clear();
+        gameChart.setBarGap(10);
+        gameChart.setVerticalGridLinesVisible(false);
+        gameChart.setAnimated(false);
+        XYChart.Series<String,Integer> gameSeries = new XYChart.Series<>();
+        gameSeries.getData().add(new XYChart.Data<>("Totaal spellen", totalGames));
+        gameChart.getData().add(gameSeries);
+
+        //player chart
+        playerChart.getData().clear();
+        playerChart.setBarGap(10);
+        playerChart.setVerticalGridLinesVisible(false);
+        playerChart.setAnimated(false);
+        XYChart.Series<String,Integer> playerSeries = new XYChart.Series<>();
+        playerSeries.getData().add(new XYChart.Data<>("Totaal spelers", totalPlayers));
+        playerChart.getData().add(playerSeries);
+
+        //score chart
+        scoreChart.getData().clear();
+        scoreChart.setBarGap(10);
+        scoreChart.setVerticalGridLinesVisible(false);
+        scoreChart.setAnimated(false);
+        XYChart.Series<String,Integer> scoreSeries = new XYChart.Series<>();
+        scoreSeries.getData().add(new XYChart.Data<>("Gemiddelde score", averageScoreInComp));
+        scoreChart.getData().add(scoreSeries);
+
         if (competitionController.isUserInCompetition(session.getCurrentUser(), competition)) {
             joinButton.setVisible(false);
         }

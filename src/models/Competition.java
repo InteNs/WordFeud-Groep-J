@@ -40,16 +40,6 @@ public class Competition {
         players.add(owner);
     }
 
-    public boolean isUserInCompetition(User user) {
-        boolean check = false;
-        for (User player : players) {
-            if (player == user) {
-                check = true;
-            }
-        }
-        return check;
-    }
-
     public void setGames(ObservableList<Game> games) {
         this.games = games;
     }
@@ -71,13 +61,16 @@ public class Competition {
     }
 
     public int getAmountOfGames(){
-        int counter = 0;
+
+       int counter = 0;
         for (Game game : games){
             if (game.getGameState() == GameState.PLAYING || game.getGameState() == GameState.FINISHED){
                 counter++;
             }
         }
         return counter;
+        //return games.size();
+
     }
 
     public int getCompetitionScoreAvgerage(){
