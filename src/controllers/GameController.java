@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.*;
+
 import java.util.List;
 
 public class GameController extends Controller {
@@ -85,5 +86,11 @@ public class GameController extends Controller {
         if (tile.toString().equals("blank")) {
             return true;
         }return false;
+    }
+    
+    public ObservableList<Tile> showPot(Game game){
+        if(game != null)
+            return game.getPot();
+        return null;
     }
 }

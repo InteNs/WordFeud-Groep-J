@@ -1,11 +1,12 @@
 package views;
 
 
-import controllers.ControllerFactory;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import models.Game;
 import models.Message;
+import models.Tile;
 import models.Turn;
 
 public class gameControlView extends View {
@@ -36,6 +37,10 @@ public class gameControlView extends View {
     private Button sendMessage;
     @FXML
     private Tab chatTab;
+    @FXML
+    private Button showPot;
+   
+    
 
 
     private final String DEFAULTPOTLABELTEXT="Aantal letters in pot:";
@@ -88,6 +93,13 @@ public class gameControlView extends View {
     private void setButtonDisabled(Game newValue) {
         if (!newValue.hasPlayer(session.getCurrentUser())){
             chatTab.setDisable(true);
+        }
+    }
+
+    public void showPot(){
+        ObservableList<Tile> tiles = gameController.showPot(gameController.getSelectedGame());
+        if(tiles != null){
+        new potView(tiles, resourceFactory);
         }
     }
 }
