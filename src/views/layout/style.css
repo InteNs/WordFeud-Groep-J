@@ -20,6 +20,11 @@
     -fx-padding: 5;
 }
 
+.time-label {
+    -fx-font-size: 50%;
+    -fx-fill: gray;
+}
+
 .chat-norm {
     -fx-background-color: #dddddd;
     -fx-background-radius: 5;

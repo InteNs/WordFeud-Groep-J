@@ -18,8 +18,12 @@ public class Message {
         this.user = user;
         this.message = message;
         date = timeStamp.toLocalDateTime();
-        dateFormatter = DateTimeFormatter.ofPattern("HH:mm - ");
+        dateFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
+    }
+
+    public String getTimeString() {
+        return date.format(dateFormatter);
     }
 
     public User getUser() {
@@ -27,7 +31,7 @@ public class Message {
     }
 
     public String toString() {
-        return date.format(dateFormatter)+ user + ":\n" + message;
+        return message;
     }
 }
 
