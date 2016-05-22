@@ -4,8 +4,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Parent;
 import models.*;
+
 import java.util.List;
 
 public class GameController extends Controller {
@@ -85,10 +85,9 @@ public class GameController extends Controller {
         gameDAO.insertMessage(selectedGame,currentUser,text);
     }
     
-    public ObservableList<Tile> showPot(Game currentGame){
-        if(currentGame != null)
-        return currentGame.getPot();
+    public ObservableList<Tile> showPot(Game game){
+        if(game != null)
+            return game.getPot();
         return null;
-        
     }
 }
