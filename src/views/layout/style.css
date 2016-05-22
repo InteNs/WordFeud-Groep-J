@@ -12,3 +12,17 @@
 .user-info .check-box {
     -fx-font-size: 13;
 }
+
+.chat-owned {
+    -fx-background-color: #28aeff;
+    -fx-background-radius: 5;
+    -fx-background-insets: 2.5;
+    -fx-padding: 5;
+}
+
+.chat-norm {
+    -fx-background-color: #dddddd;
+    -fx-background-radius: 5;
+    -fx-background-insets: 2.5;
+    -fx-padding: 5;
+}

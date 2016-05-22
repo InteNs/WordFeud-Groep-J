@@ -8,13 +8,13 @@ import java.time.format.DateTimeFormatter;
 public class Message {
 
     //DB accessor will be adding these to Chat arraylist
-    private String user;
+    private User user;
     private String message;
     private LocalDateTime date;
     private DateTimeFormatter dateFormatter;
 
 
-    public Message(String user, String message, Timestamp timeStamp) {
+    public Message(User user, String message, Timestamp timeStamp) {
         this.user = user;
         this.message = message;
         date = timeStamp.toLocalDateTime();
@@ -22,8 +22,12 @@ public class Message {
 
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public String toString() {
-        return date.format(dateFormatter)+ user + ": " + message;
+        return date.format(dateFormatter)+ user + ":\n" + message;
     }
 }
 

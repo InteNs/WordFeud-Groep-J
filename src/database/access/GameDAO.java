@@ -17,7 +17,7 @@ public class GameDAO extends DAO {
         try {
             while (records.next()) {
                 messages.add(new Message(
-                        records.getString("account_naam"),
+                        new User(records.getString("account_naam")),
                         records.getString("bericht"),
                         records.getTimestamp("tijdstip")));
             }
