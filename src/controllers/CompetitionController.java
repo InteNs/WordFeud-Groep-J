@@ -76,7 +76,7 @@ public class CompetitionController extends Controller {
     }
 
     public void mapPlayers() {
-        competitionDAO.getPlayerMap().entrySet().forEach(set ->
+        competitionDAO.getPlayerMap().forEach(set ->
             getCompetition(set.getValue()).addPlayer(getUserController().getUser(set.getKey()))
         );
     }
