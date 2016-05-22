@@ -28,7 +28,7 @@ public class CompetitionInfoView extends View {
         competitionName.setText(competition.getName());
         competitionInfo.setText("Eigenaar: " + competition.getOwner().getName());
         totalGames = competition.getAmountOfGames();
-        int totalPlayers = competition.getAmountOfPlayers();
+        int totalPlayers = competition.getAmountOfUsers();
         int averageScoreInComp = competition.getCompetitionScoreAvgerage();
         joinButton.setVisible(true);
 
@@ -48,7 +48,7 @@ public class CompetitionInfoView extends View {
 
     @FXML public void joinCompetition(){
         if (!competitionController.isUserInCompetition(session.getCurrentUser(), competitionController.getSelectedCompetition())) {
-            if (competitionController.insertUserInCompetition(session.getCurrentUser(), competitionController.getSelectedCompetition())){
+            if (competitionController.addUserInCompetition(session.getCurrentUser(), competitionController.getSelectedCompetition())){
                 refresh();
             }
         }

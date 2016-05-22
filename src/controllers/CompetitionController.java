@@ -17,10 +17,9 @@ public class CompetitionController extends Controller {
         super(factory);
         competitions = FXCollections.observableArrayList();
         selectedCompetition = new SimpleObjectProperty<>();
-        assignGames(getGameController().getGames());
     }
 
-    public boolean insertUserInCompetition(User user, Competition competition) {
+    public boolean addUserInCompetition(User user, Competition competition) {
         if (competitionDAO.insertPlayer(user, competition)) {
             competition.addPlayer(user);
             return true;
@@ -29,20 +28,7 @@ public class CompetitionController extends Controller {
     }
 
     public boolean isUserInCompetition(User thisUser, Competition thisCompetition){
-        boolean check = false;
-        for (Competition competition : competitions){
-            if (thisCompetition == competition){
-                ObservableList<User> players = competition.getPlayers();
-                for (User user : players){
-                    if (thisUser == user){
-                        check = true;
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-        return check;
+        return thisCompetition.getPlayers().contains(thisUser);
     }
 
     public Competition getSelectedCompetition() {
@@ -104,6 +90,7 @@ public class CompetitionController extends Controller {
     @Override
     public void refresh() {
         competitions.setAll(competitionDAO.selectCompetitions());
+        assignGames(getGameController().getGames());
         mapPlayers();
     }
 }
