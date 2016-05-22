@@ -49,6 +49,10 @@ public class CompetitionListView extends View {
         competitionController.getCompetitions().addListener((ListChangeListener<? super Competition>) observable ->
                 showOwnedCompetition(session.getCurrentUser())
         );
+        competitionList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            competitionController.setSelectedCompetition(newValue);
+            parent.showCompetitionInfoView();
+        });
     }
 
     private void showOwnedCompetition(User user) {

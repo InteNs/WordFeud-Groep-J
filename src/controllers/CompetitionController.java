@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.Competition;
 import models.User;
+import models.Game;
 
 public class CompetitionController extends Controller {
 
@@ -17,6 +18,32 @@ public class CompetitionController extends Controller {
         competitions = FXCollections.observableArrayList(competitionDAO.selectCompetitions());
         mapPlayers();
         selectedCompetition = new SimpleObjectProperty<>();
+        assignGames(getGameController().getGames());
+    }
+
+    public boolean insertUserInCompetition(User user, Competition competition) {
+        if (competitionDAO.insertPlayer(user, competition)) {
+            competition.addPlayer(user);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isUserInCompetition(User thisUser, Competition thisCompetition){
+        boolean check = false;
+        for (Competition competition : competitions){
+            if (thisCompetition == competition){
+                ObservableList<User> players = competition.getPlayers();
+                for (User user : players){
+                    if (thisUser == user){
+                        check = true;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        return check;
     }
 
     public Competition getSelectedCompetition() {
@@ -75,6 +102,12 @@ public class CompetitionController extends Controller {
         competitionDAO.getPlayerMap().entrySet().forEach(set -> {
             getCompetition(set.getValue()).addPlayer(getUserController().getUser(set.getKey()));
         });
+    }
+
+    public void assignGames(ObservableList<Game> games){
+        for (Competition competition : competitions){
+            competition.setGames(games.filtered(game -> game.getCompetitionId() == competition.getId()));
+        }
     }
 
     @Override

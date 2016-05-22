@@ -16,7 +16,7 @@ public class CompetitionDAO extends DAO {
         ArrayList<Competition> competitions = new ArrayList<>();
         try {
             while (rs.next()) {
-                competitions.add(new Competition(rs.getInt("id"), new User(rs.getString("account_naam_eigenaar")), rs.getString("omschrijving")));
+                competitions.add(new Competition(rs.getInt("id"), new User(rs.getString("account_naam_eigenaar")), rs.getString("omschrijving"), rs.getInt("gemidddelde_score")));
             }
         } catch (Exception e) {
             printError(e);

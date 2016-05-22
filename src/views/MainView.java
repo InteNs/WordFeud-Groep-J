@@ -23,6 +23,7 @@ public class MainView extends View implements Initializable {
     @FXML private Pane userInfoView;
     @FXML private VBox gameBoardView;
     @FXML private VBox createCompetitionView;
+    @FXML private VBox competitionInfoView;
     @FXML private VBox passwordChangeView;
     @FXML private ProgressIndicator loadIndicator;
     @FXML private ToolBar toolBar;
@@ -34,6 +35,7 @@ public class MainView extends View implements Initializable {
     /*Declare your viewControllers here*/
     @FXML private UserListView userListViewController;
     @FXML private GameListView gameListViewController;
+    @FXML private CompetitionInfoView competitionInfoViewController;
     @FXML private CompetitionListView competitionListViewController;
     @FXML private LoginView    loginViewController;
     @FXML private WelcomeView  welcomeViewController;
@@ -62,6 +64,7 @@ public class MainView extends View implements Initializable {
         Arrays.asList(
                 userListViewController,
                 gameListViewController,
+                competitionInfoViewController,
                 competitionListViewController,
                 loginViewController,
                 welcomeViewController,
@@ -96,6 +99,10 @@ public class MainView extends View implements Initializable {
 
     public void showCreateCompetition(){
     	setContent(createCompetitionView);
+    }
+
+    public void showCompetitionInfoView(){
+        setContent(competitionInfoView);
     }
 
     public void showPasswordChangeView(){
