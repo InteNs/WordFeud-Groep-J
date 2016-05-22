@@ -48,14 +48,13 @@ public class GameListView extends View {
             accordion.setExpandedPane(myGamesPane);
         });
 
-        filterField.textProperty().addListener(e -> setGlobalFilter(filteredGames));
-        userController.selectedUserProperty().addListener(e -> setGlobalFilter(filteredGames));
+        filterField.textProperty().addListener(e -> filteredGames.setPredicate(filterText));
 
-        myGamesList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        myGamesList.getSelectionModel().selectedItemProperty().addListener((o1, o2, newValue) -> {
             selectGame(newValue);
         });
 
-        allGamesList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        allGamesList.getSelectionModel().selectedItemProperty().addListener((o1, o2, newValue) -> {
             selectGame(newValue);
         });
     }
@@ -66,9 +65,5 @@ public class GameListView extends View {
             parent.showGameBoardView();
             parent.showGameControlView();
         }
-    }
-
-    private void setGlobalFilter( FilteredList<Game> list) {
-        list.setPredicate(filterText);
     }
 }

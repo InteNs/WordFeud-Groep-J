@@ -23,6 +23,12 @@ public class SessionController extends Controller {
         currentUser.set(user);
     }
 
+    public boolean login(String username, String password) {
+        User optionalUser = userDAO.selectUser(username, password);
+        setCurrentUser(optionalUser);
+        return getCurrentUser() != null;
+    }
+
     @Override
     public void refresh() {
 

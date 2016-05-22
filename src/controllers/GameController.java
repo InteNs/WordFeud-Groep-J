@@ -13,15 +13,12 @@ public class GameController extends Controller {
     private ObjectProperty<Game> selectedGame;
     private ObjectProperty<Turn> selectedTurn;
 
-
     public GameController(ControllerFactory factory) {
         super(factory);
-        games = FXCollections.observableArrayList(gameDAO.selectGames());
+        games = FXCollections.observableArrayList();
         selectedGame = new SimpleObjectProperty<>();
         selectedTurn = new SimpleObjectProperty<>();
-        games = FXCollections.observableArrayList(gameDAO.selectGames());
-
-        selectedGameProperty().addListener((observable, oldValue, newValue) -> loadGame(newValue));
+        selectedGameProperty().addListener((o, oV, nV) -> loadGame(nV));
     }
 
     public ObjectProperty<Game> selectedGameProperty() {
@@ -79,8 +76,14 @@ public class GameController extends Controller {
         game.removePlacedTile(field);
     }
 
-    public void sendMessage(Game selectedGame, User currentUser, String text) {
-        selectedGame.sendMessage(currentUser,text);
-        gameDAO.insertMessage(selectedGame,currentUser,text);
+    public void sendMessage(Game game, User user, String text) {
+        game.sendMessage(user, text);
+        gameDAO.insertMessage(game, user, text);
+    }
+
+    public boolean isJokerTile(Tile tile) {
+        if (tile.toString().equals("blank")) {
+            return true;
+        }return false;
     }
 }

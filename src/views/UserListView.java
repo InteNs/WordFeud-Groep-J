@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import models.User;
+import java.util.function.Predicate;
 
 public class UserListView extends View {
     @FXML
@@ -22,22 +23,21 @@ public class UserListView extends View {
     @Override
     public void constructor() {
         filteredUsers = new FilteredList<>(userController.getUsers());
+        Predicate<User> filterCurrent = user ->
+                user.equals(session.getCurrentUser());
+        Predicate<User> filterText = user ->
+                user.getName().toLowerCase().contains(filterField.getText().toLowerCase());
 
         userList.setItems(filteredUsers);
+        currentUserList.setItems(filteredUsers.filtered(filterCurrent));
 
-        filterField.textProperty().addListener(observable -> {
-            filteredUsers.setPredicate(user ->
-                    user.getName().toLowerCase().contains(filterField.getText().toLowerCase())
-            );
-        });
-
-        session.currentUserProperty().addListener((observable, oldValue, newValue) -> {
-            currentUserList.getItems().setAll(newValue);
-        });
+        filterField.textProperty().addListener(observable ->
+            filteredUsers.setPredicate(filterText)
+        );
 
         currentUserList.setOnMouseClicked(e -> select(session.getCurrentUser()));
 
-        userList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+        userList.getSelectionModel().selectedItemProperty().addListener((o1, o2, newValue) ->
                 select(newValue));
     }
 

@@ -3,21 +3,22 @@ package views;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 
 public class LoginView extends View {
 
     @FXML private Label invalidUserLabel;
     @FXML private TextField userNameField;
     @FXML private PasswordField userPassField;
+    @FXML private ProgressIndicator progress;
 
     @FXML
     public void login(){
-        if (userController.login(userNameField.getText(),userPassField.getText())){
+        if (session.login(userNameField.getText(), userPassField.getText())) {
+            progress.setVisible(true);
             parent.login();
-            invalidUserLabel.setVisible(false);
+            refresh();
         } else
             invalidUserLabel.setVisible(true);
     }
@@ -28,14 +29,13 @@ public class LoginView extends View {
 
     @Override
     public void refresh() {
+        userNameField.clear();
+        userPassField.clear();
+        invalidUserLabel.setVisible(false);
+        progress.setVisible(false);
     }
 
     @Override
     public void constructor() {
-    }
-    
-    public void resetFields(){
-    	userNameField.setText(null);
-    	userPassField.setText(null);
     }
 }

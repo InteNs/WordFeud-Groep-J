@@ -15,7 +15,6 @@ public class WelcomeView extends View {
 
     @Override
     public void constructor() {
-        session.currentUserProperty().addListener((observable, oldValue, newValue) ->
-                helloUserLabel.setText("Hallo "+ newValue + "!"));
+        helloUserLabel.setText("Hallo "+ session.getCurrentUser() + "!");
     }
 }

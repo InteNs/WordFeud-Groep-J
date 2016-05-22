@@ -27,6 +27,15 @@ public class User {
         loses = 0;
     }
 
+    public User(String name, String password, Role startingRole) {
+        this.name = name;
+        this.password = password;
+        roles = new ArrayList<>();
+        roles.add(startingRole);
+        wins = 0;
+        loses = 0;
+    }
+
     public String getName() {
         return name;
     }
