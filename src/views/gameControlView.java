@@ -39,8 +39,9 @@ public class gameControlView extends View {
     private Tab chatTab;
     @FXML
     private Button showPot;
-   
-    
+    @FXML
+    private Button showJokers;
+
 
 
     private final String DEFAULTPOTLABELTEXT="Aantal letters in pot:";
@@ -101,5 +102,10 @@ public class gameControlView extends View {
         if(tiles != null){
         new potView(tiles, resourceFactory);
         }
+    }
+
+    public void showJokers( ) {
+        parent.getGameBoardView().showJokers();
+
     }
 }

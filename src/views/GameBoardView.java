@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.effect.SepiaTone;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -38,7 +39,7 @@ public class GameBoardView extends View {
 
     private void displayGameBoard(Game selectedGame, Turn selectedTurn) {
         Field[][] gameBoard = selectedGame.getGameBoard();
-        gameBoardGrid.getChildren().removeAll();
+        gameBoardGrid.getChildren().clear();
         for (int y = 0; y < gameBoard.length; y++)
             for (int x = 0; x < gameBoard.length; x++) {
                 FieldTileNode fieldNode = new FieldTileNode(gameBoard[x][y], resourceFactory);
@@ -194,5 +195,17 @@ public class GameBoardView extends View {
             displayGameBoard(gameController.getSelectedGame(), selectedTurn);
             displayPlayerRack(gameController.getSelectedGame(), selectedTurn);
         });
+    }
+
+    public void showJokers (){
+
+        for (Node field : gameBoardGrid.getChildren()) {
+            FieldTileNode fieldnode = (FieldTileNode)field;
+            if (fieldnode.getField().getTile() != null) {
+                if(fieldnode.getField().getTile().getCharacter().equals('?')){
+                    fieldnode.highLight();
+                }
+            }
+        }
     }
 }

@@ -168,4 +168,8 @@ public class MainView extends View implements Initializable {
 
     public void showGameControlView() {control.getSelectionModel().select(gameControlView);
     }
+
+    public GameBoardView getGameBoardView (){
+       return gameBoardViewController;
+    }
 }
