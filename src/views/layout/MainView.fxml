@@ -26,6 +26,7 @@
                 <fx:include fx:id="gameBoardView" source="GameBoardView.fxml"/>
                 <fx:include fx:id="registerView" source="RegisterView.fxml"/>
                 <fx:include fx:id="userInfoView" source="UserInfoView.fxml"/>
+                <fx:include fx:id="competitionInfoView" source="CompetitionInfoView.fxml"/>
                 <fx:include fx:id="createCompetitionView" source="CreateCompetitionView.fxml"/>
                 <fx:include fx:id="passwordChangeView" source="PasswordChangeView.fxml"/>
             </StackPane>

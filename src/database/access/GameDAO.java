@@ -34,6 +34,7 @@ public class GameDAO extends DAO {
             while (records.next()) {
                 games.add(new Game(
                         records.getInt("id"),
+                        records.getInt("competitie_id"),
                         new User(records.getString("account_naam_uitdager")),
                         new User(records.getString("account_naam_tegenstander")),
                         GameState.parse(records.getString("toestand_type")),

@@ -58,6 +58,7 @@ public class CompetitionListView extends View {
 
     private void selectCompetition(Competition competition){
         competitionController.setSelectedCompetition(competition);
+        parent.showCompetitionInfoView();
     }
 
     private void showMyCompetition() {

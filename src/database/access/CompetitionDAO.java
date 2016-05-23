@@ -1,13 +1,13 @@
 package database.access;
 
 import database.SQL;
+import javafx.util.Pair;
 import models.Competition;
 import models.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CompetitionDAO extends DAO {
 
@@ -16,7 +16,7 @@ public class CompetitionDAO extends DAO {
         ArrayList<Competition> competitions = new ArrayList<>();
         try {
             while (rs.next()) {
-                competitions.add(new Competition(rs.getInt("id"), new User(rs.getString("account_naam_eigenaar")), rs.getString("omschrijving")));
+                competitions.add(new Competition(rs.getInt("id"), new User(rs.getString("account_naam_eigenaar")), rs.getString("omschrijving"), rs.getInt("gemidddelde_score")));
             }
         } catch (Exception e) {
             printError(e);
@@ -42,20 +42,20 @@ public class CompetitionDAO extends DAO {
         return database.insert(SQL.INSERT.INSERTPLAYER, user.getName(), competition.getId());
     }
 
-    public HashMap<String, Integer> getPlayerMap() {
-        HashMap<String, Integer> userCompMap = new HashMap<>();
+    public ArrayList<Pair<String, Integer>> getPlayerMap() {
+        ArrayList<Pair<String, Integer>> pairs = new ArrayList<>();
         ResultSet records = database.select(SQL.ALL.PLAYERSCOMPS);
         try {
             while (records.next()) {
-                userCompMap.put(
+                pairs.add(new Pair<>(
                         records.getString("account_naam"),
                         records.getInt("competitie_id")
-                );
+                ));
             }
         } catch (SQLException e) {
             printError(e);
         }
         database.close();
-        return userCompMap;
+        return pairs;
     }
 }

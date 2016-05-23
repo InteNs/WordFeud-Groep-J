@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class Game {
 
     private int id;
+    private int competitionId;
     private ObservableList<Message> messages;
     private GameState gameState;
     private User opponent;
@@ -44,6 +45,25 @@ public class Game {
         this.playingPot = FXCollections.observableArrayList();
     }
 
+
+    public Game(int id, int competitionId, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
+        this.id = id;
+        this.competitionId = competitionId;
+        this.challenger = challenger;
+        this.opponent = opponent;
+        this.gameState = state;
+        this.language = language;
+        this.boardType = boardType;
+        this.fieldsChangedThisTurn = FXCollections.observableArrayList();
+        this.currentRack = FXCollections.observableArrayList();
+        this.messages = FXCollections.observableArrayList();
+        this.turns = FXCollections.observableArrayList();
+    }
+
+    public boolean isGame() {
+        return gameState == GameState.FINISHED || gameState == GameState.PLAYING;
+    }
+
     public int getId() {
         return id;
     }
@@ -60,6 +80,10 @@ public class Game {
         if (turns != null && !turns.isEmpty())
             return turns.get(turns.size()-1);
         else return null;
+    }
+
+    public int getCompetitionId(){
+        return competitionId;
     }
 
     public ArrayList<User> getPlayers() {
