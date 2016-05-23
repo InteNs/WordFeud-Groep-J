@@ -1,7 +1,8 @@
 package views;
 
 import javafx.fxml.FXML;
-import javafx.scene.chart.*;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import models.Competition;
@@ -56,5 +57,15 @@ public class CompetitionInfoView extends View {
     @Override
     public void refresh() {
         setInfo(competitionController.getSelectedCompetition());
+    }
+
+    @FXML
+    public void showPlayers() {
+        parent.setTab(parent.userListView);
+    }
+
+    @FXML
+    public void showGames() {
+        parent.setTab(parent.gameListView);
     }
 }

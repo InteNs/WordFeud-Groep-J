@@ -10,7 +10,6 @@ public class WelcomeView extends View {
 
     @Override
     public void refresh() {
-
     }
 
     @Override
