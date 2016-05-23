@@ -4,7 +4,6 @@ import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 
 import java.sql.Timestamp;
@@ -59,6 +58,10 @@ public class Game {
         this.currentRack = FXCollections.observableArrayList();
         this.messages = FXCollections.observableArrayList();
         this.turns = FXCollections.observableArrayList();
+    }
+
+    public boolean isGame() {
+        return gameState == GameState.FINISHED || gameState == GameState.PLAYING;
     }
 
     public int getId() {

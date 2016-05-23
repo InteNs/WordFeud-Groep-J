@@ -1,10 +1,7 @@
 package models;
 
-import enumerations.GameState;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import java.util.ArrayList;
-import enumerations.Role;
 
 public class Competition {
 
@@ -60,17 +57,8 @@ public class Competition {
         return players.size();
     }
 
-    public int getAmountOfGames(){
-
-       int counter = 0;
-        for (Game game : games){
-            if (game.getGameState() == GameState.PLAYING || game.getGameState() == GameState.FINISHED){
-                counter++;
-            }
-        }
-        return counter;
-        //return games.size();
-
+    public int getAmountOfGames() {
+        return games.filtered(Game::isGame).size();
     }
 
     public int getCompetitionScoreAvgerage(){
@@ -102,7 +90,6 @@ public class Competition {
         Competition that = (Competition) o;
 
         return id == that.id;
-
     }
 
     @Override
