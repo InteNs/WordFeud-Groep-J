@@ -1,60 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ContextMenu?>
-<?import javafx.scene.control.CustomMenuItem?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
-
-<Tab fx:id="root" text="spelbestuur" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.gameControlView">
-    <VBox spacing="5.0">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<Tab text="spelbestuur" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
+     fx:controller="views.gameControlView">
+    <VBox stylesheets="@style.css" spacing="5.0">
         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
         </padding>
-        <Spinner fx:id="turnSpinner" prefHeight="50.0" prefWidth="999999.0" />
+        <Spinner fx:id="turnSpinner" prefHeight="50.0" prefWidth="999999.0"/>
         <HBox alignment="CENTER" spacing="5.0" VBox.vgrow="NEVER">
-            <effect>
-                <DropShadow blurType="GAUSSIAN" height="9.14" radius="4.07" width="9.14" />
-            </effect>
-            <Button fx:id="playButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="9999999.0" text="Speel" />
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="9999999.0" text="Shuffle" />
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="9999999.0" text="Clear" />
-            <Button fx:id="extraFunctionsButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="9999999.0" text="Overig">
+            <Button fx:id="playButton" prefHeight="50.0" prefWidth="10000" text="Speel"/>
+            <Button prefHeight="50.0" prefWidth="10000" text="Shuffle"/>
+            <Button prefHeight="50.0" prefWidth="10000" text="Clear"/>
+            <Button fx:id="extraFunctionsButton" prefHeight="50.0" prefWidth="10000" text="Overig">
                 <contextMenu>
-                    <ContextMenu fx:id="contextMenu" anchorLocation="CONTENT_TOP_RIGHT" anchorX="0.0" anchorY="0.0" x="0.0" y="0.0">
+                    <ContextMenu fx:id="contextMenu" anchorLocation="CONTENT_TOP_RIGHT">
                         <items>
-                            <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
+                            <CustomMenuItem hideOnClick="false" text="Unspecified Action">
                                 <content>
-                                    <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Jokers" />
+                                    <Button prefHeight="50.0" prefWidth="100.0" text="Jokers"/>
                                 </content>
                             </CustomMenuItem>
-                            <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                            <CustomMenuItem text="Unspecified Action">
                                 <content>
-                                    <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Ruilen" />
+                                    <Button prefHeight="50.0" prefWidth="100.0" text="Ruilen"/>
                                 </content>
                             </CustomMenuItem>
-                            <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                            <CustomMenuItem text="Unspecified Action">
                                 <content>
-                                    <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Opgeven" />
+                                    <Button prefHeight="50.0" prefWidth="100.0" text="Opgeven"/>
                                 </content>
                             </CustomMenuItem>
-                            <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                            <CustomMenuItem text="Unspecified Action">
                                 <content>
-                                    <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Pass" />
+                                    <Button prefHeight="50.0" prefWidth="100.0" text="Pass"/>
                                 </content>
                             </CustomMenuItem>
-                            <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                            <CustomMenuItem text="Unspecified Action">
                                 <content>
-                                    <Button fx:id="showPot" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Pot" onAction="#showPot" />
+                                    <Button prefHeight="50.0" prefWidth="100.0" text="Pot" onAction="#showPot"/>
                                 </content>
                             </CustomMenuItem>
                         </items>
@@ -64,22 +50,23 @@
         </HBox>
         <HBox alignment="CENTER" prefWidth="0.0" VBox.vgrow="NEVER">
             <VBox alignment="CENTER">
-                <Label fx:id="player1ScoreLabel" text="Player1:Score" />
-                <Label fx:id="player2ScoreLabel" text="Player2:Score" />
+                <Label fx:id="player1ScoreLabel" text="Player1:Score"/>
+                <Label fx:id="player2ScoreLabel" text="Player2:Score"/>
             </VBox>
-            <Region HBox.hgrow="ALWAYS" />
-            <Label fx:id="potLabel" text="Aantal letters in pot:15" />
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="potLabel" text="Aantal letters in pot:15"/>
         </HBox>
-        <TabPane VBox.vgrow="ALWAYS">
+        <TabPane fx:id="gameTabs" VBox.vgrow="ALWAYS">
             <Tab closable="false" text="Spelhistorie">
-                <ListView fx:id="turnList" fixedCellSize="50.0" />
+                <ListView fx:id="turnList" fixedCellSize="25.0"/>
             </Tab>
             <Tab fx:id="chatTab" closable="false" text="Chat">
-                <VBox>
-                    <ListView fx:id="chatList" fixedCellSize="50.0" VBox.vgrow="ALWAYS" />
-                    <HBox>
-                        <TextField fx:id="chatTextField" prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="sendMessage" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="stuur" />
+                <VBox spacing="5">
+                    <ListView fx:id="chatList" VBox.vgrow="ALWAYS"/>
+                    <HBox spacing="5">
+                        <TextArea fx:id="chatTextArea" wrapText="true" prefHeight="45.0" prefWidth="0.0"
+                                  HBox.hgrow="ALWAYS"/>
+                        <Button onAction="#sendMessage" prefHeight="45.0" prefWidth="80.0" text="Stuur"/>
                     </HBox>
                 </VBox>
             </Tab>

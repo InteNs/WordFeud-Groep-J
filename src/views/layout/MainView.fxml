@@ -11,7 +11,7 @@
       <ProgressIndicator fx:id="loadIndicator" prefHeight="20.0" prefWidth="20.0" visible="false" />
     </ToolBar>
     <SplitPane fx:id="mainContent" dividerPositions="0.5" minWidth="1000" VBox.vgrow="ALWAYS">
-        <TabPane fx:id="control" minWidth="300.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE"
+        <TabPane fx:id="control" minWidth="396.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE"
                  SplitPane.resizableWithParent="false">
             <fx:include fx:id="gameListView" source="GameListView.fxml"/>
             <fx:include fx:id="userListView" source="UserListView.fxml"/>

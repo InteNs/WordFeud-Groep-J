@@ -59,6 +59,7 @@ public class GameController extends Controller {
 
     public void refresh() {
         games.setAll(gameDAO.selectGames());
+        if(getSelectedGame() != null) loadGame(getSelectedGame());
     }
 
     public void setPlayerRack(Game game, List<Tile> tiles) {

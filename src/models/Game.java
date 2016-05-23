@@ -4,7 +4,6 @@ import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 
 import java.sql.Timestamp;
@@ -297,7 +296,6 @@ public class Game {
     }
 
     public void sendMessage(User currentUser, String text) {
-        messages.add(new Message(currentUser.getName(),text,new Timestamp(System.currentTimeMillis())));
-
+        messages.add(new Message(currentUser, text, new Timestamp(System.currentTimeMillis())));
     }
 }
