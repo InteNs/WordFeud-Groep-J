@@ -94,4 +94,7 @@ public class gameControlView extends View {
             chatTextArea.clear();
         }
     }
+    public void showJokers( ) {
+        parent.getGameBoardView().showJokers();
+    }
 }

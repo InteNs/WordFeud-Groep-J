@@ -1,7 +1,11 @@
 package views.components;
 
+import javafx.animation.FadeTransition;
+import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 import models.Field;
 import models.Tile;
 import resources.ResourceFactory;
@@ -95,5 +99,15 @@ public class FieldTileNode extends ImageView {
                 "field=" + field +
                 ", tile=" + tile +
                 '}';
+    }
+
+    public void highLight (){
+        this.setEffect(new SepiaTone(1));
+        FadeTransition ft = new FadeTransition(Duration.millis(2000), this);
+        ft.setFromValue(1.0);
+        ft.setToValue(0.1);
+        ft.setCycleCount(10);
+        ft.setAutoReverse(true);
+        ft.play();
     }
 }

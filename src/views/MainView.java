@@ -152,4 +152,8 @@ public class MainView extends View implements Initializable {
     public void changePass() {
         setContent(passwordChangeView);
     }
+
+    public GameBoardView getGameBoardView (){
+       return gameBoardViewController;
+    }
 }

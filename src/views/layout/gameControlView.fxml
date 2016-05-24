@@ -20,7 +20,7 @@
                         <items>
                             <CustomMenuItem hideOnClick="false" text="Unspecified Action">
                                 <content>
-                                    <Button prefHeight="50.0" prefWidth="100.0" text="Jokers"/>
+                                    <Button prefHeight="50.0" prefWidth="100.0" text="Jokers" onAction="#showJokers" />
                                 </content>
                             </CustomMenuItem>
                             <CustomMenuItem text="Unspecified Action">
