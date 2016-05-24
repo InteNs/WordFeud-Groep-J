@@ -6,7 +6,6 @@ import models.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class GameDAO extends DAO {
@@ -17,7 +16,7 @@ public class GameDAO extends DAO {
         try {
             while (records.next()) {
                 messages.add(new Message(
-                        records.getString("account_naam"),
+                        new User(records.getString("account_naam")),
                         records.getString("bericht"),
                         records.getTimestamp("tijdstip")));
             }
@@ -35,6 +34,7 @@ public class GameDAO extends DAO {
             while (records.next()) {
                 games.add(new Game(
                         records.getInt("id"),
+                        records.getInt("competitie_id"),
                         new User(records.getString("account_naam_uitdager")),
                         new User(records.getString("account_naam_tegenstander")),
                         GameState.parse(records.getString("toestand_type")),
@@ -137,7 +137,7 @@ public class GameDAO extends DAO {
         database.insert(SQL.INSERT.INSERTMESSAGE,
                 selectedGame.getId(),
                 currentUser.getName(),
-                text,
-                new Timestamp(System.currentTimeMillis()));
+                text
+        );
     }
 }

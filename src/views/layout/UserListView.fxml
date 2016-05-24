@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
 <Tab text="accounts" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
      fx:controller="views.UserListView">
@@ -13,6 +11,15 @@
         </padding>
         <TextField fx:id="filterField" promptText="zoeken..."/>
         <ListView fx:id="currentUserList" maxHeight="27"/>
-        <ListView fx:id="userList" VBox.vgrow="ALWAYS"/>
+        <Accordion fx:id="userLists" VBox.vgrow="ALWAYS">
+            <panes>
+                <TitledPane text="alle accounts">
+                    <ListView fx:id="userList"/>
+                </TitledPane>
+                <TitledPane fx:id="compUserPane" text="accounts binnen: ">
+                    <ListView fx:id="compUserList"/>
+                </TitledPane>
+            </panes>
+        </Accordion>
     </VBox>
 </Tab>

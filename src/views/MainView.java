@@ -9,7 +9,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -19,23 +18,27 @@ import java.util.ResourceBundle;
 
 public class MainView extends View implements Initializable {
     /*declare your view here if you need it*/
-    @FXML private VBox loginView;
-    @FXML private VBox welcomeView;
-    @FXML private VBox registerView;
-    @FXML private Pane userInfoView;
-    @FXML private VBox gameBoardView;
-    @FXML private VBox createCompetitionView;
-    @FXML private VBox passwordChangeView;
-    @FXML private ProgressIndicator loadIndicator;
-    @FXML private ToolBar toolBar;
-    @FXML private TabPane control;
-    @FXML private SplitPane mainContent;
-    @FXML private StackPane content;
-    @FXML private Tab gameControlView;
+    @FXML public VBox loginView;
+    @FXML public VBox welcomeView;
+    @FXML public VBox registerView;
+    @FXML public Pane userInfoView;
+    @FXML public VBox gameBoardView;
+    @FXML public VBox createCompetitionView;
+    @FXML public VBox competitionInfoView;
+    @FXML public VBox passwordChangeView;
+    @FXML public ProgressIndicator loadIndicator;
+    @FXML public ToolBar toolBar;
+    @FXML public TabPane control;
+    @FXML public SplitPane mainContent;
+    @FXML public StackPane content;
+    @FXML public Tab gameControlView;
+    @FXML public Tab userListView;
+    @FXML public Tab gameListView;
 
     /*Declare your viewControllers here*/
     @FXML private UserListView userListViewController;
     @FXML private GameListView gameListViewController;
+    @FXML private CompetitionInfoView competitionInfoViewController;
     @FXML private CompetitionListView competitionListViewController;
     @FXML private LoginView    loginViewController;
     @FXML private WelcomeView  welcomeViewController;
@@ -64,6 +67,7 @@ public class MainView extends View implements Initializable {
         views = new ArrayList<>(Arrays.asList(
                 userListViewController,
                 gameListViewController,
+                competitionInfoViewController,
                 competitionListViewController,
                 loginViewController,
                 welcomeViewController,
@@ -86,27 +90,6 @@ public class MainView extends View implements Initializable {
         views.forEach(View::constructor);
     }
 
-    public void showRegisterView(){
-    	setContent(registerView);
-    }
-
-    public void showLoginView(){
-    	setContent(loginView);
-    }
-
-    public void showUserInfo(){
-        setContent(userInfoView);
-    }
-
-    public void showCreateCompetition(){
-    	setContent(createCompetitionView);
-    }
-
-    public void showPasswordChangeView(){
-        passwordChangeViewController.refresh();
-        setContent(passwordChangeView);
-    }
-
     @FXML
     public void refresh() {
         loadIndicator.setVisible(true);
@@ -125,7 +108,7 @@ public class MainView extends View implements Initializable {
 
     @FXML
     public void logOut() {
-        this.showLoginView();
+        this.setContent(loginView);
         toolBar.setDisable(true);
         this.setControl(false);
         loginViewController.refresh();
@@ -148,6 +131,10 @@ public class MainView extends View implements Initializable {
         }
     }
 
+    public void setTab(Tab tab) {
+        control.getSelectionModel().select(tab);
+    }
+
     /**
      * set or add content to app's view (clears content if node == null)
      * @param node the node to set as content
@@ -162,11 +149,8 @@ public class MainView extends View implements Initializable {
         //this will never be called in this view
     }
 
-    public void showGameBoardView() {
-        setContent(gameBoardView);
-    }
-
-    public void showGameControlView() {control.getSelectionModel().select(gameControlView);
+    public void changePass() {
+        setContent(passwordChangeView);
     }
 
     public GameBoardView getGameBoardView (){

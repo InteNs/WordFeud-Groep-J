@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" prefHeight="654.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.CompetitionInfoView">
+    <children>
+        <HBox alignment="CENTER" prefHeight="110.0" prefWidth="600.0">
+            <children>
+                <VBox alignment="CENTER" prefHeight="100.0" prefWidth="999999.0">
+                    <children>
+                        <Label fx:id="competitionName" alignment="CENTER" prefHeight="17.0" prefWidth="999999.0" text="Competition naam">
+                            <font>
+                                <Font size="25.0" />
+                            </font></Label>
+                        <Label fx:id="competitionInfo" alignment="CENTER" prefWidth="999999.0" text="Eigenaar">
+                            <font>
+                                <Font size="18.0" />
+                            </font></Label>
+                        <Button fx:id="joinButton" alignment="CENTER" mnemonicParsing="false" onAction="#joinCompetition" text="Join">
+                            <padding>
+                                <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
+                            </padding>
+                        </Button>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="999999.0" prefWidth="999999.0">
+            <children>
+                <BarChart fx:id="gameChart" prefHeight="999999.0" prefWidth="999999.0">
+                    <xAxis>
+                        <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis side="LEFT" />
+                    </yAxis>
+                </BarChart>
+                <BarChart fx:id="playerChart" prefHeight="999999.0" prefWidth="999999.0">
+                    <xAxis>
+                        <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis side="LEFT" />
+                    </yAxis>
+                </BarChart>
+                <BarChart fx:id="scoreChart" prefHeight="999999.0" prefWidth="999999.0">
+                    <xAxis>
+                        <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis side="LEFT" />
+                    </yAxis>
+                </BarChart>
+            </children>
+        </HBox>
+        <HBox prefHeight="49.0" prefWidth="600.0">
+            <children>
+                <Button onAction="#showGames" mnemonicParsing="false" prefWidth="999999.0" text="Spellen">
+                    <padding>
+                        <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+                    </padding>
+                    <HBox.margin>
+                        <Insets bottom="10.0" left="20.0" />
+                    </HBox.margin>
+                </Button>
+                <Button onAction="#showPlayers" mnemonicParsing="false" prefWidth="999999.0" text="Spelers">
+                    <padding>
+                        <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+                    </padding>
+                    <HBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                    </HBox.margin>
+                </Button>
+            </children>
+        </HBox>
+    </children>
+</VBox>

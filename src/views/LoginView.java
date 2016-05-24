@@ -24,7 +24,7 @@ public class LoginView extends View {
     }
     @FXML
     public void openRegisterView () {
-        parent.showRegisterView();
+        parent.setContent(parent.registerView);
     }
 
     @Override
