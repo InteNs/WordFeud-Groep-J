@@ -69,12 +69,12 @@ public class UserDAO extends DAO {
         return success;
     }
 
-    public void setRole(User user, Role role) {
-        database.insert(SQL.INSERT.SETROLE, user.getName(), Role.format(role));
+    public boolean insertUserRole(User user, Role role) {
+        return database.insert(SQL.INSERT.SETROLE, user.getName(), Role.format(role));
     }
 
-    public void removeRole(User user, Role role) {
-        database.delete(SQL.DELETE.REMOVEROLE, user.getName(), Role.format(role));
+    public boolean deleteUserRole(User user, Role role) {
+        return database.delete(SQL.DELETE.REMOVEROLE, user.getName(), Role.format(role));
     }
 
     public void setAllStats(List<User> users) {

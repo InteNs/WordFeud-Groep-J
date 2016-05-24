@@ -147,6 +147,8 @@ public class Game {
         return diff;
     }
 
+
+
     /**
      * set the initial board for this game
      * @param fields the fields for this board

@@ -33,4 +33,9 @@ public class SessionController extends Controller {
     public void refresh() {
 
     }
+
+    @Override
+    public void refill() {
+
+    }
 }

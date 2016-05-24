@@ -41,9 +41,9 @@ public class PasswordChangeView extends View {
         }
     }
 
-    public boolean checkPassword() {
+    private boolean checkPassword() {
 
-        if (userController.checkPassword(oldPassField.getText())) {
+        if (userController.checkPassword(session.getCurrentUser(), oldPassField.getText())) {
 
             if (newPassField1.getText().equals(newPassField2.getText())) {
 

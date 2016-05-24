@@ -5,8 +5,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.Competition;
-import models.User;
 import models.Game;
+import models.User;
 
 public class CompetitionController extends Controller {
 
@@ -27,7 +27,7 @@ public class CompetitionController extends Controller {
         return false;
     }
 
-    public boolean isUserInCompetition(User thisUser, Competition thisCompetition){
+    public boolean isUserInCompetition(User thisUser, Competition thisCompetition) {
         return thisCompetition.getPlayers().contains(thisUser);
     }
 
@@ -35,12 +35,12 @@ public class CompetitionController extends Controller {
         return selectedCompetition.get();
     }
 
-    public ObjectProperty<Competition> selectedCompetitionProperty() {
-        return selectedCompetition;
-    }
-
     public void setSelectedCompetition(Competition competition) {
         selectedCompetition.set(competition);
+    }
+
+    public ObjectProperty<Competition> selectedCompetitionProperty() {
+        return selectedCompetition;
     }
 
     public Competition getCompetition(User user) {
@@ -52,7 +52,7 @@ public class CompetitionController extends Controller {
     public Competition getCompetition(int id) {
         return competitions.filtered(competition -> competition.getId() == id).get(0);
     }
-    
+
     public boolean isValidCompetitionName(String competitionName) {
         return competitionName.length() >= 5 & competitionName.length() <= 25
                 && competitionName.matches("[a-zA-Z0-9]+");
@@ -77,20 +77,26 @@ public class CompetitionController extends Controller {
 
     public void mapPlayers() {
         competitionDAO.getPlayerMap().forEach(set ->
-            getCompetition(set.getValue()).addPlayer(getUserController().getUser(set.getKey()))
+                getCompetition(set.getValue()).addPlayer(getUserController().getUser(set.getKey()))
         );
     }
 
-    public void assignGames(ObservableList<Game> games){
-        for (Competition competition : competitions){
+    public void assignGames(ObservableList<Game> games) {
+        for (Competition competition : competitions) {
             competition.setGames(games.filtered(game -> game.getCompetitionId() == competition.getId()));
         }
     }
 
     @Override
     public void refresh() {
-        competitions.setAll(competitionDAO.selectCompetitions());
         assignGames(getGameController().getGames());
         mapPlayers();
+        if(competitions.contains(getSelectedCompetition()))
+            setSelectedCompetition(competitions.get(competitions.indexOf(getSelectedCompetition())));
+    }
+
+    @Override
+    public void refill() {
+        competitions.setAll(competitionDAO.selectCompetitions());
     }
 }

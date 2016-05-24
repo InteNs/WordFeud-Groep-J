@@ -11,52 +11,53 @@ public class CompetitionInfoView extends View {
 
     @FXML private Label competitionName;
     @FXML private Label competitionInfo;
-    @FXML private BarChart<String,Integer> gameChart;
-    @FXML private BarChart<String,Integer> playerChart;
-    @FXML private BarChart<String,Integer> scoreChart;
+    @FXML private BarChart<String, Integer> gameChart;
+    @FXML private BarChart<String, Integer> playerChart;
+    @FXML private BarChart<String, Integer> scoreChart;
     @FXML private Button joinButton;
 
     @Override
     public void constructor() {
-       competitionController.selectedCompetitionProperty().addListener((observable, oldValue, newValue) -> {
-           competitionController.setSelectedCompetition(newValue);
-           setInfo(newValue);
+        competitionController.selectedCompetitionProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) setInfo(newValue);
         });
     }
 
-    private void setInfo(Competition competition){
+    private void setInfo(Competition competition) {
         competitionName.setText(competition.getName());
         competitionInfo.setText("Eigenaar: " + competition.getOwner().getName());
+        joinButton.setVisible(competitionController.isUserInCompetition(session.getCurrentUser(), competition));
 
         prepareChart(gameChart, "Totaal spellen", competition.getAmountOfGames());
         prepareChart(playerChart, "Totaal spelers", competition.getAmountOfUsers());
         prepareChart(scoreChart, "Gemiddelde score", competition.getCompetitionScoreAvgerage());
-
-        if (competitionController.isUserInCompetition(session.getCurrentUser(), competition)) {
-            joinButton.setVisible(false);
-        }
     }
 
     private void prepareChart(BarChart<String, Integer> chart, String label, int value) {
         chart.setVerticalGridLinesVisible(false);
         chart.setAnimated(false);
-        XYChart.Series<String,Integer> series = new XYChart.Series<>();
-        series.getData().add(new XYChart.Data<>(label , value));
+        XYChart.Series<String, Integer> series = new XYChart.Series<>();
+        series.getData().add(new XYChart.Data<>(label, value));
         chart.getData().clear();
         chart.getData().add(series);
     }
 
     @FXML
-    public void joinCompetition(){
-        if (!competitionController.isUserInCompetition(session.getCurrentUser(), competitionController.getSelectedCompetition())) {
-            if (competitionController.addUserInCompetition(session.getCurrentUser(), competitionController.getSelectedCompetition())){
-                refresh();
-            }
-        }
+    public void joinCompetition() {
+        competitionController.addUserInCompetition(
+                session.getCurrentUser(),
+                competitionController.getSelectedCompetition()
+        );
     }
+
     @Override
     public void refresh() {
-        setInfo(competitionController.getSelectedCompetition());
+        gameChart.getData().clear();
+        playerChart.getData().clear();
+        scoreChart.getData().clear();
+        competitionInfo.setText("");
+        competitionName.setText("");
+        joinButton.setVisible(false);
     }
 
     @FXML

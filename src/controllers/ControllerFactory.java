@@ -26,6 +26,11 @@ public class ControllerFactory {
         sessionController = null;
     }
 
+    public void refreshControllers() {
+        getControllers().forEach(Controller::refill);
+        getControllers().forEach(Controller::refresh);
+    }
+
     public UserController GetUserController(){
         if(userController == null)
             userController = new UserController(this);

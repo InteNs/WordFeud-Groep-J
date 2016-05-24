@@ -51,15 +51,30 @@ public class GameController extends Controller {
     }
 
     public void loadGame(Game game) {
+        if (game == null) return;
         game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
         game.setTurns(gameDAO.selectTurns(game));
         game.setMessages(gameDAO.selectMessages(game));
         game.setPot(gameDAO.selectPot(game.getLanguage()));
     }
 
+    @Override
     public void refresh() {
+        if (games.contains(getSelectedGame())) {
+            Game game = games.get(games.indexOf(getSelectedGame()));
+            loadGame(game);
+            setSelectedGame(game);
+
+            if (game.getTurns().contains(getSelectedTurn())) {
+                Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
+                setSelectedTurn(turn);
+            }
+        }
+    }
+
+    @Override
+    public void refill() {
         games.setAll(gameDAO.selectGames());
-        if(getSelectedGame() != null) loadGame(getSelectedGame());
     }
 
     public void setPlayerRack(Game game, List<Tile> tiles) {
@@ -84,13 +99,11 @@ public class GameController extends Controller {
     }
 
     public boolean isJokerTile(Tile tile) {
-        if (tile.toString().equals("blank")) {
-            return true;
-        }return false;
+        return tile.toString().equals("blank");
     }
-    
-    public ObservableList<Tile> showPot(Game game){
-        if(game != null)
+
+    public ObservableList<Tile> showPot(Game game) {
+        if (game != null)
             return game.getPot();
         return null;
     }

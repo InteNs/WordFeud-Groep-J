@@ -50,6 +50,7 @@ public class gameControlView extends View {
         turnSpinner.setOnMousePressed(event -> turnList.scrollTo(turnSpinner.getValue()));
 
         gameController.selectedGameProperty().addListener((o, v, newValue) -> {
+            if (newValue == null) return;
             chatList.setItems(newValue.getMessages());
             chatList.scrollTo(chatList.getItems().size());
             turnList.setItems(newValue.getTurns());

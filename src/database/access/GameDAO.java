@@ -54,6 +54,7 @@ public class GameDAO extends DAO {
         try {
             while (records.next()) {
                 turns.add(new Turn(
+                        records.getInt("id"),
                         records.getInt("score"),
                         new User(records.getString("account_naam")),
                         TurnType.getFor(records.getString("aktie_type")),

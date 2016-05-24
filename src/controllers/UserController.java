@@ -68,17 +68,16 @@ public class UserController extends Controller {
     }
 
     public void setRole(User user, Role role, Boolean enabled) {
-        if (enabled) {
-            userDAO.setRole(user, role);
-            user.addRole(role);
-        } else {
-            userDAO.removeRole(user, role);
-            user.removeRole(role);
-        }
+        if (enabled)
+            if(userDAO.insertUserRole(user, role))
+                user.addRole(role);
+        else
+            if(userDAO.deleteUserRole(user, role))
+                user.removeRole(role);
     }
 
-    public boolean checkPassword(String oldPassword) {
-        return getSession().getCurrentUser().getPassword().equals(oldPassword);
+    public boolean checkPassword(User user, String oldPassword) {
+        return user.getPassword().equals(oldPassword);
     }
 
     public void changePassword(String password) {
@@ -88,7 +87,12 @@ public class UserController extends Controller {
 
     @Override
     public void refresh() {
-        users.setAll(userDAO.selectUsers());
         userDAO.setAllStats(users);
+        if (users.contains(getSelectedUser())) setSelectedUser(users.get(users.indexOf(getSelectedUser())));
+    }
+
+    @Override
+    public void refill() {
+        users.setAll(userDAO.selectUsers());
     }
 }
