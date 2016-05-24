@@ -103,11 +103,12 @@ public class FieldTileNode extends ImageView {
 
     public void highLight (){
         this.setEffect(new SepiaTone(1));
-        FadeTransition ft = new FadeTransition(Duration.millis(2000), this);
+        FadeTransition ft = new FadeTransition(Duration.millis(1000), this);
         ft.setFromValue(1.0);
         ft.setToValue(0.1);
-        ft.setCycleCount(10);
+        ft.setCycleCount(6);
         ft.setAutoReverse(true);
+        ft.setOnFinished(e -> this.setEffect(new SepiaTone(0)));
         ft.play();
     }
 }
