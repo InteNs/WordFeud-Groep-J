@@ -10,7 +10,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
         </padding>
         <TextField fx:id="filterField" promptText="zoeken..."/>
-        <Accordion fx:id="accordion" VBox.vgrow="ALWAYS">
+        <Accordion fx:id="gameLists" VBox.vgrow="ALWAYS">
             <panes>
                 <TitledPane fx:id="myGamesPane" animated="true" text="Mijn spellen">
                     <ListView fx:id="myGamesList"/>
@@ -23,6 +23,9 @@
                 </TitledPane>
                 <TitledPane animated="true" text="Alle voltooide spellen">
                     <ListView fx:id="allFinishedGamesList"/>
+                </TitledPane>
+                <TitledPane fx:id="compGamesPane" animated="true" text="Spellen binnen: ">
+                    <ListView fx:id="compGamesList"/>
                 </TitledPane>
             </panes>
         </Accordion>

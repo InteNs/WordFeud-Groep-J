@@ -52,7 +52,7 @@ public class RegisterView extends View {
 
     @FXML
     public void openLoginView() {
-        parent.showLoginView();
+        parent.setContent(parent.loginView);
         refresh();
     }
 
