@@ -198,14 +198,10 @@ public class GameBoardView extends View {
     }
 
     public void showJokers (){
-
         for (Node field : gameBoardGrid.getChildren()) {
             FieldTileNode fieldnode = (FieldTileNode)field;
-            if (fieldnode.getField().getTile() != null) {
-                if(fieldnode.getField().getTile().getCharacter().equals('?')){
+            if ((fieldnode.getField().getTile() != null) &&  fieldnode.getField().getTile().getCharacter().equals('?'))
                     fieldnode.highLight();
-                }
-            }
         }
     }
 }

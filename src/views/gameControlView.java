@@ -103,9 +103,7 @@ public class gameControlView extends View {
         new potView(tiles, resourceFactory);
         }
     }
-
     public void showJokers( ) {
         parent.getGameBoardView().showJokers();
-
     }
 }

@@ -34,7 +34,7 @@
                         <items>
                             <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
                                 <content>
-                                    <Button fx:id="showJokers" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Jokers" onAction="#showJokers" />
+                                    <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Jokers" onAction="#showJokers" />
                                 </content>
                             </CustomMenuItem>
                             <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
