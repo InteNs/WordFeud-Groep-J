@@ -15,29 +15,16 @@ import models.Competition;
 import models.User;
 
 public class UserInfoView extends View {
-    @FXML
-    private Label userNameLabel;
-    @FXML
-    private Label lNoStats;
-    @FXML
-    private Label passwordLabel;
-    @FXML
-    private ListView<Competition> myCompetitions;
-    @FXML
-    private CheckBox checkPlayer;
-    @FXML
-    private CheckBox checkModerator;
-    @FXML
-    private CheckBox checkAdmin;
-    @FXML
-    private CheckBox checkObserver;
-    @FXML
-    private Pane rolesPane;
-    @FXML
-    private PieChart winloseChart;
-
-    private User selectedUser;
-
+    @FXML private Label userNameLabel;
+    @FXML private Label lNoStats;
+    @FXML private Label passwordLabel;
+    @FXML private ListView<Competition> myCompetitions;
+    @FXML private CheckBox checkPlayer;
+    @FXML private CheckBox checkModerator;
+    @FXML private CheckBox checkAdmin;
+    @FXML private CheckBox checkObserver;
+    @FXML private Pane rolesPane;
+    @FXML private PieChart winloseChart;
 
     @Override
     public void constructor() {
@@ -45,18 +32,16 @@ public class UserInfoView extends View {
             if (newValue == null) {
                 return;
             }
-            selectedUser = newValue;
-
-            userNameLabel.setText( newValue.toString());
-            passwordLabel.setText("wachtwoord: " + selectedUser.getPassword());
-            myCompetitions.setItems(competitionController.getCompetitions(selectedUser));
+            userNameLabel.setText(newValue.toString());
+            passwordLabel.setText("wachtwoord: " + newValue.getPassword());
+            myCompetitions.setItems(competitionController.getCompetitions(newValue));
 
             if (!session.getCurrentUser().hasRole(Role.ADMINISTRATOR)) {
                 rolesPane.setVisible(false);
                 passwordLabel.setVisible(false);
             }
-            getRoles(selectedUser);
-            setStats(selectedUser);
+            getRoles(newValue);
+            setStats(newValue);
         });
     }
 
@@ -92,22 +77,22 @@ public class UserInfoView extends View {
 
     @FXML
     public void setPlayer() {
-        userController.setRole(selectedUser, Role.PLAYER, checkPlayer.isSelected());
+        userController.setRole(userController.getSelectedUser(), Role.PLAYER, checkPlayer.isSelected());
     }
 
     @FXML
     public void setAdmin() {
-        userController.setRole(selectedUser, Role.ADMINISTRATOR, checkAdmin.isSelected());
+        userController.setRole(userController.getSelectedUser(), Role.ADMINISTRATOR, checkAdmin.isSelected());
     }
 
     @FXML
     public void setModerator() {
-        userController.setRole(selectedUser, Role.MODERATOR, checkModerator.isSelected());
+        userController.setRole(userController.getSelectedUser(), Role.MODERATOR, checkModerator.isSelected());
     }
 
     @FXML
     public void setObserver() {
-        userController.setRole(selectedUser, Role.OBSERVER, checkObserver.isSelected());
+        userController.setRole(userController.getSelectedUser(), Role.OBSERVER, checkObserver.isSelected());
     }
 
     @Override

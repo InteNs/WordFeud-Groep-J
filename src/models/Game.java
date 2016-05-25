@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Game {
@@ -88,6 +89,14 @@ public class Game {
 
     public ArrayList<User> getPlayers() {
         return new ArrayList<>(Arrays.asList(challenger, opponent));
+    }
+
+    public User getOpponent() {
+        return opponent;
+    }
+
+    public User getChallenger() {
+        return challenger;
     }
 
     public GameState getGameState() {

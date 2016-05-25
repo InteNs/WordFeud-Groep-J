@@ -47,6 +47,7 @@ public class gameControlView extends View {
         turnSpinner.valueProperty().addListener((o, v, newValue) ->
             selectTurn(newValue)
         );
+
         turnSpinner.setOnMousePressed(event -> turnList.scrollTo(turnSpinner.getValue()));
 
         gameController.selectedGameProperty().addListener((o, v, newValue) -> {

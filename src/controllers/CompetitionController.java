@@ -50,7 +50,9 @@ public class CompetitionController extends Controller {
     }
 
     public Competition getCompetition(int id) {
-        return competitions.filtered(competition -> competition.getId() == id).get(0);
+        for (Competition competition : competitions)
+            if (competition.getId() == id) return competition;
+        return null;
     }
 
     public boolean isValidCompetitionName(String competitionName) {
@@ -64,7 +66,6 @@ public class CompetitionController extends Controller {
         Competition newComp = new Competition(getSession().getCurrentUser(), competitionName);
         competitions.add(newComp);
         return competitionDAO.insertCompetition(newComp);
-
     }
 
     public ObservableList<Competition> getCompetitions() {
@@ -75,13 +76,13 @@ public class CompetitionController extends Controller {
         return competitions.filtered(competition -> competition.getPlayers().contains(user));
     }
 
-    public void mapPlayers() {
+    private void mapPlayers() {
         competitionDAO.getPlayerMap().forEach(set ->
                 getCompetition(set.getValue()).addPlayer(getUserController().getUser(set.getKey()))
         );
     }
 
-    public void assignGames(ObservableList<Game> games) {
+    private void assignGames(ObservableList<Game> games) {
         for (Competition competition : competitions) {
             competition.setGames(games.filtered(game -> game.getCompetitionId() == competition.getId()));
         }

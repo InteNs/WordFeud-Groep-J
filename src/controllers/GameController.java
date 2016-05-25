@@ -47,7 +47,7 @@ public class GameController extends Controller {
     }
 
     public ObservableList<Game> getGames() {
-        return games;
+        return games.filtered(Game::isGame);
     }
 
     public void loadGame(Game game) {
