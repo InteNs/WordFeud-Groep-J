@@ -1,9 +1,11 @@
 package views;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -34,7 +36,6 @@ public class JokerView extends View {
         // you can't close the window until you select a button
         window.initStyle(StageStyle.UNDECORATED);
 
-        window.setTitle("selecteer hier je keuze");
         TilePane tilePane = new TilePane();
         tilePane.setStyle("-fx-background-color: gray");
         tilePane.setPrefColumns(7);
@@ -56,9 +57,14 @@ public class JokerView extends View {
         vBox.setPadding(new Insets(10, 10, 10, 10));
         Scene scene = new Scene(vBox);
         window.setScene(scene);
-
+        scene.setOnKeyPressed(e -> {
+            for (alphabet = 'A'; alphabet <= 'Z'; alphabet++) {
+                if (e.getCode().toString().equals("" + alphabet)) {
+                    returnValue = alphabet; window.close(); return;
+                }
+            }
+        });
         window.showAndWait();
-
         return returnValue;
     }
 }
