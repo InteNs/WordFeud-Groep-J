@@ -3,6 +3,7 @@ package models;
 import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
+import enumerations.Role;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -332,10 +333,5 @@ public class Game {
 
     public void sendMessage(User currentUser, String text) {
         messages.add(new Message(currentUser, text, new Timestamp(System.currentTimeMillis())));
-    }
-
-
-    public void shuffleRack() {
-        Collections.shuffle(currentRack);
     }
 }

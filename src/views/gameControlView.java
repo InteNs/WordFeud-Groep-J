@@ -101,6 +101,6 @@ public class gameControlView extends View {
     }
     
     public void shuffle(){
-        gameController.shuffle();
+        parent.getGameBoardView().shuffleRack();
     }
 }
