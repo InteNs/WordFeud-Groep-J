@@ -99,4 +99,8 @@ public class gameControlView extends View {
     public void showJokers( ) {
         parent.getGameBoardView().showJokers();
     }
+    
+    public void shuffle(){
+        gameController.shuffle();
+    }
 }
