@@ -14,13 +14,29 @@ public class Turn {
     private ArrayList<Tile> rack;
     private ArrayList<Tile> placedTiles;
 
-    public Turn(int id, int score, User user, TurnType type, ArrayList<Tile> placedTiles, ArrayList<Tile> rack) {
+    public Turn(int id, int score, User user, TurnType type) {
         this.id = id;
         this.score = score;
         this.user = user;
         this.type = type;
-        this.placedTiles = placedTiles;
-        this.rack = rack;
+        rack = new ArrayList<>();
+        placedTiles = new ArrayList<>();
+    }
+
+    public void addPlacedTile(Tile tile) {
+        placedTiles.add(tile);
+    }
+
+    public void addRackTile(Tile tile) {
+        rack.add(tile);
+    }
+
+    public boolean hasRackTile(Tile tile) {
+        return rack.contains(tile);
+    }
+
+    public boolean hasPlacedTile(Tile tile) {
+        return placedTiles.contains(tile);
     }
 
     public String getWoord() {

@@ -8,6 +8,7 @@ public enum Role {
     UNDEFINED;
 
     public static Role parse(String role) {
+        if (role == null) return null;
         switch (role) {
             case "player": return PLAYER;
             case "administrator": return ADMINISTRATOR;

@@ -3,17 +3,17 @@ package database;
 
 public class SQL {
     public class SELECT {
-        public static final String LETTERSFORLANG = "SELECT * FROM lettertype WHERE letterset_code = ?;";
-        public static final String TURNSFORGAME = "SELECT b.*, g.woorddeel, g.`x-waarden`, g.`y-waarden`, p.inhoud FROM beurt b LEFT JOIN gelegd g ON g.beurt_id = b.id AND g.spel_id = b.spel_id LEFT JOIN plankje p ON p.beurt_id = b.id AND p.spel_id = b.spel_id WHERE b.spel_id = ?;\n";
+        public static final String LETTERSFORGAME = "SELECT\n  letter.*,\n  lettertype.waarde\nFROM letter\n\n  JOIN lettertype\n    ON letter.lettertype_letterset_code = lettertype.letterset_code AND letter.lettertype_karakter = lettertype.karakter\nWHERE spel_id = ?";
+        public static final String TURNSFORGAME = "SELECT\n  spel.id           spel,\n  beurt.id          beurt,\n  beurt.aktie_type,\n  beurt.score,\n  beurt.account_naam,\n  placed.letter_id  gelegd_id,\n  plankje.letter_id plank_id,\n  placed.blancoletterkarakter,\n  placed.tegel_x,\n  placed.tegel_y\nFROM spel\n  LEFT JOIN beurt ON beurt.spel_id = spel.id\n  LEFT JOIN gelegdeletter placed ON placed.beurt_id = beurt.id AND placed.spel_id = spel.id\n  LEFT JOIN letterbakjeletter plankje ON beurt.id = plankje.beurt_id AND beurt.spel_id = plankje.spel_id\n\nWHERE spel.id = ?;";
         public static final String TILESFORBOARD = "SELECT * FROM wordfeud.tegel WHERE bord_naam =?";
         public static final String MESSAGESFORGAME = "SELECT * FROM chatregel WHERE spel_id = ? ORDER BY tijdstip;";
-        public static final String USERWITHCREDS = "SELECT a.naam, a.wachtwoord, r.rol_type FROM account a, accountrol r WHERE a.naam = r.account_naam AND a.naam = ? AND a.wachtwoord = ? ORDER BY a.naam;";
-        public static final String USERWITHNAME = "SELECT a.naam, a.wachtwoord, r.rol_type FROM account a, accountrol r WHERE a.naam = r.account_naam AND a.naam = ? ORDER BY a.naam;";
+        public static final String USERWITHCREDS = "SELECT\n  a.naam,\n  a.wachtwoord,\n  r.rol_type\nFROM account a\n  LEFT JOIN accountrol r ON a.naam = r.account_naam\nWHERE naam = ?\n      AND wachtwoord = ?";
+        public static final String USERWITHNAME = "SELECT\n  a.naam,\n  a.wachtwoord,\n  r.rol_type\nFROM account a\n  LEFT JOIN accountrol r ON a.naam = accountrol.account_naam\nWHERE a.naam = ?";
         public static final String COMPFOROWNER = "SELECT id FROM competitie WHERE account_naam_eigenaar = ?";
     }
 
     public class ALL {
-        public static final String USERS = "SELECT a.naam, a.wachtwoord, r.rol_type FROM account a, accountrol r WHERE a.naam = r.account_naam ORDER BY a.naam;";
+        public static final String USERS = "SELECT\n  a.naam,\n  a.wachtwoord,\n  r.rol_type\nFROM account a\n  LEFT JOIN accountrol r on a.naam = r.account_naam";
         public static final String GAMES = "SELECT * FROM spel;";
         public static final String COMPETITIONS = "SELECT C.id, C.omschrijving, C.account_naam_eigenaar, AVG(R.gemidddelde_score) AS gemidddelde_score FROM competitie AS C LEFT JOIN rank_avg AS R ON C.id = R.competitie_id GROUP BY C.id;";
         public static final String PLAYERSCOMPS = "SELECT * FROM deelnemer";

@@ -10,9 +10,9 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
         </padding>
         <Spinner fx:id="turnSpinner" prefHeight="50.0" prefWidth="999999.0"/>
-        <HBox alignment="CENTER" spacing="5.0" VBox.vgrow="NEVER">
+        <HBox fx:id="buttonBox" alignment="CENTER" spacing="5.0" VBox.vgrow="NEVER">
             <Button fx:id="playButton" prefHeight="50.0" prefWidth="10000" text="Speel"/>
-            <Button prefHeight="50.0" prefWidth="10000" onAction="#shuffle" text="Shuffle"/>
+            <Button fx:id="shuffleButton" prefHeight="50.0" prefWidth="10000" onAction="#shuffle" text="Shuffle"/>
             <Button prefHeight="50.0" prefWidth="10000" text="Clear"/>
             <Button fx:id="extraFunctionsButton" prefHeight="50.0" prefWidth="10000" text="Overig">
                 <contextMenu>
@@ -57,7 +57,7 @@
             <Label fx:id="potLabel" text="Aantal letters in pot:15"/>
         </HBox>
         <TabPane fx:id="gameTabs" VBox.vgrow="ALWAYS">
-            <Tab closable="false" text="Spelhistorie">
+            <Tab fx:id="turnTab" closable="false" text="Spelhistorie">
                 <ListView fx:id="turnList" fixedCellSize="25.0"/>
             </Tab>
             <Tab fx:id="chatTab" closable="false" text="Chat">

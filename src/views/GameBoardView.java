@@ -1,5 +1,6 @@
 package views;
 
+import enumerations.Role;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -51,7 +52,7 @@ public class GameBoardView extends View {
                     fieldNode.setEffect(new SepiaTone(1));
                 }
 
-                if (selectedGame.isLastTurn(selectedTurn)) {
+                if (selectedGame.isLastTurn(selectedTurn) && selectedGame.getGameMode() == Role.PLAYER) {
                     fieldNode.setOnDragOver(event -> {
                         if (fieldNode.getField().getTile() == null)
                             event.acceptTransferModes(TransferMode.MOVE);
@@ -108,7 +109,7 @@ public class GameBoardView extends View {
             nodes.add(tileNode);
             tileNode.setCursor(Cursor.OPEN_HAND);
 
-            if (selectedGame.isLastTurn(selectedTurn)) {
+            if (selectedGame.isLastTurn(selectedTurn) && selectedGame.getGameMode() == Role.PLAYER) {
                 tileNode.setOnDragDetected(event -> {
                     if (tileNode.isPlaceHolder())
                         return;

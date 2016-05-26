@@ -1,11 +1,13 @@
 package views;
 
 
+import enumerations.Role;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import models.Game;
 import models.Message;
 import models.Tile;
@@ -16,6 +18,7 @@ public class gameControlView extends View {
 
     @FXML private ListView<Message> chatList;
     @FXML private ListView<Turn> turnList;
+    @FXML private HBox buttonBox;
     @FXML private Button playButton;
     @FXML private Button extraFunctionsButton;
     @FXML private ContextMenu contextMenu;
@@ -25,6 +28,7 @@ public class gameControlView extends View {
     @FXML private Label player2ScoreLabel;
     @FXML private TextArea chatTextArea;
     @FXML private Tab chatTab;
+    @FXML private Tab turnTab;
     @FXML private TabPane gameTabs;
 
     @Override
@@ -50,6 +54,10 @@ public class gameControlView extends View {
 
         turnSpinner.setOnMousePressed(event -> turnList.scrollTo(turnSpinner.getValue()));
 
+        gameController.currentRoleProperty().addListener((observable, oldValue, newValue) ->
+                setTabs(newValue)
+        );
+
         gameController.selectedGameProperty().addListener((o, v, newValue) -> {
             if (newValue == null) return;
             chatList.setItems(newValue.getMessages());
@@ -58,8 +66,8 @@ public class gameControlView extends View {
             turnSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(newValue.getTurns()));
             selectTurn(newValue.getLastTurn());
             turnList.scrollTo(newValue.getLastTurn());
-            setButtonDisabled(newValue);
             setPotLabel(newValue);
+            setTabs(gameController.getCurrentRole());
         });
 
         gameTabs.widthProperty().addListener((o, v, newValue) ->
@@ -77,8 +85,16 @@ public class gameControlView extends View {
         potLabel.setText("Aantal letters in pot: " + newValue.getPot().size());
     }
 
-    private void setButtonDisabled(Game newValue) {
-        chatTab.setDisable(!newValue.hasPlayer(session.getCurrentUser()));
+    private void setTabs(Role gameMode) {
+        if(gameMode == Role.PLAYER) {
+            disableTurnControls(true);
+            disableGameControls(false);
+            gameTabs.getSelectionModel().select(chatTab);
+        } else if(gameMode == Role.OBSERVER) {
+            disableTurnControls(false);
+            disableGameControls(true);
+            gameTabs.getSelectionModel().select(turnTab);
+        }
     }
 
     @FXML
@@ -87,6 +103,17 @@ public class gameControlView extends View {
         if (tiles != null) {
             new potView(tiles, resourceFactory);
         }
+    }
+
+    private void disableGameControls(boolean disable) {
+        buttonBox.setDisable(disable);
+        chatTab.setDisable(disable);
+
+    }
+
+    private void disableTurnControls(boolean disable) {
+        turnTab.setDisable(disable);
+        turnSpinner.setDisable(disable);
     }
 
     @FXML
