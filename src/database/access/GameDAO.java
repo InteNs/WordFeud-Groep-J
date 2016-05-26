@@ -50,72 +50,60 @@ public class GameDAO extends DAO {
     }
     public ArrayList<Turn> selectTurns(Game game) {
         ArrayList<Turn> turns = new ArrayList<>();
+        ArrayList<Tile> tiles = new ArrayList<>();
         ResultSet records = database.select(SQL.SELECT.TURNSFORGAME, game.getId());
+        ResultSet tileRecords = database.select(SQL.SELECT.LETTERSFORGAME, game.getId());
         try {
+            while (tileRecords.next()) {
+                tiles.add(new Tile(
+                        tileRecords.getInt("id"),
+                        tileRecords.getInt("waarde"),
+                        tileRecords.getString("lettertype_karakter").charAt(0)
+                ));
+            }
+
             while (records.next()) {
-                turns.add(new Turn(
-                        records.getInt("id"),
+                Turn turn = new Turn(
+                        records.getInt("beurt"),
                         records.getInt("score"),
                         new User(records.getString("account_naam")),
-                        TurnType.getFor(records.getString("aktie_type")),
-                        buildPlacedTiles(
-                                records.getString("woorddeel"),
-                                records.getString("x-waarden"),
-                                records.getString("y-waarden")
-                        ),
-                        buildRack(records.getString("inhoud"))
-                ));
+                        TurnType.getFor(records.getString("aktie_type"))
+                );
+                if (turns.contains(turn))
+                    turn = turns.get(turns.indexOf(turn));
+                else
+                    turns.add(turn);
+
+                if (records.getInt("gelegd_id") > 0) {
+                    for (Tile tile : tiles) {
+                        if(tile.getId() == records.getInt("gelegd_id")) {
+                            if(!turn.hasPlacedTile(tile)) {
+                                tile.setX(records.getInt("tegel_x")-1);
+                                tile.setY(records.getInt("tegel_y")-1);
+                                if (records.getString("blancoletterkarakter") != null)
+                                    tile.replaceJoker(records.getString("blancoletterkarakter").charAt(0));
+                                turn.addPlacedTile(tile);
+                            }
+                            break;
+                        }
+                    }
+                }
+                if (records.getInt("plank_id") > 0) {
+                    for (Tile tile: tiles) {
+                        if (tile.getId() == records.getInt("plank_id")) {
+                            if (!turn.hasRackTile(tile))
+                                turn.addRackTile(tile);
+                            break;
+                        }
+                    }
+                }
             }
         } catch (SQLException e) {
             printError(e);
         }
         database.close();
+        game.setPot(tiles);
         return turns;
-    }
-    protected ArrayList<Tile> buildRack(String values) {
-        ArrayList<Tile> rack = new ArrayList<>();
-        if(values == null)
-            return null;
-        for (String s : values.split(",")) {
-            rack.add(new Tile(s.charAt(0)));
-        }
-        return rack;
-    }
-
-    protected ArrayList<Tile> buildPlacedTiles(String woorddeel, String x, String y) {
-        if(woorddeel == null)
-            return null;
-        ArrayList<Tile> tiles = new ArrayList<>();
-        String[] sC = woorddeel.split(",");
-        String[] sX = x.split(",");
-        String[] sY = y.split(",");
-        for (int i = 0; i < sC.length; i++) {
-            tiles.add(new Tile(
-                    sC[i].charAt(0),
-                    Integer.parseInt(sX[i])-1,
-                    Integer.parseInt(sY[i])-1
-            ));
-        }
-        return tiles;
-    }
-
-    public ArrayList<Tile> selectPot(Language language) {
-        ArrayList<Tile> tiles = new ArrayList<>();
-        ResultSet records = database.select(SQL.SELECT.LETTERSFORLANG, language.toString());
-        try {
-            while (records.next()){
-                for (int i = 0; i <records.getInt("aantal") ; i++) {
-                    tiles.add(new Tile(
-                            records.getInt("waarde"),
-                            records.getString("karakter").charAt(0)
-                    ));
-                }
-            }
-        } catch (Exception e) {
-            printError(e);
-        }
-        database.close();
-        return tiles;
     }
 
     public Field[][] selectFieldsForBoard(BoardType boardType) {

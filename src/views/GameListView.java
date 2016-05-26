@@ -53,6 +53,8 @@ public class GameListView extends View {
 
         userRoleBox.setOnAction(event -> {
             currentRole = userRoleBox.getValue();
+            gameController.setCurrentRole(currentRole);
+            gameController.setSelectedGame(null);
             compGameLists.getPanes().remove(allCompGamesPane);
             gameLists.getPanes().remove(allGamesPane);
             if (currentRole == Role.PLAYER) {
@@ -99,11 +101,11 @@ public class GameListView extends View {
         });
 
         myGamesList.getSelectionModel().selectedItemProperty().addListener((o1, o2, newValue) -> {
-            selectGame(newValue, currentRole);
+            selectGame(newValue);
         });
 
         allGamesList.getSelectionModel().selectedItemProperty().addListener((o1, o2, newValue) -> {
-            selectGame(newValue, currentRole);
+            selectGame(newValue);
         });
     }
 
@@ -112,8 +114,7 @@ public class GameListView extends View {
         filteredGames.setPredicate(filterState.and(filterText));
     }
 
-    private void selectGame(Game game, Role role) {
-        //todo if role ==observer do something else than if user
+    private void selectGame(Game game) {
         if (game != null) {
             gameController.setSelectedGame(game);
             parent.setContent(parent.gameBoardView);

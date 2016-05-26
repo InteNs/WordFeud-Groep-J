@@ -1,5 +1,6 @@
 package controllers;
 
+import enumerations.Role;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -12,6 +13,7 @@ public class GameController extends Controller {
 
     private ObservableList<Game> games;
     private ObjectProperty<Game> selectedGame;
+    private ObjectProperty<Role> currentRole;
     private ObjectProperty<Turn> selectedTurn;
 
     public GameController(ControllerFactory factory) {
@@ -19,7 +21,20 @@ public class GameController extends Controller {
         games = FXCollections.observableArrayList();
         selectedGame = new SimpleObjectProperty<>();
         selectedTurn = new SimpleObjectProperty<>();
-        selectedGameProperty().addListener((o, oV, nV) -> loadGame(nV));
+        currentRole = new SimpleObjectProperty<>();
+        selectedGameProperty().addListener((o, oV, nV) -> loadGame(nV, getCurrentRole()));
+    }
+
+    public void setCurrentRole(Role currentRole) {
+        this.currentRole.set(currentRole);
+    }
+
+    public ObjectProperty<Role> currentRoleProperty() {
+        return currentRole;
+    }
+
+    public Role getCurrentRole() {
+        return currentRole.get();
     }
 
     public ObjectProperty<Game> selectedGameProperty() {
@@ -50,19 +65,19 @@ public class GameController extends Controller {
         return games.filtered(Game::isGame);
     }
 
-    public void loadGame(Game game) {
+    public void loadGame(Game game, Role gameMode) {
         if (game == null) return;
         game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
         game.setTurns(gameDAO.selectTurns(game));
         game.setMessages(gameDAO.selectMessages(game));
-        game.setPot(gameDAO.selectPot(game.getLanguage()));
+        game.setGameMode(gameMode);
     }
 
     @Override
     public void refresh() {
         if (games.contains(getSelectedGame())) {
             Game game = games.get(games.indexOf(getSelectedGame()));
-            loadGame(game);
+            loadGame(game, getCurrentRole());
             setSelectedGame(game);
 
             if (game.getTurns().contains(getSelectedTurn())) {

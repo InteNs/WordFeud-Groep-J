@@ -11,7 +11,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Game {
@@ -20,6 +19,7 @@ public class Game {
     private int competitionId;
     private ObservableList<Message> messages;
     private GameState gameState;
+    private Role gameMode;
     private User opponent;
     private User challenger;
     private Language language;
@@ -29,24 +29,8 @@ public class Game {
     private Field[][] gameBoard;        // USE THIS INSTEAD
     private ObservableList<Tile> currentRack;
     private ObservableList<Field> fieldsChangedThisTurn;
-    private ArrayList<Tile> allTilesCache;
     private ObservableList<Tile> playingPot;
-    private ArrayList<Tile> startPot;
-
-    public Game(int id, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
-        this.id = id;
-        this.challenger = challenger;
-        this.opponent = opponent;
-        this.gameState = state;
-        this.language = language;
-        this.boardType = boardType;
-        this.fieldsChangedThisTurn = FXCollections.observableArrayList();
-        this.currentRack = FXCollections.observableArrayList();
-        this.messages = FXCollections.observableArrayList();
-        this.turns = FXCollections.observableArrayList();
-        this.playingPot = FXCollections.observableArrayList();
-    }
-
+    private ObservableList<Tile> allTiles;
 
     public Game(int id, int competitionId, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
         this.id = id;
@@ -60,6 +44,16 @@ public class Game {
         this.currentRack = FXCollections.observableArrayList();
         this.messages = FXCollections.observableArrayList();
         this.turns = FXCollections.observableArrayList();
+        this.playingPot = FXCollections.observableArrayList();
+        this.allTiles = FXCollections.observableArrayList();
+    }
+
+    public void setGameMode(Role gameMode) {
+        this.gameMode = gameMode;
+    }
+
+    public Role getGameMode() {
+        return gameMode;
     }
 
     public boolean isGame() {
@@ -124,20 +118,6 @@ public class Game {
         return gameBoard;
     }
 
-    /**
-     * fetches all the tiles placed in all the completed turns
-     * @return the (cached) tiles
-     */
-    public ArrayList<Tile> getPlacedTiles() {
-        if(allTilesCache != null)
-            return allTilesCache;
-        allTilesCache = new ArrayList<Tile>();
-        turns.stream()
-                .filter(turn -> turn.getPlacedTiles() != null)
-                .forEach(turn -> allTilesCache.addAll(turn.getPlacedTiles()));
-        return allTilesCache;
-    }
-
     public int setMessages(ArrayList<Message> messages) {
         int diff = 0;
         if (this.messages != null) {
@@ -156,8 +136,6 @@ public class Game {
         }
         return diff;
     }
-
-
 
     /**
      * set the initial board for this game
@@ -183,26 +161,25 @@ public class Game {
      */
     public void setBoardStateTo(Turn turnToDisplay) {
         gameBoard = cloneGameBoard(emptyGameBoard);
-        playingPot = clonedPot(startPot);
+        playingPot.setAll(allTiles);
         for (Turn turn : turns) {
-            for (Tile tile : turn.getPlacedTiles()){
+            playingPot.removeAll(turn.getRack());
+            playingPot.removeAll(turn.getPlacedTiles());
+            for (Tile tile : turn.getPlacedTiles())
                 gameBoard[tile.getY()][tile.getX()].setTile(tile);
-                for (Tile tileInPot : playingPot) {
-                    if (tileInPot.getCharacter()==tile.getCharacter()){
-                        playingPot.remove(tileInPot);
-                        break;
-                    }
-                }
-            }
+
             if(turn.equals(turnToDisplay)) {
-                currentRack.setAll(turn.getRack());
+                if(gameMode == Role.OBSERVER)
+                    currentRack.setAll(turn.getRack());
+                else if(isLastTurn(turn))
+                    currentRack.setAll(turns.get(turns.indexOf(turn)-1).getRack());
                 return;
             }
         }
     }
 
     public void setPot(ArrayList<Tile> tilesForPot) {
-        startPot = tilesForPot;
+        allTiles.setAll(tilesForPot);
     }
 
     public ObservableList<Tile> getPot() {
@@ -303,10 +280,6 @@ public class Game {
             }
         }
         return clonedGameBoard;
-    }
-
-    private ObservableList<Tile> clonedPot(ArrayList<Tile> startPot){
-        return FXCollections.observableArrayList(startPot);
     }
 
     @Override

@@ -82,11 +82,9 @@ public class MainView extends View implements Initializable {
     }
 
     public void login() {
-        setContent(welcomeView);
-        setControl(true);
-        toolBar.setDisable(false);
         controllerFactory.refreshControllers();
         views.forEach(View::constructor);
+        constructor();
     }
 
     @FXML
@@ -108,6 +106,7 @@ public class MainView extends View implements Initializable {
     @FXML
     public void logOut() {
         this.setContent(loginView);
+        this.setTab(gameListView);
         toolBar.setDisable(true);
         this.setControl(false);
         views.forEach(View::refresh);
@@ -145,7 +144,16 @@ public class MainView extends View implements Initializable {
 
     @Override
     public void constructor() {
-        //this will never be called in this view
+        gameControlView.setDisable(controllerFactory.getGameController().getSelectedGame() == null);
+        controllerFactory.getGameController().selectedGameProperty().addListener((observable, oldValue, newValue) -> {
+            gameControlView.setDisable(newValue == null);
+        });
+        setContent(welcomeView);
+        setControl(true);
+        toolBar.setDisable(false);
+        control.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == gameControlView) setContent(gameBoardView);
+        });
     }
 
     public void changePass() {
