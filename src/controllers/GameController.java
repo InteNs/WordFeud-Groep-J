@@ -99,7 +99,7 @@ public class GameController extends Controller {
     }
 
     public boolean isJokerTile(Tile tile) {
-        return tile.toString().equals("blank");
+        return tile.getCharacter() == '?';
     }
 
     public ObservableList<Tile> showPot(Game game) {

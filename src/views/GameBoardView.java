@@ -130,7 +130,7 @@ public class GameBoardView extends View {
                     if (tileNode.isPlaceHolder()) {
                         tileNode.setTile(tileBeingDragged);
                         if (tileNode.getTile().getCharacter().equals('?')) {
-                            tileBeingDragged.replaceJoker('?');
+                            tileBeingDragged.replaceJoker(null);
                             tileNode.redrawImage();
                         }
                     } else {
@@ -203,7 +203,7 @@ public class GameBoardView extends View {
     public void showJokers() {
         for (Node field : gameBoardGrid.getChildren()) {
             FieldTileNode fieldnode = (FieldTileNode) field;
-            if ((fieldnode.getField().getTile() != null) && fieldnode.getField().getTile().getCharacter().equals('?'))
+            if ((fieldnode.getField().getTile() != null) && gameController.isJokerTile(fieldnode.getField().getTile()))
                 fieldnode.highLight();
         }
     }
