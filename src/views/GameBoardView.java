@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 public class GameBoardView extends View {
 
+    ObservableList<FieldTileNode> nodes;
     @FXML
     private VBox root;
     @FXML
@@ -96,10 +97,11 @@ public class GameBoardView extends View {
     }
 
     private void displayPlayerRack(Game selectedGame, Turn selectedTurn) {
-        ObservableList<FieldTileNode> nodes = FXCollections.observableArrayList();
+        nodes = FXCollections.observableArrayList();
         playerRackGrid.getChildren().setAll(nodes);
 
-        nodes.addListener((ListChangeListener<? super FieldTileNode>) observable -> playerRackGrid.getChildren().setAll(nodes));
+        nodes.addListener((ListChangeListener<? super FieldTileNode>) observable ->
+                playerRackGrid.getChildren().setAll(nodes));
 
         selectedGame.getCurrentRack().forEach(tile -> {
             FieldTileNode tileNode = new FieldTileNode(tile, resourceFactory);
@@ -168,6 +170,11 @@ public class GameBoardView extends View {
 
     }
 
+    public void shuffleRack() {
+        FXCollections.shuffle(nodes);
+        setCurrentRack(gameController.getSelectedGame(), nodes);
+    }
+
     private void setCurrentRack(Game game, ObservableList<FieldTileNode> tileNodes) {
         gameController.setPlayerRack(game, tileNodes.stream().filter(fieldTileNode -> !fieldTileNode.isPlaceHolder())
                 .map(FieldTileNode::getTile).collect(Collectors.toList()));
@@ -190,16 +197,14 @@ public class GameBoardView extends View {
             gameController.setBoardState(gameController.getSelectedGame(), selectedTurn);
             displayGameBoard(gameController.getSelectedGame(), selectedTurn);
             displayPlayerRack(gameController.getSelectedGame(), selectedTurn);
-            gameController.getSelectedGame().getCurrentRack().addListener((ListChangeListener<? super Tile>) observable1 ->
-            displayPlayerRack(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn()));
         });
     }
 
-    public void showJokers (){
+    public void showJokers() {
         for (Node field : gameBoardGrid.getChildren()) {
-            FieldTileNode fieldnode = (FieldTileNode)field;
-            if ((fieldnode.getField().getTile() != null) &&  fieldnode.getField().getTile().getCharacter().equals('?'))
-                    fieldnode.highLight();
+            FieldTileNode fieldnode = (FieldTileNode) field;
+            if ((fieldnode.getField().getTile() != null) && fieldnode.getField().getTile().getCharacter().equals('?'))
+                fieldnode.highLight();
         }
     }
 }
