@@ -333,4 +333,9 @@ public class Game {
     public void sendMessage(User currentUser, String text) {
         messages.add(new Message(currentUser, text, new Timestamp(System.currentTimeMillis())));
     }
+
+
+    public void shuffleRack() {
+        Collections.shuffle(currentRack);
+    }
 }

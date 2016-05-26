@@ -107,4 +107,10 @@ public class GameController extends Controller {
             return game.getPot();
         return null;
     }
+    
+    public void shuffle(){
+        this.getSelectedGame().shuffleRack();
+    }
+
+    
 }

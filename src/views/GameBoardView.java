@@ -190,6 +190,8 @@ public class GameBoardView extends View {
             gameController.setBoardState(gameController.getSelectedGame(), selectedTurn);
             displayGameBoard(gameController.getSelectedGame(), selectedTurn);
             displayPlayerRack(gameController.getSelectedGame(), selectedTurn);
+            gameController.getSelectedGame().getCurrentRack().addListener((ListChangeListener<? super Tile>) observable1 ->
+            displayPlayerRack(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn()));
         });
     }
 
