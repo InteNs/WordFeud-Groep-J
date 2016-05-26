@@ -26,7 +26,7 @@ public class CompetitionInfoView extends View {
     private void setInfo(Competition competition) {
         competitionName.setText(competition.getName());
         competitionInfo.setText("Eigenaar: " + competition.getOwner().getName());
-        joinButton.setVisible(competitionController.isUserInCompetition(session.getCurrentUser(), competition));
+        joinButton.setVisible(!competitionController.isUserInCompetition(session.getCurrentUser(), competition));
 
         prepareChart(gameChart, "Totaal spellen", competition.getAmountOfGames());
         prepareChart(playerChart, "Totaal spelers", competition.getAmountOfUsers());
@@ -48,6 +48,7 @@ public class CompetitionInfoView extends View {
                 session.getCurrentUser(),
                 competitionController.getSelectedCompetition()
         );
+        setInfo(competitionController.getSelectedCompetition());
     }
 
     @Override
