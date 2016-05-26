@@ -3,31 +3,39 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
-<Tab text="spellen" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
-     fx:controller="views.GameListView">
-    <VBox spacing="5">
+<?import javafx.scene.layout.HBox?>
+<Tab xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.GameListView"
+     text="spellen">
+    <VBox spacing="5" stylesheets="@style.css">
         <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
         </padding>
         <TextField fx:id="filterField" promptText="zoeken..."/>
-        <Accordion fx:id="gameLists" VBox.vgrow="ALWAYS">
-            <panes>
-                <TitledPane fx:id="myGamesPane" animated="true" text="Mijn spellen">
-                    <ListView fx:id="myGamesList"/>
-                </TitledPane>
-                <TitledPane animated="true" text="Mijn voltooide spellen">
-                    <ListView fx:id="myFinishedGamesList"/>
-                </TitledPane>
-                <TitledPane animated="true" text="Alle spellen">
-                    <ListView fx:id="allGamesList"/>
-                </TitledPane>
-                <TitledPane animated="true" text="Alle voltooide spellen">
-                    <ListView fx:id="allFinishedGamesList"/>
-                </TitledPane>
-                <TitledPane fx:id="compGamesPane" animated="true" text="Spellen binnen: ">
-                    <ListView fx:id="compGamesList"/>
-                </TitledPane>
-            </panes>
-        </Accordion>
+        <HBox>
+            <ChoiceBox styleClass="custom-choice" fx:id="userRoleBox" prefWidth="10000"/>
+            <ChoiceBox styleClass="custom-choice" fx:id="gameStateBox" prefWidth="10000"/>
+        </HBox>
+        <SplitPane fx:id="lists" VBox.vgrow="ALWAYS" dividerPositions="1" orientation="VERTICAL">
+            <Accordion fx:id="gameLists" SplitPane.resizableWithParent="false">
+                <panes>
+                    <TitledPane fx:id="myGamesPane" animated="false" text="Mijn spellen">
+                        <ListView prefHeight="999999" fx:id="myGamesList"/>
+                    </TitledPane>
+                    <TitledPane fx:id="allGamesPane" animated="false" text="Alle spellen">
+                        <ListView prefHeight="999999" fx:id="allGamesList"/>
+                    </TitledPane>
+                </panes>
+            </Accordion>
+            <Accordion fx:id="compGameLists" SplitPane.resizableWithParent="false">
+                <panes>
+                    <TitledPane fx:id="myCompGamesPane" animated="false" text="Mijn spellen binnen: ">
+                        <ListView prefHeight="999999" fx:id="myCompGamesList"/>
+                    </TitledPane>
+                    <TitledPane fx:id="allCompGamesPane" animated="false" text="Alle spellen binnen: ">
+                        <ListView prefHeight="999999" fx:id="allCompGamesList"/>
+                    </TitledPane>
+                </panes>
+            </Accordion>
+        </SplitPane>
     </VBox>
 </Tab>

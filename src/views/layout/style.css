@@ -13,6 +13,11 @@
     -fx-font-size: 13;
 }
 
+.custom-choice {
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
 .chat-owned {
     -fx-background-color: #28aeff;
     -fx-background-radius: 5;

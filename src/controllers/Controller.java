@@ -36,4 +36,7 @@ public abstract class Controller {
 
 
     public abstract void refresh();
+
+    public abstract void refill();
+
 }

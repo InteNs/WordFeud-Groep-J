@@ -1,20 +1,20 @@
 package models;
 
 import enumerations.Role;
-
-import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class User {
 
     private String name;
     private String password;
-    private ArrayList<Role> roles;
+    private ObservableList<Role> roles;
     private int wins;
     private int loses;
 
     public User(String name) {
         this.name = name;
-        roles = new ArrayList<>();
+        roles = FXCollections.observableArrayList();
         wins = 0;
         loses = 0;
     }
@@ -22,7 +22,7 @@ public class User {
     public User(String name, String password) {
         this.name = name;
         this.password = password;
-        roles = new ArrayList<>();
+        roles = FXCollections.observableArrayList();
         wins = 0;
         loses = 0;
     }
@@ -30,7 +30,7 @@ public class User {
     public User(String name, String password, Role startingRole) {
         this.name = name;
         this.password = password;
-        roles = new ArrayList<>();
+        roles = FXCollections.observableArrayList();
         roles.add(startingRole);
         wins = 0;
         loses = 0;
@@ -57,7 +57,7 @@ public class User {
         roles.remove(role);
     }
 
-    public ArrayList<Role> getRoles() {
+    public ObservableList<Role> getRoles() {
         return roles;
     }
 

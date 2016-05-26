@@ -25,6 +25,7 @@ public class UserListView extends View {
     @Override
     public void constructor() {
         filteredUsers = new FilteredList<>(userController.getUsers());
+
         Predicate<User> filterCurrent = user ->
                 user.equals(session.getCurrentUser());
         Predicate<User> filterText = user ->
@@ -52,7 +53,8 @@ public class UserListView extends View {
         currentUserList.setOnMouseClicked(e -> select(session.getCurrentUser()));
 
         userList.getSelectionModel().selectedItemProperty().addListener((o1, o2, newValue) ->
-                select(newValue));
+                select(newValue)
+        );
     }
 
     private void select(User user) {

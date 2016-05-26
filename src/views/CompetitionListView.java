@@ -48,22 +48,28 @@ public class CompetitionListView extends View {
         myCompetition.setItems(filteredCompetitions.filtered(filterOwned));
 
         showMyCompetition();
+
         myCompetition.getItems().addListener((ListChangeListener<? super Competition>) observable ->
-                showMyCompetition());
+                showMyCompetition()
+        );
 
         competitionList.getSelectionModel().selectedItemProperty().addListener((ig1, ig2, newValue) ->
-                selectCompetition(newValue));
-        myCompetition.setOnMouseClicked(e -> selectCompetition(competitionController.getSelectedCompetition()));
+                selectCompetition(newValue)
+        );
+
+        myCompetition.setOnMouseClicked(e ->
+                selectCompetition(myCompetition.getItems().get(0))
+        );
     }
 
-    private void selectCompetition(Competition competition){
+    private void selectCompetition(Competition competition) {
         competitionController.setSelectedCompetition(competition);
         parent.setContent(parent.competitionInfoView);
     }
 
     private void showMyCompetition() {
         if (myCompetition.getItems().size() > 0) {
-            if(root.getChildren().contains(createCompetition)) {
+            if (root.getChildren().contains(createCompetition)) {
                 root.getChildren().remove(myCompetition);
                 Collections.replaceAll(root.getChildren(), createCompetition, myCompetition);
             }

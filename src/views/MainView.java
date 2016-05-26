@@ -1,6 +1,5 @@
 package views;
 
-import controllers.Controller;
 import controllers.ControllerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -86,14 +85,14 @@ public class MainView extends View implements Initializable {
         setContent(welcomeView);
         setControl(true);
         toolBar.setDisable(false);
-        controllerFactory.getControllers().forEach(Controller::refresh);
+        controllerFactory.refreshControllers();
         views.forEach(View::constructor);
     }
 
     @FXML
     public void refresh() {
         loadIndicator.setVisible(true);
-        controllerFactory.getControllers().forEach(Controller::refresh);
+        controllerFactory.refreshControllers();
         loadIndicator.setVisible(false);
     }
 
@@ -111,7 +110,7 @@ public class MainView extends View implements Initializable {
         this.setContent(loginView);
         toolBar.setDisable(true);
         this.setControl(false);
-        loginViewController.refresh();
+        views.forEach(View::refresh);
         controllerFactory.resetControllers();
     }
 

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 
 public class Turn {
+    private int id;
     private int score;
     private String woord;
     private User user;
@@ -13,7 +14,8 @@ public class Turn {
     private ArrayList<Tile> rack;
     private ArrayList<Tile> placedTiles;
 
-    public Turn(int score, User user, TurnType type, ArrayList<Tile> placedTiles, ArrayList<Tile> rack) {
+    public Turn(int id, int score, User user, TurnType type, ArrayList<Tile> placedTiles, ArrayList<Tile> rack) {
+        this.id = id;
         this.score = score;
         this.user = user;
         this.type = type;
@@ -46,5 +48,21 @@ public class Turn {
     @Override
     public String toString() {
         return "Speler: "+user+" -Actie:"+type+" -Beurtscore:"+score;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Turn turn = (Turn) o;
+
+        return id == turn.id;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }
