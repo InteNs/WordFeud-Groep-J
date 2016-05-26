@@ -48,7 +48,6 @@ public class CompetitionInfoView extends View {
                 session.getCurrentUser(),
                 competitionController.getSelectedCompetition()
         );
-        joinButton.setVisible(false);
         setInfo(competitionController.getSelectedCompetition());
     }
 
