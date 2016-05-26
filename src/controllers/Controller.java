@@ -3,6 +3,7 @@ package controllers;
 import database.access.CompetitionDAO;
 import database.access.GameDAO;
 import database.access.UserDAO;
+import database.access.WordDAO;
 
 public abstract class Controller {
 
@@ -21,17 +22,21 @@ public abstract class Controller {
     public SessionController getSession() {
         return controllerFactory.getSessionController();
     }
+    public WordController getWordController(){return controllerFactory.getWordController();}
 
     protected ControllerFactory controllerFactory;
     protected UserDAO userDAO;
     protected GameDAO gameDAO;
     protected CompetitionDAO competitionDAO;
+    protected WordDAO wordDAO;
 
     public Controller(ControllerFactory factory) {
         this.controllerFactory = factory;
         competitionDAO = new CompetitionDAO();
         gameDAO = new GameDAO();
         userDAO = new UserDAO();
+        wordDAO = new WordDAO();
+
     }
 
 

@@ -81,7 +81,7 @@ public class WordListView extends View {
 
     public void select(Word word) {
         wordController.setSelectedWord(word);
-        parent.showWordInfo();
+        parent.setContent(parent.wordInfoView);
     }
 }
 

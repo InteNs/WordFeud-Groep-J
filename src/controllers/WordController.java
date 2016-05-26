@@ -32,6 +32,11 @@ public class WordController extends Controller {
         this.wordList.setAll(wordDAO.getWords());
     }
 
+    @Override
+    public void refill() {
+
+    }
+
     public void setCurrentWord(Word currentWord) {
         selectedWord.set(currentWord);
     }

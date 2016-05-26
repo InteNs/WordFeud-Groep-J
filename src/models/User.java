@@ -4,17 +4,21 @@ import enumerations.Role;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.ArrayList;
+
 public class User {
 
     private String name;
     private String password;
     private ObservableList<Role> roles;
+    private ArrayList<Word> words;
     private int wins;
     private int loses;
 
     public User(String name) {
         this.name = name;
         roles = FXCollections.observableArrayList();
+        words = new ArrayList<>();
         wins = 0;
         loses = 0;
     }
@@ -23,6 +27,7 @@ public class User {
         this.name = name;
         this.password = password;
         roles = FXCollections.observableArrayList();
+        words = new ArrayList<>();
         wins = 0;
         loses = 0;
     }
@@ -31,6 +36,7 @@ public class User {
         this.name = name;
         this.password = password;
         roles = FXCollections.observableArrayList();
+        words = new ArrayList<>();
         roles.add(startingRole);
         wins = 0;
         loses = 0;
@@ -79,6 +85,9 @@ public class User {
 
     public void setLoses(Integer loses) {
         this.loses = loses;
+    }
+    public void addWord(Word word){
+        words.add(word);
     }
 
     @Override
