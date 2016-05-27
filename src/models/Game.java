@@ -1,10 +1,8 @@
 package models;
 
-import enumerations.BoardType;
-import enumerations.GameState;
-import enumerations.Language;
-import enumerations.Role;
+import enumerations.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.sql.Timestamp;
@@ -46,6 +44,14 @@ public class Game {
         this.turns = FXCollections.observableArrayList();
         this.playingPot = FXCollections.observableArrayList();
         this.allTiles = FXCollections.observableArrayList();
+        this.fieldsChangedThisTurn.addListener((ListChangeListener<? super Field>) observable -> {
+            if (!fieldsChangedThisTurn.isEmpty()){
+                char fixedAxis = verifyCurrentTurn();
+                if (fixedAxis == 'x' || fixedAxis == 'y'){
+                    System.out.println(resolveWords(fixedAxis));
+                }
+            }
+        });
     }
 
     public void setGameMode(Role gameMode) {
@@ -203,11 +209,11 @@ public class Game {
      * check if the current state of the game is a valid turn
      * @return validTurn
      */
-    public boolean verifyCurrentTurn() {
+    public Character verifyCurrentTurn() {
 
         //TODO: validTurn =false when StartTile doesn't have a Tile.
         if (fieldsChangedThisTurn.size()==0){
-            return false;
+            return null;
         }
 
         boolean validTurn = true;
@@ -246,30 +252,105 @@ public class Game {
                 if (gameBoard[x][y].getTile() == null && !yValues.contains(y))
                     validTurn = false;
         }
-
-        return validTurn;
+       if (validTurn){
+           if (fieldsChangedThisTurn.size()==1 && findWords(checkColumn(fieldsChangedThisTurn.get(0).getX())) == null){
+               fixedAxis = 'y';
+           }
+           return fixedAxis;
+       } else {
+           return null;
+       }
     }
 
-    //TODO:
-    public int calculateWordScore(Field field){
-        return 5;
-    }
-
-    public boolean checkRow() {
-        String rowStr = null;
-        for (Field[] aGameBoard : gameBoard) {
-            rowStr = Arrays.toString(aGameBoard);
-            System.out.println(rowStr);
+    public String resolveWords(char fixedAxis){
+        ArrayList<ArrayList<Field>> wordsFound = new ArrayList<>();
+        ArrayList<Field> word;
+        switch (fixedAxis){
+            case 'x':
+                int xPos = getFieldsChangedThisTurn().get(0).getX();
+                wordsFound.add(findWords(checkColumn(xPos)));
+                for (Field field : getFieldsChangedThisTurn()) {
+                    word=findWords(new ArrayList<>(Arrays.asList(gameBoard[field.getY()])));
+                    if (word != null){
+                        wordsFound.add(word);
+                    }
+                }
+                break;
+            case 'y':
+                int yPos = getFieldsChangedThisTurn().get(0).getY();
+               wordsFound.add(findWords(new ArrayList<>(Arrays.asList(gameBoard[yPos]))));
+                for (Field field : fieldsChangedThisTurn) {
+                    word = findWords(checkColumn(field.getX()));
+                    if (word!=null){
+                        wordsFound.add(word);
+                    }
+                }
+                break;
+            default:
+                break;
         }
-        return false;
+        return String.valueOf(calculateTotalScore(wordsFound));
     }
 
-    //TODO: This method receives a row/column from the GameBoard. It then checks if there are any words that can be made.
-    //TODO: If words can be made, crosschecks with the words in the WordsList of the Game class --> new Word found? --> add word to the WordList and calculate score.
-    //TODO: similar to making a string from the row, we also(or instead) need a Field arraylist so we can calculate score using fieldType and letterValue,
-    //TODO: off course we already have the field array, we use it to make the string
-    private ArrayList<String> getWords(String word){
-    return null;
+    private int calculateTotalScore(ArrayList<ArrayList<Field>> wordsFound){
+        int totalScore = 0;
+        for (ArrayList<Field> word : wordsFound) {
+            totalScore += calculateWordScore(word);
+        }
+        if (fieldsChangedThisTurn.size()==7){
+            totalScore += 40;
+        }
+        return totalScore;
+    }
+
+    private int calculateWordScore(ArrayList<Field> word){
+        int wordScore = 0;
+        for (Field field : word) {
+            if (fieldsChangedThisTurn.contains(field) && (field.getFieldType() == FieldType.DL || field.getFieldType() == FieldType.TL)){
+                if (field.getFieldType() == FieldType.TL){
+                    wordScore += field.getTile().getValue()*3;
+                } else {
+                    wordScore += field.getTile().getValue()*2;
+                }
+            } else {
+                wordScore += field.getTile().getValue();
+            }
+        }
+        for (Field field : word) {
+            if (fieldsChangedThisTurn.contains(field) && (field.getFieldType() == FieldType.DW || field.getFieldType() == FieldType.TW)) {
+                if (field.getFieldType() == FieldType.TW){
+                    wordScore = wordScore*3;
+                } else {
+                    wordScore = wordScore*2;
+                }
+            }
+        }
+        return wordScore;
+    }
+
+    private ArrayList<Field> findWords (ArrayList<Field> turnFields){
+        ArrayList<Field> word = new ArrayList<>();
+        for (Field field : turnFields) {
+            if (field.getTile()!= null){
+                word.add(field);
+            } else {
+                for (Field wordField : word) {
+                    if (fieldsChangedThisTurn.contains(wordField) && word.size()>1){
+                        return word;
+                    }
+                }
+                word.clear();
+            }
+        }
+        return null;
+    }
+
+    private ArrayList<Field> checkColumn(int xPos){
+        ArrayList<Field> returnColumn = new ArrayList<>();
+        for (int y = 0; y < gameBoard.length; y++) {
+            returnColumn.add(gameBoard[y][xPos]);
+        }
+        return returnColumn;
     }
 
     private Field[][] cloneGameBoard(Field[][] emptyGameBoard){

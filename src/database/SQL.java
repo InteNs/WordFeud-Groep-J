@@ -36,5 +36,9 @@ public class SQL {
         public static final String UPDATEPASSWORD = "UPDATE account SET wachtwoord = ? WHERE naam = ?";
                 
     }
+
+    public class COUNT{
+        public static final String COUNTWORDS = "SELECT COUNT(woordenboek.woord ) FROM woordenboek WHERE woord =? AND woordenboek.letterset_code=?;";
+    }
     
 }
