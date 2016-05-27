@@ -1,13 +1,18 @@
 package controllers;
 
 import enumerations.Role;
+import enumerations.TurnType;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Pair;
 import models.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameController extends Controller {
 
@@ -121,5 +126,25 @@ public class GameController extends Controller {
         if (game != null)
             return game.getPot();
         return null;
+    }
+
+    public ArrayList<String> playWord(Game selectedGame) {
+        ArrayList<String> wordsNotInDictionary =
+                gameDAO.selectWords(selectedGame, selectedGame.getWordsFoundThisTurn())
+                        .stream()
+                        .filter(pair -> !pair.getValue())
+                        .map(Pair::getKey)
+                        .collect(Collectors.toCollection(ArrayList::new));
+
+        if (wordsNotInDictionary.size() == 0){
+            selectedGame.fillCurrentRack();
+            gameDAO.insertTurn(selectedGame, new Turn((selectedGame.getLastTurn().getId()+1),
+                    selectedGame.getScoreThisTurn(),
+                    getSession().getCurrentUser(),
+                    TurnType.WORD,
+                    selectedGame.getTilesChangedThisTurn(),
+                    new ArrayList<>(selectedGame.getCurrentRack())));
+        }
+        return wordsNotInDictionary;
     }
 }

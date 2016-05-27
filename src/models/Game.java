@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Game {
@@ -29,6 +30,8 @@ public class Game {
     private ObservableList<Field> fieldsChangedThisTurn;
     private ObservableList<Tile> playingPot;
     private ObservableList<Tile> allTiles;
+    private ArrayList<ArrayList<Field>> listOfFieldsWithWordsThisTurn;
+    private int scoreThisTurn;
 
     public Game(int id, int competitionId, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
         this.id = id;
@@ -45,13 +48,44 @@ public class Game {
         this.playingPot = FXCollections.observableArrayList();
         this.allTiles = FXCollections.observableArrayList();
         this.fieldsChangedThisTurn.addListener((ListChangeListener<? super Field>) observable -> {
-            if (!fieldsChangedThisTurn.isEmpty()){
-                char fixedAxis = verifyCurrentTurn();
-                if (fixedAxis == 'x' || fixedAxis == 'y'){
-                    System.out.println(resolveWords(fixedAxis));
-                }
-            }
+            verifyAndCalculate();
         });
+    }
+
+    private void verifyAndCalculate() {
+        listOfFieldsWithWordsThisTurn = null;
+        if (!fieldsChangedThisTurn.isEmpty()) {
+            Character fixedAxis = verifyCurrentTurn();
+            if (fixedAxis != null) {
+                listOfFieldsWithWordsThisTurn = resolveWords(fixedAxis);
+                scoreThisTurn = calculateTotalScore(listOfFieldsWithWordsThisTurn);
+            }
+        }
+    }
+
+    public int getScoreThisTurn() {
+        return scoreThisTurn;
+    }
+
+    public ArrayList<Tile> getTilesChangedThisTurn(){
+        return fieldsChangedThisTurn.stream()
+                .map(Field::getTile)
+                .collect(Collectors.toCollection(ArrayList<Tile>::new));
+    }
+
+    public ArrayList<ArrayList<Field>> getListOfFieldsWithWordsThisTurn() {
+        return listOfFieldsWithWordsThisTurn;
+    }
+
+    public ArrayList<String> getWordsFoundThisTurn() {
+        ArrayList<String> words = new ArrayList<>();
+        listOfFieldsWithWordsThisTurn.forEach(fields -> {
+            StringBuilder newWord = new StringBuilder();
+            fields.stream()
+                    .map(Field::getTile).forEach(tile -> newWord.append(tile.toString()));
+            words.add(newWord.toString());
+        });
+        return words;
     }
 
     public void setGameMode(Role gameMode) {
@@ -158,6 +192,8 @@ public class Game {
 
     public void addPlacedTile(Field field, Tile tile) {
         field.setTile(tile);
+        tile.setX(field.getX());
+        tile.setY(field.getY());
         fieldsChangedThisTurn.add(field);
     }
 
@@ -193,6 +229,7 @@ public class Game {
     }
 
     public void removePlacedTile(Field field) {
+        field.getTile().clearCoordinates();
         field.setTile(null);
         fieldsChangedThisTurn.remove(field);
     }
@@ -210,59 +247,69 @@ public class Game {
      * @return validTurn
      */
     public Character verifyCurrentTurn() {
+        boolean validTurn = true;
+        char fixedAxis = 0;
 
-        //TODO: validTurn =false when StartTile doesn't have a Tile.
-        if (fieldsChangedThisTurn.size()==0){
+        if (fieldsChangedThisTurn.size() == 0 || startFieldIsEmpty()) {
+            validTurn = false;
+        }
+
+        if (validTurn) {
+
+        /* fetch first X and all X coords */
+            int x = fieldsChangedThisTurn.get(0).getX();
+            ArrayList<Integer> xValues = fieldsChangedThisTurn.stream()
+                    .map(Field::getX)
+                    .collect(Collectors.toCollection(ArrayList<Integer>::new));
+
+        /* fetch first Y and All X coords */
+            int y = fieldsChangedThisTurn.get(0).getY();
+            ArrayList<Integer> yValues = fieldsChangedThisTurn.stream()
+                    .map(Field::getY)
+                    .collect(Collectors.toCollection(ArrayList<Integer>::new));
+
+        /* check if placed on single axis, if not -> invalidate turn */
+            if (Collections.frequency(xValues, x) != xValues.size()) {
+                if (Collections.frequency(yValues, y) != yValues.size())
+                    validTurn = false;  // Y and X are not equal for all tiles
+
+                fixedAxis = 'y';        // Y is equal for all tiles
+            } else
+                fixedAxis = 'x';        // X is equal for all tiles
+
+        /* check if there are gaps between placed letters */
+            if (fixedAxis == 'y') {
+                // check if all X coords are not null
+                for (x = Collections.min(xValues); x <= Collections.max(xValues); x++)
+                    if (gameBoard[y][x].getTile() == null && !xValues.contains(x))
+                        validTurn = false;
+            } else {
+                // check if all Y coords are not null
+                for (y = Collections.min(yValues); y <= Collections.max(yValues); y++)
+                    if (gameBoard[y][x].getTile() == null && !yValues.contains(y))
+                        validTurn = false;
+            }
+        }
+
+        if (validTurn) {
+            if (fieldsChangedThisTurn.size() == 1 && findWords(checkColumn(fieldsChangedThisTurn.get(0).getX())) == null) {
+                if (findWords(new ArrayList<>(Arrays.asList(gameBoard[fieldsChangedThisTurn.get(0).getY()]))) == null) {
+                    validTurn = false;
+                } else {
+                    fixedAxis = 'y';
+                }
+           }
+       }
+
+        if (validTurn) {
+            return fixedAxis;
+        } else {
             return null;
         }
 
-        boolean validTurn = true;
-        char fixedAxis;
-
-        /* fetch first X and all X coords */
-        int x = fieldsChangedThisTurn.get(0).getX();
-        ArrayList<Integer> xValues = fieldsChangedThisTurn.stream()
-                .map(Field::getX)
-                .collect(Collectors.toCollection(ArrayList<Integer>::new));
-
-        /* fetch first Y and All X coords */
-        int y = fieldsChangedThisTurn.get(0).getY();
-        ArrayList<Integer> yValues = fieldsChangedThisTurn.stream()
-                .map(Field::getY)
-                .collect(Collectors.toCollection(ArrayList<Integer>::new));
-
-        /* check if placed on single axis, if not -> invalidate turn */
-        if (Collections.frequency(xValues, x) != xValues.size()) {
-            if (Collections.frequency(yValues, y) != yValues.size())
-                validTurn = false;  // Y and X are not equal for all tiles
-
-            fixedAxis = 'y';        // Y is equal for all tiles
-        } else
-            fixedAxis = 'x';        // X is equal for all tiles
-
-        /* check if there are gaps between placed letters */
-        if (fixedAxis == 'y') {
-            // check if all X coords are not null
-            for (x = Collections.min(xValues); x <= Collections.max(xValues); x++)
-                if (gameBoard[x][y].getTile() == null && !xValues.contains(x))
-                    validTurn = false;
-        } else {
-            // check if all Y coords are not null
-            for (y = Collections.min(yValues); y <= Collections.max(yValues); y++)
-                if (gameBoard[x][y].getTile() == null && !yValues.contains(y))
-                    validTurn = false;
-        }
-       if (validTurn){
-           if (fieldsChangedThisTurn.size()==1 && findWords(checkColumn(fieldsChangedThisTurn.get(0).getX())) == null){
-               fixedAxis = 'y';
-           }
-           return fixedAxis;
-       } else {
-           return null;
-       }
     }
 
-    public String resolveWords(char fixedAxis){
+    public ArrayList<ArrayList<Field>> resolveWords(char fixedAxis) {
         ArrayList<ArrayList<Field>> wordsFound = new ArrayList<>();
         ArrayList<Field> word;
         switch (fixedAxis){
@@ -289,7 +336,7 @@ public class Game {
             default:
                 break;
         }
-        return String.valueOf(calculateTotalScore(wordsFound));
+        return wordsFound;
     }
 
     private int calculateTotalScore(ArrayList<ArrayList<Field>> wordsFound){
@@ -363,6 +410,14 @@ public class Game {
         return clonedGameBoard;
     }
 
+    private boolean startFieldIsEmpty() {
+        for (int y = 0; y < gameBoard.length; y++)
+            for (int x = 0; x < gameBoard.length; x++)
+                if (gameBoard[y][x].getFieldType() == FieldType.STARTTILE)
+                    return gameBoard[y][x].getTile() == null;
+        return false;
+    }
+
     @Override
     public String toString() {
         return "[" + id + "]["+language+"] " +boardType.toString().toLowerCase()
@@ -387,5 +442,12 @@ public class Game {
 
     public void sendMessage(User currentUser, String text) {
         messages.add(new Message(currentUser, text, new Timestamp(System.currentTimeMillis())));
+    }
+
+    public void fillCurrentRack() {
+        for (int i = 0; i < 8-currentRack.size(); i++) {
+            if (!getPot().isEmpty())
+            currentRack.add(getPot().get(new Random().nextInt(getPot().size())));
+        }
     }
 }

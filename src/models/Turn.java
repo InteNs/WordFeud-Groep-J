@@ -23,6 +23,31 @@ public class Turn {
         placedTiles = new ArrayList<>();
     }
 
+    public Turn(int id, int score, User user, TurnType type, ArrayList<Tile> placedTiles, ArrayList<Tile> playerRack){
+        this.id = id;
+        this.score = score;
+        this.user = user;
+        this.type = type;
+        rack = playerRack;
+        this.placedTiles = placedTiles;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public TurnType getType() {
+        return type;
+    }
+
     public void addPlacedTile(Tile tile) {
         placedTiles.add(tile);
     }

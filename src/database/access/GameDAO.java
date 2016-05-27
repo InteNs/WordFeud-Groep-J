@@ -2,6 +2,7 @@ package database.access;
 
 import database.SQL;
 import enumerations.*;
+import javafx.util.Pair;
 import models.*;
 
 import java.sql.ResultSet;
@@ -128,5 +129,57 @@ public class GameDAO extends DAO {
                 currentUser.getName(),
                 text
         );
+    }
+
+    public ArrayList<Pair<String,Boolean>> selectWords(Game game, ArrayList<String> wordsFoundThisTurn) {
+        ArrayList<Pair<String,Boolean>> results = new ArrayList<>();
+        wordsFoundThisTurn.forEach(s -> {
+            results.add(new Pair<>(s,database.count(SQL.COUNT.COUNTWORDS,s,game.getLanguage().toString())> 0));
+        });
+        return results;
+    }
+
+    public void insertTurn(Game game, Turn turn) {
+        database.insert(SQL.INSERT.INSERTTURN,
+                turn.getId(),
+                game.getId(),
+                turn.getUser().getName(),
+                turn.getScore(),
+                TurnType.format(turn.getType())
+        );
+
+        game.getCurrentRack().forEach(tile ->
+                database.insert(SQL.INSERT.INSERTRACKTILES,
+                        game.getId(),
+                        tile.getId(),
+                        turn.getId())
+        );
+
+        switch (turn.getType()){
+            case BEGIN:
+                break;
+            case END:
+                break;
+            case PASS:
+                break;
+            case RESIGN:
+                break;
+            case SWAP:
+                break;
+            case WORD:
+                turn.getPlacedTiles().forEach(tile ->
+                        database.insert(SQL.INSERT.INSERTPLACEDTILES,
+                                tile.getId(),
+                                game.getId(),
+                                turn.getId(),
+                                tile.getX()+1,
+                                tile.getY()+1,
+                                BoardType.format(game.getBoardType()),
+                                tile.getReplacedJokerCharacter())
+                        );
+                break;
+            case UNDEFINED:
+                break;
+        }
     }
 }

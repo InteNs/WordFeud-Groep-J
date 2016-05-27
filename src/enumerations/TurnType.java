@@ -20,4 +20,22 @@ public enum TurnType {
             default: return UNDEFINED;
         }
     }
+    public static String format(TurnType turnType) {
+        switch (turnType) {
+            case BEGIN:
+                return "begin";
+            case END:
+                return "end";
+            case PASS:
+                return "pass";
+            case RESIGN:
+                return "resign";
+            case SWAP:
+                return "swap";
+            case WORD:
+                return "word";
+            default:
+              return "";
+        }
+    }
 }

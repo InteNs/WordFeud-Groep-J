@@ -3,6 +3,7 @@ package views;
 
 import enumerations.Role;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -129,5 +130,13 @@ public class gameControlView extends View {
     
     public void shuffle(){
         parent.getGameBoardView().shuffleRack();
+    }
+
+    public void playWord() {
+        boolean aap = gameController.playWord(gameController.getSelectedGame()).isEmpty();
+        if (aap) {
+            gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
+        }
+        gameController.getSelectedGame().setBoardStateTo(gameController.getSelectedGame().getLastTurn());
     }
 }
