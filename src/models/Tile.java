@@ -25,6 +25,10 @@ public class Tile {
         this.y = y;
     }
 
+    public int getValue(){
+        return value;
+    }
+
     public int getId() {
         return id;
     }
