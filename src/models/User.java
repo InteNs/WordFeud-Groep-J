@@ -9,14 +9,12 @@ public class User {
     private String name;
     private String password;
     private ObservableList<Role> roles;
-    private ObservableList<Word> words;
     private int wins;
     private int loses;
 
     public User(String name) {
         this.name = name;
         roles = FXCollections.observableArrayList();
-        words = FXCollections.observableArrayList();
         wins = 0;
         loses = 0;
     }
@@ -25,16 +23,15 @@ public class User {
         this.name = name;
         this.password = password;
         roles = FXCollections.observableArrayList();
-        words = FXCollections.observableArrayList();
         wins = 0;
         loses = 0;
     }
+
 
     public User(String name, String password, Role startingRole) {
         this.name = name;
         this.password = password;
         roles = FXCollections.observableArrayList();
-        words = FXCollections.observableArrayList();
         roles.add(startingRole);
         wins = 0;
         loses = 0;
@@ -85,9 +82,6 @@ public class User {
         this.loses = loses;
     }
 
-    public void addWord(Word word) {
-        words.add(word);
-    }
 
     @Override
     public boolean equals(Object o) {

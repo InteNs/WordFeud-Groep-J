@@ -29,7 +29,7 @@ public enum WordStatus {
                 return "in afwachting";
 
             default:
-                return "";
+                return "error";
         }
     }
 }

@@ -27,18 +27,7 @@ public class WordDAO extends DAO {
         return wordList;
     }
 
-    public void setUserWords(User user) {
-        ResultSet rs = database.select(SQL.SELECT.SELECTUSERWORDS, user.getName());
-        try {
-            while (rs.next()) {
-                user.addWord(new Word(rs.getString("woord"), rs.getString("account_naam"), rs.getString("letterset_code"), WordStatus.parse(rs.getString("status"))));
-            }
-        } catch (SQLException e) {
-            printError(e);
-        }
-    }
-
-    public boolean updateWordStatus(Word word,String status){
-        return database.update(SQL.UPDATE.UPDATEWORDSTATUS,status,word.toString(),word.getOwner());
+    public boolean updateWordStatus(Word word, WordStatus status) {
+        return database.update(SQL.UPDATE.UPDATEWORDSTATUS, status.toString().toLowerCase(), word.toString(), word.getOwner());
     }
 }

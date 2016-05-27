@@ -49,7 +49,7 @@ public class WordListView extends View {
             accordion.getPanes().removeAll(acceptedWordPane, pendingWordPane, deniedWordPane);
         }
         accordion.setExpandedPane(myWordPane);
-        myWordList.setItems(wordController.getWords());
+        myWordList.setItems(wordController.getUserWords(session.getCurrentUser()));
 
         myWordList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             listIndex = (pendingWordList.getSelectionModel().getSelectedIndex());

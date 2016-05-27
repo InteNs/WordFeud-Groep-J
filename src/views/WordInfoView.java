@@ -65,7 +65,7 @@ public class WordInfoView extends View {
 
     @Override
     public void constructor() {
-        wordController.selectedWordProperty().addListener((observable, oldValue, newValue) -> {
+        wordController.getSelectedWord().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
                 return;
             }
@@ -80,7 +80,7 @@ public class WordInfoView extends View {
     }
 
     public void acceptWord() {
-        if (wordController.updateWordStatus(selectedWord, "accepted")) {
+        if (wordController.updateWordStatus(selectedWord, WordStatus.ACCEPTED)) {
             labelStatus.setTextFill(Color.web("green"));
             buttonAccept.setVisible(false);
             buttonDecline.setVisible(false);
@@ -94,7 +94,7 @@ public class WordInfoView extends View {
     }
 
     public void declineWord() {
-        if (wordController.updateWordStatus(selectedWord, "denied")) {
+        if (wordController.updateWordStatus(selectedWord, WordStatus.DENIED)) {
             labelStatus.setTextFill(Color.web("red"));
             buttonAccept.setVisible(false);
             buttonDecline.setVisible(false);
