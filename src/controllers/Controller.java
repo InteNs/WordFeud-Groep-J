@@ -36,7 +36,6 @@ public abstract class Controller {
         gameDAO = new GameDAO();
         userDAO = new UserDAO();
         wordDAO = new WordDAO();
-
     }
 
 

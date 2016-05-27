@@ -1,20 +1,11 @@
 package controllers;
 
-import database.access.UserDAO;
-import database.access.WordDAO;
-import enumerations.Role;
 import enumerations.WordStatus;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import models.User;
 import models.Word;
-import views.WordInfoView;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Optional;
 
 public class WordController extends Controller {
     private ObjectProperty<Word> selectedWord;
@@ -35,18 +26,6 @@ public class WordController extends Controller {
     @Override
     public void refill() {
 
-    }
-
-    public void setCurrentWord(Word currentWord) {
-        selectedWord.set(currentWord);
-    }
-
-    public void setWordList() {
-
-    }
-
-    public void setUserWords(User user) {
-        wordDAO.setUserWords(user);
     }
 
     public ObservableList<Word> getWords(WordStatus status) {

@@ -1,27 +1,14 @@
 package views;
 
-import controllers.WordController;
-import enumerations.GameState;
+
 import enumerations.Role;
 import enumerations.WordStatus;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.TilePane;
-import models.Competition;
-import models.User;
 import models.Word;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WordListView extends View {
     @FXML
@@ -44,7 +31,6 @@ public class WordListView extends View {
     Accordion accordion;
 
     private int listIndex;
-
 
     public void refresh() {
 
