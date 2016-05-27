@@ -76,15 +76,22 @@ public class FieldTileNode extends ImageView {
         if (field.getTile() == null)
             s = field.getFieldType().toString();
         else
-            s = field.getTile().toString().toUpperCase();
+            if (field.getTile().getValue() == 0)
+                s = field.getTile().toString().toUpperCase();
+             else
+                s = field.getTile().toString().toUpperCase() + "_" + field.getTile().getValue();
 
         String myString = s + ".png";
+        System.out.println(myString);
         return resourceFactory.getImage(myString, false);
     }
 
     private Image getImage(Tile tile) {
         String s;
-        s = tile.toString().toUpperCase();
+        if (tile.getValue() == 0)
+            s = "blank";
+        else
+            s = tile.toString().toUpperCase() + "_" + tile.getValue();
         String myString = s + ".png";
         return resourceFactory.getImage(myString, true);
     }
