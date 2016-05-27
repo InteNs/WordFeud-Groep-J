@@ -1,5 +1,6 @@
 package controllers;
 
+import enumerations.Language;
 import enumerations.Role;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -66,7 +67,8 @@ public class GameController extends Controller {
     }
 
     public void loadGame(Game game, Role gameMode) {
-        if (game == null) return;
+        if (game == null)
+            return;
         game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
         game.setTurns(gameDAO.selectTurns(game));
         game.setMessages(gameDAO.selectMessages(game));
@@ -121,5 +123,18 @@ public class GameController extends Controller {
         if (game != null)
             return game.getPot();
         return null;
+    }
+
+    public boolean challenge(Language language, User requester, User receiver, Competition comp) {
+
+        if (!requester.getName().equals(receiver.getName())) {
+            if (controllerFactory.getCompetitionController().isUserInCompetition(requester, comp)) {
+                if (!competitionDAO.alreadyInvited(requester.getName(), receiver.getName())) {
+                    gameDAO.createGame(comp.getId(), requester.getName(), language, receiver.getName());
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
