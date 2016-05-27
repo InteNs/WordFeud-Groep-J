@@ -12,7 +12,7 @@ public enum WordStatus {
                 return ACCEPTED;
             case "denied":
                 return DENIED;
-            case "peding":
+            case "pending":
                 return PENDING;
             default:
                 return UNDEFINED;
