@@ -82,7 +82,6 @@ public class FieldTileNode extends ImageView {
                 s = field.getTile().toString().toUpperCase() + "_" + field.getTile().getValue();
 
         String myString = s + ".png";
-        System.out.println(myString);
         return resourceFactory.getImage(myString, false);
     }
 
