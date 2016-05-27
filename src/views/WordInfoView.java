@@ -2,10 +2,12 @@ package views;
 
 import enumerations.Role;
 import enumerations.WordStatus;
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 import models.Word;
 import javafx.scene.paint.Color;
 
@@ -24,10 +26,13 @@ public class WordInfoView extends View {
     Button buttonAccept;
     @FXML
     Button buttonDecline;
+    @FXML
+    Label labelConfirm;
 
     @FXML
     Pane pane;
     private Word selectedWord;
+
 
     public void refresh() {
         if (session.getCurrentUser().hasRole(Role.MODERATOR) && selectedWord.getStatus() == WordStatus.PENDING) {
@@ -39,9 +44,6 @@ public class WordInfoView extends View {
             buttonDecline.setVisible(false);
         }
         labelStatus.setText("Status: " + WordStatus.format(selectedWord.getStatus()));
-        pane.isFocusTraversable();
-        pane.isFocused();
-        pane.requestFocus();
 
     }
 
@@ -59,6 +61,7 @@ public class WordInfoView extends View {
         }
 
     }
+
 
     @Override
     public void constructor() {
@@ -82,8 +85,10 @@ public class WordInfoView extends View {
             buttonAccept.setVisible(false);
             buttonDecline.setVisible(false);
             labelStatus.setVisible(true);
+            labelConfirm.setText(selectedWord + " is geaccepteerd!");
             parent.refresh();
             refresh();
+            doAnimation();
         }
 
     }
@@ -94,9 +99,20 @@ public class WordInfoView extends View {
             buttonAccept.setVisible(false);
             buttonDecline.setVisible(false);
             labelStatus.setVisible(true);
+            labelConfirm.setText(selectedWord + " is afgewezen!");
             parent.refresh();
             refresh();
+            doAnimation();
         }
+    }
+
+    private void doAnimation() {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(1000), labelConfirm);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        fadeOut.setCycleCount(1);
+        labelConfirm.setVisible(true);
+        fadeOut.play();
     }
 
 }

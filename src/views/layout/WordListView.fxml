@@ -19,7 +19,7 @@
                     <ListView fx:id="acceptedWordList"/>
                 </TitledPane>
                 <TitledPane fx:id="pendingWordPane" animated="true" text="Woorden in afwachting">
-                    <ListView fx:id="pendingWordList"/>
+                    <ListView onKeyPressed="#HandleKeyEvent" fx:id="pendingWordList"/>
                 </TitledPane>
                 <TitledPane fx:id="deniedWordPane" animated="true" text="Afgewezen woorden">
                     <ListView fx:id="deniedWordlist"/>

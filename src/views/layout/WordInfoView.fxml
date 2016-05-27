@@ -6,8 +6,8 @@
 <?import javafx.scene.text.Font?>
 
 <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-       prefHeight="449.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.WordInfoView">
+      prefHeight="449.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="views.WordInfoView">
     <children>
         <Label fx:id="labelWord" alignment="CENTER" contentDisplay="CENTER" layoutY="69.0" prefHeight="38.0"
                prefWidth="600.0" text="Woord">
@@ -39,6 +39,12 @@
                text="Saved" visible="false">
             <font>
                 <Font size="18.0"/>
+            </font>
+        </Label>
+        <Label fx:id="labelConfirm" alignment="CENTER" layoutY="14.0" prefHeight="17.0" prefWidth="600.0"
+               text="woord is &lt;action&gt;" textFill="#27e823" visible="false">
+            <font>
+                <Font size="20.0"/>
             </font>
         </Label>
     </children>

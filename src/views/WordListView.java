@@ -28,15 +28,10 @@ public class WordListView extends View {
     ListView<Word> myWordList;
     @FXML
     ListView<Word> acceptedWordList;
-
-
     @FXML
     ListView<Word> pendingWordList;
-
-
     @FXML
     ListView<Word> deniedWordlist;
-
     @FXML
     TitledPane acceptedWordPane;
     @FXML
@@ -47,6 +42,8 @@ public class WordListView extends View {
     TitledPane myWordPane;
     @FXML
     Accordion accordion;
+
+    private int listIndex;
 
 
     public void refresh() {
@@ -68,15 +65,32 @@ public class WordListView extends View {
         accordion.setExpandedPane(myWordPane);
         myWordList.setItems(wordController.getWords());
 
-        myWordList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-                select(newValue));
-        acceptedWordList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-                select(newValue));
-        deniedWordlist.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-                select(newValue));
-        pendingWordList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-                select(newValue));
+        myWordList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            listIndex = (pendingWordList.getSelectionModel().getSelectedIndex());
+            select(newValue);
+        });
+        acceptedWordList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            select(newValue);
+        });
+        deniedWordlist.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            listIndex = (pendingWordList.getSelectionModel().getSelectedIndex());
+            select(newValue);
+        });
+        pendingWordList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            listIndex = (pendingWordList.getSelectionModel().getSelectedIndex());
+            select(newValue);
+        });
 
+    }
+
+    public void HandleKeyEvent(KeyEvent ke) {
+        if (ke.getCode().toString().equals("Y")) {
+            parent.getWordInfoView().acceptWord();
+            pendingWordList.getSelectionModel().select(listIndex + 1);
+        } else if (ke.getCode().toString().equals("N")) {
+            parent.getWordInfoView().declineWord();
+            pendingWordList.getSelectionModel().select(listIndex + 1);
+        }
     }
 
     public void select(Word word) {

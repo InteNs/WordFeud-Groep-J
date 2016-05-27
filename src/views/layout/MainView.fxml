@@ -2,13 +2,14 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.MainView">
+<VBox stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="views.MainView">
     <ToolBar fx:id="toolBar" disable="true" prefHeight="40.0" prefWidth="200.0">
-        <ToggleButton mnemonicParsing="false" onAction="#toggleControl" text="verstop tabs" />
-        <Button mnemonicParsing="false" onAction="#refresh" text="herladen" />
-        <Button mnemonicParsing="false" onAction="#changePass" text="wachtwoord wijzigen" />
-        <Button mnemonicParsing="false" onAction="#logOut" text="uitloggen" />
-      <ProgressIndicator fx:id="loadIndicator" prefHeight="20.0" prefWidth="20.0" visible="false" />
+        <ToggleButton mnemonicParsing="false" onAction="#toggleControl" text="verstop tabs"/>
+        <Button mnemonicParsing="false" onAction="#refresh" text="herladen"/>
+        <Button mnemonicParsing="false" onAction="#changePass" text="wachtwoord wijzigen"/>
+        <Button mnemonicParsing="false" onAction="#logOut" text="uitloggen"/>
+        <ProgressIndicator fx:id="loadIndicator" prefHeight="20.0" prefWidth="20.0" visible="false"/>
     </ToolBar>
     <SplitPane fx:id="mainContent" dividerPositions="0.5" minWidth="1000" VBox.vgrow="ALWAYS">
         <TabPane fx:id="control" minWidth="396.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE"
@@ -20,7 +21,7 @@
             <fx:include fx:id="wordListView" source="WordListView.fxml"/>
         </TabPane>
         <VBox minHeight="720.0" minWidth="604.0" SplitPane.resizableWithParent="false">
-            <Region maxHeight="-Infinity" minHeight="-Infinity" styleClass="tab-aligned" />
+            <Region maxHeight="-Infinity" minHeight="-Infinity" styleClass="tab-aligned"/>
             <StackPane fx:id="content" VBox.vgrow="ALWAYS">
                 <fx:include fx:id="loginView" source="LoginView.fxml"/>
                 <fx:include fx:id="welcomeView" source="WelcomeView.fxml"/>

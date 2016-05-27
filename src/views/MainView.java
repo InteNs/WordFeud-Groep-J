@@ -168,4 +168,8 @@ public class MainView extends View implements Initializable {
     public GameBoardView getGameBoardView (){
        return gameBoardViewController;
     }
+
+    public WordInfoView getWordInfoView(){
+        return wordInfoViewController;
+    }
 }
