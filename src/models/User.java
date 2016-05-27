@@ -27,6 +27,7 @@ public class User {
         loses = 0;
     }
 
+
     public User(String name, String password, Role startingRole) {
         this.name = name;
         this.password = password;
@@ -80,6 +81,7 @@ public class User {
     public void setLoses(Integer loses) {
         this.loses = loses;
     }
+
 
     @Override
     public boolean equals(Object o) {

@@ -11,6 +11,7 @@ abstract class View {
     protected CompetitionController competitionController;
     protected SessionController session;
     protected ResourceFactory resourceFactory;
+    protected WordController wordController;
 
     public abstract void refresh();
     public abstract void constructor();
@@ -20,7 +21,9 @@ abstract class View {
         userController = controllerFactory.GetUserController();
         gameController = controllerFactory.getGameController();
         competitionController = controllerFactory.getCompetitionController();
+        wordController = controllerFactory.getWordController();
         session = controllerFactory.getSessionController();
+
         resourceFactory = new ResourceFactory();
         this.parent = parent;
     }

@@ -33,6 +33,7 @@ public class MainView extends View implements Initializable {
     @FXML public Tab gameControlView;
     @FXML public Tab userListView;
     @FXML public Tab gameListView;
+    @FXML public Pane wordInfoView;
 
     /*Declare your viewControllers here*/
     @FXML private UserListView userListViewController;
@@ -47,6 +48,8 @@ public class MainView extends View implements Initializable {
     @FXML private CreateCompetitionView createCompetitionViewController;
     @FXML private PasswordChangeView passwordChangeViewController;
     @FXML private gameControlView gameControlViewController;
+    @FXML private WordListView wordListViewController;
+    @FXML private WordInfoView wordInfoViewController;
 
     private ControllerFactory controllerFactory;
     private ArrayList<View> views;
@@ -76,7 +79,9 @@ public class MainView extends View implements Initializable {
                 userInfoViewController,
                 createCompetitionViewController,
                 passwordChangeViewController,
-                gameControlViewController
+                gameControlViewController,
+                wordListViewController,
+                wordInfoViewController
         ));
         views.forEach(view -> view.init(this));
     }
@@ -162,5 +167,9 @@ public class MainView extends View implements Initializable {
 
     public GameBoardView getGameBoardView (){
        return gameBoardViewController;
+    }
+
+    public WordInfoView getWordInfoView(){
+        return wordInfoViewController;
     }
 }

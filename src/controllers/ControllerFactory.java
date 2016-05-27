@@ -9,13 +9,15 @@ public class ControllerFactory {
     private GameController gameController;
     private CompetitionController competitionController;
     private SessionController sessionController;
+    private WordController wordController;
 
     public List<Controller> getControllers() {
         return Arrays.asList(
                 GetUserController(),
                 getGameController(),
                 getCompetitionController(),
-                getSessionController()
+                getSessionController(),
+                getWordController()
         );
     }
 
@@ -54,5 +56,11 @@ public class ControllerFactory {
             sessionController = new SessionController(this);
         }
         return sessionController;
+    }
+    public WordController getWordController() {
+        if (wordController== null) {
+            wordController = new WordController(this);
+        }
+        return wordController;
     }
 }
