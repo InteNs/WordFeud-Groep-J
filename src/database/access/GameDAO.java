@@ -129,4 +129,8 @@ public class GameDAO extends DAO {
                 text
         );
     }
+
+    public void createGame(int compId, String requester, Language language, String receiver) {
+        database.insert(SQL.INSERT.CREATEGAME, compId, requester, language.toString(), receiver);
+    }
 }

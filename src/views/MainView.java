@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -26,6 +27,7 @@ public class MainView extends View implements Initializable {
     @FXML public VBox createCompetitionView;
     @FXML public VBox competitionInfoView;
     @FXML public VBox passwordChangeView;
+    @FXML public VBox challengeView;
     @FXML public ProgressIndicator loadIndicator;
     @FXML public ToolBar toolBar;
     @FXML public TabPane control;
@@ -51,6 +53,7 @@ public class MainView extends View implements Initializable {
     @FXML private gameControlView gameControlViewController;
     @FXML private WordListView wordListViewController;
     @FXML private WordInfoView wordInfoViewController;
+    @FXML private ChallengeView challengeViewController;
 
     private ControllerFactory controllerFactory;
     private ArrayList<View> views;
@@ -83,7 +86,9 @@ public class MainView extends View implements Initializable {
                 passwordChangeViewController,
                 gameControlViewController,
                 wordListViewController,
-                wordInfoViewController
+                wordInfoViewController,
+                challengeViewController
+
         ));
         views.forEach(view -> view.init(this));
     }
