@@ -10,6 +10,7 @@ public class SQL {
         public static final String USERWITHCREDS = "SELECT\n  a.naam,\n  a.wachtwoord,\n  r.rol_type\nFROM account a\n  LEFT JOIN accountrol r ON a.naam = r.account_naam\nWHERE naam = ?\n      AND wachtwoord = ?";
         public static final String USERWITHNAME = "SELECT\n  a.naam,\n  a.wachtwoord,\n  r.rol_type\nFROM account a\n  LEFT JOIN accountrol r ON a.naam = accountrol.account_naam\nWHERE a.naam = ?";
         public static final String COMPFOROWNER = "SELECT id FROM competitie WHERE account_naam_eigenaar = ?";
+        public static final String SELECTUSERWORDS = "SELECT * FROM woordenboek WHERE account_naam = ?";
     }
 
     public class ALL {
@@ -18,6 +19,7 @@ public class SQL {
         public static final String COMPETITIONS = "SELECT C.id, C.omschrijving, C.account_naam_eigenaar, AVG(R.gemidddelde_score) AS gemidddelde_score FROM competitie AS C LEFT JOIN rank_avg AS R ON C.id = R.competitie_id GROUP BY C.id;";
         public static final String PLAYERSCOMPS = "SELECT * FROM deelnemer";
         public static final String WINSLOSES = "SELECT w.account_naam, wins,lost FROM rank_nr_wins w JOIN rank_nr_lost l ON w.account_naam = l.account_naam";
+        public static final String WORDS = "SELECT * FROM woordenboek WHERE account_naam != 'bookowner'";
     }
 
     public class INSERT {
@@ -38,7 +40,7 @@ public class SQL {
     
     public class UPDATE {
         public static final String UPDATEPASSWORD = "UPDATE account SET wachtwoord = ? WHERE naam = ?";
-                
+        public static final String UPDATEWORDSTATUS = "UPDATE woordenboek SET status = ? WHERE woord = ? AND account_naam = ?";
     }
 
     public class COUNT{

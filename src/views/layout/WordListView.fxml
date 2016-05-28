@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<Tab text="Woorden" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
+     fx:controller="views.WordListView">
+    <VBox spacing="5">
+        <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+        </padding>
+        <TextField fx:id="filterField" promptText="zoeken..."/>
+        <Accordion fx:id="accordion" VBox.vgrow="ALWAYS">
+            <panes>
+                <TitledPane fx:id="myWordsPane" animated="true" text="Mijn woorden">
+                    <ListView fx:id="myWordList"/>
+                </TitledPane>
+                <TitledPane fx:id="acceptedWordPane" animated="true" text="Geaccepteerde woorden">
+                    <ListView fx:id="acceptedWordList"/>
+                </TitledPane>
+                <TitledPane fx:id="pendingWordPane" animated="true" text="Woorden in afwachting">
+                    <ListView onKeyPressed="#HandleKeyEvent" fx:id="pendingWordList"/>
+                </TitledPane>
+                <TitledPane fx:id="deniedWordPane" animated="true" text="Afgewezen woorden">
+                    <ListView fx:id="deniedWordlist"/>
+                </TitledPane>
+            </panes>
+        </Accordion>
+    </VBox>
+</Tab>
