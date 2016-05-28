@@ -76,7 +76,7 @@ public class GameBoardView extends View {
                     });
 
                     fieldNode.setOnDragDetected(event -> {
-                        if (!selectedGame.getTurnBuilder().getFieldsChangedThisTurn().contains(fieldNode.getField()))
+                        if (!selectedGame.getTurnBuilder().getFieldsChanged().contains(fieldNode.getField()))
                             return;
                         prepareDrag(fieldNode);
                         tileBeingDragged = fieldNode.getField().getTile();

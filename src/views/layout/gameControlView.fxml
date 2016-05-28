@@ -48,10 +48,10 @@
                 </contextMenu>
             </Button>
         </HBox>
-        <HBox alignment="CENTER" prefWidth="0.0" VBox.vgrow="NEVER">
+        <HBox alignment="CENTER_LEFT" prefWidth="0.0" VBox.vgrow="NEVER">
             <VBox alignment="CENTER">
-                <Label fx:id="player1ScoreLabel" text="Player1:Score"/>
-                <Label fx:id="player2ScoreLabel" text="Player2:Score"/>
+                <Label fx:id="challengerLabel" text="Player1:Score" prefWidth="150"/>
+                <Label fx:id="opponentLabel" text="Player2:Score" prefWidth="150"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
             <Label fx:id="potLabel" text="Aantal letters in pot:15"/>

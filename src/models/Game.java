@@ -75,6 +75,19 @@ public class Game {
         else return null;
     }
 
+    public int getScore(User user, Turn selectedTurn){
+        int score = 0;
+        for (Turn turn : turns) {
+            if (turn.getUser().equals(user)){
+                score += turn.getScore();
+            }
+            if (turn.equals(selectedTurn)){
+                break;
+            }
+        }
+        return score;
+    }
+
     public int getCompetitionId(){
         return competitionId;
     }
@@ -142,8 +155,12 @@ public class Game {
         for (Turn turn : turns) {
             playingPot.removeAll(turn.getRack());
             playingPot.removeAll(turn.getPlacedTiles());
-            for (Tile tile : turn.getPlacedTiles())
+            ObservableList<Field> fieldsChanged = FXCollections.observableArrayList();
+            for (Tile tile : turn.getPlacedTiles()) {
                 gameBoard[tile.getY()][tile.getX()].setTile(tile);
+                fieldsChanged.add(gameBoard[tile.getY()][tile.getX()]);
+            }
+            turn.setWord(new TurnBuilder().getTurnWord(gameBoard,fieldsChanged));
 
             if(turn.equals(turnToDisplay)) {
 

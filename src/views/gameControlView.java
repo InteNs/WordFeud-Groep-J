@@ -8,10 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import models.Game;
-import models.Message;
-import models.Tile;
-import models.Turn;
+import models.*;
 import views.components.ChatCell;
 
 public class gameControlView extends View {
@@ -24,8 +21,8 @@ public class gameControlView extends View {
     @FXML private ContextMenu contextMenu;
     @FXML private Label potLabel;
     @FXML private Spinner<Turn> turnSpinner;
-    @FXML private Label player1ScoreLabel;
-    @FXML private Label player2ScoreLabel;
+    @FXML private Label challengerLabel;
+    @FXML private Label opponentLabel;
     @FXML private TextArea chatTextArea;
     @FXML private Tab chatTab;
     @FXML private Tab turnTab;
@@ -79,6 +76,16 @@ public class gameControlView extends View {
         setPotLabel(gameController.getSelectedGame());
         turnSpinner.getValueFactory().setValue(newValue);
         turnList.getSelectionModel().select(newValue);
+        Game game = gameController.getSelectedGame();
+        challengerLabel.setText(game.getChallenger() + ": " + game.getScore(game.getChallenger(),newValue));
+        opponentLabel.setText(game.getOpponent() + ": " + game.getScore(game.getOpponent(),newValue));
+        if (newValue.getUser().equals(gameController.getSelectedGame().getChallenger())){
+            opponentLabel.setStyle("");
+            challengerLabel.setStyle("-fx-font-weight: bold");
+        } else {
+            challengerLabel.setStyle("");
+            opponentLabel.setStyle("-fx-font-weight: bold");
+        }
     }
 
     private void setPotLabel(Game newValue) {
@@ -139,5 +146,6 @@ public class gameControlView extends View {
         gameController.setBoardState(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
         parent.getGameBoardView().displayGameBoard(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
         parent.getGameBoardView().displayPlayerRack(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+        selectTurn(gameController.getSelectedGame().getLastTurn());
     }
 }
