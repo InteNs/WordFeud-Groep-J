@@ -1,5 +1,7 @@
 package controllers;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
+import enumerations.GameState;
 import enumerations.Language;
 import enumerations.Role;
 import javafx.beans.property.ObjectProperty;
@@ -127,9 +129,9 @@ public class GameController extends Controller {
 
     public boolean challenge(Language language, User requester, User receiver, Competition comp) {
 
-        if (!requester.getName().equals(receiver.getName())) {
-            if (controllerFactory.getCompetitionController().isUserInCompetition(requester, comp)) {
-                if (!competitionDAO.alreadyInvited(requester.getName(), receiver.getName())) {
+        if (isUserInSelectedComp(requester, comp)) {
+            if (!this.playingGame(requester, receiver, comp)) {
+                if (validInvite(requester, receiver)) {
                     gameDAO.createGame(comp.getId(), requester.getName(), language, receiver.getName());
                     return true;
                 }
@@ -137,4 +139,29 @@ public class GameController extends Controller {
         }
         return false;
     }
+
+    private boolean validInvite(User requester, User receiver) {
+        if (!requester.getName().equals(receiver.getName())) return true;
+        return false;
+    }
+
+    private boolean isUserInSelectedComp(User requester, Competition comp) {
+        if (getCompetitionController().isUserInCompetition(requester, comp)) return true;
+        return false;
+    }
+
+
+    public boolean playingGame(User challenger, User opponent, Competition comp) {
+        for (Game g : games) {
+            if (g.getChallenger().equals(challenger) && g.getOpponent().equals(opponent) || (g.getChallenger().equals(opponent) && g.getOpponent().equals(challenger))) {
+                if (g.getGameState() != GameState.FINISHED) {
+                    if (g.getCompetitionId() == comp.getId()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 }

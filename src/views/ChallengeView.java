@@ -26,15 +26,15 @@ public class ChallengeView extends View {
         User receiver = userController.getSelectedUser();
 
         challenge.setText(null);
-        if (!languageBox.getSelectionModel().isEmpty()) {
+       if (!languageBox.getSelectionModel().isEmpty()) {
             if(!gameController.challenge(languageBox.getValue(), requester, receiver, comp)){
                 challenge.setTextFill(Color.RED);
-                challenge.setText("Niet in de juiste competitie, niet jezelf uitnodigen, geen 2 spellen met dezelfde tegenstander");
-            }
-        } else {
+                challenge.setText("Fout met uitnodigen");
+            } 
+       } else {
             challenge.setTextFill(Color.RED);
             challenge.setText("Er is geen taal aangewezen");
-        }
+       }
     }
 
     @Override
