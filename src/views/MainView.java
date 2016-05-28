@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import main.Main;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class MainView extends View implements Initializable {
     @FXML public Tab gameControlView;
     @FXML public Tab userListView;
     @FXML public Tab gameListView;
+    @FXML public Pane wordInfoView;
 
     /*Declare your viewControllers here*/
     @FXML private UserListView userListViewController;
@@ -49,13 +51,16 @@ public class MainView extends View implements Initializable {
     @FXML private CreateCompetitionView createCompetitionViewController;
     @FXML private PasswordChangeView passwordChangeViewController;
     @FXML private gameControlView gameControlViewController;
+    @FXML private WordListView wordListViewController;
+    @FXML private WordInfoView wordInfoViewController;
     @FXML private ChallengeView challengeViewController;
-    
+
     private ControllerFactory controllerFactory;
     private ArrayList<View> views;
 
     private int controlIndex;
     private double dividerPos;
+    private Main applicationLoader;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -80,7 +85,10 @@ public class MainView extends View implements Initializable {
                 createCompetitionViewController,
                 passwordChangeViewController,
                 gameControlViewController,
+                wordListViewController,
+                wordInfoViewController,
                 challengeViewController
+
         ));
         views.forEach(view -> view.init(this));
     }
@@ -109,12 +117,7 @@ public class MainView extends View implements Initializable {
 
     @FXML
     public void logOut() {
-        this.setContent(loginView);
-        this.setTab(gameListView);
-        toolBar.setDisable(true);
-        this.setControl(false);
-        views.forEach(View::refresh);
-        controllerFactory.resetControllers();
+        applicationLoader.loadApp();
     }
 
     /**
@@ -160,11 +163,19 @@ public class MainView extends View implements Initializable {
         });
     }
 
+    public void setApplicationLoader(Main applicationLoader) {
+        this.applicationLoader = applicationLoader;
+    }
+
     public void changePass() {
         setContent(passwordChangeView);
     }
 
     public GameBoardView getGameBoardView (){
        return gameBoardViewController;
+    }
+
+    public WordInfoView getWordInfoView(){
+        return wordInfoViewController;
     }
 }

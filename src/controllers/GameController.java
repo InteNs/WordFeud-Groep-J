@@ -152,6 +152,7 @@ public class GameController extends Controller {
 
 
     public boolean playingGame(User challenger, User opponent, Competition comp) {
+        getGames();
         for (Game g : games) {
             if (g.getChallenger().equals(challenger) && g.getOpponent().equals(opponent) || (g.getChallenger().equals(opponent) && g.getOpponent().equals(challenger))) {
                 if (g.getGameState() != GameState.FINISHED) {
