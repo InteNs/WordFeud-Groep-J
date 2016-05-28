@@ -18,6 +18,9 @@
     -fx-background-radius: 0;
 }
 
+.current-player-label {
+    -fx-font-weight: bold;
+}
 .chat-owned {
     -fx-background-color: #28aeff;
     -fx-background-radius: 5;

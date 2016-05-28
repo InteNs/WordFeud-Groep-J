@@ -8,7 +8,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import models.*;
+import models.Game;
+import models.Message;
+import models.Tile;
+import models.Turn;
 import views.components.ChatCell;
 
 public class gameControlView extends View {
@@ -30,6 +33,7 @@ public class gameControlView extends View {
 
     @Override
     public void refresh() {
+        showGame(gameController.getSelectedGame());
     }
 
     @Override
@@ -56,22 +60,26 @@ public class gameControlView extends View {
         );
 
         gameController.selectedGameProperty().addListener((o, v, newValue) -> {
-            if (newValue == null) return;
-            chatList.setItems(newValue.getMessages());
-            chatList.scrollTo(chatList.getItems().size());
-            turnList.setItems(newValue.getTurns());
-            turnSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(newValue.getTurns()));
-            selectTurn(newValue.getLastTurn());
-            turnList.scrollTo(newValue.getLastTurn());
-            setPotLabel(newValue);
-            setTabs(gameController.getCurrentRole());
+            showGame(newValue);
         });
 
         gameTabs.widthProperty().addListener((o, v, newValue) ->
                 gameTabs.setTabMinWidth((double) newValue / 2 - 23));
     }
 
+    private void showGame(Game game) {
+        if (game == null) return;
+        chatList.setItems(game.getMessages());
+        chatList.scrollTo(chatList.getItems().size());
+        turnList.setItems(game.getTurns());
+        turnSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(game.getTurns()));
+        selectTurn(game.getLastTurn());
+        turnList.scrollTo(game.getLastTurn());
+        setPotLabel(game);
+        setTabs(gameController.getCurrentRole());
+    }
     private void selectTurn(Turn newValue) {
+        if (newValue == null) return;
         gameController.setSelectedTurn(newValue);
         setPotLabel(gameController.getSelectedGame());
         turnSpinner.getValueFactory().setValue(newValue);
@@ -79,12 +87,27 @@ public class gameControlView extends View {
         Game game = gameController.getSelectedGame();
         challengerLabel.setText(game.getChallenger() + ": " + game.getScore(game.getChallenger(),newValue));
         opponentLabel.setText(game.getOpponent() + ": " + game.getScore(game.getOpponent(),newValue));
-        if (newValue.getUser().equals(gameController.getSelectedGame().getChallenger())){
-            opponentLabel.setStyle("");
-            challengerLabel.setStyle("-fx-font-weight: bold");
+        if (game.getOpponent().equals(newValue.getUser())) {
+            if (gameController.getCurrentRole() == Role.PLAYER)
+                highLight(challengerLabel);
+            if (gameController.getCurrentRole() == Role.OBSERVER)
+                highLight(opponentLabel);
         } else {
-            challengerLabel.setStyle("");
-            opponentLabel.setStyle("-fx-font-weight: bold");
+            if (gameController.getCurrentRole() == Role.PLAYER)
+                highLight(opponentLabel);
+            if (gameController.getCurrentRole() == Role.OBSERVER)
+                highLight(challengerLabel);
+        }
+    }
+
+    private void highLight(Label label) {
+        if (label == challengerLabel) {
+            challengerLabel.getStyleClass().setAll("current-player-label");
+            opponentLabel.getStyleClass().clear();
+        }
+        else if (label == opponentLabel) {
+            opponentLabel.getStyleClass().setAll("current-player-label");
+            challengerLabel.getStyleClass().clear();
         }
     }
 

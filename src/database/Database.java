@@ -5,6 +5,7 @@ import com.mysql.jdbc.CommunicationsException;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Database {
 
@@ -79,6 +80,10 @@ public class Database {
      */
     public boolean insert(String query, Object... values) {
         return execute(query, values);
+    }
+
+    public boolean insert(String query, Collection<Object> values) {
+        return execute(query, values.toArray());
     }
 
     /**

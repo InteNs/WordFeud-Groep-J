@@ -96,4 +96,9 @@ public class Tile {
         x = null;
         y = null;
     }
+
+    public String getReplacedJokerAsString() {
+        if (replacedJokerCharacter == null) return null;
+        return replacedJokerCharacter.toString();
+    }
 }

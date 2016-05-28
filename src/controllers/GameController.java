@@ -83,6 +83,7 @@ public class GameController extends Controller {
             Game game = games.get(games.indexOf(getSelectedGame()));
             loadGame(game, getCurrentRole());
             setSelectedGame(game);
+            setSelectedTurn(game.getLastTurn());
 
             if (game.getTurns().contains(getSelectedTurn())) {
                 Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));

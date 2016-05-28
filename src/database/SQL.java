@@ -29,8 +29,8 @@ public class SQL {
         public static final String INSERTPLAYER = "INSERT INTO deelnemer (account_naam, competitie_id) VALUES (?, ?);";
         public static final String INSERTMESSAGE = "INSERT INTO wordfeud.chatregel (chatregel.spel_id,chatregel.account_naam,chatregel.bericht) VALUES (?,?,?);";
         public static final String INSERTTURN = "INSERT INTO wordfeud.beurt(id, spel_id, account_naam, score, aktie_type) VALUES (?,?,?,?,?);";
-        public static final String INSERTPLACEDTILES = "INSERT INTO wordfeud.gelegdeletter(letter_id, spel_id, beurt_id, tegel_x, tegel_y, tegel_bord_naam, blancoletterkarakter) VALUES (?,?,?,?,?,?,?);";
-        public static final String INSERTRACKTILES = "INSERT INTO wordfeud.letterbakjeletter(spel_id, letter_id, beurt_id) VALUES (?,?,?);";
+        public static final String INSERTPLACEDTILES = "INSERT INTO wordfeud.gelegdeletter(letter_id, spel_id, beurt_id, tegel_x, tegel_y, tegel_bord_naam, blancoletterkarakter) VALUES";
+        public static final String INSERTRACKTILES = "INSERT INTO wordfeud.letterbakjeletter(spel_id, letter_id, beurt_id) VALUES";
 
     }
     

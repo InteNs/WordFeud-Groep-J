@@ -286,9 +286,7 @@ public class TurnBuilder {
     }
 
     public void fillCurrentRack(ObservableList<Tile> playingPot) {
-        for (int i = 0; i < 8 - currentRack.size(); i++) {
-            if (!playingPot.isEmpty())
-                currentRack.add(playingPot.get(new Random().nextInt(playingPot.size())));
-        }
+        while (currentRack.size() < 7 && !playingPot.isEmpty())
+            currentRack.add(playingPot.get(new Random().nextInt(playingPot.size())));
     }
 }

@@ -8,6 +8,7 @@ import models.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GameDAO extends DAO {
 
@@ -49,6 +50,7 @@ public class GameDAO extends DAO {
         database.close();
         return games;
     }
+
     public ArrayList<Turn> selectTurns(Game game) {
         ArrayList<Turn> turns = new ArrayList<>();
         ArrayList<Tile> tiles = new ArrayList<>();
@@ -77,10 +79,10 @@ public class GameDAO extends DAO {
 
                 if (records.getInt("gelegd_id") > 0) {
                     for (Tile tile : tiles) {
-                        if(tile.getId() == records.getInt("gelegd_id")) {
-                            if(!turn.hasPlacedTile(tile)) {
-                                tile.setX(records.getInt("tegel_x")-1);
-                                tile.setY(records.getInt("tegel_y")-1);
+                        if (tile.getId() == records.getInt("gelegd_id")) {
+                            if (!turn.hasPlacedTile(tile)) {
+                                tile.setX(records.getInt("tegel_x") - 1);
+                                tile.setY(records.getInt("tegel_y") - 1);
                                 if (records.getString("blancoletterkarakter") != null)
                                     tile.replaceJoker(records.getString("blancoletterkarakter").charAt(0));
                                 turn.addPlacedTile(tile);
@@ -90,7 +92,7 @@ public class GameDAO extends DAO {
                     }
                 }
                 if (records.getInt("plank_id") > 0) {
-                    for (Tile tile: tiles) {
+                    for (Tile tile : tiles) {
                         if (tile.getId() == records.getInt("plank_id")) {
                             if (!turn.hasRackTile(tile))
                                 turn.addRackTile(tile);
@@ -111,10 +113,10 @@ public class GameDAO extends DAO {
         Field[][] fields = new Field[15][15];
         ResultSet records = database.select(SQL.SELECT.TILESFORBOARD, boardType.toString());
         try {
-            while (records.next()){
-                int x=records.getInt("x")-1;
-                int y = records.getInt("y")-1;
-                fields[(y)][x] = new Field(FieldType.parse(records.getString("tegeltype_soort")),x,y);
+            while (records.next()) {
+                int x = records.getInt("x") - 1;
+                int y = records.getInt("y") - 1;
+                fields[(y)][x] = new Field(FieldType.parse(records.getString("tegeltype_soort")), x, y);
             }
         } catch (SQLException e) {
             printError(e);
@@ -131,10 +133,10 @@ public class GameDAO extends DAO {
         );
     }
 
-    public ArrayList<Pair<String,Boolean>> selectWords(Game game, ArrayList<String> wordsFoundThisTurn) {
-        ArrayList<Pair<String,Boolean>> results = new ArrayList<>();
+    public ArrayList<Pair<String, Boolean>> selectWords(Game game, ArrayList<String> wordsFoundThisTurn) {
+        ArrayList<Pair<String, Boolean>> results = new ArrayList<>();
         wordsFoundThisTurn.forEach(s -> {
-            results.add(new Pair<>(s,database.count(SQL.COUNT.COUNTWORDS,s,game.getLanguage().toString())> 0));
+            results.add(new Pair<>(s, database.count(SQL.COUNT.COUNTWORDS, s, game.getLanguage().toString()) > 0));
         });
         return results;
     }
@@ -147,15 +149,18 @@ public class GameDAO extends DAO {
                 turn.getScore(),
                 TurnType.format(turn.getType())
         );
+        StringBuilder insertRackQuery = new StringBuilder(SQL.INSERT.INSERTRACKTILES);
+        ArrayList<Object> insertRackvalues = new ArrayList<>();
+        turn.getRack().forEach(tile -> {
+            insertRackQuery.append("(?,?,?),");
+            insertRackvalues.addAll(Arrays.asList(game.getId(), tile.getId(), turn.getId()));
+        });
+        insertRackQuery.deleteCharAt(insertRackQuery.length()-1);
+        insertRackQuery.append((";"));
 
-        turn.getRack().forEach(tile ->
-                database.insert(SQL.INSERT.INSERTRACKTILES,
-                        game.getId(),
-                        tile.getId(),
-                        turn.getId())
-        );
+        database.insert(insertRackQuery.toString(), insertRackvalues);
 
-        switch (turn.getType()){
+        switch (turn.getType()) {
             case BEGIN:
                 break;
             case END:
@@ -167,16 +172,23 @@ public class GameDAO extends DAO {
             case SWAP:
                 break;
             case WORD:
-                turn.getPlacedTiles().forEach(tile ->
-                        database.insert(SQL.INSERT.INSERTPLACEDTILES,
-                                tile.getId(),
-                                game.getId(),
-                                turn.getId(),
-                                tile.getX()+1,
-                                tile.getY()+1,
-                                BoardType.format(game.getBoardType()),
-                                tile.getReplacedJokerCharacter())
-                        );
+                StringBuilder insertPlacedQuery = new StringBuilder(SQL.INSERT.INSERTPLACEDTILES);
+                ArrayList<Object> insertPlacedValues = new ArrayList<>();
+                turn.getPlacedTiles().forEach(tile -> {
+                    insertPlacedQuery.append("(?,?,?,?,?,?,?),");
+                    insertPlacedValues.addAll(Arrays.asList(
+                            tile.getId(),
+                            game.getId(),
+                            turn.getId(),
+                            tile.getX() + 1,
+                            tile.getY() + 1,
+                            BoardType.format(game.getBoardType()),
+                            tile.getReplacedJokerAsString())
+                    );
+                });
+                insertPlacedQuery.deleteCharAt(insertPlacedQuery.length()-1);
+                insertPlacedQuery.append(";");
+                database.insert(insertPlacedQuery.toString(), insertPlacedValues);
                 break;
             case UNDEFINED:
                 break;
