@@ -137,5 +137,7 @@ public class gameControlView extends View {
             gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
         }
         gameController.setBoardState(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+        parent.getGameBoardView().displayGameBoard(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+        parent.getGameBoardView().displayPlayerRack(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
     }
 }

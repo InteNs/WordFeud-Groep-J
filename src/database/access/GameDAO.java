@@ -148,7 +148,7 @@ public class GameDAO extends DAO {
                 TurnType.format(turn.getType())
         );
 
-        game.getCurrentRack().forEach(tile ->
+        turn.getRack().forEach(tile ->
                 database.insert(SQL.INSERT.INSERTRACKTILES,
                         game.getId(),
                         tile.getId(),

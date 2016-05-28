@@ -97,7 +97,7 @@ public class GameController extends Controller {
     }
 
     public void setPlayerRack(Game game, List<Tile> tiles) {
-        game.getCurrentRack().setAll(tiles);
+        game.getTurnBuilder().getCurrentRack().setAll(tiles);
     }
 
     public void setBoardState(Game game, Turn turn) {
@@ -105,11 +105,11 @@ public class GameController extends Controller {
     }
 
     public void placeTile(Game game, Field field, Tile tile) {
-        game.addPlacedTile(field, tile);
+        game.getTurnBuilder().addPlacedTile(field, tile);
     }
 
     public void removeTile(Game game, Field field) {
-        game.removePlacedTile(field);
+        game.getTurnBuilder().removePlacedTile(field);
     }
 
     public void sendMessage(Game game, User user, String text) {
@@ -129,20 +129,20 @@ public class GameController extends Controller {
 
     public ArrayList<String> playWord(Game selectedGame) {
         ArrayList<String> wordsNotInDictionary =
-                gameDAO.selectWords(selectedGame, selectedGame.getWordsFoundThisTurn())
+                gameDAO.selectWords(selectedGame, selectedGame.getTurnBuilder().getWordsFoundThisTurn())
                         .stream()
                         .filter(pair -> !pair.getValue())
                         .map(Pair::getKey)
                         .collect(Collectors.toCollection(ArrayList::new));
 
-        if (wordsNotInDictionary.size() == 0){
-            selectedGame.fillCurrentRack();
-            gameDAO.insertTurn(selectedGame, new Turn((selectedGame.getLastTurn().getId()+1),
-                    selectedGame.getScoreThisTurn(),
+        if (wordsNotInDictionary.size() == 0) {
+            selectedGame.getTurnBuilder().fillCurrentRack(selectedGame.getPot());
+            Turn newTurn =   selectedGame.getTurnBuilder().buildTurn(
+                    selectedGame.getLastTurn().getId() + 1,
                     getSession().getCurrentUser(),
-                    TurnType.WORD,
-                    selectedGame.getTilesChangedThisTurn(),
-                    new ArrayList<>(selectedGame.getCurrentRack())));
+                    TurnType.WORD);
+            gameDAO.insertTurn(selectedGame,newTurn);
+            selectedGame.addTurn(newTurn);
         }
         return wordsNotInDictionary;
     }

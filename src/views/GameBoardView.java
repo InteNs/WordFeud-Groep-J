@@ -39,8 +39,8 @@ public class GameBoardView extends View {
     @FXML
     private Tile tileBeingDragged;
 
-    private void displayGameBoard(Game selectedGame, Turn selectedTurn) {
-        Field[][] gameBoard = selectedGame.getGameBoard();
+    public void displayGameBoard(Game selectedGame, Turn selectedTurn) {
+        Field[][] gameBoard = selectedGame.getTurnBuilder().getGameBoard();
         gameBoardGrid.getChildren().clear();
         for (int y = 0; y < gameBoard.length; y++)
             for (int x = 0; x < gameBoard.length; x++) {
@@ -76,7 +76,7 @@ public class GameBoardView extends View {
                     });
 
                     fieldNode.setOnDragDetected(event -> {
-                        if (!selectedGame.getFieldsChangedThisTurn().contains(fieldNode.getField()))
+                        if (!selectedGame.getTurnBuilder().getFieldsChangedThisTurn().contains(fieldNode.getField()))
                             return;
                         prepareDrag(fieldNode);
                         tileBeingDragged = fieldNode.getField().getTile();
@@ -97,14 +97,14 @@ public class GameBoardView extends View {
             }
     }
 
-    private void displayPlayerRack(Game selectedGame, Turn selectedTurn) {
+    public void displayPlayerRack(Game selectedGame, Turn selectedTurn) {
         nodes = FXCollections.observableArrayList();
         playerRackGrid.getChildren().setAll(nodes);
 
         nodes.addListener((ListChangeListener<? super FieldTileNode>) observable ->
                 playerRackGrid.getChildren().setAll(nodes));
 
-        selectedGame.getCurrentRack().forEach(tile -> {
+        selectedGame.getTurnBuilder().getCurrentRack().forEach(tile -> {
             FieldTileNode tileNode = new FieldTileNode(tile, resourceFactory);
             nodes.add(tileNode);
             tileNode.setCursor(Cursor.OPEN_HAND);
@@ -195,9 +195,11 @@ public class GameBoardView extends View {
     @Override
     public void constructor() {
         gameController.selectedTurnProperty().addListener((observable, oldValue, selectedTurn) -> {
-            gameController.setBoardState(gameController.getSelectedGame(), selectedTurn);
-            displayGameBoard(gameController.getSelectedGame(), selectedTurn);
-            displayPlayerRack(gameController.getSelectedGame(), selectedTurn);
+            if (selectedTurn != null) {
+                gameController.setBoardState(gameController.getSelectedGame(), selectedTurn);
+                displayGameBoard(gameController.getSelectedGame(), selectedTurn);
+                displayPlayerRack(gameController.getSelectedGame(), selectedTurn);
+            }
         });
     }
 
