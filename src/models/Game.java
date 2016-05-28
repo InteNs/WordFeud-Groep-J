@@ -209,8 +209,12 @@ public class Game {
 
     @Override
     public String toString() {
-        return "[" + id + "][" + language + "] " + boardType.toString().toLowerCase()
+        String s = "[" + id + "][" + language + "] " + boardType.toString().toLowerCase()
                 + " spel tussen " + challenger + " en " + opponent;
+        if (getLastTurn() != null) {
+            s += "\n" + getLastTurn();
+        }
+        return s;
     }
 
     @Override

@@ -18,6 +18,16 @@
     -fx-background-radius: 0;
 }
 
+.spinner:disabled {
+    -fx-opacity: 1;
+}
+.spinner:disabled .text-field {
+    -fx-text-fill: #000000;
+    -fx-prompt-text-fill: #000000;
+    -fx-opacity: 1.0;
+    -fx-background-color: white;
+}
+
 .current-player-label {
     -fx-font-weight: bold;
 }
@@ -28,8 +38,9 @@
 }
 
 .chat-label {
-    -fx-font-size: 50%;
-    -fx-fill: gray;
+    -fx-font-size: 80%;
+    -fx-text-fill: grey;
+    -fx-font-weight: lighter;
 }
 
 .chat-norm {

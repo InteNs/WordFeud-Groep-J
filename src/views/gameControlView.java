@@ -8,10 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import models.Game;
-import models.Message;
-import models.Tile;
-import models.Turn;
+import models.*;
 import views.components.ChatCell;
 
 public class gameControlView extends View {
@@ -60,8 +57,10 @@ public class gameControlView extends View {
 
         turnSpinner.setOnMousePressed(event -> turnList.scrollTo(turnSpinner.getValue()));
 
-        gameController.currentRoleProperty().addListener((observable, oldValue, newValue) ->
-                setTabs(newValue)
+        gameController.currentRoleProperty().addListener((observable, oldValue, newValue) -> {
+            if (gameController.getSelectedTurn() != null)
+                setTabs(newValue, gameController.getSelectedTurn().getUser());
+            }
         );
 
         gameController.selectedGameProperty().addListener((o, v, newValue) -> {
@@ -81,8 +80,8 @@ public class gameControlView extends View {
         selectTurn(game.getLastTurn());
         turnList.scrollTo(game.getLastTurn());
         setPotLabel(game);
-        setTabs(gameController.getCurrentRole());
-        chatTab.setDisable(game.getPlayers().contains(session.getCurrentUser()));
+        setTabs(gameController.getCurrentRole(), game.getLastTurn().getUser());
+        chatTab.setDisable(!game.getPlayers().contains(session.getCurrentUser()));
     }
     private void selectTurn(Turn newValue) {
         if (newValue == null) return;
@@ -121,14 +120,14 @@ public class gameControlView extends View {
         potLabel.setText("Aantal letters in pot: " + newValue.getPot().size());
     }
 
-    private void setTabs(Role gameMode) {
+    private void setTabs(Role gameMode, User currentTurnUser) {
         if(gameMode == Role.PLAYER) {
             disableTurnControls(true);
-            disableGameControls(false);
+            disableGameControls(currentTurnUser.equals(session.getCurrentUser()), false);
             gameTabs.getSelectionModel().select(chatTab);
         } else if(gameMode == Role.OBSERVER) {
             disableTurnControls(false);
-            disableGameControls(true);
+            disableGameControls(true, true);
             gameTabs.getSelectionModel().select(turnTab);
         }
     }
@@ -141,13 +140,13 @@ public class gameControlView extends View {
         }
     }
 
-    private void disableGameControls(boolean disable) {
+    private void disableGameControls(boolean disable, boolean includeRackControls) {
         playButton.setDisable(disable);
         passButton.setDisable(disable);
         swapButton.setDisable(disable);
         resignButton.setDisable(disable);
-        shuffleButton.setDisable(disable);
-        clearButton.setDisable(disable);
+        shuffleButton.setDisable(includeRackControls);
+        clearButton.setDisable(includeRackControls);
     }
 
     private void disableTurnControls(boolean disable) {

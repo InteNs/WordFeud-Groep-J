@@ -166,9 +166,7 @@ public class GameBoardView extends View {
                     event.consume();
                 });
             }
-
         });
-
     }
 
     public void shuffleRack() {
