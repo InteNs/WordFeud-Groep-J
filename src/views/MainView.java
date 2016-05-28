@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import main.Main;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class MainView extends View implements Initializable {
 
     private int controlIndex;
     private double dividerPos;
+    private Main applicationLoader;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -110,12 +112,7 @@ public class MainView extends View implements Initializable {
 
     @FXML
     public void logOut() {
-        this.setContent(loginView);
-        this.setTab(gameListView);
-        toolBar.setDisable(true);
-        this.setControl(false);
-        views.forEach(View::refresh);
-        controllerFactory.resetControllers();
+        applicationLoader.loadApp();
     }
 
     /**
@@ -159,6 +156,10 @@ public class MainView extends View implements Initializable {
         control.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == gameControlView) setContent(gameBoardView);
         });
+    }
+
+    public void setApplicationLoader(Main applicationLoader) {
+        this.applicationLoader = applicationLoader;
     }
 
     public void changePass() {
