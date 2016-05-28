@@ -20,6 +20,11 @@ public class gameControlView extends View {
     @FXML private ListView<Turn> turnList;
     @FXML private HBox buttonBox;
     @FXML private Button playButton;
+    @FXML private Button passButton;
+    @FXML private Button swapButton;
+    @FXML private Button resignButton;
+    @FXML private Button shuffleButton;
+    @FXML private Button clearButton;
     @FXML private Button extraFunctionsButton;
     @FXML private ContextMenu contextMenu;
     @FXML private Label potLabel;
@@ -77,6 +82,7 @@ public class gameControlView extends View {
         turnList.scrollTo(game.getLastTurn());
         setPotLabel(game);
         setTabs(gameController.getCurrentRole());
+        chatTab.setDisable(game.getPlayers().contains(session.getCurrentUser()));
     }
     private void selectTurn(Turn newValue) {
         if (newValue == null) return;
@@ -136,9 +142,12 @@ public class gameControlView extends View {
     }
 
     private void disableGameControls(boolean disable) {
-        buttonBox.setDisable(disable);
-        chatTab.setDisable(disable);
-
+        playButton.setDisable(disable);
+        passButton.setDisable(disable);
+        swapButton.setDisable(disable);
+        resignButton.setDisable(disable);
+        shuffleButton.setDisable(disable);
+        clearButton.setDisable(disable);
     }
 
     private void disableTurnControls(boolean disable) {
@@ -153,6 +162,7 @@ public class gameControlView extends View {
             chatTextArea.clear();
         }
     }
+
     public void showJokers( ) {
         parent.getGameBoardView().showJokers();
     }

@@ -6,10 +6,11 @@ import enumerations.Language;
 import enumerations.Role;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Objects;
 
 public class Game {
 
@@ -24,7 +25,6 @@ public class Game {
     private BoardType boardType;
     private ObservableList<Turn> turns;
     private Field[][] emptyGameBoard;   // SHOULD NOT BE OVERWRITTEN
-    private Field[][] gameBoard;
     private ObservableList<Tile> allTiles;
     private ObservableList<Tile> playingPot;
     private ObservableList<Tile> currentRack;
@@ -45,12 +45,12 @@ public class Game {
         this.playingPot = FXCollections.observableArrayList();
     }
 
-    public void setGameMode(Role gameMode) {
-        this.gameMode = gameMode;
-    }
-
     public Role getGameMode() {
         return gameMode;
+    }
+
+    public void setGameMode(Role gameMode) {
+        this.gameMode = gameMode;
     }
 
     public boolean isGame() {
@@ -69,26 +69,31 @@ public class Game {
         return turns;
     }
 
+    public void setTurns(ArrayList<Turn> turns) {
+        this.turns.setAll(turns);
+        this.turns.removeIf(Objects::isNull);
+    }
+
     public Turn getLastTurn() {
         if (turns != null && !turns.isEmpty())
-            return turns.get(turns.size()-1);
+            return turns.get(turns.size() - 1);
         else return null;
     }
 
-    public int getScore(User user, Turn selectedTurn){
+    public int getScore(User user, Turn selectedTurn) {
         int score = 0;
         for (Turn turn : turns) {
-            if (turn.getUser().equals(user)){
+            if (turn.getUser().equals(user)) {
                 score += turn.getScore();
             }
-            if (turn.equals(selectedTurn)){
+            if (turn.equals(selectedTurn)) {
                 break;
             }
         }
         return score;
     }
 
-    public int getCompetitionId(){
+    public int getCompetitionId() {
         return competitionId;
     }
 
@@ -106,6 +111,10 @@ public class Game {
 
     public GameState getGameState() {
         return gameState;
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 
     public BoardType getBoardType() {
@@ -126,31 +135,22 @@ public class Game {
         return diff;
     }
 
-    public void setTurns(ArrayList<Turn> turns) {
-        this.turns.setAll(turns);
-        this.turns.removeAll(Collections.singleton(null));
-        }
-
     /**
      * set the initial board for this game
+     *
      * @param fields the fields for this board
      */
     public void setBoard(Field[][] fields) {
         this.emptyGameBoard = fields;
     }
 
-    public void setGameState(GameState gameState) {
-        this.gameState = gameState;
-    }
-
-
-
     /**
      * set the board to a specific turn that has already completed
+     *
      * @param turnToDisplay the last turn to be added to the board
      */
     public void setBoardStateTo(Turn turnToDisplay, User watcher) {
-        gameBoard = cloneGameBoard(emptyGameBoard);
+        Field[][] gameBoard = cloneGameBoard(emptyGameBoard);
         playingPot.setAll(allTiles);
         for (Turn turn : turns) {
             playingPot.removeAll(turn.getRack());
@@ -160,27 +160,27 @@ public class Game {
                 gameBoard[tile.getY()][tile.getX()].setTile(tile);
                 fieldsChanged.add(gameBoard[tile.getY()][tile.getX()]);
             }
-            turn.setWord(new TurnBuilder().getTurnWord(gameBoard,fieldsChanged));
+            turn.setWord(new TurnBuilder().getTurnWord(gameBoard, fieldsChanged));
 
-            if(turn.equals(turnToDisplay)) {
+            if (turn.equals(turnToDisplay)) {
 
-                if(gameMode == Role.OBSERVER  || turn.getUser().equals(watcher))
+                if (gameMode == Role.OBSERVER || turn.getUser().equals(watcher))
                     currentRack.setAll(turn.getRack());
-                else if(isLastTurn(turn)) {
+                else if (isLastTurn(turn)) {
                     currentRack.setAll(turns.get(turns.indexOf(turn) - 1).getRack());
                 }
-                turnBuilder = new TurnBuilder(gameBoard,currentRack);
+                turnBuilder = new TurnBuilder(gameBoard, currentRack);
                 return;
             }
         }
     }
 
-    public void setPot(ArrayList<Tile> tilesForPot) {
-        allTiles.setAll(tilesForPot);
-    }
-
     public ObservableList<Tile> getPot() {
         return playingPot;
+    }
+
+    public void setPot(ArrayList<Tile> tilesForPot) {
+        allTiles.setAll(tilesForPot);
     }
 
     public TurnBuilder getTurnBuilder() {
@@ -196,11 +196,11 @@ public class Game {
         return selectedTurn.equals(getLastTurn());
     }
 
-    private Field[][] cloneGameBoard(Field[][] emptyGameBoard){
+    private Field[][] cloneGameBoard(Field[][] emptyGameBoard) {
         Field[][] clonedGameBoard = new Field[15][15];
         for (int y = 0; y < emptyGameBoard.length; y++) {
             for (int x = 0; x < emptyGameBoard.length; x++) {
-                clonedGameBoard[y][x] = new Field(emptyGameBoard[y][x].getFieldType(),x,y);
+                clonedGameBoard[y][x] = new Field(emptyGameBoard[y][x].getFieldType(), x, y);
             }
         }
         return clonedGameBoard;
@@ -209,8 +209,8 @@ public class Game {
 
     @Override
     public String toString() {
-        return "[" + id + "]["+language+"] " +boardType.toString().toLowerCase()
-                +" spel tussen " + challenger + " en " + opponent;
+        return "[" + id + "][" + language + "] " + boardType.toString().toLowerCase()
+                + " spel tussen " + challenger + " en " + opponent;
     }
 
     @Override

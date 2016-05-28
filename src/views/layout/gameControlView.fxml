@@ -13,7 +13,7 @@
         <HBox fx:id="buttonBox" alignment="CENTER" spacing="5.0" VBox.vgrow="NEVER">
             <Button fx:id="playButton" prefHeight="50.0" prefWidth="10000" text="Speel" onAction="#playWord"/>
             <Button fx:id="shuffleButton" prefHeight="50.0" prefWidth="10000" onAction="#shuffle" text="Shuffle"/>
-            <Button prefHeight="50.0" prefWidth="10000" text="Clear"/>
+            <Button fx:id="clearButton" prefHeight="50.0" prefWidth="10000" text="Clear"/>
             <Button fx:id="extraFunctionsButton" prefHeight="50.0" prefWidth="10000" text="Overig">
                 <contextMenu>
                     <ContextMenu fx:id="contextMenu" anchorLocation="CONTENT_TOP_RIGHT">
@@ -25,17 +25,17 @@
                             </CustomMenuItem>
                             <CustomMenuItem text="Unspecified Action">
                                 <content>
-                                    <Button prefHeight="50.0" prefWidth="100.0" text="Ruilen"/>
+                                    <Button fx:id="swapButton" prefHeight="50.0" prefWidth="100.0" text="Ruilen"/>
                                 </content>
                             </CustomMenuItem>
                             <CustomMenuItem text="Unspecified Action">
                                 <content>
-                                    <Button prefHeight="50.0" prefWidth="100.0" text="Opgeven"/>
+                                    <Button fx:id="resignButton" prefHeight="50.0" prefWidth="100.0" text="Opgeven"/>
                                 </content>
                             </CustomMenuItem>
                             <CustomMenuItem text="Unspecified Action">
                                 <content>
-                                    <Button prefHeight="50.0" prefWidth="100.0" text="Pass"/>
+                                    <Button fx:id="passButton" prefHeight="50.0" prefWidth="100.0" text="Pass"/>
                                 </content>
                             </CustomMenuItem>
                             <CustomMenuItem text="Unspecified Action">
