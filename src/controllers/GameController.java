@@ -10,7 +10,6 @@ import javafx.util.Pair;
 import models.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -102,7 +101,7 @@ public class GameController extends Controller {
     }
 
     public void setBoardState(Game game, Turn turn) {
-        game.setBoardStateTo(turn);
+        game.setBoardStateTo(turn, getSession().getCurrentUser());
     }
 
     public void placeTile(Game game, Field field, Tile tile) {

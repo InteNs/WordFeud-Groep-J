@@ -1,11 +1,8 @@
 package models;
 
-import controllers.ControllerFactory;
-import controllers.GameController;
 import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
-import enumerations.Role;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,8 +39,6 @@ public class GameTest {
 
     @Test
     public void checkRow() throws Exception {
-        GameController gameController = new ControllerFactory().getGameController();
-        gameController.loadGame(game, Role.PLAYER);
-        game.setBoardStateTo(game.getTurns().get(game.getTurns().size() - 1));
+
     }
 }

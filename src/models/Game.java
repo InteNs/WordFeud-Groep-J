@@ -201,7 +201,7 @@ public class Game {
      * set the board to a specific turn that has already completed
      * @param turnToDisplay the last turn to be added to the board
      */
-    public void setBoardStateTo(Turn turnToDisplay) {
+    public void setBoardStateTo(Turn turnToDisplay, User watcher) {
         gameBoard = cloneGameBoard(emptyGameBoard);
         playingPot.setAll(allTiles);
         for (Turn turn : turns) {
@@ -211,7 +211,8 @@ public class Game {
                 gameBoard[tile.getY()][tile.getX()].setTile(tile);
 
             if(turn.equals(turnToDisplay)) {
-                if(gameMode == Role.OBSERVER)
+
+                if(gameMode == Role.OBSERVER  || turn.getUser().equals(watcher))
                     currentRack.setAll(turn.getRack());
                 else if(isLastTurn(turn))
                     currentRack.setAll(turns.get(turns.indexOf(turn)-1).getRack());
