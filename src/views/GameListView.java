@@ -6,6 +6,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import models.Game;
+import views.components.GameCell;
 
 import java.util.function.Predicate;
 
@@ -27,37 +28,35 @@ public class GameListView extends View {
     @FXML private ChoiceBox<Role> userRoleBox;
 
     private FilteredList<Game> filteredGames;
-    private Predicate<Game> filterText, filterComp, filterState, filterUser;
-    private Role currentRole;
-    private GameState currentState;
+    private Predicate<Game> filterText, filterComp, filterUser;
 
     public void refresh() {
-        lists.getItems().remove(compGameLists);
-        gameStateBox.getSelectionModel().select(GameState.PLAYING);
-        userRoleBox.getSelectionModel().select(Role.PLAYER);
     }
 
     @Override
     public void constructor() {
         filteredGames = new FilteredList<>(gameController.getGames());
+
+        //fill the choiceboxes according to current users roles and gamestates
         gameStateBox.getItems().setAll(GameState.PLAYING, GameState.FINISHED);
         userRoleBox.getItems().setAll(session.getCurrentUser().getRoles().filtered(role ->
                 role == Role.OBSERVER || role == Role.PLAYER));
 
+        //define the filters for different lists
         filterText = game ->
                 game.toString().toLowerCase().contains(filterField.getText().toLowerCase());
         filterComp = game -> competitionController.getSelectedCompetition() != null
                 && competitionController.getSelectedCompetition().getGames().contains(game);
-        filterState = game -> game.getGameState() == currentState;
-        filterUser = game -> game.getPlayers().contains(session.getCurrentUser());
+        filterUser = game ->
+                game.getPlayers().contains(session.getCurrentUser());
 
+        //when player changes to observer or player hide and show proper stuff in view
         userRoleBox.setOnAction(event -> {
-            currentRole = userRoleBox.getValue();
-            gameController.setCurrentRole(currentRole);
+            gameController.setCurrentRole(userRoleBox.getValue());
             gameController.setSelectedGame(null);
             compGameLists.getPanes().remove(allCompGamesPane);
             gameLists.getPanes().remove(allGamesPane);
-            if (currentRole == Role.PLAYER) {
+            if (gameController.getCurrentRole() == Role.PLAYER) {
                 gameStateBox.getSelectionModel().select(0);
                 gameStateBox.setVisible(false);
                 gameLists.setExpandedPane(myGamesPane);
@@ -72,21 +71,30 @@ public class GameListView extends View {
             }
         });
 
-        gameStateBox.setOnAction(event -> {
-            currentState = gameStateBox.getValue();
-            filter();
-        });
+        //add listener to gamestatebox and search field that filters the games when changed
+        gameStateBox.setOnAction(event -> filter(gameStateBox.getValue()));
+        filterField.textProperty().addListener(observable -> filter(gameStateBox.getValue()));
 
-        filterField.textProperty().addListener(observable -> {
-            filter();
-        });
+        //add action listeners to lists
+        myGamesList.setOnMouseClicked(event -> selectGame(myGamesList.getSelectionModel().getSelectedItem()));
+        allGamesList.setOnMouseClicked(event -> selectGame(allGamesList.getSelectionModel().getSelectedItem()));
+        compGameLists.setOnMouseClicked(event -> selectGame(myCompGamesList.getSelectionModel().getSelectedItem()));
+        allCompGamesList.setOnMouseClicked(event -> selectGame(allCompGamesList.getSelectionModel().getSelectedItem()));
 
+        //fill all lists and select default viewing mode
         allGamesList.setItems(filteredGames);
         myGamesList.setItems(filteredGames.filtered(filterUser));
         lists.getItems().remove(compGameLists);
         gameStateBox.getSelectionModel().select(GameState.PLAYING);
         userRoleBox.getSelectionModel().select(Role.PLAYER);
 
+        //set custom cell
+        allGamesList.setCellFactory(param -> new GameCell(session.getCurrentUser()));
+        myGamesList.setCellFactory(param -> new GameCell(session.getCurrentUser()));
+        myCompGamesList.setCellFactory(param -> new GameCell(session.getCurrentUser()));
+        allCompGamesList.setCellFactory(param -> new GameCell(session.getCurrentUser()));
+
+        //when a competition is selected elsewhere(and has games/users, show or hide the lists, and update titles
         competitionController.selectedCompetitionProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.getPlayers().isEmpty()) {
                 if(!lists.getItems().contains(compGameLists)) lists.getItems().add(compGameLists);
@@ -100,18 +108,11 @@ public class GameListView extends View {
             }
         });
 
-        myGamesList.getSelectionModel().selectedItemProperty().addListener((o1, o2, newValue) -> {
-            selectGame(newValue);
-        });
-
-        allGamesList.getSelectionModel().selectedItemProperty().addListener((o1, o2, newValue) -> {
-            selectGame(newValue);
-        });
     }
 
-    private void filter() {
+    private void filter(GameState state) {
         filteredGames.setPredicate(null);
-        filteredGames.setPredicate(filterState.and(filterText));
+        filteredGames.setPredicate(((Predicate<Game>) game -> game.getGameState() == state).and(filterText));
     }
 
     private void selectGame(Game game) {

@@ -17,7 +17,7 @@ public class potView extends View {
     public potView(ObservableList<Tile> pot, ResourceFactory resourceFactory) {
 
         Stage window = new Stage();
-        window.initModality(Modality.APPLICATION_MODAL);
+        window.initModality(Modality.WINDOW_MODAL);
         window.initStyle(StageStyle.UNDECORATED);
         TilePane tilePane = new TilePane();
         tilePane.setMaxHeight(400);

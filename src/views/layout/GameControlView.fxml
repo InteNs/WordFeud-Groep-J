@@ -11,31 +11,31 @@
         </padding>
         <Spinner fx:id="turnSpinner" prefHeight="50.0" prefWidth="999999.0"/>
         <HBox fx:id="buttonBox" alignment="CENTER" spacing="5.0" VBox.vgrow="NEVER">
-            <Button fx:id="playButton" prefHeight="50.0" prefWidth="10000" text="Speel"/>
+            <Button fx:id="playButton" prefHeight="50.0" prefWidth="10000" text="Speel" onAction="#playWord"/>
             <Button fx:id="shuffleButton" prefHeight="50.0" prefWidth="10000" onAction="#shuffle" text="Shuffle"/>
-            <Button prefHeight="50.0" prefWidth="10000" text="Clear"/>
+            <Button fx:id="clearButton" prefHeight="50.0" prefWidth="10000" onAction="#clear" text="Clear"/>
             <Button fx:id="extraFunctionsButton" prefHeight="50.0" prefWidth="10000" text="Overig">
                 <contextMenu>
                     <ContextMenu fx:id="contextMenu" anchorLocation="CONTENT_TOP_RIGHT">
                         <items>
                             <CustomMenuItem hideOnClick="false" text="Unspecified Action">
                                 <content>
-                                    <Button prefHeight="50.0" prefWidth="100.0" text="Jokers" onAction="#showJokers" />
+                                    <Button prefHeight="50.0" prefWidth="100.0" text="Jokers" onAction="#showJokers"/>
                                 </content>
                             </CustomMenuItem>
                             <CustomMenuItem text="Unspecified Action">
                                 <content>
-                                    <Button prefHeight="50.0" prefWidth="100.0" text="Ruilen"/>
+                                    <Button fx:id="swapButton" prefHeight="50.0" prefWidth="100.0" text="Ruilen"/>
                                 </content>
                             </CustomMenuItem>
                             <CustomMenuItem text="Unspecified Action">
                                 <content>
-                                    <Button prefHeight="50.0" prefWidth="100.0" text="Opgeven"/>
+                                    <Button fx:id="resignButton" prefHeight="50.0" prefWidth="100.0" text="Opgeven"/>
                                 </content>
                             </CustomMenuItem>
                             <CustomMenuItem text="Unspecified Action">
                                 <content>
-                                    <Button prefHeight="50.0" prefWidth="100.0" text="Pass"/>
+                                    <Button fx:id="passButton" prefHeight="50.0" prefWidth="100.0" text="Pass"/>
                                 </content>
                             </CustomMenuItem>
                             <CustomMenuItem text="Unspecified Action">
@@ -48,28 +48,24 @@
                 </contextMenu>
             </Button>
         </HBox>
-        <HBox alignment="CENTER" prefWidth="0.0" VBox.vgrow="NEVER">
+        <HBox alignment="CENTER_LEFT" prefWidth="0.0" VBox.vgrow="NEVER">
             <VBox alignment="CENTER">
-                <Label fx:id="player1ScoreLabel" text="Player1:Score"/>
-                <Label fx:id="player2ScoreLabel" text="Player2:Score"/>
+                <Label fx:id="challengerLabel" text="Player1:Score" prefWidth="150"/>
+                <Label fx:id="opponentLabel" text="Player2:Score" prefWidth="150"/>
             </VBox>
             <Region HBox.hgrow="ALWAYS"/>
             <Label fx:id="potLabel" text="Aantal letters in pot:15"/>
         </HBox>
-        <TabPane fx:id="gameTabs" VBox.vgrow="ALWAYS">
-            <Tab fx:id="turnTab" closable="false" text="Spelhistorie">
-                <ListView fx:id="turnList" fixedCellSize="25.0"/>
-            </Tab>
-            <Tab fx:id="chatTab" closable="false" text="Chat">
-                <VBox spacing="5">
-                    <ListView fx:id="chatList" VBox.vgrow="ALWAYS"/>
-                    <HBox spacing="5">
-                        <TextArea fx:id="chatTextArea" wrapText="true" prefHeight="45.0" prefWidth="0.0"
-                                  HBox.hgrow="ALWAYS"/>
-                        <Button onAction="#sendMessage" prefHeight="45.0" prefWidth="80.0" text="Stuur"/>
-                    </HBox>
-                </VBox>
-            </Tab>
-        </TabPane>
+        <StackPane fx:id="turnChat" VBox.vgrow="ALWAYS">
+            <ListView fx:id="turnList" fixedCellSize="25.0"/>
+            <VBox fx:id="chatBox" spacing="5">
+                <ListView fx:id="chatList" VBox.vgrow="ALWAYS"/>
+                <HBox spacing="5">
+                    <TextArea fx:id="chatTextArea" wrapText="true" prefHeight="45.0" prefWidth="0.0"
+                              HBox.hgrow="ALWAYS"/>
+                    <Button onAction="#sendMessage" prefHeight="45.0" prefWidth="80.0" text="Stuur"/>
+                </HBox>
+            </VBox>
+        </StackPane>
     </VBox>
 </Tab>

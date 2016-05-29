@@ -5,8 +5,8 @@ public class Tile {
     private int value;
     private Character character;
     private Character replacedJokerCharacter;
-    private int x;
-    private int y;
+    private Integer x;
+    private Integer y;
     private int id;
 
     public Tile(Character character) {
@@ -23,6 +23,10 @@ public class Tile {
         this.character = character;
         this.x = x;
         this.y = y;
+    }
+
+    public Character getReplacedJokerCharacter() {
+        return replacedJokerCharacter;
     }
 
     public int getValue(){
@@ -86,5 +90,15 @@ public class Tile {
     @Override
     public int hashCode() {
         return id;
+    }
+
+    public void clearCoordinates() {
+        x = null;
+        y = null;
+    }
+
+    public String getReplacedJokerAsString() {
+        if (replacedJokerCharacter == null) return null;
+        return replacedJokerCharacter.toString();
     }
 }

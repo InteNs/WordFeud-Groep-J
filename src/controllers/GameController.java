@@ -4,13 +4,17 @@ import com.sun.org.apache.xpath.internal.SourceTree;
 import enumerations.GameState;
 import enumerations.Language;
 import enumerations.Role;
+import enumerations.TurnType;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Pair;
 import models.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameController extends Controller {
 
@@ -97,19 +101,23 @@ public class GameController extends Controller {
     }
 
     public void setPlayerRack(Game game, List<Tile> tiles) {
-        game.getCurrentRack().setAll(tiles);
+        game.getTurnBuilder().getCurrentRack().setAll(tiles);
     }
 
     public void setBoardState(Game game, Turn turn) {
-        game.setBoardStateTo(turn);
+        game.setBoardStateTo(turn, getSession().getCurrentUser());
     }
 
     public void placeTile(Game game, Field field, Tile tile) {
-        game.addPlacedTile(field, tile);
+        game.getTurnBuilder().addPlacedTile(field, tile);
     }
 
     public void removeTile(Game game, Field field) {
-        game.removePlacedTile(field);
+        game.getTurnBuilder().removePlacedTile(field);
+    }
+
+    public ObservableList<Field> getFieldsChanged(Game game) {
+        return game.getTurnBuilder().getFieldsChanged();
     }
 
     public void sendMessage(Game game, User user, String text) {
@@ -119,6 +127,26 @@ public class GameController extends Controller {
 
     public boolean isJokerTile(Tile tile) {
         return tile.getCharacter() == '?';
+    }
+
+    public ArrayList<String> playWord(Game selectedGame) {
+        ArrayList<String> wordsNotInDictionary =
+                gameDAO.selectWords(selectedGame, selectedGame.getTurnBuilder().getWordsFoundThisTurn())
+                        .stream()
+                        .filter(pair -> !pair.getValue())
+                        .map(Pair::getKey)
+                        .collect(Collectors.toCollection(ArrayList::new));
+
+        if (wordsNotInDictionary.size() == 0) {
+            selectedGame.getTurnBuilder().fillCurrentRack(selectedGame.getPot());
+            Turn newTurn =   selectedGame.getTurnBuilder().buildTurn(
+                    selectedGame.getLastTurn().getId() + 1,
+                    getSession().getCurrentUser(),
+                    TurnType.WORD);
+            gameDAO.insertTurn(selectedGame,newTurn);
+            selectedGame.addTurn(newTurn);
+        }
+        return wordsNotInDictionary;
     }
 
     public ObservableList<Tile> showPot(Game game) {

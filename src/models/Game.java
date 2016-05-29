@@ -10,13 +10,13 @@ import javafx.collections.ObservableList;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 public class Game {
 
     private int id;
     private int competitionId;
+    private int lastTurnNumber;
     private ObservableList<Message> messages;
     private GameState gameState;
     private Role gameMode;
@@ -26,34 +26,33 @@ public class Game {
     private BoardType boardType;
     private ObservableList<Turn> turns;
     private Field[][] emptyGameBoard;   // SHOULD NOT BE OVERWRITTEN
-    private Field[][] gameBoard;        // USE THIS INSTEAD
-    private ObservableList<Tile> currentRack;
-    private ObservableList<Field> fieldsChangedThisTurn;
-    private ObservableList<Tile> playingPot;
     private ObservableList<Tile> allTiles;
+    private ObservableList<Tile> playingPot;
+    private ObservableList<Tile> currentRack;
+    private TurnBuilder turnBuilder;
 
-    public Game(int id, int competitionId, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
+    public Game(int id, int lastTurnNumber, int competitionId, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
         this.id = id;
+        this.lastTurnNumber = lastTurnNumber;
         this.competitionId = competitionId;
         this.challenger = challenger;
         this.opponent = opponent;
         this.gameState = state;
         this.language = language;
         this.boardType = boardType;
-        this.fieldsChangedThisTurn = FXCollections.observableArrayList();
-        this.currentRack = FXCollections.observableArrayList();
         this.messages = FXCollections.observableArrayList();
         this.turns = FXCollections.observableArrayList();
-        this.playingPot = FXCollections.observableArrayList();
         this.allTiles = FXCollections.observableArrayList();
-    }
-
-    public void setGameMode(Role gameMode) {
-        this.gameMode = gameMode;
+        this.currentRack = FXCollections.observableArrayList();
+        this.playingPot = FXCollections.observableArrayList();
     }
 
     public Role getGameMode() {
         return gameMode;
+    }
+
+    public void setGameMode(Role gameMode) {
+        this.gameMode = gameMode;
     }
 
     public boolean isGame() {
@@ -72,13 +71,31 @@ public class Game {
         return turns;
     }
 
+    public void setTurns(ArrayList<Turn> turns) {
+        this.turns.setAll(turns);
+        this.turns.removeIf(Objects::isNull);
+    }
+
     public Turn getLastTurn() {
         if (turns != null && !turns.isEmpty())
-            return turns.get(turns.size()-1);
+            return turns.get(turns.size() - 1);
         else return null;
     }
 
-    public int getCompetitionId(){
+    public int getScore(User user, Turn selectedTurn) {
+        int score = 0;
+        for (Turn turn : turns) {
+            if (turn.getUser().equals(user)) {
+                score += turn.getScore();
+            }
+            if (turn.equals(selectedTurn)) {
+                break;
+            }
+        }
+        return score;
+    }
+
+    public int getCompetitionId() {
         return competitionId;
     }
 
@@ -98,24 +115,16 @@ public class Game {
         return gameState;
     }
 
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+
     public BoardType getBoardType() {
         return boardType;
     }
 
     public Language getLanguage() {
         return language;
-    }
-
-    public ObservableList<Tile> getCurrentRack() {
-        return currentRack;
-    }
-
-    public ObservableList<Field> getFieldsChangedThisTurn() {
-        return fieldsChangedThisTurn;
-    }
-
-    public Field[][] getGameBoard() {
-        return gameBoard;
     }
 
     public int setMessages(ArrayList<Message> messages) {
@@ -128,164 +137,88 @@ public class Game {
         return diff;
     }
 
-    public int setTurns(ArrayList<Turn> turns) {
-        int diff = 0;
-        if (this.turns != null){
-            diff = turns.size() - this.turns.size();
-            this.turns.setAll(turns);
-        }
-        return diff;
-    }
-
     /**
      * set the initial board for this game
+     *
      * @param fields the fields for this board
      */
     public void setBoard(Field[][] fields) {
         this.emptyGameBoard = fields;
-        gameBoard = cloneGameBoard(emptyGameBoard);
-    }
-
-    public void setGameState(GameState gameState) {
-        this.gameState = gameState;
-    }
-
-    public void addPlacedTile(Field field, Tile tile) {
-        field.setTile(tile);
-        fieldsChangedThisTurn.add(field);
     }
 
     /**
      * set the board to a specific turn that has already completed
+     *
      * @param turnToDisplay the last turn to be added to the board
      */
-    public void setBoardStateTo(Turn turnToDisplay) {
-        gameBoard = cloneGameBoard(emptyGameBoard);
+    public void setBoardStateTo(Turn turnToDisplay, User watcher) {
+        Field[][] gameBoard = cloneGameBoard(emptyGameBoard);
         playingPot.setAll(allTiles);
         for (Turn turn : turns) {
             playingPot.removeAll(turn.getRack());
             playingPot.removeAll(turn.getPlacedTiles());
-            for (Tile tile : turn.getPlacedTiles())
+            ObservableList<Field> fieldsChanged = FXCollections.observableArrayList();
+            for (Tile tile : turn.getPlacedTiles()) {
                 gameBoard[tile.getY()][tile.getX()].setTile(tile);
+                fieldsChanged.add(gameBoard[tile.getY()][tile.getX()]);
+            }
+            turn.setWord(new TurnBuilder().getTurnWord(gameBoard, fieldsChanged));
 
-            if(turn.equals(turnToDisplay)) {
-                if(gameMode == Role.OBSERVER)
+            if (turn.equals(turnToDisplay)) {
+
+                if (gameMode == Role.OBSERVER || turn.getUser().equals(watcher))
                     currentRack.setAll(turn.getRack());
-                else if(isLastTurn(turn))
-                    currentRack.setAll(turns.get(turns.indexOf(turn)-1).getRack());
+                else if (isLastTurn(turn)) {
+                    currentRack.setAll(turns.get(turns.indexOf(turn) - 1).getRack());
+                }
+                turnBuilder = new TurnBuilder(gameBoard, currentRack);
                 return;
             }
         }
-    }
-
-    public void setPot(ArrayList<Tile> tilesForPot) {
-        allTiles.setAll(tilesForPot);
     }
 
     public ObservableList<Tile> getPot() {
         return playingPot;
     }
 
-    public void removePlacedTile(Field field) {
-        field.setTile(null);
-        fieldsChangedThisTurn.remove(field);
+    public void setPot(ArrayList<Tile> tilesForPot) {
+        allTiles.setAll(tilesForPot);
     }
+
+    public TurnBuilder getTurnBuilder() {
+        return turnBuilder;
+    }
+
 
     public boolean hasPlayer(User user) {
         return getPlayers().contains(user);
     }
 
     public boolean isLastTurn(Turn selectedTurn) {
-        return selectedTurn == getLastTurn();
+        return selectedTurn.equals(getLastTurn());
     }
 
-    /**
-     * check if the current state of the game is a valid turn
-     * @return validTurn
-     */
-    public boolean verifyCurrentTurn() {
-
-        //TODO: validTurn =false when StartTile doesn't have a Tile.
-        if (fieldsChangedThisTurn.size()==0){
-            return false;
-        }
-
-        boolean validTurn = true;
-        char fixedAxis;
-
-        /* fetch first X and all X coords */
-        int x = fieldsChangedThisTurn.get(0).getX();
-        ArrayList<Integer> xValues = fieldsChangedThisTurn.stream()
-                .map(Field::getX)
-                .collect(Collectors.toCollection(ArrayList<Integer>::new));
-
-        /* fetch first Y and All X coords */
-        int y = fieldsChangedThisTurn.get(0).getY();
-        ArrayList<Integer> yValues = fieldsChangedThisTurn.stream()
-                .map(Field::getY)
-                .collect(Collectors.toCollection(ArrayList<Integer>::new));
-
-        /* check if placed on single axis, if not -> invalidate turn */
-        if (Collections.frequency(xValues, x) != xValues.size()) {
-            if (Collections.frequency(yValues, y) != yValues.size())
-                validTurn = false;  // Y and X are not equal for all tiles
-
-            fixedAxis = 'y';        // Y is equal for all tiles
-        } else
-            fixedAxis = 'x';        // X is equal for all tiles
-
-        /* check if there are gaps between placed letters */
-        if (fixedAxis == 'y') {
-            // check if all X coords are not null
-            for (x = Collections.min(xValues); x <= Collections.max(xValues); x++)
-                if (gameBoard[x][y].getTile() == null && !xValues.contains(x))
-                    validTurn = false;
-        } else {
-            // check if all Y coords are not null
-            for (y = Collections.min(yValues); y <= Collections.max(yValues); y++)
-                if (gameBoard[x][y].getTile() == null && !yValues.contains(y))
-                    validTurn = false;
-        }
-
-        return validTurn;
-    }
-
-    //TODO:
-    public int calculateWordScore(Field field){
-        return 5;
-    }
-
-    public boolean checkRow() {
-        String rowStr = null;
-        for (Field[] aGameBoard : gameBoard) {
-            rowStr = Arrays.toString(aGameBoard);
-            System.out.println(rowStr);
-        }
-        return false;
-    }
-
-    //TODO: This method receives a row/column from the GameBoard. It then checks if there are any words that can be made.
-    //TODO: If words can be made, crosschecks with the words in the WordsList of the Game class --> new Word found? --> add word to the WordList and calculate score.
-    //TODO: similar to making a string from the row, we also(or instead) need a Field arraylist so we can calculate score using fieldType and letterValue,
-    //TODO: off course we already have the field array, we use it to make the string
-    private ArrayList<String> getWords(String word){
-    return null;
-    }
-
-    private Field[][] cloneGameBoard(Field[][] emptyGameBoard){
+    private Field[][] cloneGameBoard(Field[][] emptyGameBoard) {
         Field[][] clonedGameBoard = new Field[15][15];
         for (int y = 0; y < emptyGameBoard.length; y++) {
             for (int x = 0; x < emptyGameBoard.length; x++) {
-                clonedGameBoard[y][x] = new Field(emptyGameBoard[y][x].getFieldType(),x,y);
+                clonedGameBoard[y][x] = new Field(emptyGameBoard[y][x].getFieldType(), x, y);
             }
         }
         return clonedGameBoard;
     }
 
+    public User getNextUser() {
+        if ( (lastTurnNumber & 1) == 0 )
+           return challenger;
+        else
+           return opponent;
+    }
+
     @Override
     public String toString() {
-        return "[" + id + "]["+language+"] " +boardType.toString().toLowerCase()
-                +" spel tussen " + challenger + " en " + opponent;
+        return "[" + id + "][" + language + "] " + boardType.toString().toLowerCase()
+                + " spel tussen " + challenger + " en " + opponent;
     }
 
     @Override
@@ -306,5 +239,10 @@ public class Game {
 
     public void sendMessage(User currentUser, String text) {
         messages.add(new Message(currentUser, text, new Timestamp(System.currentTimeMillis())));
+    }
+
+
+    public void addTurn(Turn newTurn) {
+        turns.add(newTurn);
     }
 }

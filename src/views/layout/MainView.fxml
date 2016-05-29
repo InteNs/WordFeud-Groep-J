@@ -12,15 +12,15 @@
         <ProgressIndicator fx:id="loadIndicator" prefHeight="20.0" prefWidth="20.0" visible="false"/>
     </ToolBar>
     <SplitPane fx:id="mainContent" dividerPositions="0.5" minWidth="1000" VBox.vgrow="ALWAYS">
-        <TabPane fx:id="control" minWidth="396.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE"
+        <TabPane fx:id="control" minWidth="350.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE"
                  SplitPane.resizableWithParent="false">
             <fx:include fx:id="gameListView" source="GameListView.fxml"/>
             <fx:include fx:id="userListView" source="UserListView.fxml"/>
             <fx:include fx:id="competitionListView" source="CompetitionListView.fxml"/>
-            <fx:include fx:id="gameControlView" source="gameControlView.fxml"/>
+            <fx:include fx:id="gameControlView" source="GameControlView.fxml"/>
             <fx:include fx:id="wordListView" source="WordListView.fxml"/>
         </TabPane>
-        <VBox minHeight="720.0" minWidth="604.0" SplitPane.resizableWithParent="false">
+        <VBox minHeight="720.0" minWidth="620.0" SplitPane.resizableWithParent="false">
             <Region maxHeight="-Infinity" minHeight="-Infinity" styleClass="tab-aligned"/>
             <StackPane fx:id="content" VBox.vgrow="ALWAYS">
                 <fx:include fx:id="loginView" source="LoginView.fxml"/>
