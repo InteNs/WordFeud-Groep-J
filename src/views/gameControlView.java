@@ -191,6 +191,7 @@ public class gameControlView extends View {
 
     @FXML
     public void pass(){
+        clear();
         Turn newTurn = gameController.getSelectedGame().getTurnBuilder().buildTurn(gameController.getSelectedGame().getLastTurn().getId() + 1, session.getCurrentUser(), TurnType.PASS);
         gameController.insertTurn(newTurn, gameController.getSelectedGame());
         if (gameController.isThirdPass()) {
