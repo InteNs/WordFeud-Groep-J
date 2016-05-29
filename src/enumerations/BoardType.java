@@ -15,5 +15,14 @@ public enum BoardType {
             default: return UNDEFINED;
         }
     }
+    public static String format(BoardType boardType) {
+        switch (boardType) {
+            case STANDARD:
+               return "standard";
+            case RANDOM:
+                return "random";
+            default: return "";
+        }
+    }
 
 }

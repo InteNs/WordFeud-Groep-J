@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Turn {
     private int id;
     private int score;
-    private String woord;
+    private String word;
     private User user;
     private TurnType type;
     private ArrayList<Tile> rack;
@@ -21,6 +21,31 @@ public class Turn {
         this.type = type;
         rack = new ArrayList<>();
         placedTiles = new ArrayList<>();
+    }
+
+    public Turn(int id, int score, User user, TurnType type, ArrayList<Tile> placedTiles, ArrayList<Tile> playerRack){
+        this.id = id;
+        this.score = score;
+        this.user = user;
+        this.type = type;
+        rack = playerRack;
+        this.placedTiles = placedTiles;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public TurnType getType() {
+        return type;
     }
 
     public void addPlacedTile(Tile tile) {
@@ -39,12 +64,12 @@ public class Turn {
         return placedTiles.contains(tile);
     }
 
-    public String getWoord() {
-        return woord;
+    public String getWord() {
+        return word;
     }
 
-    public void setWoord(String woord) {
-        this.woord = woord;
+    public void setWord(String word) {
+        this.word = word;
     }
 
     public ArrayList<Tile> getPlacedTiles() {
@@ -63,7 +88,22 @@ public class Turn {
     }
     @Override
     public String toString() {
-        return "Speler: "+user+" -Actie:"+type+" -Beurtscore:"+score;
+        switch (type) {
+            case BEGIN:
+                return "";
+            case END:
+                return "";
+            case PASS:
+                return user + " heeft gepast ";
+            case RESIGN:
+                return user + " heeft opgegeven ";
+            case SWAP:
+                return user + " heeft " + " (X) " + " letters geruild";
+            case WORD:
+                return user + " heeft " + word + " gespeeld voor " + score + " punten";
+            default:
+                return "";
+        }
     }
 
     @Override

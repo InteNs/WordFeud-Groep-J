@@ -42,7 +42,7 @@
             </font>
         </Label>
         <Label fx:id="labelConfirm" alignment="CENTER" layoutY="14.0" prefHeight="17.0" prefWidth="600.0"
-               text="woord is &lt;action&gt;" textFill="#27e823" visible="false">
+               text="word is &lt;action&gt;" textFill="#27e823" visible="false">
             <font>
                 <Font size="20.0"/>
             </font>

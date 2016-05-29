@@ -35,6 +35,7 @@ public class WordInfoView extends View {
 
 
     public void refresh() {
+        if (wordController.getSelectedWord() == null) return;
         if (session.getCurrentUser().hasRole(Role.MODERATOR) && selectedWord.getStatus() == WordStatus.PENDING) {
             buttonAccept.setVisible(true);
             buttonDecline.setVisible(true);
@@ -65,7 +66,7 @@ public class WordInfoView extends View {
 
     @Override
     public void constructor() {
-        wordController.getSelectedWord().addListener((observable, oldValue, newValue) -> {
+        wordController.selectedWordProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
                 return;
             }

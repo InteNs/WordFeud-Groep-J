@@ -10,53 +10,53 @@ import models.Word;
 
 public class WordController extends Controller {
     private ObjectProperty<Word> selectedWord;
-    private ObservableList<Word> wordList;
+    private ObservableList<Word> words;
 
     public WordController(ControllerFactory factory) {
         super(factory);
-        wordList = FXCollections.observableArrayList();
+        words = FXCollections.observableArrayList();
         selectedWord = new SimpleObjectProperty<>();
     }
 
+    public Word getSelectedWord() {
+        return selectedWord.get();
+    }
+
+    public ObjectProperty<Word> selectedWordProperty() {
+        return selectedWord;
+    }
+
+    public void setSelectedWord(Word selectedWord) {
+        this.selectedWord.set(selectedWord);
+    }
 
     @Override
     public void refresh() {
-        if (wordList.contains(getSelectedWord())) setSelectedWord(wordList.get(wordList.indexOf(getSelectedWord())));
+        if (words.contains(getSelectedWord())) setSelectedWord(words.get(words.indexOf(getSelectedWord())));
     }
 
     @Override
     public void refill() {
-        wordList.setAll(wordDAO.getWords());
+        words.setAll(wordDAO.getWords());
     }
 
     public ObservableList<Word> getWords(WordStatus status) {
-        return wordList.filtered(word -> word.getStatus() == status);
+        return words.filtered(word -> word.getStatus() == status);
     }
 
     public ObservableList<Word> getUserWords(User user) {
-        return wordList.filtered(word -> word.getOwner().equals(user.toString()));
+        return words.filtered(word -> word.getOwner().equals(user.toString()));
     }
 
     public ObservableList<Word> getWords() {
-        return wordList;
-    }
-
-    public ObjectProperty<Word> getSelectedWord() {
-        return selectedWord;
+        return words;
     }
 
     public boolean updateWordStatus(Word word, WordStatus status) {
         if (wordDAO.updateWordStatus(word, status)) {
             word.setStatus(status);
             return true;
-        } else {
-            return false;
         }
-
-    }
-
-    public void setSelectedWord(Word selectedWord) {
-        this.selectedWord.set(selectedWord);
+        return false;
     }
 }
-

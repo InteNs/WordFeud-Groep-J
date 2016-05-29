@@ -98,6 +98,7 @@ public class MainView extends View implements Initializable {
     public void refresh() {
         loadIndicator.setVisible(true);
         controllerFactory.refreshControllers();
+        views.forEach(View::refresh);
         loadIndicator.setVisible(false);
     }
 

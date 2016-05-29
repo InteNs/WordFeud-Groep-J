@@ -5,6 +5,7 @@ import com.mysql.jdbc.CommunicationsException;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Database {
 
@@ -31,11 +32,11 @@ public class Database {
      * close any open statement or resultSet made with this connection
      */
     public void close() {
-        try {
-            if (connection != null)
-                connection.close();
-        } catch (SQLException ignored) {
-        }
+//        try {
+//            if (connection != null)
+//                connection.close();
+//        } catch (SQLException ignored) {
+//        }
     }
 
     /**
@@ -71,6 +72,17 @@ public class Database {
     }
 
     /**
+     * execute a delete query with x amount of question marks
+     *
+     * @param query  defined in static SQL class
+     * @param values values to insert into question marks
+     * @return false if the execution failed
+     */
+    public boolean delete(String query, Collection<Object> values) {
+        return execute(query, values.toArray());
+    }
+
+    /**
      * execute an insert query with x amount of question marks
      *
      * @param query  defined in static SQL class
@@ -82,6 +94,17 @@ public class Database {
     }
 
     /**
+     * execute an insert query with x amount of question marks
+     *
+     * @param query  defined in static SQL class
+     * @param values values to insert into question marks
+     * @return false if the execution failed
+     */
+    public boolean insert(String query, Collection<Object> values) {
+        return execute(query, values.toArray());
+    }
+
+    /**
      * execute an update query with x amount of question marks
      *
      * @param query  defined in static SQL class
@@ -90,6 +113,17 @@ public class Database {
      */
     public boolean update(String query, Object... values) {
         return execute(query, values);
+    }
+
+    /**
+     * execute an update query with x amount of question marks
+     *
+     * @param query  defined in static SQL class
+     * @param values values to insert into question marks
+     * @return false if the execution failed
+     */
+    public boolean update(String query, Collection<Object> values) {
+        return execute(query, values.toArray());
     }
 
     /**
@@ -155,6 +189,7 @@ public class Database {
     }
 
     private Connection connection() throws SQLException {
+        if (connection != null) return connection;
         connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
         return connection;
     }
