@@ -150,4 +150,24 @@ public class GameController extends Controller {
             return game.getPot();
         return null;
     }
+
+    public void insertTurn(Turn turn, Game game) {
+        gameDAO.insertTurn(game, turn);
+    }
+
+    public boolean isThirdPass(){
+        int counter = 0;
+        ObservableList<Turn> turns = getSelectedGame().getTurns();
+        for ( int n = turns.size()-1; n > turns.size()-3 ; n--){
+            System.out.println(turns.get(n).getId());
+            if (turns.get(n).getType() == TurnType.PASS){
+                counter++;
+            }
+        }
+        if (counter == 2){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

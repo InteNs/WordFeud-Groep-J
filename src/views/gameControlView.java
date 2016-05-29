@@ -2,6 +2,7 @@ package views;
 
 
 import enumerations.Role;
+import enumerations.TurnType;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -182,6 +183,21 @@ public class gameControlView extends View {
         if (aap) {
             gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
         }
+        gameController.setBoardState(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+        parent.getGameBoardView().displayGameBoard(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+        parent.getGameBoardView().displayPlayerRack(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+        selectTurn(gameController.getSelectedGame().getLastTurn());
+    }
+
+    @FXML
+    public void pass(){
+        Turn newTurn = gameController.getSelectedGame().getTurnBuilder().buildTurn(gameController.getSelectedGame().getLastTurn().getId() + 1, session.getCurrentUser(), TurnType.PASS);
+        gameController.insertTurn(newTurn, gameController.getSelectedGame());
+        if (gameController.isThirdPass()) {
+            //DOTO: finish the game!
+            System.out.println("3x passed!");
+        }
+        gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
         gameController.setBoardState(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
         parent.getGameBoardView().displayGameBoard(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
         parent.getGameBoardView().displayPlayerRack(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
