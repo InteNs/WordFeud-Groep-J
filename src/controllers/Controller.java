@@ -45,4 +45,6 @@ public abstract class Controller extends Observable {
 
     public abstract void refill();
 
+    public abstract void fetch();
+
 }

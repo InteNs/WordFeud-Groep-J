@@ -8,7 +8,11 @@ import javafx.collections.ObservableList;
 import models.User;
 import models.Word;
 
+import java.util.ArrayList;
+
 public class WordController extends Controller {
+
+    private ArrayList<Word> fetched;
     private ObjectProperty<Word> selectedWord;
     private ObservableList<Word> words;
 
@@ -37,7 +41,12 @@ public class WordController extends Controller {
 
     @Override
     public void refill() {
-        words.setAll(wordDAO.getWords());
+        words.setAll(fetched);
+    }
+
+    @Override
+    public void fetch() {
+        fetched = wordDAO.getWords();
     }
 
     public ObservableList<Word> getWords(WordStatus status) {

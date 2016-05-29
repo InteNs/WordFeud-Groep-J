@@ -38,4 +38,9 @@ public class SessionController extends Controller {
     public void refill() {
 
     }
+
+    @Override
+    public void fetch() {
+
+    }
 }

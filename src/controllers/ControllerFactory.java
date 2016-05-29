@@ -33,6 +33,10 @@ public class ControllerFactory {
         getControllers().forEach(Controller::refresh);
     }
 
+    public void fetchControllers() {
+        getControllers().forEach(Controller::fetch);
+    }
+
     public UserController GetUserController(){
         if(userController == null)
             userController = new UserController(this);

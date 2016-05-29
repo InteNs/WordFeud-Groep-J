@@ -7,8 +7,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.User;
 
+import java.util.ArrayList;
+
 public class UserController extends Controller {
 
+    private ArrayList<User> fetched;
     private ObservableList<User> users;
     private ObjectProperty<User> selectedUser;
 
@@ -95,6 +98,11 @@ public class UserController extends Controller {
 
     @Override
     public void refill() {
-        users.setAll(userDAO.selectUsers());
+        users.setAll(fetched);
+    }
+
+    @Override
+    public void fetch() {
+        fetched = userDAO.selectUsers();
     }
 }

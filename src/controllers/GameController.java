@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 public class GameController extends Controller {
 
+    private ArrayList<Game> fetched;
     private ObservableList<Game> games;
     private ObjectProperty<Game> selectedGame;
     private ObjectProperty<Role> currentRole;
@@ -69,6 +70,10 @@ public class GameController extends Controller {
         return games.filtered(Game::isGame);
     }
 
+    public ObservableList<Game> getGames(Competition competition) {
+        return games.filtered(game -> game.getCompetitionId() == competition.getId());
+    }
+
     public void loadGame(Game game, Role gameMode) {
         if (game == null) return;
         game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
@@ -98,7 +103,12 @@ public class GameController extends Controller {
 
     @Override
     public void refill() {
-        games.setAll(gameDAO.selectGames());
+        games.setAll(fetched);
+    }
+
+    @Override
+    public void fetch() {
+        fetched = gameDAO.selectGames();
     }
 
     public void setPlayerRack(Game game, List<Tile> tiles) {

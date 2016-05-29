@@ -6,10 +6,11 @@
       fx:controller="views.MainView">
     <ToolBar fx:id="toolBar" disable="true" prefHeight="40.0" prefWidth="200.0">
         <ToggleButton mnemonicParsing="false" onAction="#toggleControl" text="verstop tabs"/>
-        <Button mnemonicParsing="false" onAction="#refresh" text="herladen"/>
         <Button mnemonicParsing="false" onAction="#changePass" text="wachtwoord wijzigen"/>
         <Button mnemonicParsing="false" onAction="#logOut" text="uitloggen"/>
+        <Region HBox.hgrow="ALWAYS"/>
         <ProgressIndicator fx:id="loadIndicator" prefHeight="20.0" prefWidth="20.0" visible="false"/>
+        <ToggleButton fx:id="threadToggle" styleClass="custom-toggle" mnemonicParsing="false" onAction="#doThread" text="auto herladen"/>
     </ToolBar>
     <SplitPane fx:id="mainContent" dividerPositions="0.5" minWidth="1000" VBox.vgrow="ALWAYS">
         <TabPane fx:id="control" minWidth="350.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE"

@@ -4,12 +4,16 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Pair;
 import models.Competition;
-import models.Game;
 import models.User;
+
+import java.util.ArrayList;
 
 public class CompetitionController extends Controller {
 
+    private ArrayList<Pair<String, Integer>> playerMap;
+    private ArrayList<Competition> fetched;
     private ObservableList<Competition> competitions;
     private ObjectProperty<Competition> selectedCompetition;
 
@@ -76,28 +80,28 @@ public class CompetitionController extends Controller {
         return competitions.filtered(competition -> competition.getPlayers().contains(user));
     }
 
-    private void mapPlayers() {
-        competitionDAO.getPlayerMap().forEach(set ->
-                getCompetition(set.getValue()).addPlayer(getUserController().getUser(set.getKey()))
-        );
-    }
-
-    private void assignGames(ObservableList<Game> games) {
-        for (Competition competition : competitions) {
-            competition.setGames(games.filtered(game -> game.getCompetitionId() == competition.getId()));
-        }
-    }
-
     @Override
     public void refresh() {
-        assignGames(getGameController().getGames());
-        mapPlayers();
+        playerMap.forEach(set ->
+                getCompetition(set.getValue()).addPlayer(getUserController().getUser(set.getKey()))
+        );
+
+        competitions.forEach(competition ->
+                competition.setGames(getGameController().getGames(competition)));
+
         if(competitions.contains(getSelectedCompetition()))
             setSelectedCompetition(competitions.get(competitions.indexOf(getSelectedCompetition())));
     }
 
     @Override
     public void refill() {
-        competitions.setAll(competitionDAO.selectCompetitions());
+        competitions.setAll(fetched);
     }
+
+    @Override
+    public void fetch() {
+        fetched = competitionDAO.selectCompetitions();
+        playerMap = competitionDAO.getPlayerMap();
+    }
+
 }
