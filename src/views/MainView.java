@@ -1,6 +1,7 @@
 package views;
 
 import controllers.ControllerFactory;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +16,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class MainView extends View implements Initializable {
     /*declare your view here if you need it*/
@@ -86,6 +92,8 @@ public class MainView extends View implements Initializable {
                 wordInfoViewController
         ));
         views.forEach(view -> view.init(this));
+
+
     }
 
     public void login() {
@@ -93,6 +101,18 @@ public class MainView extends View implements Initializable {
         views.forEach(View::constructor);
         constructor();
         views.forEach(View::refresh);
+        ScheduledExecutorService scheduler =
+                Executors.newScheduledThreadPool(1);
+
+        Runnable beeper = () -> Platform.runLater(() -> {
+                controllerFactory.refreshControllers();
+                views.forEach(View::refresh);
+                System.out.println("boo!");
+        });
+
+        ScheduledFuture<?> beeperHandle =
+                scheduler.scheduleAtFixedRate(beeper, 10, 1, SECONDS);
+        scheduler.schedule((Runnable) () -> beeperHandle.cancel(true), 60 * 60, SECONDS);
     }
 
     @FXML
