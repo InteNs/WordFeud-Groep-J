@@ -112,6 +112,10 @@ public class GameController extends Controller {
         game.getTurnBuilder().removePlacedTile(field);
     }
 
+    public ObservableList<Field> getFieldsChanged(Game game) {
+        return game.getTurnBuilder().getFieldsChanged();
+    }
+
     public void sendMessage(Game game, User user, String text) {
         game.sendMessage(user, text);
         gameDAO.insertMessage(game, user, text);
