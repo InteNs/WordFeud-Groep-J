@@ -16,6 +16,7 @@ public class Game {
 
     private int id;
     private int competitionId;
+    private int lastTurnNumber;
     private ObservableList<Message> messages;
     private GameState gameState;
     private Role gameMode;
@@ -30,8 +31,9 @@ public class Game {
     private ObservableList<Tile> currentRack;
     private TurnBuilder turnBuilder;
 
-    public Game(int id, int competitionId, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
+    public Game(int id, int lastTurnNumber, int competitionId, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
         this.id = id;
+        this.lastTurnNumber = lastTurnNumber;
         this.competitionId = competitionId;
         this.challenger = challenger;
         this.opponent = opponent;
@@ -206,15 +208,17 @@ public class Game {
         return clonedGameBoard;
     }
 
+    public User getNextUser() {
+        if ( (lastTurnNumber & 1) == 0 )
+           return challenger;
+        else
+           return opponent;
+    }
 
     @Override
     public String toString() {
-        String s = "[" + id + "][" + language + "] " + boardType.toString().toLowerCase()
+        return "[" + id + "][" + language + "] " + boardType.toString().toLowerCase()
                 + " spel tussen " + challenger + " en " + opponent;
-        if (getLastTurn() != null) {
-            s += "\n" + getLastTurn();
-        }
-        return s;
     }
 
     @Override

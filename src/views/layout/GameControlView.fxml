@@ -20,7 +20,7 @@
                         <items>
                             <CustomMenuItem hideOnClick="false" text="Unspecified Action">
                                 <content>
-                                    <Button prefHeight="50.0" prefWidth="100.0" text="Jokers" onAction="#showJokers" />
+                                    <Button prefHeight="50.0" prefWidth="100.0" text="Jokers" onAction="#showJokers"/>
                                 </content>
                             </CustomMenuItem>
                             <CustomMenuItem text="Unspecified Action">
@@ -56,20 +56,16 @@
             <Region HBox.hgrow="ALWAYS"/>
             <Label fx:id="potLabel" text="Aantal letters in pot:15"/>
         </HBox>
-        <TabPane fx:id="gameTabs" VBox.vgrow="ALWAYS">
-            <Tab fx:id="turnTab" closable="false" text="Spelhistorie">
-                <ListView fx:id="turnList" fixedCellSize="25.0"/>
-            </Tab>
-            <Tab fx:id="chatTab" closable="false" text="Chat">
-                <VBox spacing="5">
-                    <ListView fx:id="chatList" VBox.vgrow="ALWAYS"/>
-                    <HBox spacing="5">
-                        <TextArea fx:id="chatTextArea" wrapText="true" prefHeight="45.0" prefWidth="0.0"
-                                  HBox.hgrow="ALWAYS"/>
-                        <Button onAction="#sendMessage" prefHeight="45.0" prefWidth="80.0" text="Stuur"/>
-                    </HBox>
-                </VBox>
-            </Tab>
-        </TabPane>
+        <StackPane fx:id="turnChat" VBox.vgrow="ALWAYS">
+            <ListView fx:id="turnList" fixedCellSize="25.0"/>
+            <VBox fx:id="chatBox" spacing="5">
+                <ListView fx:id="chatList" VBox.vgrow="ALWAYS"/>
+                <HBox spacing="5">
+                    <TextArea fx:id="chatTextArea" wrapText="true" prefHeight="45.0" prefWidth="0.0"
+                              HBox.hgrow="ALWAYS"/>
+                    <Button onAction="#sendMessage" prefHeight="45.0" prefWidth="80.0" text="Stuur"/>
+                </HBox>
+            </VBox>
+        </StackPane>
     </VBox>
 </Tab>

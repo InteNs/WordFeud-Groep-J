@@ -20,7 +20,7 @@ public class GameTest {
         user1 = new User("current");
         user2 = new User("other");
 
-        game = new Game(511, 1,  user1, user2, GameState.FINISHED, BoardType.STANDARD, Language.NL);
+        game = new Game(511, 5, 1,  user1, user2, GameState.FINISHED, BoardType.STANDARD, Language.NL);
     }
 
     @Test

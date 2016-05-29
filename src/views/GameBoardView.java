@@ -175,8 +175,11 @@ public class GameBoardView extends View {
     }
 
     private void setCurrentRack(Game game, ObservableList<FieldTileNode> tileNodes) {
-        gameController.setPlayerRack(game, tileNodes.stream().filter(fieldTileNode -> !fieldTileNode.isPlaceHolder())
-                .map(FieldTileNode::getTile).collect(Collectors.toList()));
+        gameController.setPlayerRack(game, tileNodes.stream()
+                .filter(fieldTileNode -> !fieldTileNode.isPlaceHolder())
+                .map(FieldTileNode::getTile)
+                .collect(Collectors.toList())
+        );
     }
 
     private void prepareDrag(FieldTileNode fieldTileNode) {

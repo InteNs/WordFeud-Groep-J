@@ -83,7 +83,6 @@ public class GameController extends Controller {
             Game game = games.get(games.indexOf(getSelectedGame()));
             loadGame(game, getCurrentRole());
             setSelectedGame(game);
-            setSelectedTurn(game.getLastTurn());
 
             if (game.getTurns().contains(getSelectedTurn())) {
                 Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
@@ -122,12 +121,6 @@ public class GameController extends Controller {
         return tile.getCharacter() == '?';
     }
 
-    public ObservableList<Tile> showPot(Game game) {
-        if (game != null)
-            return game.getPot();
-        return null;
-    }
-
     public ArrayList<String> playWord(Game selectedGame) {
         ArrayList<String> wordsNotInDictionary =
                 gameDAO.selectWords(selectedGame, selectedGame.getTurnBuilder().getWordsFoundThisTurn())
@@ -146,5 +139,11 @@ public class GameController extends Controller {
             selectedGame.addTurn(newTurn);
         }
         return wordsNotInDictionary;
+    }
+
+    public ObservableList<Tile> showPot(Game game) {
+        if (game != null)
+            return game.getPot();
+        return null;
     }
 }

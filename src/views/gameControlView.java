@@ -8,6 +8,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import models.*;
 import views.components.ChatCell;
 
@@ -29,9 +31,8 @@ public class gameControlView extends View {
     @FXML private Label challengerLabel;
     @FXML private Label opponentLabel;
     @FXML private TextArea chatTextArea;
-    @FXML private Tab chatTab;
-    @FXML private Tab turnTab;
-    @FXML private TabPane gameTabs;
+    @FXML private VBox chatBox;
+    @FXML private StackPane turnChat;
 
     @Override
     public void refresh() {
@@ -43,6 +44,8 @@ public class gameControlView extends View {
         chatList.setCellFactory(param -> new ChatCell(param, session.getCurrentUser()));
         chatList.addEventFilter(MouseEvent.MOUSE_PRESSED, Event::consume);
 
+
+        turnSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
         turnList.getSelectionModel().selectedItemProperty().addListener((o, v, newValue) ->
             selectTurn(newValue)
         );
@@ -66,9 +69,6 @@ public class gameControlView extends View {
         gameController.selectedGameProperty().addListener((o, v, newValue) -> {
             showGame(newValue);
         });
-
-        gameTabs.widthProperty().addListener((o, v, newValue) ->
-                gameTabs.setTabMinWidth((double) newValue / 2 - 23));
     }
 
     private void showGame(Game game) {
@@ -81,7 +81,7 @@ public class gameControlView extends View {
         turnList.scrollTo(game.getLastTurn());
         setPotLabel(game);
         setTabs(gameController.getCurrentRole(), game.getLastTurn().getUser());
-        chatTab.setDisable(!game.getPlayers().contains(session.getCurrentUser()));
+        disableChat(!game.getPlayers().contains(session.getCurrentUser()));
     }
     private void selectTurn(Turn newValue) {
         if (newValue == null) return;
@@ -124,11 +124,9 @@ public class gameControlView extends View {
         if(gameMode == Role.PLAYER) {
             disableTurnControls(true);
             disableGameControls(currentTurnUser.equals(session.getCurrentUser()), false);
-            gameTabs.getSelectionModel().select(chatTab);
         } else if(gameMode == Role.OBSERVER) {
             disableTurnControls(false);
             disableGameControls(true, true);
-            gameTabs.getSelectionModel().select(turnTab);
         }
     }
 
@@ -149,8 +147,14 @@ public class gameControlView extends View {
         clearButton.setDisable(includeRackControls);
     }
 
+    private void disableChat(boolean disable) {
+        turnChat.getChildren().remove(chatBox);
+        if(!disable)turnChat.getChildren().add(chatBox);
+    }
+
     private void disableTurnControls(boolean disable) {
-        turnTab.setDisable(disable);
+        turnChat.getChildren().remove(turnList);
+        if(!disable)turnChat.getChildren().add(turnList);
         turnSpinner.setDisable(disable);
     }
 

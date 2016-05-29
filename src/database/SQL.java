@@ -10,12 +10,11 @@ public class SQL {
         public static final String USERWITHCREDS = "SELECT\n  a.naam,\n  a.wachtwoord,\n  r.rol_type\nFROM account a\n  LEFT JOIN accountrol r ON a.naam = r.account_naam\nWHERE naam = ?\n      AND wachtwoord = ?";
         public static final String USERWITHNAME = "SELECT\n  a.naam,\n  a.wachtwoord,\n  r.rol_type\nFROM account a\n  LEFT JOIN accountrol r ON a.naam = accountrol.account_naam\nWHERE a.naam = ?";
         public static final String COMPFOROWNER = "SELECT id FROM competitie WHERE account_naam_eigenaar = ?";
-        public static final String SELECTUSERWORDS = "SELECT * FROM woordenboek WHERE account_naam = ?";
     }
 
     public class ALL {
         public static final String USERS = "SELECT\n  a.naam,\n  a.wachtwoord,\n  r.rol_type\nFROM account a\n  LEFT JOIN accountrol r on a.naam = r.account_naam";
-        public static final String GAMES = "SELECT * FROM spel;";
+        public static final String GAMES = "SELECT spel.*, MAX(beurt.id) AS last_turn\nFROM spel\nLEFT JOIN beurt ON spel.id = beurt.spel_id\nGROUP BY spel_id";
         public static final String COMPETITIONS = "SELECT C.id, C.omschrijving, C.account_naam_eigenaar, AVG(R.gemidddelde_score) AS gemidddelde_score FROM competitie AS C LEFT JOIN rank_avg AS R ON C.id = R.competitie_id GROUP BY C.id;";
         public static final String PLAYERSCOMPS = "SELECT * FROM deelnemer";
         public static final String WINSLOSES = "SELECT w.account_naam, wins,lost FROM rank_nr_wins w JOIN rank_nr_lost l ON w.account_naam = l.account_naam";
@@ -23,15 +22,14 @@ public class SQL {
     }
 
     public class INSERT {
+        public static final String INSERTTURN = "INSERT INTO wordfeud.beurt(id, spel_id, account_naam, score, aktie_type) VALUES (?,?,?,?,?);";
+        public static final String INSERTPLACEDTILES = "INSERT INTO wordfeud.gelegdeletter(letter_id, spel_id, beurt_id, tegel_x, tegel_y, tegel_bord_naam, blancoletterkarakter) VALUES";
+        public static final String INSERTRACKTILES = "INSERT INTO wordfeud.letterbakjeletter(spel_id, letter_id, beurt_id) VALUES";
         public static final String INSERTUSER = "INSERT INTO account (naam, wachtwoord) VALUES (?, ?)";
         public static final String SETROLE = "INSERT INTO `wordfeud`.`accountrol` (`account_naam`, `rol_type`) VALUES (?, ?);";
         public static final String INSERTCOMPETITION = "INSERT INTO competitie (omschrijving, account_naam_eigenaar) VALUES (?, ?);";
         public static final String INSERTPLAYER = "INSERT INTO deelnemer (account_naam, competitie_id) VALUES (?, ?);";
         public static final String INSERTMESSAGE = "INSERT INTO wordfeud.chatregel (chatregel.spel_id,chatregel.account_naam,chatregel.bericht) VALUES (?,?,?);";
-        public static final String INSERTTURN = "INSERT INTO wordfeud.beurt(id, spel_id, account_naam, score, aktie_type) VALUES (?,?,?,?,?);";
-        public static final String INSERTPLACEDTILES = "INSERT INTO wordfeud.gelegdeletter(letter_id, spel_id, beurt_id, tegel_x, tegel_y, tegel_bord_naam, blancoletterkarakter) VALUES";
-        public static final String INSERTRACKTILES = "INSERT INTO wordfeud.letterbakjeletter(spel_id, letter_id, beurt_id) VALUES";
-
     }
     
     public class DELETE {
