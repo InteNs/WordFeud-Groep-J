@@ -182,6 +182,7 @@ public class GameBoardView extends View {
             gameController.removeTile(gameController.getSelectedGame(), field);
             findNodeInGrid(field.getX(), field.getY()).redrawImage();
         });
+        setCurrentRack(gameController.getSelectedGame(), nodes);
     }
 
     private FieldTileNode findNodeInGrid(int col, int row) {
