@@ -6,55 +6,63 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import models.Competition;
 import models.User;
 import java.util.function.Predicate;
 
 public class UserListView extends View {
     @FXML private ListView<User> userList;
-    @FXML private ListView<User> currentUserList;
+    @FXML private TextField currentUserField;
     @FXML private ListView<User> compUserList;
     @FXML private TitledPane compUserPane;
     @FXML private Accordion userLists;
     @FXML private TextField filterField;
 
     private FilteredList<User> filteredUsers;
+    private Predicate<User> filterText, filterComp;
 
     public void refresh(){
+        showCompUsers(competitionController.getSelectedCompetition());
+    }
+
+    @Override
+    public void clear() {
+
     }
 
     @Override
     public void constructor() {
         filteredUsers = new FilteredList<>(userController.getUsers());
 
-        Predicate<User> filterCurrent = user ->
-                user.equals(session.getCurrentUser());
-        Predicate<User> filterText = user ->
+        filterText = user ->
                 user.getName().toLowerCase().contains(filterField.getText().toLowerCase());
-        Predicate<User> filterComp = user -> competitionController.getSelectedCompetition() != null
+        filterComp = user -> competitionController.getSelectedCompetition() != null
                 && competitionController.getSelectedCompetition().getPlayers().contains(user);
 
         userList.setItems(filteredUsers);
-        currentUserList.setItems(filteredUsers.filtered(filterCurrent));
 
         competitionController.selectedCompetitionProperty().addListener((observable, oldValue, newValue) -> {
-            userLists.getPanes().remove(compUserPane);
-            if(newValue != null && !newValue.getPlayers().isEmpty()) {
-                userLists.getPanes().add(compUserPane);
-                userLists.setExpandedPane(compUserPane);
-                compUserPane.setText("Accounts binnen: " + newValue.toString());
-                compUserList.setItems((filteredUsers.filtered(filterComp)));
-            }
+            showCompUsers(newValue);
         });
 
         filterField.textProperty().addListener(observable ->
             filteredUsers.setPredicate(filterText)
         );
 
-        currentUserList.setOnMouseClicked(e -> select(session.getCurrentUser()));
+        currentUserField.setText(session.getCurrentUser().toString());
+        currentUserField.setOnMouseClicked(e -> select(session.getCurrentUser()));
 
-        userList.getSelectionModel().selectedItemProperty().addListener((o1, o2, newValue) ->
-                select(newValue)
-        );
+        userList.setOnMouseClicked(event -> select(userList.getSelectionModel().getSelectedItem()));
+    }
+
+    private void showCompUsers(Competition newValue) {
+        userLists.getPanes().remove(compUserPane);
+        if(newValue != null && !newValue.getPlayers().isEmpty()) {
+            userLists.getPanes().add(compUserPane);
+            userLists.setExpandedPane(compUserPane);
+            compUserPane.setText("Accounts binnen: " + newValue.toString());
+            compUserList.setItems((filteredUsers.filtered(filterComp)));
+        }
     }
 
     private void select(User user) {

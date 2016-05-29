@@ -18,12 +18,17 @@ public class CompetitionInfoView extends View {
 
     @Override
     public void constructor() {
-        competitionController.selectedCompetitionProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) setInfo(newValue);
-        });
+        competitionController.selectedCompetitionProperty().addListener((observable, oldValue, newValue) ->
+                setInfo(newValue)
+        );
     }
 
     private void setInfo(Competition competition) {
+        if (competition == null) {
+            clear();
+            return;
+        }
+
         competitionName.setText(competition.getName());
         competitionInfo.setText("Eigenaar: " + competition.getOwner().getName());
         joinButton.setVisible(!competitionController.isUserInCompetition(session.getCurrentUser(), competition));
@@ -48,11 +53,16 @@ public class CompetitionInfoView extends View {
                 session.getCurrentUser(),
                 competitionController.getSelectedCompetition()
         );
-        setInfo(competitionController.getSelectedCompetition());
+        refresh();
     }
 
     @Override
     public void refresh() {
+        setInfo(competitionController.getSelectedCompetition());
+    }
+
+    @Override
+    public void clear() {
         gameChart.getData().clear();
         playerChart.getData().clear();
         scoreChart.getData().clear();

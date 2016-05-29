@@ -68,12 +68,14 @@ public class UserController extends Controller {
     }
 
     public void setRole(User user, Role role, Boolean enabled) {
-        if (enabled)
-            if(userDAO.insertUserRole(user, role))
-                user.addRole(role);
-        else
-            if(userDAO.deleteUserRole(user, role))
-                user.removeRole(role);
+        if (enabled) {
+            userDAO.insertUserRole(user, role);
+            user.addRole(role);
+        }
+        else {
+            userDAO.deleteUserRole(user, role);
+            user.removeRole(role);
+        }
     }
 
     public boolean checkPassword(User user, String oldPassword) {

@@ -21,6 +21,7 @@ import models.Game;
 import models.Tile;
 import models.Turn;
 import views.components.FieldTileNode;
+import views.subviews.JokerView;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -191,6 +192,11 @@ public class GameBoardView extends View {
 
     @Override
     public void refresh() {
+    }
+
+    @Override
+    public void clear() {
+
     }
 
     @Override

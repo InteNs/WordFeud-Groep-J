@@ -6,24 +6,20 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import models.Competition;
 
-import java.util.Collections;
 import java.util.function.Predicate;
 
 public class CompetitionListView extends View {
 
-    @FXML
-    private TextField filterField;
-    @FXML
-    private VBox root;
-    @FXML
-    private ListView<Competition> competitionList;
-    @FXML
-    private ListView<Competition> myCompetition;
-    @FXML
-    private Button createCompetition;
+    @FXML private TextField filterField;
+    @FXML private VBox root;
+    @FXML private ListView<Competition> competitionList;
+    @FXML private TextField myCompetition;
+    @FXML private Button createCompetition;
+    @FXML private StackPane myCompetitionArea;
 
     private FilteredList<Competition> filteredCompetitions;
 
@@ -31,6 +27,11 @@ public class CompetitionListView extends View {
 
     @Override
     public void refresh() {
+        showMyCompetition();
+    }
+
+    @Override
+    public void clear() {
     }
 
     @Override
@@ -45,38 +46,32 @@ public class CompetitionListView extends View {
         );
 
         competitionList.setItems(filteredCompetitions);
-        myCompetition.setItems(filteredCompetitions.filtered(filterOwned));
 
         showMyCompetition();
+        competitionController.getCompetitions().addListener((ListChangeListener<? super Competition>) observable ->
+                showMyCompetition());
 
-        myCompetition.getItems().addListener((ListChangeListener<? super Competition>) observable ->
-                showMyCompetition()
-        );
+        myCompetition.setOnMouseClicked(event ->
+                selectCompetition(filteredCompetitions.filtered(filterOwned).get(0)));
 
-        competitionList.getSelectionModel().selectedItemProperty().addListener((ig1, ig2, newValue) ->
-                selectCompetition(newValue)
+        competitionList.setOnMouseClicked(event ->
+                selectCompetition(competitionList.getSelectionModel().getSelectedItem())
         );
+    }
 
-        myCompetition.setOnMouseClicked(e ->
-                selectCompetition(myCompetition.getItems().get(0))
-        );
+    private void showMyCompetition() {
+        myCompetitionArea.getChildren().clear();
+        if(filteredCompetitions.filtered(filterOwned).isEmpty()) {
+            myCompetitionArea.getChildren().add(createCompetition);
+        } else {
+            myCompetition.setText(filteredCompetitions.filtered(filterOwned).get(0).toString());
+            myCompetitionArea.getChildren().add(myCompetition);
+        }
     }
 
     private void selectCompetition(Competition competition) {
         competitionController.setSelectedCompetition(competition);
         parent.setContent(parent.competitionInfoView);
-    }
-
-    private void showMyCompetition() {
-        if (myCompetition.getItems().size() > 0) {
-            if (root.getChildren().contains(createCompetition)) {
-                root.getChildren().remove(myCompetition);
-                Collections.replaceAll(root.getChildren(), createCompetition, myCompetition);
-            }
-        } else {
-            root.getChildren().remove(createCompetition);
-            Collections.replaceAll(root.getChildren(), myCompetition, createCompetition);
-        }
     }
 
     public void createCompetition() {

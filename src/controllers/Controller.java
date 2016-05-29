@@ -5,7 +5,9 @@ import database.access.GameDAO;
 import database.access.UserDAO;
 import database.access.WordDAO;
 
-public abstract class Controller {
+import java.util.Observable;
+
+public abstract class Controller extends Observable {
 
     public UserController getUserController() {
         return controllerFactory.GetUserController();

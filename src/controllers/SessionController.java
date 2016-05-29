@@ -31,7 +31,7 @@ public class SessionController extends Controller {
 
     @Override
     public void refresh() {
-
+        setCurrentUser(getUserController().getUser(getCurrentUser().getName()));
     }
 
     @Override

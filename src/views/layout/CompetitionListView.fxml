@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <Tab text="competities" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
      fx:controller="views.CompetitionListView">
@@ -10,10 +11,14 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
         </padding>
         <TextField fx:id="filterField" promptText="zoeken..."/>
-        <ListView maxHeight="27" fx:id="myCompetition"/>
-        <Button fx:id="createCompetition" prefHeight="27" prefWidth="Infinity" onAction="#createCompetition" alignment="CENTER"
-                mnemonicParsing="false"
-                text="Competitie aanmaken"/>
+        <StackPane fx:id="myCompetitionArea">
+            <TextField styleClass="cell-text-field" editable="false" fx:id="myCompetition"/>
+            <Button fx:id="createCompetition" prefHeight="25" onAction="#createCompetition"
+                    alignment="CENTER"
+                    prefWidth="Infinity"
+                    text="Competitie aanmaken"/>
+        </StackPane>
+
         <ListView fx:id="competitionList" VBox.vgrow="ALWAYS"/>
 
     </VBox>

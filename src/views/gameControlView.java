@@ -12,6 +12,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import models.*;
 import views.components.ChatCell;
+import views.subviews.potView;
 
 public class gameControlView extends View {
 
@@ -36,7 +37,12 @@ public class gameControlView extends View {
 
     @Override
     public void refresh() {
-        showGame(gameController.getSelectedGame());
+        showGame(gameController.getSelectedGame(), gameController.getSelectedGame());
+    }
+
+    @Override
+    public void clear() {
+
     }
 
     @Override
@@ -46,17 +52,15 @@ public class gameControlView extends View {
 
 
         turnSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-        turnList.getSelectionModel().selectedItemProperty().addListener((o, v, newValue) ->
-            selectTurn(newValue)
-        );
+        turnList.setOnMouseClicked(event -> selectTurn(turnList.getSelectionModel().getSelectedItem()));
 
         extraFunctionsButton.setOnMouseClicked(event ->
             contextMenu.show(extraFunctionsButton, event.getScreenX(), event.getScreenY())
         );
 
-        turnSpinner.valueProperty().addListener((o, v, newValue) ->
-            selectTurn(newValue)
-        );
+        turnSpinner.valueProperty().addListener((o, oldValue, newValue) -> {
+            if (oldValue != newValue && !newValue.toString().equals("")) selectTurn(newValue);
+        });
 
         turnSpinner.setOnMousePressed(event -> turnList.scrollTo(turnSpinner.getValue()));
 
@@ -67,21 +71,21 @@ public class gameControlView extends View {
         );
 
         gameController.selectedGameProperty().addListener((o, v, newValue) -> {
-            showGame(newValue);
+            showGame(newValue, v);
         });
     }
 
-    private void showGame(Game game) {
-        if (game == null) return;
-        chatList.setItems(game.getMessages());
+    private void showGame(Game newGame, Game oldGame) {
+        if (newGame == null) return;
+        chatList.setItems(newGame.getMessages());
         chatList.scrollTo(chatList.getItems().size());
-        turnList.setItems(game.getTurns());
-        turnSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(game.getTurns()));
-        selectTurn(game.getLastTurn());
-        turnList.scrollTo(game.getLastTurn());
-        setPotLabel(game);
-        setTabs(gameController.getCurrentRole(), game.getLastTurn().getUser());
-        disableChat(!game.getPlayers().contains(session.getCurrentUser()));
+        turnList.setItems(newGame.getTurns());
+        turnSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(newGame.getTurns()));
+        turnList.scrollTo(newGame.getLastTurn());
+        selectTurn(newGame.getLastTurn());
+        setPotLabel(newGame);
+        setTabs(gameController.getCurrentRole(), newGame.getLastTurn().getUser());
+        disableChat(!newGame.getPlayers().contains(session.getCurrentUser()));
     }
     private void selectTurn(Turn newValue) {
         if (newValue == null) return;

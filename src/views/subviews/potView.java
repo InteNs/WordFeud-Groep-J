@@ -1,4 +1,4 @@
-package views;
+package views.subviews;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import models.Tile;
 import resources.ResourceFactory;
+import views.View;
 import views.components.FieldTileNode;
 
 public class potView extends View {
@@ -49,6 +50,11 @@ public class potView extends View {
 
     @Override
     public void refresh() {
+    }
+
+    @Override
+    public void clear() {
+
     }
 
     @Override

@@ -10,7 +10,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
         </padding>
         <TextField fx:id="filterField" promptText="zoeken..."/>
-        <ListView fx:id="currentUserList" maxHeight="27"/>
+        <TextField styleClass="cell-text-field" fx:id="currentUserField" editable="false"/>
         <Accordion fx:id="userLists" VBox.vgrow="ALWAYS">
             <panes>
                 <TitledPane text="alle accounts">

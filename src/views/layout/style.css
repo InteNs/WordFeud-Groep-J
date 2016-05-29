@@ -42,6 +42,13 @@
     -fx-opacity: 1.0;
 }
 
+.cell-text-field {
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-alignment: center;
+    -fx-pref-height: 25;
+}
+
 .current-player-label {
     -fx-font-weight: bold;
 }

@@ -29,20 +29,23 @@ public class UserInfoView extends View {
     @Override
     public void constructor() {
         userController.selectedUserProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null) {
-                return;
-            }
-            userNameLabel.setText(newValue.toString());
-            passwordLabel.setText("wachtwoord: " + newValue.getPassword());
-            myCompetitions.setItems(competitionController.getCompetitions(newValue));
-
-            if (!session.getCurrentUser().hasRole(Role.ADMINISTRATOR)) {
-                rolesPane.setVisible(false);
-                passwordLabel.setVisible(false);
-            }
-            getRoles(newValue);
-            setStats(newValue);
+            showUser(newValue, oldValue);
         });
+    }
+
+    private void showUser(User newValue, User oldValue) {
+        if (newValue == null) { clear(); return; }
+        if (newValue.equals(oldValue)) return;
+        userNameLabel.setText(newValue.toString());
+        passwordLabel.setText("wachtwoord: " + newValue.getPassword());
+        myCompetitions.setItems(competitionController.getCompetitions(newValue));
+
+        if (!session.getCurrentUser().hasRole(Role.ADMINISTRATOR)) {
+            rolesPane.setVisible(false);
+            passwordLabel.setVisible(false);
+        }
+        getRoles(newValue);
+        setStats(newValue);
     }
 
     private void setStats(User selectedUser) {
@@ -97,6 +100,13 @@ public class UserInfoView extends View {
 
     @Override
     public void refresh() {
+        showUser(userController.getSelectedUser(), userController.getSelectedUser());
+    }
 
+    @Override
+    public void clear() {
+        userNameLabel.setText("");
+        passwordLabel.setText("");
+        myCompetitions.setItems(null);
     }
 }

@@ -1,24 +1,27 @@
-package views;
+package views.subviews;
 
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import resources.ResourceFactory;
+import views.View;
 
 public class JokerView extends View {
-    char returnValue = '!';
-    char alphabet;
+    private char returnValue = '!';
+    private char alphabet;
 
     @Override
     public void refresh() {
+    }
+
+    @Override
+    public void clear() {
+
     }
 
     @Override

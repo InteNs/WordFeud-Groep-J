@@ -92,6 +92,7 @@ public class MainView extends View implements Initializable {
         controllerFactory.refreshControllers();
         views.forEach(View::constructor);
         constructor();
+        views.forEach(View::refresh);
     }
 
     @FXML
@@ -100,6 +101,11 @@ public class MainView extends View implements Initializable {
         controllerFactory.refreshControllers();
         views.forEach(View::refresh);
         loadIndicator.setVisible(false);
+    }
+
+    @Override
+    public void clear() {
+
     }
 
     public ControllerFactory getControllerFactory() {

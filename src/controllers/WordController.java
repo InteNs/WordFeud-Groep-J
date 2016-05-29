@@ -53,10 +53,10 @@ public class WordController extends Controller {
     }
 
     public boolean updateWordStatus(Word word, WordStatus status) {
-        if (wordDAO.updateWordStatus(word, status)) {
-            word.setStatus(status);
-            return true;
-        }
-        return false;
+        wordDAO.updateWordStatus(word, status);
+        word.setStatus(status);
+        setChanged();
+        notifyObservers();
+        return true;
     }
 }

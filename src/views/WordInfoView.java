@@ -12,25 +12,16 @@ import models.Word;
 import javafx.scene.paint.Color;
 
 public class WordInfoView extends View {
-    @FXML
-    Label labelWord;
-    @FXML
-    Label labelLanguage;
-    @FXML
-    Label labelStatus;
-    @FXML
-    Label labelOwner;
-    @FXML
-    Label labelSaved;
-    @FXML
-    Button buttonAccept;
-    @FXML
-    Button buttonDecline;
-    @FXML
-    Label labelConfirm;
+    @FXML private Label labelWord;
+    @FXML private Label labelLanguage;
+    @FXML private Label labelStatus;
+    @FXML private Label labelOwner;
+    @FXML private Label labelSaved;
+    @FXML private Button buttonAccept;
+    @FXML private Button buttonDecline;
+    @FXML private Label labelConfirm;
+    @FXML private Pane pane;
 
-    @FXML
-    Pane pane;
     private Word selectedWord;
 
 
@@ -48,21 +39,10 @@ public class WordInfoView extends View {
 
     }
 
-    public void setLabelColor() {
-        switch (selectedWord.getStatus()) {
-            case ACCEPTED:
-                labelStatus.setTextFill(Color.web("green"));
-                break;
-            case PENDING:
-                labelStatus.setTextFill(Color.web("orange"));
-                break;
-            case DENIED:
-                labelStatus.setTextFill(Color.web("red"));
-                break;
-        }
+    @Override
+    public void clear() {
 
     }
-
 
     @Override
     public void constructor() {
@@ -80,6 +60,21 @@ public class WordInfoView extends View {
         });
     }
 
+    private void setLabelColor() {
+        switch (selectedWord.getStatus()) {
+            case ACCEPTED:
+                labelStatus.setTextFill(Color.web("green"));
+                break;
+            case PENDING:
+                labelStatus.setTextFill(Color.web("orange"));
+                break;
+            case DENIED:
+                labelStatus.setTextFill(Color.web("red"));
+                break;
+        }
+
+    }
+
     public void acceptWord() {
         if (wordController.updateWordStatus(selectedWord, WordStatus.ACCEPTED)) {
             labelStatus.setTextFill(Color.web("green"));
@@ -87,7 +82,6 @@ public class WordInfoView extends View {
             buttonDecline.setVisible(false);
             labelStatus.setVisible(true);
             labelConfirm.setText(selectedWord + " is geaccepteerd!");
-            parent.refresh();
             refresh();
             doAnimation();
         }
@@ -101,7 +95,6 @@ public class WordInfoView extends View {
             buttonDecline.setVisible(false);
             labelStatus.setVisible(true);
             labelConfirm.setText(selectedWord + " is afgewezen!");
-            parent.refresh();
             refresh();
             doAnimation();
         }

@@ -3,7 +3,7 @@ package views;
 import controllers.*;
 import resources.ResourceFactory;
 
-abstract class View {
+public abstract class View {
     protected MainView parent;
     protected ControllerFactory controllerFactory;
     protected UserController userController;
@@ -14,6 +14,7 @@ abstract class View {
     protected WordController wordController;
 
     public abstract void refresh();
+    public abstract void clear();
     public abstract void constructor();
 
     protected void init(MainView parent) {

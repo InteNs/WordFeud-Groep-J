@@ -71,6 +71,10 @@ public class Game {
         return turns;
     }
 
+    public void setTurnBuilder(TurnBuilder turnBuilder) {
+        this.turnBuilder = turnBuilder;
+    }
+
     public void setTurns(ArrayList<Turn> turns) {
         this.turns.setAll(turns);
         this.turns.removeIf(Objects::isNull);
@@ -126,6 +130,8 @@ public class Game {
     public Language getLanguage() {
         return language;
     }
+
+
 
     public int setMessages(ArrayList<Message> messages) {
         int diff = 0;

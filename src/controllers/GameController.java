@@ -81,13 +81,18 @@ public class GameController extends Controller {
     public void refresh() {
         if (games.contains(getSelectedGame())) {
             Game game = games.get(games.indexOf(getSelectedGame()));
+            TurnBuilder previous = getSelectedGame().getTurnBuilder();
             loadGame(game, getCurrentRole());
+
             setSelectedGame(game);
 
             if (game.getTurns().contains(getSelectedTurn())) {
                 Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
                 setSelectedTurn(turn);
+                game.setBoardStateTo(turn, getSession().getCurrentUser());
             }
+            if(getSelectedGame().getTurns().size() == game.getTurns().size())
+                game.setTurnBuilder(previous);
         }
     }
 
