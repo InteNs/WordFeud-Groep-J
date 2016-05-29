@@ -4,7 +4,6 @@ import javafx.animation.FadeTransition;
 import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import models.Field;
 import models.Tile;

@@ -47,15 +47,15 @@ public class gameControlView extends View {
 
         turnSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
         turnList.getSelectionModel().selectedItemProperty().addListener((o, v, newValue) ->
-            selectTurn(newValue)
+                selectTurn(newValue)
         );
 
         extraFunctionsButton.setOnMouseClicked(event ->
-            contextMenu.show(extraFunctionsButton, event.getScreenX(), event.getScreenY())
+                contextMenu.show(extraFunctionsButton, event.getScreenX(), event.getScreenY())
         );
 
         turnSpinner.valueProperty().addListener((o, v, newValue) ->
-            selectTurn(newValue)
+                selectTurn(newValue)
         );
 
         turnSpinner.setOnMousePressed(event -> turnList.scrollTo(turnSpinner.getValue()));
@@ -63,12 +63,11 @@ public class gameControlView extends View {
         gameController.currentRoleProperty().addListener((observable, oldValue, newValue) -> {
             if (gameController.getSelectedTurn() != null)
                 setTabs(newValue, gameController.getSelectedTurn().getUser());
-            }
-        );
-
-        gameController.selectedGameProperty().addListener((o, v, newValue) -> {
-            showGame(newValue);
         });
+
+        gameController.selectedGameProperty().addListener((o, v, newValue) ->
+                showGame(newValue)
+        );
     }
 
     private void showGame(Game game) {
@@ -83,6 +82,7 @@ public class gameControlView extends View {
         setTabs(gameController.getCurrentRole(), game.getLastTurn().getUser());
         disableChat(!game.getPlayers().contains(session.getCurrentUser()));
     }
+
     private void selectTurn(Turn newValue) {
         if (newValue == null) return;
         gameController.setSelectedTurn(newValue);
@@ -90,8 +90,8 @@ public class gameControlView extends View {
         turnSpinner.getValueFactory().setValue(newValue);
         turnList.getSelectionModel().select(newValue);
         Game game = gameController.getSelectedGame();
-        challengerLabel.setText(game.getChallenger() + ": " + game.getScore(game.getChallenger(),newValue));
-        opponentLabel.setText(game.getOpponent() + ": " + game.getScore(game.getOpponent(),newValue));
+        challengerLabel.setText(game.getChallenger() + ": " + game.getScore(game.getChallenger(), newValue));
+        opponentLabel.setText(game.getOpponent() + ": " + game.getScore(game.getOpponent(), newValue));
         if (game.getOpponent().equals(newValue.getUser())) {
             if (gameController.getCurrentRole() == Role.PLAYER)
                 highLight(challengerLabel);
@@ -109,8 +109,7 @@ public class gameControlView extends View {
         if (label == challengerLabel) {
             challengerLabel.getStyleClass().setAll("current-player-label");
             opponentLabel.getStyleClass().clear();
-        }
-        else if (label == opponentLabel) {
+        } else if (label == opponentLabel) {
             opponentLabel.getStyleClass().setAll("current-player-label");
             challengerLabel.getStyleClass().clear();
         }
@@ -121,10 +120,10 @@ public class gameControlView extends View {
     }
 
     private void setTabs(Role gameMode, User currentTurnUser) {
-        if(gameMode == Role.PLAYER) {
+        if (gameMode == Role.PLAYER) {
             disableTurnControls(true);
             disableGameControls(currentTurnUser.equals(session.getCurrentUser()), false);
-        } else if(gameMode == Role.OBSERVER) {
+        } else if (gameMode == Role.OBSERVER) {
             disableTurnControls(false);
             disableGameControls(true, true);
         }
@@ -149,12 +148,12 @@ public class gameControlView extends View {
 
     private void disableChat(boolean disable) {
         turnChat.getChildren().remove(chatBox);
-        if(!disable)turnChat.getChildren().add(chatBox);
+        if (!disable) turnChat.getChildren().add(chatBox);
     }
 
     private void disableTurnControls(boolean disable) {
         turnChat.getChildren().remove(turnList);
-        if(!disable)turnChat.getChildren().add(turnList);
+        if (!disable) turnChat.getChildren().add(turnList);
         turnSpinner.setDisable(disable);
     }
 
@@ -166,12 +165,16 @@ public class gameControlView extends View {
         }
     }
 
-    public void showJokers( ) {
+    public void showJokers() {
         parent.getGameBoardView().showJokers();
     }
-    
-    public void shuffle(){
+
+    public void shuffle() {
         parent.getGameBoardView().shuffleRack();
+    }
+
+    public void clear() {
+        parent.getGameBoardView().clear();
     }
 
     public void playWord() {
