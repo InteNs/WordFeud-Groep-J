@@ -58,19 +58,4 @@ public class CompetitionDAO extends DAO {
         database.close();
         return pairs;
     }
-    
-    public boolean alreadyInvited(String requester, String receiver){
-        ResultSet rs = database.select(SQL.ALL.GAMES);
-        try {
-            while(rs.next()){
-                if(rs.getString("account_naam_uitdager").equals(requester) && rs.getString("account_naam_tegenstander").equals(receiver)){
-                return true;
-            }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-          }
-        database.close();
-        return false;  
-    }
 }

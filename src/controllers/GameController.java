@@ -1,10 +1,6 @@
 package controllers;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
-import enumerations.GameState;
-import enumerations.Language;
-import enumerations.Role;
-import enumerations.TurnType;
+import enumerations.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -73,8 +69,7 @@ public class GameController extends Controller {
     }
 
     public void loadGame(Game game, Role gameMode) {
-        if (game == null)
-            return;
+        if (game == null) return;
         game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
         game.setTurns(gameDAO.selectTurns(game));
         game.setMessages(gameDAO.selectMessages(game));
@@ -156,10 +151,11 @@ public class GameController extends Controller {
     }
 
     public boolean challenge(Language language, User requester, User receiver, Competition comp) {
-
         if (isUserInSelectedComp(requester, comp)) {
             if (!this.playingGame(requester, receiver, comp)) {
                 if (validInvite(requester, receiver)) {
+                    Game game = new Game(0, 0, comp.getId(), requester, receiver, GameState.REQUEST, BoardType.STANDARD, language);
+                    games.add(game);
                     gameDAO.createGame(comp.getId(), requester.getName(), language, receiver.getName());
                     return true;
                 }
@@ -178,9 +174,8 @@ public class GameController extends Controller {
         return false;
     }
 
-
     public boolean playingGame(User challenger, User opponent, Competition comp) {
-        getGames();
+        System.out.println(games);
         for (Game g : games) {
             if (g.getChallenger().equals(challenger) && g.getOpponent().equals(opponent) || (g.getChallenger().equals(opponent) && g.getOpponent().equals(challenger))) {
                 if (g.getGameState() != GameState.FINISHED) {

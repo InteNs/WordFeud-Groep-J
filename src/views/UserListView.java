@@ -63,6 +63,8 @@ public class UserListView extends View {
     }
     
     private void selectChallenge(User user){
+//        gameController.refill();
+        parent.getChallengeView().setDefaultText();
         userController.setSelectedUser(user);
         parent.setContent(parent.challengeView);
     }

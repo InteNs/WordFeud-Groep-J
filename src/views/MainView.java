@@ -179,4 +179,8 @@ public class MainView extends View implements Initializable {
     public WordInfoView getWordInfoView(){
         return wordInfoViewController;
     }
+
+    public ChallengeView getChallengeView(){
+        return challengeViewController;
+    }
 }

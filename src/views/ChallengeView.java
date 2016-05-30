@@ -12,7 +12,7 @@ import models.User;
 
 public class ChallengeView extends View {
 
-    private ObservableList<Language> languages = FXCollections.observableArrayList(Language.NL , Language.EN);
+    private ObservableList<Language> languages = FXCollections.observableArrayList(Language.NL, Language.EN);
 
     @FXML
     private ComboBox<Language> languageBox;
@@ -20,21 +20,19 @@ public class ChallengeView extends View {
     private Label challenge;
 
     public void challenge() {
-
         Competition comp = competitionController.getSelectedCompetition();
         User requester = session.getCurrentUser();
         User receiver = userController.getSelectedUser();
 
-        challenge.setText(null);
-       if (!languageBox.getSelectionModel().isEmpty()) {
-            if(!gameController.challenge(languageBox.getValue(), requester, receiver, comp)){
+        if (!languageBox.getSelectionModel().isEmpty()) {
+            if (!gameController.challenge(languageBox.getValue(), requester, receiver, comp)) {
                 challenge.setTextFill(Color.RED);
                 challenge.setText("Fout met uitnodigen");
-            } 
-       } else {
+            }
+        } else {
             challenge.setTextFill(Color.RED);
             challenge.setText("Er is geen taal aangewezen");
-       }
+        }
     }
 
     @Override
@@ -43,7 +41,11 @@ public class ChallengeView extends View {
 
     @Override
     public void constructor() {
-        challenge.setText("Uitdagen");
         languageBox.setItems(languages);
+    }
+
+    public void setDefaultText() {
+        challenge.setTextFill(Color.BLACK);
+        challenge.setText("Uitdagen");
     }
 }
