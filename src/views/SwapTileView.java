@@ -80,7 +80,7 @@ public class SwapTileView extends View {
        window.setScene(scene);
        window.showAndWait(); 
        
-       if(returnvalue.isEmpty()){
+       if(returnvalue == null){
            return null;
        }
        return returnvalue;

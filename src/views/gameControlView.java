@@ -213,12 +213,13 @@ public class gameControlView extends View {
          ObservableList<Tile> currentRack = gameController.getSelectedGame().getTurnBuilder().getCurrentRack();
          SwapTileView swapTileView = new SwapTileView(resourceFactory);
          ObservableList<FieldTileNode> selectedTiles = swapTileView.swapTiles(currentRack);
+         if(selectedTiles != null){
          gameController.swapTiles(selectedTiles, gameController.getSelectedGame());
          gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
          gameController.setBoardState(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
          parent.getGameBoardView().displayGameBoard(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
          parent.getGameBoardView().displayPlayerRack(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
          selectTurn(gameController.getSelectedGame().getLastTurn());
-                
+         }       
     }
 }
