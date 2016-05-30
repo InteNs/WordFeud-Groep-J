@@ -32,6 +32,8 @@
                 <fx:include fx:id="createCompetitionView" source="CreateCompetitionView.fxml"/>
                 <fx:include fx:id="passwordChangeView" source="PasswordChangeView.fxml"/>
                 <fx:include fx:id="wordInfoView" source="WordInfoView.fxml"/>
+                <fx:include fx:id="challengeView" source="ChallengeView.fxml"/>
+
             </StackPane>
         </VBox>
     </SplitPane>

@@ -55,6 +55,17 @@ public class UserListView extends View {
         userList.getSelectionModel().selectedItemProperty().addListener((o1, o2, newValue) ->
                 select(newValue)
         );
+        compUserList.getSelectionModel().selectedItemProperty().addListener((o1, o2, newValue) ->
+        selectChallenge(newValue) 
+        );
+        
+        
+    }
+    
+    private void selectChallenge(User user){
+        parent.getChallengeView().setDefaultText();
+        userController.setSelectedUser(user);
+        parent.setContent(parent.challengeView);
     }
 
     private void select(User user) {

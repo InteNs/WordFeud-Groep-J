@@ -14,7 +14,7 @@ public class SQL {
 
     public class ALL {
         public static final String USERS = "SELECT\n  a.naam,\n  a.wachtwoord,\n  r.rol_type\nFROM account a\n  LEFT JOIN accountrol r on a.naam = r.account_naam";
-        public static final String GAMES = "SELECT spel.*, MAX(beurt.id) AS last_turn\nFROM spel\nLEFT JOIN beurt ON spel.id = beurt.spel_id\nGROUP BY spel_id";
+        public static final String GAMES = "SELECT spel.*, MAX(beurt.id) AS last_turn\nFROM spel\nLEFT JOIN beurt ON spel.id = beurt.spel_id\nGROUP BY spel.id";
         public static final String COMPETITIONS = "SELECT C.id, C.omschrijving, C.account_naam_eigenaar, AVG(R.gemidddelde_score) AS gemidddelde_score FROM competitie AS C LEFT JOIN rank_avg AS R ON C.id = R.competitie_id GROUP BY C.id;";
         public static final String PLAYERSCOMPS = "SELECT * FROM deelnemer";
         public static final String WINSLOSES = "SELECT w.account_naam, wins,lost FROM rank_nr_wins w JOIN rank_nr_lost l ON w.account_naam = l.account_naam";
@@ -29,7 +29,8 @@ public class SQL {
         public static final String SETROLE = "INSERT INTO `wordfeud`.`accountrol` (`account_naam`, `rol_type`) VALUES (?, ?);";
         public static final String INSERTCOMPETITION = "INSERT INTO competitie (omschrijving, account_naam_eigenaar) VALUES (?, ?);";
         public static final String INSERTPLAYER = "INSERT INTO deelnemer (account_naam, competitie_id) VALUES (?, ?);";
-        public static final String INSERTMESSAGE = "INSERT INTO wordfeud.chatregel (chatregel.spel_id,chatregel.account_naam,chatregel.bericht) VALUES (?,?,?);";
+        public static final String INSERTMESSAGE = "INSERT INTO wordfeud.chatregel (chatregel.spel_id,chatregel.account_naam,chatregel.bericht) VALUES (?,?,?);"; 
+        public static final String CREATEGAME = "INSERT INTO spel (competitie_id, toestand_type, account_naam_uitdager, reaktie_type, bord_naam, letterset_naam, account_naam_tegenstander) VALUES (?, 'request', ?, 'unknown', 'standard', ?, ?);";
     }
     
     public class DELETE {
