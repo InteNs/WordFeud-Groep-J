@@ -179,7 +179,7 @@ public class GameController extends Controller {
         } 
         game.getTurnBuilder().fillCurrentRack(game.getPot());
         int turnId = game.getLastTurn().getId() + 1;
-        Turn newTurn = game.getTurnBuilder().buildTurn(turnId, getSession().getCurrentUser(), TurnType.getFor("swap"));
+        Turn newTurn = game.getTurnBuilder().buildTurn(turnId, getSession().getCurrentUser(), TurnType.SWAP);
         insertTurn(newTurn, game);
         
         

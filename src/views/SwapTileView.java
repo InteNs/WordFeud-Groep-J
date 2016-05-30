@@ -67,8 +67,7 @@ public class SwapTileView extends View {
         Button swap  = new Button("Ruilen");
         Button close = new Button("Sluiten");
         
-        tilePane.getChildren().add(close);
-        tilePane.getChildren().add(swap);
+        tilePane.getChildren().addAll(close, swap);
         
         close.setOnAction(event -> window.close());
         swap.setOnAction(event -> { 
