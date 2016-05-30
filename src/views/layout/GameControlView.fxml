@@ -25,7 +25,7 @@
                             </CustomMenuItem>
                             <CustomMenuItem text="Unspecified Action">
                                 <content>
-                                    <Button fx:id="swapButton" prefHeight="50.0" prefWidth="100.0" text="Ruilen"/>
+                                    <Button fx:id="swapButton" prefHeight="50.0" prefWidth="100.0" text="Ruilen" onAction="#swapTiles" />
                                 </content>
                             </CustomMenuItem>
                             <CustomMenuItem text="Unspecified Action">
