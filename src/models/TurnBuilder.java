@@ -214,9 +214,19 @@ public class TurnBuilder {
 
     private int calculateTotalScore(ArrayList<ArrayList<Field>> wordsFound) {
         int totalScore = 0;
+        boolean otherAxis = false;
         for (ArrayList<Field> word : wordsFound) {
-            totalScore += calculateWordScore(word);
+            int wordScore = calculateWordScore(word);
+            if (wordsFound.size() == 2 && totalScore < wordScore){
+                otherAxis = true;
+            }
+            totalScore += wordScore ;
         }
+
+        if (otherAxis && fieldsChanged.size() == 1){
+            Collections.swap(wordsFound,0,1);
+        }
+
         if (fieldsChanged.size() == 7) {
             totalScore += 40;
         }
