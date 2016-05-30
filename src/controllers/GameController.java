@@ -7,9 +7,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import models.*;
+import views.components.FieldTileNode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class GameController extends Controller {
@@ -148,6 +150,38 @@ public class GameController extends Controller {
         if (game != null)
             return game.getPot();
         return null;
+    }
+
+    public void insertTurn(Turn turn, Game game) {
+        gameDAO.insertTurn(game, turn);
+    }
+
+    public boolean isThirdPass(){
+        int counter = 0;
+        ObservableList<Turn> turns = getSelectedGame().getTurns();
+        for ( int n = turns.size()-1; n > turns.size()-3 ; n--){
+            System.out.println(turns.get(n).getId());
+            if (turns.get(n).getType() == TurnType.PASS){
+                counter++;
+            }
+        }
+        if (counter == 2){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public void swapTiles(ObservableList<FieldTileNode> swapTiles, Game game){
+        for(FieldTileNode field: swapTiles){
+            game.getTurnBuilder().getCurrentRack().remove(field.getTile());
+        } 
+        game.getTurnBuilder().fillCurrentRack(game.getPot());
+        int turnId = game.getLastTurn().getId() + 1;
+        Turn newTurn = game.getTurnBuilder().buildTurn(turnId, getSession().getCurrentUser(), TurnType.SWAP);
+        insertTurn(newTurn, game);
+        
+        
     }
 
     public boolean challenge(Language language, User requester, User receiver, Competition comp) {

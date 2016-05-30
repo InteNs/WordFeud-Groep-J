@@ -2,6 +2,7 @@ package views;
 
 
 import enumerations.Role;
+import enumerations.TurnType;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import models.*;
 import views.components.ChatCell;
+import views.components.FieldTileNode;
 
 public class gameControlView extends View {
 
@@ -81,6 +83,9 @@ public class gameControlView extends View {
         setPotLabel(game);
         setTabs(gameController.getCurrentRole(), game.getLastTurn().getUser());
         disableChat(!game.getPlayers().contains(session.getCurrentUser()));
+        if(game.getPot().size() < 7){
+            swapButton.setDisable(true);
+        }
     }
 
     private void selectTurn(Turn newValue) {
@@ -186,5 +191,34 @@ public class gameControlView extends View {
         parent.getGameBoardView().displayGameBoard(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
         parent.getGameBoardView().displayPlayerRack(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
         selectTurn(gameController.getSelectedGame().getLastTurn());
+    }
+
+    @FXML
+    public void pass(){
+        clear();
+        Turn newTurn = gameController.getSelectedGame().getTurnBuilder().buildTurn(gameController.getSelectedGame().getLastTurn().getId() + 1, session.getCurrentUser(), TurnType.PASS);
+        gameController.insertTurn(newTurn, gameController.getSelectedGame());
+        if (gameController.isThirdPass()) {
+            //DOTO: finish the game!
+            System.out.println("3x passed!");
+        }
+        gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
+        gameController.setBoardState(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+        parent.getGameBoardView().displayGameBoard(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+        parent.getGameBoardView().displayPlayerRack(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+        selectTurn(gameController.getSelectedGame().getLastTurn());
+    }
+    
+    public void swapTiles(){
+         ObservableList<Tile> currentRack = gameController.getSelectedGame().getTurnBuilder().getCurrentRack();
+         SwapTileView swapTileView = new SwapTileView(resourceFactory);
+         ObservableList<FieldTileNode> selectedTiles = swapTileView.swapTiles(currentRack);
+         gameController.swapTiles(selectedTiles, gameController.getSelectedGame());
+         gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
+         gameController.setBoardState(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+         parent.getGameBoardView().displayGameBoard(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+         parent.getGameBoardView().displayPlayerRack(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+         selectTurn(gameController.getSelectedGame().getLastTurn());
+                
     }
 }
