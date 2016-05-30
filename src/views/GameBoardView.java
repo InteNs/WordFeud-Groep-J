@@ -67,7 +67,7 @@ public class GameBoardView extends View {
                         gameController.placeTile(selectedGame, fieldNode.getField(), tileBeingDragged);
                         event.setDropCompleted(true);
                         if (gameController.isJokerTile(tileBeingDragged)) {
-                            JokerView jokerView = new JokerView(resourceFactory);
+                            JokerView jokerView = new JokerView(resourceFactory, parent);
                             char choice = jokerView.jokerChoice();
                             tileBeingDragged.replaceJoker(choice);
                             ((FieldTileNode) event.getTarget()).redrawImage();
@@ -168,6 +168,31 @@ public class GameBoardView extends View {
                 });
             }
         });
+    }
+
+    public void clear() {
+        //get changed fields
+        ObservableList<Field> fields = gameController.getFieldsChanged(gameController.getSelectedGame());
+        //for every blank space in rack
+        nodes.stream()
+                .filter(FieldTileNode::isPlaceHolder)
+                .forEach(fieldTileNode -> {
+            if (fields.isEmpty()) return;
+            Field field = fields.get(0);
+            fieldTileNode.setTile(field.getTile());
+            gameController.removeTile(gameController.getSelectedGame(), field);
+            findNodeInGrid(field.getX(), field.getY()).redrawImage();
+        });
+        setCurrentRack(gameController.getSelectedGame(), nodes);
+    }
+
+    private FieldTileNode findNodeInGrid(int col, int row) {
+        for (Node node : gameBoardGrid.getChildren()) {
+            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+                return (FieldTileNode) node;
+            }
+        }
+        return (FieldTileNode) gameBoardGrid.getChildren().get(0);
     }
 
     public void shuffleRack() {

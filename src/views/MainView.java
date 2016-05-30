@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -31,6 +32,7 @@ public class MainView extends View implements Initializable {
     @FXML public VBox createCompetitionView;
     @FXML public VBox competitionInfoView;
     @FXML public VBox passwordChangeView;
+    @FXML public VBox challengeView;
     @FXML public ProgressIndicator loadIndicator;
     @FXML public ToggleButton threadToggle;
     @FXML public ToolBar toolBar;
@@ -57,6 +59,7 @@ public class MainView extends View implements Initializable {
     @FXML private gameControlView gameControlViewController;
     @FXML private WordListView wordListViewController;
     @FXML private WordInfoView wordInfoViewController;
+    @FXML private ChallengeView challengeViewController;
 
     private ControllerFactory controllerFactory;
     private ArrayList<View> views;
@@ -90,7 +93,9 @@ public class MainView extends View implements Initializable {
                 passwordChangeViewController,
                 gameControlViewController,
                 wordListViewController,
-                wordInfoViewController
+                wordInfoViewController,
+                challengeViewController
+
         ));
         views.forEach(view -> view.init(this));
 
@@ -137,7 +142,6 @@ public class MainView extends View implements Initializable {
 
     /**
      * set the control (tab pane) visible or not (makes content fill window)
-     *
      * @param visible whether the control tabs should be visible
      */
     public void setControl(Boolean visible) {
@@ -157,7 +161,6 @@ public class MainView extends View implements Initializable {
 
     /**
      * set or add content to app's view (clears content if node == null)
-     *
      * @param node the node to set as content
      */
     public void setContent(Node node) {
@@ -211,6 +214,10 @@ public class MainView extends View implements Initializable {
 
     public WordInfoView getWordInfoView() {
         return wordInfoViewController;
+    }
+
+    public ChallengeView getChallengeView(){
+        return challengeViewController;
     }
 
     public void doThread(ActionEvent actionEvent) {

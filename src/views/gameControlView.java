@@ -2,6 +2,7 @@ package views;
 
 
 import enumerations.Role;
+import enumerations.TurnType;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -12,7 +13,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import models.*;
 import views.components.ChatCell;
+import views.components.FieldTileNode;
 import views.subviews.potView;
+
 
 public class gameControlView extends View {
 
@@ -41,21 +44,18 @@ public class gameControlView extends View {
     }
 
     @Override
-    public void clear() {
-
-    }
-
-    @Override
     public void constructor() {
         chatList.setCellFactory(param -> new ChatCell(param, session.getCurrentUser()));
         chatList.addEventFilter(MouseEvent.MOUSE_PRESSED, Event::consume);
 
 
         turnSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-        turnList.setOnMouseClicked(event -> selectTurn(turnList.getSelectionModel().getSelectedItem()));
+        turnList.getSelectionModel().selectedItemProperty().addListener((o, v, newValue) ->
+                selectTurn(newValue)
+        );
 
         extraFunctionsButton.setOnMouseClicked(event ->
-            contextMenu.show(extraFunctionsButton, event.getScreenX(), event.getScreenY())
+                contextMenu.show(extraFunctionsButton, event.getScreenX(), event.getScreenY())
         );
 
         turnSpinner.valueProperty().addListener((o, oldValue, newValue) -> {
@@ -86,7 +86,11 @@ public class gameControlView extends View {
         setPotLabel(newGame);
         setTabs(gameController.getCurrentRole(), newGame.getLastTurn().getUser());
         disableChat(!newGame.getPlayers().contains(session.getCurrentUser()));
+        if(newGame.getPot().size() < 7){
+            swapButton.setDisable(true);
+        }
     }
+
     private void selectTurn(Turn newValue) {
         if (newValue == null) return;
         gameController.setSelectedTurn(newValue);
@@ -94,8 +98,8 @@ public class gameControlView extends View {
         turnSpinner.getValueFactory().setValue(newValue);
         turnList.getSelectionModel().select(newValue);
         Game game = gameController.getSelectedGame();
-        challengerLabel.setText(game.getChallenger() + ": " + game.getScore(game.getChallenger(),newValue));
-        opponentLabel.setText(game.getOpponent() + ": " + game.getScore(game.getOpponent(),newValue));
+        challengerLabel.setText(game.getChallenger() + ": " + game.getScore(game.getChallenger(), newValue));
+        opponentLabel.setText(game.getOpponent() + ": " + game.getScore(game.getOpponent(), newValue));
         if (game.getOpponent().equals(newValue.getUser())) {
             if (gameController.getCurrentRole() == Role.PLAYER)
                 highLight(challengerLabel);
@@ -113,8 +117,7 @@ public class gameControlView extends View {
         if (label == challengerLabel) {
             challengerLabel.getStyleClass().setAll("current-player-label");
             opponentLabel.getStyleClass().clear();
-        }
-        else if (label == opponentLabel) {
+        } else if (label == opponentLabel) {
             opponentLabel.getStyleClass().setAll("current-player-label");
             challengerLabel.getStyleClass().clear();
         }
@@ -125,10 +128,10 @@ public class gameControlView extends View {
     }
 
     private void setTabs(Role gameMode, User currentTurnUser) {
-        if(gameMode == Role.PLAYER) {
+        if (gameMode == Role.PLAYER) {
             disableTurnControls(true);
             disableGameControls(currentTurnUser.equals(session.getCurrentUser()), false);
-        } else if(gameMode == Role.OBSERVER) {
+        } else if (gameMode == Role.OBSERVER) {
             disableTurnControls(false);
             disableGameControls(true, true);
         }
@@ -153,12 +156,12 @@ public class gameControlView extends View {
 
     private void disableChat(boolean disable) {
         turnChat.getChildren().remove(chatBox);
-        if(!disable)turnChat.getChildren().add(chatBox);
+        if (!disable) turnChat.getChildren().add(chatBox);
     }
 
     private void disableTurnControls(boolean disable) {
         turnChat.getChildren().remove(turnList);
-        if(!disable)turnChat.getChildren().add(turnList);
+        if (!disable) turnChat.getChildren().add(turnList);
         turnSpinner.setDisable(disable);
     }
 
@@ -170,12 +173,16 @@ public class gameControlView extends View {
         }
     }
 
-    public void showJokers( ) {
+    public void showJokers() {
         parent.getGameBoardView().showJokers();
     }
-    
-    public void shuffle(){
+
+    public void shuffle() {
         parent.getGameBoardView().shuffleRack();
+    }
+
+    public void clear() {
+        parent.getGameBoardView().clear();
     }
 
     public void playWord() {
@@ -187,5 +194,35 @@ public class gameControlView extends View {
         parent.getGameBoardView().displayGameBoard(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
         parent.getGameBoardView().displayPlayerRack(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
         selectTurn(gameController.getSelectedGame().getLastTurn());
+    }
+
+    @FXML
+    public void pass(){
+        clear();
+        Turn newTurn = gameController.getSelectedGame().getTurnBuilder().buildTurn(gameController.getSelectedGame().getLastTurn().getId() + 1, session.getCurrentUser(), TurnType.PASS);
+        gameController.insertTurn(newTurn, gameController.getSelectedGame());
+        if (gameController.isThirdPass()) {
+            //DOTO: finish the game!
+            System.out.println("3x passed!");
+        }
+        gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
+        gameController.setBoardState(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+        parent.getGameBoardView().displayGameBoard(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+        parent.getGameBoardView().displayPlayerRack(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+        selectTurn(gameController.getSelectedGame().getLastTurn());
+    }
+
+    public void swapTiles(){
+         ObservableList<Tile> currentRack = gameController.getSelectedGame().getTurnBuilder().getCurrentRack();
+         SwapTileView swapTileView = new SwapTileView(resourceFactory);
+         ObservableList<FieldTileNode> selectedTiles = swapTileView.swapTiles(currentRack);
+         if(selectedTiles != null){
+         gameController.swapTiles(selectedTiles, gameController.getSelectedGame());
+         gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
+         gameController.setBoardState(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+         parent.getGameBoardView().displayGameBoard(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+         parent.getGameBoardView().displayPlayerRack(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+         selectTurn(gameController.getSelectedGame().getLastTurn());
+         }
     }
 }

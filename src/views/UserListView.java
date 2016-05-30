@@ -53,6 +53,10 @@ public class UserListView extends View {
         currentUserField.setOnMouseClicked(e -> select(session.getCurrentUser()));
 
         userList.setOnMouseClicked(event -> select(userList.getSelectionModel().getSelectedItem()));
+
+        compUserList.getSelectionModel().selectedItemProperty().addListener((o1, o2, newValue) ->
+                selectChallenge(newValue)
+        );
     }
 
     private void showCompUsers(Competition newValue) {
@@ -63,6 +67,12 @@ public class UserListView extends View {
             compUserPane.setText("Accounts binnen: " + newValue.toString());
             compUserList.setItems((filteredUsers.filtered(filterComp)));
         }
+    }
+
+    private void selectChallenge(User user){
+        parent.getChallengeView().setDefaultText();
+        userController.setSelectedUser(user);
+        parent.setContent(parent.challengeView);
     }
 
     private void select(User user) {
