@@ -66,7 +66,7 @@ public class GameBoardView extends View {
                         gameController.placeTile(selectedGame, fieldNode.getField(), tileBeingDragged);
                         event.setDropCompleted(true);
                         if (gameController.isJokerTile(tileBeingDragged)) {
-                            JokerView jokerView = new JokerView(resourceFactory);
+                            JokerView jokerView = new JokerView(resourceFactory, parent);
                             char choice = jokerView.jokerChoice();
                             tileBeingDragged.replaceJoker(choice);
                             ((FieldTileNode) event.getTarget()).redrawImage();
