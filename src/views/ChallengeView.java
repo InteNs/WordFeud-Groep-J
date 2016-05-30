@@ -28,6 +28,9 @@ public class ChallengeView extends View {
             if (!gameController.challenge(languageBox.getValue(), requester, receiver, comp)) {
                 challenge.setTextFill(Color.RED);
                 challenge.setText("Fout met uitnodigen");
+            } else{
+                challenge.setTextFill(Color.GREEN);
+                challenge.setText("Succesvol uitgedaagd");
             }
         } else {
             challenge.setTextFill(Color.RED);
