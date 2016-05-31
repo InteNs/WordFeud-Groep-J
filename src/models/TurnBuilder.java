@@ -31,6 +31,14 @@ public class TurnBuilder {
 
     }
 
+    public ArrayList<Turn> buildEndTurns(Turn challengerTurn, Turn opponentTurn){
+        int challengerScore = challengerTurn.getScore();
+        int opponentScore = opponentTurn.getScore();
+
+        return null;
+    }
+
+
     public String getTurnWord(Field[][] gameBoard, ObservableList<Field> fieldsChanged){
        if (fieldsChanged.isEmpty()){
            return null;
@@ -43,7 +51,14 @@ public class TurnBuilder {
     }
 
     public Turn buildTurn(int newTurnId, User user, TurnType turnType){
-       return new Turn(newTurnId,
+        if (turnType == TurnType.END){
+           if (!currentRack.isEmpty()){
+               for (Tile tile : currentRack) {
+                   score -= tile.getValue();
+               }
+           }
+        }
+        return new Turn(newTurnId,
                 getScore(),
                 user,
                 turnType,
