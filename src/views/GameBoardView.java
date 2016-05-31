@@ -170,7 +170,7 @@ public class GameBoardView extends View {
         });
     }
 
-    public void clear() {
+    public void clearBoard() {
         //get changed fields
         ObservableList<Field> fields = gameController.getFieldsChanged(gameController.getSelectedGame());
         //for every blank space in rack

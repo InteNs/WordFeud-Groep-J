@@ -95,7 +95,8 @@ public class CompetitionController extends Controller {
 
     @Override
     public void refill() {
-        competitions.setAll(fetched);
+        if (!competitions.equals(fetched))
+            competitions.setAll(fetched);
     }
 
     @Override

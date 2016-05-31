@@ -16,6 +16,8 @@ import views.components.ChatCell;
 import views.components.FieldTileNode;
 import views.subviews.potView;
 
+import java.util.Objects;
+
 
 public class gameControlView extends View {
 
@@ -40,7 +42,13 @@ public class gameControlView extends View {
 
     @Override
     public void refresh() {
-        showGame(gameController.getSelectedGame(), gameController.getSelectedGame());
+        if (gameController.getSelectedGame() != null)
+            showGame(gameController.getSelectedGame(), false);
+    }
+
+    @Override
+    public void clear() {
+
     }
 
     @Override
@@ -50,43 +58,56 @@ public class gameControlView extends View {
 
 
         turnSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-        turnList.getSelectionModel().selectedItemProperty().addListener((o, v, newValue) ->
-                selectTurn(newValue)
-        );
+        turnList.getSelectionModel().selectedItemProperty()
+                .addListener((o, oldValue, newValue) -> {
+                    if (!Objects.equals(oldValue, newValue) && newValue != null)
+                        selectTurn(newValue);
+                });
 
         extraFunctionsButton.setOnMouseClicked(event ->
                 contextMenu.show(extraFunctionsButton, event.getScreenX(), event.getScreenY())
         );
 
         turnSpinner.valueProperty().addListener((o, oldValue, newValue) -> {
-            if (oldValue != newValue && !newValue.toString().equals("")) selectTurn(newValue);
+            if (newValue != null && oldValue != newValue && !newValue.toString().equals("")) selectTurn(newValue);
         });
 
         turnSpinner.setOnMousePressed(event -> turnList.scrollTo(turnSpinner.getValue()));
 
-        gameController.currentRoleProperty().addListener((observable, oldValue, newValue) -> {
-            if (gameController.getSelectedTurn() != null)
-                setTabs(newValue, gameController.getSelectedTurn().getUser());
-            }
-        );
+        gameController.currentRoleProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if (gameController.getSelectedTurn() != null)
+                        setTabs(newValue, gameController.getSelectedTurn().getUser());
+                });
 
-        gameController.selectedGameProperty().addListener((o, v, newValue) -> {
-            showGame(newValue, v);
-        });
+        gameController.selectedGameProperty()
+                .addListener((o, oldValue, newValue) -> {
+                    if (!Objects.equals(oldValue, newValue) && newValue != null)
+                        showGame(newValue, true);
+                });
     }
 
-    private void showGame(Game newGame, Game oldGame) {
-        if (newGame == null) return;
+    private void showGame(Game newGame, boolean isNew) {
         chatList.setItems(newGame.getMessages());
-        chatList.scrollTo(chatList.getItems().size());
+        if (isNew) chatList.scrollTo(chatList.getItems().size());
         turnList.setItems(newGame.getTurns());
         turnSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(newGame.getTurns()));
-        turnList.scrollTo(newGame.getLastTurn());
-        selectTurn(newGame.getLastTurn());
+        if (newGame.getGameMode() == Role.PLAYER) selectTurn(newGame.getLastTurn());
+        else if (newGame.getGameMode() == Role.OBSERVER) {
+            if (newGame.getTurns().contains(gameController.getSelectedTurn())) {
+                selectTurn(gameController.getSelectedTurn());
+                //turnList.scrollTo(gameController.getSelectedTurn());
+            }
+            else {
+                selectTurn(newGame.getLastTurn());
+                turnList.scrollTo(newGame.getLastTurn());
+            }
+        }
+
         setPotLabel(newGame);
         setTabs(gameController.getCurrentRole(), newGame.getLastTurn().getUser());
         disableChat(!newGame.getPlayers().contains(session.getCurrentUser()));
-        if(newGame.getPot().size() < 7){
+        if (newGame.getPot().size() < 7) {
             swapButton.setDisable(true);
         }
     }
@@ -181,8 +202,8 @@ public class gameControlView extends View {
         parent.getGameBoardView().shuffleRack();
     }
 
-    public void clear() {
-        parent.getGameBoardView().clear();
+    public void clearBoard() {
+        parent.getGameBoardView().clearBoard();
     }
 
     public void playWord() {
@@ -197,7 +218,7 @@ public class gameControlView extends View {
     }
 
     @FXML
-    public void pass(){
+    public void pass() {
         clear();
         Turn newTurn = gameController.getSelectedGame().getTurnBuilder().buildTurn(gameController.getSelectedGame().getLastTurn().getId() + 1, session.getCurrentUser(), TurnType.PASS);
         gameController.insertTurn(newTurn, gameController.getSelectedGame());
@@ -212,17 +233,17 @@ public class gameControlView extends View {
         selectTurn(gameController.getSelectedGame().getLastTurn());
     }
 
-    public void swapTiles(){
-         ObservableList<Tile> currentRack = gameController.getSelectedGame().getTurnBuilder().getCurrentRack();
-         SwapTileView swapTileView = new SwapTileView(resourceFactory);
-         ObservableList<FieldTileNode> selectedTiles = swapTileView.swapTiles(currentRack);
-         if(selectedTiles != null){
-         gameController.swapTiles(selectedTiles, gameController.getSelectedGame());
-         gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
-         gameController.setBoardState(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
-         parent.getGameBoardView().displayGameBoard(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
-         parent.getGameBoardView().displayPlayerRack(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
-         selectTurn(gameController.getSelectedGame().getLastTurn());
-         }
+    public void swapTiles() {
+        ObservableList<Tile> currentRack = gameController.getSelectedGame().getTurnBuilder().getCurrentRack();
+        SwapTileView swapTileView = new SwapTileView(resourceFactory);
+        ObservableList<FieldTileNode> selectedTiles = swapTileView.swapTiles(currentRack);
+        if (selectedTiles != null) {
+            gameController.swapTiles(selectedTiles, gameController.getSelectedGame());
+            gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
+            gameController.setBoardState(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+            parent.getGameBoardView().displayGameBoard(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+            parent.getGameBoardView().displayPlayerRack(gameController.getSelectedGame(), gameController.getSelectedGame().getLastTurn());
+            selectTurn(gameController.getSelectedGame().getLastTurn());
+        }
     }
 }

@@ -152,6 +152,10 @@ public class Game {
         this.emptyGameBoard = fields;
     }
 
+    public Field[][] getEmptyGameBoard() {
+        return emptyGameBoard;
+    }
+
     /**
      * set the board to a specific turn that has already completed
      *

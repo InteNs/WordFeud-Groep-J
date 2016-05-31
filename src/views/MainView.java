@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -197,7 +196,7 @@ public class MainView extends View implements Initializable {
                 views.forEach(View::refresh);
                 loadIndicator.setVisible(false);
             });
-        }), 0, 6, SECONDS);
+        }), 0, 2, SECONDS);
     }
 
     public void setApplicationLoader(Main applicationLoader) {

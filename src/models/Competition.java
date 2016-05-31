@@ -50,7 +50,7 @@ public class Competition {
     }
 
     public void addPlayer(User user) {
-        players.add(user);
+        if (!players.contains(user)) players.add(user);
     }
 
     public int getAmountOfUsers(){

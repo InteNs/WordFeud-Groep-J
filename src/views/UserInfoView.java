@@ -14,6 +14,8 @@ import javafx.util.Duration;
 import models.Competition;
 import models.User;
 
+import java.util.Objects;
+
 public class UserInfoView extends View {
     @FXML private Label userNameLabel;
     @FXML private Label lNoStats;
@@ -29,13 +31,12 @@ public class UserInfoView extends View {
     @Override
     public void constructor() {
         userController.selectedUserProperty().addListener((observable, oldValue, newValue) -> {
-            showUser(newValue, oldValue);
+            if (!Objects.equals(oldValue, newValue)) showUser(newValue, true);
         });
     }
 
-    private void showUser(User newValue, User oldValue) {
-        if (newValue == null) { clear(); return; }
-        if (newValue.equals(oldValue)) return;
+    private void showUser(User newValue, boolean isNew) {
+        if (newValue == null) return;
         userNameLabel.setText(newValue.toString());
         passwordLabel.setText("wachtwoord: " + newValue.getPassword());
         myCompetitions.setItems(competitionController.getCompetitions(newValue));
@@ -45,10 +46,10 @@ public class UserInfoView extends View {
             passwordLabel.setVisible(false);
         }
         getRoles(newValue);
-        setStats(newValue);
+        setStats(newValue, isNew);
     }
 
-    private void setStats(User selectedUser) {
+    private void setStats(User selectedUser, boolean isNew) {
         FadeTransition ft = new FadeTransition(Duration.millis(1000), lNoStats);
         ft.setFromValue(0.0);
         ft.setToValue(1.0);
@@ -57,7 +58,7 @@ public class UserInfoView extends View {
         if (selectedUser.getWins() == 0 && selectedUser.getLoses() == 0) {
             lNoStats.setVisible(true);
             winloseChart.setVisible(false);
-            ft.play();
+            if (isNew) ft.play();
 
         } else {
             winloseChart.setOpacity(1);
@@ -100,7 +101,7 @@ public class UserInfoView extends View {
 
     @Override
     public void refresh() {
-        showUser(userController.getSelectedUser(), userController.getSelectedUser());
+        showUser(userController.getSelectedUser(), false);
     }
 
     @Override

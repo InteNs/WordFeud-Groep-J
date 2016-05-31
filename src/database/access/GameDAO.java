@@ -57,6 +57,7 @@ public class GameDAO extends DAO {
         ArrayList<Tile> tiles = new ArrayList<>();
         ResultSet records = database.select(SQL.SELECT.TURNSFORGAME, game.getId());
         ResultSet tileRecords = database.select(SQL.SELECT.LETTERSFORGAME, game.getId());
+        if (records == null || tileRecords == null) return null;
         try {
             while (tileRecords.next()) {
                 tiles.add(new Tile(

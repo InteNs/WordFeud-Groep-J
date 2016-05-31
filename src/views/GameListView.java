@@ -10,24 +10,39 @@ import models.Competition;
 import models.Game;
 import views.components.GameCell;
 
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public class GameListView extends View {
 
-    @FXML private SplitPane lists;
-    @FXML private Accordion gameLists;
-    @FXML private Accordion compGameLists;
-    @FXML private TextField filterField;
-    @FXML private ListView<Game> myCompGamesList;
-    @FXML private ListView<Game> myGamesList;
-    @FXML private ListView<Game> allGamesList;
-    @FXML private ListView<Game> allCompGamesList;
-    @FXML private TitledPane myCompGamesPane;
-    @FXML private TitledPane myGamesPane;
-    @FXML private TitledPane allCompGamesPane;
-    @FXML private TitledPane allGamesPane;
-    @FXML private ChoiceBox<GameState> gameStateBox;
-    @FXML private ChoiceBox<Role> userRoleBox;
+    @FXML
+    private SplitPane lists;
+    @FXML
+    private Accordion gameLists;
+    @FXML
+    private Accordion compGameLists;
+    @FXML
+    private TextField filterField;
+    @FXML
+    private ListView<Game> myCompGamesList;
+    @FXML
+    private ListView<Game> myGamesList;
+    @FXML
+    private ListView<Game> allGamesList;
+    @FXML
+    private ListView<Game> allCompGamesList;
+    @FXML
+    private TitledPane myCompGamesPane;
+    @FXML
+    private TitledPane myGamesPane;
+    @FXML
+    private TitledPane allCompGamesPane;
+    @FXML
+    private TitledPane allGamesPane;
+    @FXML
+    private ChoiceBox<GameState> gameStateBox;
+    @FXML
+    private ChoiceBox<Role> userRoleBox;
 
     private FilteredList<Game> filteredGames;
     private Predicate<Game> filterText, filterComp, filterUser;
@@ -36,7 +51,7 @@ public class GameListView extends View {
         setChoiceBoxes();
         setViewingMode(false, null);
         applyViewingMode();
-        showCompGames(competitionController.getSelectedCompetition(), competitionController.getSelectedCompetition());
+        showCompGames(competitionController.getSelectedCompetition(), false);
     }
 
     @Override
@@ -65,7 +80,7 @@ public class GameListView extends View {
         });
 
         setViewingMode(true, null);
-        showCompGames(null, null);
+        showCompGames(null, false);
 
         //add listener to gamestatebox and search field that filters the games when changed
         gameStateBox.setOnAction(event -> filter(gameStateBox.getValue()));
@@ -88,15 +103,15 @@ public class GameListView extends View {
         allCompGamesList.setCellFactory(param -> new GameCell(session.getCurrentUser()));
 
         //when a competition is selected elsewhere(and has games/users, show or hide the lists, and update titles
-        competitionController.selectedCompetitionProperty().addListener((observable, oldValue, newValue) -> {
-            showCompGames(newValue, oldValue);
-        });
+        competitionController.selectedCompetitionProperty()
+                .addListener((o, oldValue, newValue) -> {
+                    if (!Objects.equals(newValue, oldValue)) showCompGames(newValue, true);
+                });
 
     }
 
     private void applyViewingMode() {
         gameController.setCurrentRole(userRoleBox.getValue());
-        //gameController.setSelectedGame(null);
         compGameLists.getPanes().remove(allCompGamesPane);
         gameLists.getPanes().remove(allGamesPane);
         if (userRoleBox.getValue() == Role.PLAYER) {
@@ -114,16 +129,16 @@ public class GameListView extends View {
         }
     }
 
-    private void showCompGames(Competition newValue, Competition oldValue) {
+    private void showCompGames(Competition newValue, boolean isNew) {
         if (newValue != null && !newValue.getPlayers().isEmpty()) {
-            if (!lists.getItems().contains(compGameLists)) lists.getItems().add(compGameLists);
+            if (!lists.getItems().contains(compGameLists))
+                lists.getItems().add(compGameLists);
 
             allCompGamesPane.setText("Alle spellen binnen: " + newValue.toString());
             allCompGamesList.setItems(filteredGames.filtered(filterComp));
             myCompGamesPane.setText("Mijn spellen binnen: " + newValue.toString());
-            myCompGamesList.setItems(filteredGames.filtered(filterComp.and(filterUser))
-            );
-            if (!newValue.equals(oldValue)) {
+            myCompGamesList.setItems(filteredGames.filtered(filterComp.and(filterUser)));
+            if (isNew) {
                 lists.setDividerPosition(0, 0.5);
                 compGameLists.setExpandedPane(myCompGamesPane);
             }
@@ -133,7 +148,7 @@ public class GameListView extends View {
     private void setChoiceBoxes() {
         ObservableList<Role> roles = session.getCurrentUser().getRoles().filtered(role ->
                 role == Role.OBSERVER || role == Role.PLAYER);
-        if(userRoleBox.getItems().size() != roles.size()) {
+        if (userRoleBox.getItems().size() != roles.size()) {
             Role previous = userRoleBox.getValue();
             userRoleBox.getItems().setAll(roles);
             setViewingMode(false, previous);
@@ -142,7 +157,7 @@ public class GameListView extends View {
 
     private void setViewingMode(boolean firstTime, Role select) {
         if (firstTime) {
-            if(session.getCurrentUser().hasRole(Role.PLAYER))
+            if (session.getCurrentUser().hasRole(Role.PLAYER))
                 userRoleBox.getSelectionModel().select(Role.PLAYER);
             else
                 userRoleBox.getSelectionModel().select(Role.OBSERVER);

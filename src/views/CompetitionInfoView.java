@@ -7,6 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import models.Competition;
 
+import java.util.Objects;
+
 public class CompetitionInfoView extends View {
 
     @FXML private Label competitionName;
@@ -18,17 +20,14 @@ public class CompetitionInfoView extends View {
 
     @Override
     public void constructor() {
-        competitionController.selectedCompetitionProperty().addListener((observable, oldValue, newValue) ->
-                setInfo(newValue)
-        );
+        competitionController.selectedCompetitionProperty()
+                .addListener((o, oldValue, newValue) -> {
+                    if (!Objects.equals(oldValue, newValue) && newValue != null)
+                        setInfo(newValue);
+                });
     }
 
     private void setInfo(Competition competition) {
-        if (competition == null) {
-            clear();
-            return;
-        }
-
         competitionName.setText(competition.getName());
         competitionInfo.setText("Eigenaar: " + competition.getOwner().getName());
         joinButton.setVisible(!competitionController.isUserInCompetition(session.getCurrentUser(), competition));
@@ -58,7 +57,8 @@ public class CompetitionInfoView extends View {
 
     @Override
     public void refresh() {
-        setInfo(competitionController.getSelectedCompetition());
+        if (competitionController.getSelectedCompetition() != null)
+            setInfo(competitionController.getSelectedCompetition());
     }
 
     @Override

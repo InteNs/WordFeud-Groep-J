@@ -10,6 +10,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import models.Competition;
 
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public class CompetitionListView extends View {
@@ -54,14 +55,16 @@ public class CompetitionListView extends View {
         myCompetition.setOnMouseClicked(event ->
                 selectCompetition(filteredCompetitions.filtered(filterOwned).get(0)));
 
-        competitionList.setOnMouseClicked(event ->
-                selectCompetition(competitionList.getSelectionModel().getSelectedItem())
-        );
+        competitionList.getSelectionModel().selectedItemProperty()
+                .addListener((o, oldValue, newValue) -> {
+                    if (!Objects.equals(oldValue, newValue) && newValue != null)
+                        selectCompetition(newValue);
+                });
     }
 
     private void showMyCompetition() {
         myCompetitionArea.getChildren().clear();
-        if(filteredCompetitions.filtered(filterOwned).isEmpty()) {
+        if (filteredCompetitions.filtered(filterOwned).isEmpty()) {
             myCompetitionArea.getChildren().add(createCompetition);
         } else {
             myCompetition.setText(filteredCompetitions.filtered(filterOwned).get(0).toString());

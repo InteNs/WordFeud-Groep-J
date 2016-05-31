@@ -13,7 +13,7 @@
         <HBox fx:id="buttonBox" alignment="CENTER" spacing="5.0" VBox.vgrow="NEVER">
             <Button fx:id="playButton" prefHeight="50.0" prefWidth="10000" text="Speel" onAction="#playWord"/>
             <Button fx:id="shuffleButton" prefHeight="50.0" prefWidth="10000" onAction="#shuffle" text="Shuffle"/>
-            <Button fx:id="clearButton" prefHeight="50.0" prefWidth="10000" onAction="#clear" text="Clear"/>
+            <Button fx:id="clearButton" prefHeight="50.0" prefWidth="10000" onAction="#clearBoard" text="Clear"/>
             <Button fx:id="extraFunctionsButton" prefHeight="50.0" prefWidth="10000" text="Overig">
                 <contextMenu>
                     <ContextMenu fx:id="contextMenu" anchorLocation="CONTENT_TOP_RIGHT">

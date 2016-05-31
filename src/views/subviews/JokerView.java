@@ -14,6 +14,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import resources.ResourceFactory;
+import views.MainView;
 import views.View;
 
 public class JokerView extends View {

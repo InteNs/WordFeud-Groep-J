@@ -25,12 +25,12 @@ public class UserController extends Controller {
         return selectedUser;
     }
 
-    public void setSelectedUser(User user) {
-        selectedUser.set(user);
-    }
-
     public User getSelectedUser() {
         return selectedUser.get();
+    }
+
+    public void setSelectedUser(User user) {
+        selectedUser.set(user);
     }
 
     public ObservableList<User> getUsers() {
@@ -39,18 +39,19 @@ public class UserController extends Controller {
 
     public User getUser(String name) {
         User user = new User(name);
-        if(users.contains(user))
+        if (users.contains(user))
             return users.get(users.indexOf(user));
         return null;
     }
 
     /**
      * check if user exists, checks database if no users in memory
+     *
      * @param username name of user to check
      * @return true if user already exists
      */
     public boolean userExists(String username) {
-        if(users != null)
+        if (users != null)
             return getUser(username) != null;
         else
             return userDAO.selectUser(username, null) != null;
@@ -63,7 +64,7 @@ public class UserController extends Controller {
 
     public boolean isValidUsername(String username) {
         return username.length() >= 5 & username.length() <= 25
-                && username.matches("[a-zA-Z0-9]+" );
+                && username.matches("[a-zA-Z0-9]+");
     }
 
     public boolean isValidPassword(String password) {
@@ -74,8 +75,7 @@ public class UserController extends Controller {
         if (enabled) {
             userDAO.insertUserRole(user, role);
             user.addRole(role);
-        }
-        else {
+        } else {
             userDAO.deleteUserRole(user, role);
             user.removeRole(role);
         }
@@ -92,13 +92,15 @@ public class UserController extends Controller {
 
     @Override
     public void refresh() {
-        userDAO.setAllStats(users);
+        //userDAO.setAllStats(users);
         if (users.contains(getSelectedUser())) setSelectedUser(users.get(users.indexOf(getSelectedUser())));
     }
 
     @Override
     public void refill() {
-        users.setAll(fetched);
+        if (!users.equals(fetched) || !users.stream().allMatch(user ->
+                user.deepEquals(fetched.get(fetched.indexOf(user)))))
+            users.setAll(fetched);
     }
 
     @Override

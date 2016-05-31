@@ -24,7 +24,7 @@
 
 .custom-toggle {
     -fx-background-color: orangered;
-    -fx-border-width: 1;
+    -fx-graphic: url("../../resources/icons/refresh.png");
 }
 
 .game-label {

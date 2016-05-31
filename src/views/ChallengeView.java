@@ -1,8 +1,6 @@
 package views;
 
 import enumerations.Language;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -12,12 +10,8 @@ import models.User;
 
 public class ChallengeView extends View {
 
-    private ObservableList<Language> languages = FXCollections.observableArrayList(Language.NL, Language.EN);
-
-    @FXML
-    private ComboBox<Language> languageBox;
-    @FXML
-    private Label challenge;
+    @FXML private ComboBox<Language> languageBox;
+    @FXML private Label challenge;
 
     public void challenge() {
         Competition comp = competitionController.getSelectedCompetition();
@@ -43,12 +37,13 @@ public class ChallengeView extends View {
     }
 
     @Override
-    public void constructor() {
-        languageBox.setItems(languages);
-    }
-
-    public void setDefaultText() {
+    public void clear() {
         challenge.setTextFill(Color.BLACK);
         challenge.setText("Uitdagen");
+    }
+
+    @Override
+    public void constructor() {
+        languageBox.getItems().setAll(Language.NL, Language.EN);
     }
 }

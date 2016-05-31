@@ -3,6 +3,8 @@ package models;
 import enumerations.BoardType;
 import enumerations.GameState;
 import enumerations.Language;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,6 +41,8 @@ public class GameTest {
 
     @Test
     public void checkRow() throws Exception {
+        ObservableList<User> users = FXCollections.observableArrayList();
+        System.out.println(users.filtered(user -> true).get(0));
 
     }
 }
