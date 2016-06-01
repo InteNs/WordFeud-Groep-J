@@ -161,7 +161,7 @@ public class gameControlView extends View {
     public void showPot() {
         ObservableList<Tile> tiles = gameController.showPot(gameController.getSelectedGame());
         if (tiles != null) {
-            new potView(tiles, resourceFactory);
+            new potView(tiles, resourceFactory, parent);
         }
     }
 
