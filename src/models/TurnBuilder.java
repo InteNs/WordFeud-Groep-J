@@ -124,7 +124,6 @@ public class TurnBuilder {
         return words;
     }
 
-
     public ObservableList<Tile> getCurrentRack() {
         return currentRack;
     }
@@ -213,7 +212,7 @@ public class TurnBuilder {
             }
         }
 
-        if (validTurn) {
+        if (validTurn && !gameboardIsEmpty()) {
             boolean touches = false;
             /**
              all fields changed are already connected to each other at this point
@@ -257,6 +256,19 @@ public class TurnBuilder {
             return fixedAxis;
         else
             return null;
+    }
+
+    private boolean gameboardIsEmpty() {
+        boolean isEmpty = true;
+        for (int y = 0; y < gameBoard.length; y++) {
+            for (int x = 0; x < gameBoard.length; x++) {
+                if (gameBoard[y][x].getTile() != null && !fieldsChanged.contains(gameBoard[y][x])) {
+                    isEmpty = false;
+                    break;
+                }
+            }
+        }
+        return isEmpty;
     }
 
     private ArrayList<ArrayList<Field>> resolveWords(char fixedAxis) {

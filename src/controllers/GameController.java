@@ -132,7 +132,9 @@ public class GameController extends Controller {
 
     @Override
     public void refill() {
-        if (!games.equals(fetchedGames))
+        if (!games.equals(fetchedGames) && games.stream().allMatch(game ->
+            game.deepEquals(fetchedGames.get(fetchedGames.indexOf(game)))
+        ))
             games.setAll(fetchedGames);
     }
 

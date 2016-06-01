@@ -135,7 +135,6 @@ public class Game {
     }
 
 
-
     public int setMessages(ArrayList<Message> messages) {
         int diff = 0;
         if (this.messages != null) {
@@ -223,16 +222,30 @@ public class Game {
     }
 
     public User getNextUser() {
-        if ( (lastTurnNumber & 1) == 0 )
-           return challenger;
+        if ((lastTurnNumber & 1) == 0)
+            return challenger;
         else
-           return opponent;
+            return opponent;
     }
 
     @Override
     public String toString() {
         return "[" + id + "][" + language + "] " + boardType.toString().toLowerCase()
                 + " spel tussen " + challenger + " en " + opponent;
+    }
+
+
+    public void sendMessage(User currentUser, String text) {
+        messages.add(new Message(currentUser, text, new Timestamp(System.currentTimeMillis())));
+    }
+
+
+    public void addTurn(Turn newTurn) {
+        turns.add(newTurn);
+    }
+
+    public ReactionType getReactionType() {
+        return reactionType;
     }
 
     @Override
@@ -251,16 +264,23 @@ public class Game {
         return id;
     }
 
-    public void sendMessage(User currentUser, String text) {
-        messages.add(new Message(currentUser, text, new Timestamp(System.currentTimeMillis())));
+    public boolean deepEquals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Game game = (Game) o;
+
+        if (id != game.id) return false;
+        if (competitionId != game.competitionId) return false;
+        if (gameState != game.gameState) return false;
+        return reactionType == game.reactionType;
     }
 
-
-    public void addTurn(Turn newTurn) {
-        turns.add(newTurn);
-    }
-
-    public ReactionType getReactionType() {
-        return reactionType;
+    public int deepHashCode() {
+        int result = id;
+        result = 31 * result + competitionId;
+        result = 31 * result + (gameState != null ? gameState.hashCode() : 0);
+        result = 31 * result + (reactionType != null ? reactionType.hashCode() : 0);
+        return result;
     }
 }
