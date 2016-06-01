@@ -6,7 +6,11 @@ import enumerations.TurnType;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class TurnBuilder {
@@ -28,21 +32,21 @@ public class TurnBuilder {
         });
     }
 
-    public TurnBuilder(){
+    public TurnBuilder() {
         this.listOfFieldsWithWords = new ArrayList<>();
         this.fieldsChanged = FXCollections.observableArrayList();
     }
 
-    public ArrayList<Turn> buildBeginTurns(Game selectedGame){
+    public ArrayList<Turn> buildBeginTurns(Game selectedGame) {
         ArrayList<Turn> returnList = new ArrayList<>();
-        Turn firstBeginTurn = new Turn(1,0, selectedGame.getChallenger(),TurnType.BEGIN);
-        Turn secondBeginTurn = new Turn(2,0, selectedGame.getOpponent(),TurnType.BEGIN);
+        Turn firstBeginTurn = new Turn(1, 0, selectedGame.getChallenger(), TurnType.BEGIN);
+        Turn secondBeginTurn = new Turn(2, 0, selectedGame.getOpponent(), TurnType.BEGIN);
         returnList.add(firstBeginTurn);
         returnList.add(secondBeginTurn);
         return returnList;
     }
 
-    public ArrayList<Turn> buildEndTurns(Turn lastTurn, Turn secondToLastTurn){
+    public ArrayList<Turn> buildEndTurns(Turn lastTurn, Turn secondToLastTurn) {
         int subtractFromLastTurn = 0;
         int subtractFromSecondToLastTurn = 0;
 
@@ -54,16 +58,16 @@ public class TurnBuilder {
             subtractFromSecondToLastTurn -= tile.getValue();
         }
 
-        if (lastTurn.getRack().isEmpty()){
+        if (lastTurn.getRack().isEmpty()) {
             subtractFromLastTurn += subtractFromSecondToLastTurn;
         }
 
-        if (secondToLastTurn.getRack().isEmpty()){
+        if (secondToLastTurn.getRack().isEmpty()) {
             subtractFromSecondToLastTurn += subtractFromLastTurn;
         }
 
-        Turn firstEndTurn = new Turn(lastTurn.getId()+1, subtractFromSecondToLastTurn,secondToLastTurn.getUser(),TurnType.END);
-        Turn secondEndTurn = new Turn(lastTurn.getId()+2, subtractFromLastTurn,lastTurn.getUser(),TurnType.END);
+        Turn firstEndTurn = new Turn(lastTurn.getId() + 1, subtractFromSecondToLastTurn, secondToLastTurn.getUser(), TurnType.END);
+        Turn secondEndTurn = new Turn(lastTurn.getId() + 2, subtractFromLastTurn, lastTurn.getUser(), TurnType.END);
         ArrayList<Turn> returnList = new ArrayList<>();
         returnList.add(firstEndTurn);
         returnList.add(secondEndTurn);
@@ -71,21 +75,21 @@ public class TurnBuilder {
     }
 
 
-    public String getTurnWord(Field[][] gameBoard, ObservableList<Field> fieldsChanged){
-       if (fieldsChanged.isEmpty()){
-           return null;
-       } else {
-           this.gameBoard = gameBoard;
-           this.fieldsChanged = fieldsChanged;
-           verifyAndCalculate();
-          if (!listOfFieldsWithWords.isEmpty()){
-              return getWordsFoundThisTurn().get(0);
-          }
-       }
+    public String getTurnWord(Field[][] gameBoard, ObservableList<Field> fieldsChanged) {
+        if (fieldsChanged.isEmpty()) {
+            return null;
+        } else {
+            this.gameBoard = gameBoard;
+            this.fieldsChanged = fieldsChanged;
+            verifyAndCalculate();
+            if (!listOfFieldsWithWords.isEmpty()) {
+                return getWordsFoundThisTurn().get(0);
+            }
+        }
         return null;
     }
 
-    public Turn buildTurn(int newTurnId, User user, TurnType turnType){
+    public Turn buildTurn(int newTurnId, User user, TurnType turnType) {
         return new Turn(newTurnId,
                 getScore(),
                 user,
@@ -218,6 +222,39 @@ public class TurnBuilder {
                 }
             }
         }
+
+        if (validTurn) {
+            boolean touches = false;
+            for (Field field : fieldsChanged) {
+                int x = field.getX();
+                int y = field.getY();
+                // it touches if the field above has a tile not in fieldsChanged
+                if (x > 0 && gameBoard[y][x - 1].getTile() != null && !fieldsChanged.contains(gameBoard[y][x - 1])) {
+                    touches = true;
+                    break;
+                }
+
+                // it touches if the field below has a tile not in fieldsChanged
+                if (x < 14 && gameBoard[y][x + 1].getTile() != null && !fieldsChanged.contains(gameBoard[y][x + 1])) {
+                    touches = true;
+                    break;
+                }
+
+                // it touches if the field to the left has a tile not in fieldsChanged
+                if (y > 0 && gameBoard[y - 1][x].getTile() != null && !fieldsChanged.contains(gameBoard[y - 1][x])) {
+                    touches = true;
+                    break;
+                }
+
+                // it touches if the field to the right has a tile not in fieldsChanged
+                if (y < 14 && gameBoard[y + 1][x].getTile() != null && !fieldsChanged.contains(gameBoard[y + 1][x])) {
+                    touches = true;
+                    break;
+                }
+            }
+            if (!touches)
+                validTurn = false;
+        }
         if (this.getCurrentRack() != null)
             System.out.println(validTurn);
         if (validTurn) {
@@ -263,14 +300,14 @@ public class TurnBuilder {
         boolean otherAxis = false;
         for (ArrayList<Field> word : wordsFound) {
             int wordScore = calculateWordScore(word);
-            if (wordsFound.size() == 2 && totalScore < wordScore){
+            if (wordsFound.size() == 2 && totalScore < wordScore) {
                 otherAxis = true;
             }
-            totalScore += wordScore ;
+            totalScore += wordScore;
         }
 
-        if (otherAxis && fieldsChanged.size() == 1){
-            Collections.swap(wordsFound,0,1);
+        if (otherAxis && fieldsChanged.size() == 1) {
+            Collections.swap(wordsFound, 0, 1);
         }
 
         if (fieldsChanged.size() == 7) {
@@ -318,10 +355,10 @@ public class TurnBuilder {
                 word.clear();
             }
         }
-        if (word.size()>1) {
+        if (word.size() > 1) {
             return word;
         }
-            return null;
+        return null;
     }
 
     private ArrayList<Field> checkColumn(int xPos) {
