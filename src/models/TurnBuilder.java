@@ -50,42 +50,33 @@ public class TurnBuilder {
         int subtractFromLastTurn = 0;
         int subtractFromSecondToLastTurn = 0;
 
-        for (Tile tile : lastTurn.getRack()) {
+        for (Tile tile : lastTurn.getRack())
             subtractFromLastTurn -= tile.getValue();
-        }
 
-        for (Tile tile : secondToLastTurn.getRack()) {
+        for (Tile tile : secondToLastTurn.getRack())
             subtractFromSecondToLastTurn -= tile.getValue();
-        }
 
-        if (lastTurn.getRack().isEmpty()) {
+        if (lastTurn.getRack().isEmpty())
             subtractFromLastTurn += subtractFromSecondToLastTurn;
-        }
 
-        if (secondToLastTurn.getRack().isEmpty()) {
+        if (secondToLastTurn.getRack().isEmpty())
             subtractFromSecondToLastTurn += subtractFromLastTurn;
-        }
 
-        Turn firstEndTurn = new Turn(lastTurn.getId() + 1, subtractFromSecondToLastTurn, secondToLastTurn.getUser(), TurnType.END);
-        Turn secondEndTurn = new Turn(lastTurn.getId() + 2, subtractFromLastTurn, lastTurn.getUser(), TurnType.END);
-        ArrayList<Turn> returnList = new ArrayList<>();
-        returnList.add(firstEndTurn);
-        returnList.add(secondEndTurn);
-        return returnList;
+        Turn firstEndTurn = new Turn(lastTurn.getId() + 1,
+                subtractFromSecondToLastTurn, secondToLastTurn.getUser(), TurnType.END);
+        Turn secondEndTurn = new Turn(lastTurn.getId() + 2,
+                subtractFromLastTurn, lastTurn.getUser(), TurnType.END);
+
+        return new ArrayList<>(Arrays.asList(firstEndTurn, secondEndTurn));
     }
 
-
     public String getTurnWord(Field[][] gameBoard, ObservableList<Field> fieldsChanged) {
-        if (fieldsChanged.isEmpty()) {
-            return null;
-        } else {
-            this.gameBoard = gameBoard;
-            this.fieldsChanged = fieldsChanged;
-            verifyAndCalculate();
-            if (!listOfFieldsWithWords.isEmpty()) {
-                return getWordsFoundThisTurn().get(0);
-            }
-        }
+        if (fieldsChanged.isEmpty()) return null;
+        this.gameBoard = gameBoard;
+        this.fieldsChanged = fieldsChanged;
+        verifyAndCalculate();
+        if (!listOfFieldsWithWords.isEmpty())
+            return getWordsFoundThisTurn().get(0);
         return null;
     }
 
@@ -97,7 +88,6 @@ public class TurnBuilder {
                 getTilesChangedThisTurn(),
                 new ArrayList<>(getCurrentRack()));
     }
-
 
     private void verifyAndCalculate() {
         listOfFieldsWithWords.clear();
@@ -112,18 +102,14 @@ public class TurnBuilder {
         }
     }
 
-    public int getScore() {
+    private int getScore() {
         return score;
     }
 
-    public ArrayList<Tile> getTilesChangedThisTurn() {
+    private ArrayList<Tile> getTilesChangedThisTurn() {
         return fieldsChanged.stream()
                 .map(Field::getTile)
                 .collect(Collectors.toCollection(ArrayList<Tile>::new));
-    }
-
-    public ArrayList<ArrayList<Field>> getListOfFieldsWithWords() {
-        return listOfFieldsWithWords;
     }
 
     public ArrayList<String> getWordsFoundThisTurn() {
@@ -131,7 +117,8 @@ public class TurnBuilder {
         listOfFieldsWithWords.forEach(fields -> {
             StringBuilder newWord = new StringBuilder();
             fields.stream()
-                    .map(Field::getTile).forEach(tile -> newWord.append(tile.toString()));
+                    .map(Field::getTile)
+                    .forEach(tile -> newWord.append(tile.toString()));
             words.add(newWord.toString());
         });
         return words;
@@ -172,25 +159,24 @@ public class TurnBuilder {
         boolean validTurn = true;
         char fixedAxis = 0;
 
-        if (fieldsChanged.size() == 0 || startFieldIsEmpty()) {
+        /** if nothing is placed or the startTile is empty -> invalidate turn */
+        if (fieldsChanged.size() == 0 || startFieldIsEmpty())
             validTurn = false;
-        }
 
         if (validTurn) {
-
-        /* fetch first X and all X coords */
+            /** fetch first X and all X coords */
             int x = fieldsChanged.get(0).getX();
             ArrayList<Integer> xValues = fieldsChanged.stream()
                     .map(Field::getX)
                     .collect(Collectors.toCollection(ArrayList<Integer>::new));
 
-        /* fetch first Y and All X coords */
+            /** fetch first Y and All X coords */
             int y = fieldsChanged.get(0).getY();
             ArrayList<Integer> yValues = fieldsChanged.stream()
                     .map(Field::getY)
                     .collect(Collectors.toCollection(ArrayList<Integer>::new));
 
-        /* check if placed on single axis, if not -> invalidate turn */
+            /** check if placed on single axis, if not -> invalidate turn */
             if (Collections.frequency(xValues, x) != xValues.size()) {
                 if (Collections.frequency(yValues, y) != yValues.size())
                     validTurn = false;  // Y and X are not equal for all tiles
@@ -199,7 +185,7 @@ public class TurnBuilder {
             } else
                 fixedAxis = 'x';        // X is equal for all tiles
 
-        /* check if there are gaps between placed letters */
+            /** check if there are gaps between placed letters */
             if (fixedAxis == 'y') {
                 // check if all X coords are not null
                 for (x = Collections.min(xValues); x <= Collections.max(xValues); x++)
@@ -214,17 +200,25 @@ public class TurnBuilder {
         }
 
         if (validTurn) {
+            /**
+             if only one tile has been placed at this point, check if it's a vertical word
+             if not, and theres also no horizontal word, the turn is invalid, if there however is
+             a horizontal word, flip the fixedAxis to horizontal
+             */
             if (fieldsChanged.size() == 1 && findWords(checkColumn(fieldsChanged.get(0).getX())) == null) {
-                if (findWords(new ArrayList<>(Arrays.asList(gameBoard[fieldsChanged.get(0).getY()]))) == null) {
+                if (findWords(new ArrayList<>(Arrays.asList(gameBoard[fieldsChanged.get(0).getY()]))) == null)
                     validTurn = false;
-                } else {
+                else
                     fixedAxis = 'y';
-                }
             }
         }
 
         if (validTurn) {
             boolean touches = false;
+            /**
+             all fields changed are already connected to each other at this point
+             check if at least one of them connects to a tile from another turn
+             */
             for (Field field : fieldsChanged) {
                 int x = field.getX();
                 int y = field.getY();
@@ -255,17 +249,17 @@ public class TurnBuilder {
             if (!touches)
                 validTurn = false;
         }
+
         if (this.getCurrentRack() != null)
             System.out.println(validTurn);
-        if (validTurn) {
-            return fixedAxis;
-        } else {
-            return null;
-        }
 
+        if (validTurn)
+            return fixedAxis;
+        else
+            return null;
     }
 
-    public ArrayList<ArrayList<Field>> resolveWords(char fixedAxis) {
+    private ArrayList<ArrayList<Field>> resolveWords(char fixedAxis) {
         ArrayList<ArrayList<Field>> wordsFound = new ArrayList<>();
         ArrayList<Field> word;
         switch (fixedAxis) {
@@ -274,9 +268,7 @@ public class TurnBuilder {
                 wordsFound.add(findWords(checkColumn(xPos)));
                 for (Field field : getFieldsChanged()) {
                     word = findWords(new ArrayList<>(Arrays.asList(gameBoard[field.getY()])));
-                    if (word != null) {
-                        wordsFound.add(word);
-                    }
+                    if (word != null) wordsFound.add(word);
                 }
                 break;
             case 'y':
@@ -284,9 +276,7 @@ public class TurnBuilder {
                 wordsFound.add(findWords(new ArrayList<>(Arrays.asList(gameBoard[yPos]))));
                 for (Field field : fieldsChanged) {
                     word = findWords(checkColumn(field.getX()));
-                    if (word != null) {
-                        wordsFound.add(word);
-                    }
+                    if (word != null) wordsFound.add(word);
                 }
                 break;
             default:
@@ -300,19 +290,18 @@ public class TurnBuilder {
         boolean otherAxis = false;
         for (ArrayList<Field> word : wordsFound) {
             int wordScore = calculateWordScore(word);
-            if (wordsFound.size() == 2 && totalScore < wordScore) {
+
+            if (wordsFound.size() == 2 && totalScore < wordScore)
                 otherAxis = true;
-            }
+
             totalScore += wordScore;
         }
 
-        if (otherAxis && fieldsChanged.size() == 1) {
+        if (otherAxis && fieldsChanged.size() == 1)
             Collections.swap(wordsFound, 0, 1);
-        }
 
-        if (fieldsChanged.size() == 7) {
+        if (fieldsChanged.size() == 7)
             totalScore += 40;
-        }
         return totalScore;
     }
 
@@ -344,14 +333,12 @@ public class TurnBuilder {
     private ArrayList<Field> findWords(ArrayList<Field> turnFields) {
         ArrayList<Field> word = new ArrayList<>();
         for (Field field : turnFields) {
-            if (field.getTile() != null) {
+            if (field.getTile() != null)
                 word.add(field);
-            } else {
-                for (Field wordField : word) {
-                    if (fieldsChanged.contains(wordField) && word.size() > 1) {
+            else {
+                for (Field wordField : word)
+                    if (fieldsChanged.contains(wordField) && word.size() > 1)
                         return word;
-                    }
-                }
                 word.clear();
             }
         }
