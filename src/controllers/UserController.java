@@ -1,5 +1,6 @@
 package controllers;
 
+import database.DatabaseFactory;
 import enumerations.Role;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,8 +16,8 @@ public class UserController extends Controller {
     private ObservableList<User> users;
     private ObjectProperty<User> selectedUser;
 
-    public UserController(ControllerFactory factory) {
-        super(factory);
+    public UserController(ControllerFactory controllerFactory, DatabaseFactory databaseFactory) {
+        super(controllerFactory, databaseFactory);
         users = FXCollections.observableArrayList();
         selectedUser = new SimpleObjectProperty<>();
     }
@@ -86,7 +87,7 @@ public class UserController extends Controller {
     }
 
     public void changePassword(String password) {
-        User user = getSession().getCurrentUser();
+        User user = getSessionController().getCurrentUser();
         userDAO.updatePassword(user, password);
     }
 
@@ -106,5 +107,6 @@ public class UserController extends Controller {
     @Override
     public void fetch() {
         fetched = userDAO.selectUsers();
+        userDAO.close();
     }
 }

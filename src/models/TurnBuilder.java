@@ -21,6 +21,7 @@ public class TurnBuilder {
     public TurnBuilder(Field[][] gameBoard, ObservableList<Tile> currentRack) {
         this.gameBoard = gameBoard;
         this.currentRack = currentRack;
+        this.listOfFieldsWithWords = new ArrayList<>();
         this.fieldsChanged = FXCollections.observableArrayList();
         this.fieldsChanged.addListener((ListChangeListener<? super Field>) observable -> {
             verifyAndCalculate();
@@ -275,7 +276,6 @@ public class TurnBuilder {
         }
         return returnColumn;
     }
-
 
     private boolean startFieldIsEmpty() {
         for (int y = 0; y < gameBoard.length; y++)

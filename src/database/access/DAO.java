@@ -1,12 +1,17 @@
 package database.access;
 
 import database.Database;
+import database.DatabaseFactory;
 
 abstract class DAO {
     protected Database database;
 
-    public DAO() {
-        database = new Database();
+    public void close() {
+        database.close();
+    }
+
+    public DAO(DatabaseFactory databaseFactory) {
+        this.database = databaseFactory.getDatabase();
     }
 
     protected void printError(Exception e) {

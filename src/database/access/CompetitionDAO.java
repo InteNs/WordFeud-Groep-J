@@ -1,5 +1,6 @@
 package database.access;
 
+import database.DatabaseFactory;
 import database.SQL;
 import javafx.util.Pair;
 import models.Competition;
@@ -11,6 +12,10 @@ import java.util.ArrayList;
 
 public class CompetitionDAO extends DAO {
 
+    public CompetitionDAO(DatabaseFactory databaseFactory) {
+        super(databaseFactory);
+    }
+
     public ArrayList<Competition> selectCompetitions() {
         ResultSet rs = database.select(SQL.ALL.COMPETITIONS);
         ArrayList<Competition> competitions = new ArrayList<>();
@@ -21,7 +26,6 @@ public class CompetitionDAO extends DAO {
         } catch (Exception e) {
             printError(e);
         }
-        database.close();
         return competitions;
     }
 
@@ -55,7 +59,6 @@ public class CompetitionDAO extends DAO {
         } catch (SQLException e) {
             printError(e);
         }
-        database.close();
         return pairs;
     }
 }

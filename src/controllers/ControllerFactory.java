@@ -1,5 +1,7 @@
 package controllers;
 
+import database.DatabaseFactory;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,6 +12,12 @@ public class ControllerFactory {
     private CompetitionController competitionController;
     private SessionController sessionController;
     private WordController wordController;
+
+    private DatabaseFactory databaseFactory;
+
+    public ControllerFactory() {
+        this.databaseFactory = new DatabaseFactory();
+    }
 
     public List<Controller> getControllers() {
         return Arrays.asList(
@@ -39,32 +47,31 @@ public class ControllerFactory {
 
     public UserController GetUserController(){
         if(userController == null)
-            userController = new UserController(this);
+            userController = new UserController(this, databaseFactory);
         return userController;
     }
 
-    public CompetitionController getCompetitionController(){
+    public CompetitionController getCompetitionController() {
         if(competitionController == null)
-            competitionController = new CompetitionController(this);
+            competitionController = new CompetitionController(this, databaseFactory);
         return competitionController;
     }
 
     public GameController getGameController() {
         if (gameController == null)
-            gameController = new GameController(this);
+            gameController = new GameController(this, databaseFactory);
         return gameController;
     }
 
     public SessionController getSessionController() {
-        if (sessionController == null) {
-            sessionController = new SessionController(this);
-        }
+        if (sessionController == null)
+            sessionController = new SessionController(this, databaseFactory);
         return sessionController;
     }
+
     public WordController getWordController() {
-        if (wordController== null) {
-            wordController = new WordController(this);
-        }
+        if (wordController== null)
+            wordController = new WordController(this, databaseFactory);
         return wordController;
     }
 }

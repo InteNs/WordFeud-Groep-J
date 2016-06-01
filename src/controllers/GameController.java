@@ -1,5 +1,6 @@
 package controllers;
 
+import database.DatabaseFactory;
 import enumerations.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,19 +16,20 @@ import java.util.stream.Collectors;
 
 public class GameController extends Controller {
 
-    private ArrayList<Game> fetched;
+    private ArrayList<Game> fetchedGames;
+    private ArrayList<Turn> fetchedTurns;
+    private ArrayList<Message> fetchedMessages;
     private ObservableList<Game> games;
     private ObjectProperty<Game> selectedGame;
     private ObjectProperty<Role> currentRole;
     private ObjectProperty<Turn> selectedTurn;
 
-    public GameController(ControllerFactory factory) {
-        super(factory);
+    public GameController(ControllerFactory controllerFactory, DatabaseFactory databaseFactory) {
+        super(controllerFactory, databaseFactory);
         games = FXCollections.observableArrayList();
         selectedGame = new SimpleObjectProperty<>();
         selectedTurn = new SimpleObjectProperty<>();
         currentRole = new SimpleObjectProperty<>();
-        selectedGameProperty().addListener((o, oV, nV) -> loadGame(nV, getCurrentRole()));
     }
 
     public void setCurrentRole(Role currentRole) {
@@ -76,14 +78,14 @@ public class GameController extends Controller {
 
     public void loadGame(Game game, Role gameMode) {
         if (game == null) return;
+        if (fetchedTurns == null || fetchedMessages == null) fetch();
         if (game.getEmptyGameBoard() == null)
             game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
-        ArrayList<Turn> newTurns = gameDAO.selectTurns(game);
-        if (!game.getTurns().equals(newTurns))
-            game.setTurns(newTurns);
-        ArrayList<Message> newChats = gameDAO.selectMessages(game);
-        if (!(game.getMessages().size() == newChats.size()))
-            game.setMessages(newChats);
+        if (!game.getTurns().equals(fetchedTurns))
+            game.setTurns(fetchedTurns);
+        if (!(game.getMessages().size() == fetchedMessages.size()))
+            game.setMessages(fetchedMessages);
+
         game.setGameMode(gameMode);
     }
 
@@ -91,7 +93,9 @@ public class GameController extends Controller {
     public void refresh() {
         if (games.contains(getSelectedGame())) {
             Game game = games.get(games.indexOf(getSelectedGame()));
-            TurnBuilder previous = getSelectedGame().getTurnBuilder();
+            TurnBuilder previousTurnBuilder = getSelectedGame().getTurnBuilder();
+            Field[][] previousBoard = getSelectedGame().getEmptyGameBoard();
+            game.setBoard(previousBoard);
             loadGame(game, getCurrentRole());
 
             setSelectedGame(game);
@@ -99,22 +103,26 @@ public class GameController extends Controller {
             if (game.getTurns().contains(getSelectedTurn())) {
                 Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
                 setSelectedTurn(turn);
-                game.setBoardStateTo(turn, getSession().getCurrentUser());
+                game.setBoardStateTo(turn, getSessionController().getCurrentUser());
             }
-            if(getSelectedGame().getTurns().size() == game.getTurns().size())
-                game.setTurnBuilder(previous);
+            game.setTurnBuilder(previousTurnBuilder);
         }
     }
 
     @Override
     public void refill() {
-        if (!games.equals(fetched))
-            games.setAll(fetched);
+        if (!games.equals(fetchedGames))
+            games.setAll(fetchedGames);
     }
 
     @Override
     public void fetch() {
-        fetched = gameDAO.selectGames();
+        fetchedGames = gameDAO.selectGames();
+        if (getSelectedGame() != null) {
+            fetchedMessages = gameDAO.selectMessages(getSelectedGame());
+            fetchedTurns = gameDAO.selectTurns(getSelectedGame());
+
+        }
     }
 
     public void setPlayerRack(Game game, List<Tile> tiles) {
@@ -122,7 +130,7 @@ public class GameController extends Controller {
     }
 
     public void setBoardState(Game game, Turn turn) {
-        game.setBoardStateTo(turn, getSession().getCurrentUser());
+        game.setBoardStateTo(turn, getSessionController().getCurrentUser());
     }
 
     public void placeTile(Game game, Field field, Tile tile) {
@@ -158,7 +166,7 @@ public class GameController extends Controller {
             selectedGame.getTurnBuilder().fillCurrentRack(selectedGame.getPot());
             Turn newTurn =   selectedGame.getTurnBuilder().buildTurn(
                     selectedGame.getLastTurn().getId() + 1,
-                    getSession().getCurrentUser(),
+                    getSessionController().getCurrentUser(),
                     TurnType.WORD);
             gameDAO.insertTurn(selectedGame,newTurn);
             selectedGame.addTurn(newTurn);
@@ -194,7 +202,7 @@ public class GameController extends Controller {
         } 
         game.getTurnBuilder().fillCurrentRack(game.getPot());
         int turnId = game.getLastTurn().getId() + 1;
-        Turn newTurn = game.getTurnBuilder().buildTurn(turnId, getSession().getCurrentUser(), TurnType.SWAP);
+        Turn newTurn = game.getTurnBuilder().buildTurn(turnId, getSessionController().getCurrentUser(), TurnType.SWAP);
         insertTurn(newTurn, game);
         
         

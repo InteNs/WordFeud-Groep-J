@@ -42,7 +42,7 @@ public class gameControlView extends View {
 
     @Override
     public void refresh() {
-        if (gameController.getSelectedGame() != null)
+        if (gameController.getSelectedGame() != null && !gameController.getSelectedGame().getTurns().isEmpty())
             showGame(gameController.getSelectedGame(), false);
     }
 
@@ -83,6 +83,7 @@ public class gameControlView extends View {
         gameController.selectedGameProperty()
                 .addListener((o, oldValue, newValue) -> {
                     if (!Objects.equals(oldValue, newValue) && newValue != null)
+                        gameController.loadGame(newValue, gameController.getCurrentRole());
                         showGame(newValue, true);
                 });
     }

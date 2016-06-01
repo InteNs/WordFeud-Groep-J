@@ -1,5 +1,6 @@
 package controllers;
 
+import database.DatabaseFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -17,8 +18,8 @@ public class CompetitionController extends Controller {
     private ObservableList<Competition> competitions;
     private ObjectProperty<Competition> selectedCompetition;
 
-    public CompetitionController(ControllerFactory factory) {
-        super(factory);
+    public CompetitionController(ControllerFactory controllerFactory, DatabaseFactory databaseFactory) {
+        super(controllerFactory, databaseFactory);
         competitions = FXCollections.observableArrayList();
         selectedCompetition = new SimpleObjectProperty<>();
     }
@@ -65,9 +66,9 @@ public class CompetitionController extends Controller {
     }
 
     public boolean createCompetition(String competitionName) {
-        if (getCompetition(getSession().getCurrentUser()) != null)
+        if (getCompetition(getSessionController().getCurrentUser()) != null)
             return false;
-        Competition newComp = new Competition(getSession().getCurrentUser(), competitionName);
+        Competition newComp = new Competition(getSessionController().getCurrentUser(), competitionName);
         competitions.add(newComp);
         return competitionDAO.insertCompetition(newComp);
     }
@@ -103,6 +104,7 @@ public class CompetitionController extends Controller {
     public void fetch() {
         fetched = competitionDAO.selectCompetitions();
         playerMap = competitionDAO.getPlayerMap();
+        competitionDAO.close();
     }
 
 }

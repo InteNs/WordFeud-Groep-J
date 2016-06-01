@@ -196,7 +196,7 @@ public class MainView extends View implements Initializable {
                 views.forEach(View::refresh);
                 loadIndicator.setVisible(false);
             });
-        }), 0, 2, SECONDS);
+        }), 0, 5, SECONDS);
     }
 
     public void setApplicationLoader(Main applicationLoader) {
