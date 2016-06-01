@@ -8,10 +8,8 @@ import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import models.*;
 import views.components.FieldTileNode;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class GameController extends Controller {
@@ -140,10 +138,43 @@ public class GameController extends Controller {
                     selectedGame.getLastTurn().getId() + 1,
                     getSession().getCurrentUser(),
                     TurnType.WORD);
-            gameDAO.insertTurn(selectedGame,newTurn);
+            insertTurn(newTurn, selectedGame);
             selectedGame.addTurn(newTurn);
         }
+        checkForEndGame(selectedGame);
         return wordsNotInDictionary;
+    }
+
+    private void checkForEndGame(Game selectedGame){
+        switch (selectedGame.getLastTurn().getType()){
+            case PASS:
+                if (isThirdPass(selectedGame)){
+                    buildEndTurns(selectedGame);
+                    gameDAO.updateGameState(false, selectedGame);
+                }
+                break;
+            case RESIGN:
+                buildEndTurns(selectedGame);
+                gameDAO.updateGameState(true, selectedGame);
+                break;
+            case WORD:
+                if (selectedGame.getLastTurn().getRack().isEmpty()
+                        && selectedGame.getPot().isEmpty()){
+                    buildEndTurns(selectedGame);
+                    gameDAO.updateGameState(false, selectedGame);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void buildEndTurns(Game selectedGame){
+        for (Turn turn : selectedGame.getTurnBuilder().buildEndTurns(selectedGame.getLastTurn()
+                , selectedGame.getTurns().get(selectedGame.getTurns().size() - 2))) {
+            insertTurn(turn,selectedGame);
+            selectedGame.addTurn(turn);
+        }
     }
 
     public ObservableList<Tile> showPot(Game game) {
@@ -152,24 +183,27 @@ public class GameController extends Controller {
         return null;
     }
 
+    public void passTurn(Game selectedGame){
+        Turn newTurn = selectedGame.getTurnBuilder().buildTurn(selectedGame.getLastTurn().getId() + 1, getSession().getCurrentUser(), TurnType.PASS);
+        insertTurn(newTurn, selectedGame);
+        selectedGame.addTurn(newTurn);
+        checkForEndGame(selectedGame);
+    }
+
+    public void resign(Game selectedGame) {
+        Turn newTurn = selectedGame.getTurnBuilder().buildTurn(selectedGame.getLastTurn().getId() + 1, getSession().getCurrentUser(), TurnType.RESIGN);
+        insertTurn(newTurn, selectedGame);
+        selectedGame.addTurn(newTurn);
+        checkForEndGame(selectedGame);
+    }
+
     public void insertTurn(Turn turn, Game game) {
         gameDAO.insertTurn(game, turn);
     }
 
-    public boolean isThirdPass(){
-        int counter = 0;
-        ObservableList<Turn> turns = getSelectedGame().getTurns();
-        for ( int n = turns.size()-1; n > turns.size()-3 ; n--){
-            System.out.println(turns.get(n).getId());
-            if (turns.get(n).getType() == TurnType.PASS){
-                counter++;
-            }
-        }
-        if (counter == 2){
-            return true;
-        } else {
-            return false;
-        }
+    private boolean isThirdPass(Game selectedGame){
+        return selectedGame.getTurns().get(selectedGame.getTurns().size() - 2).getType() == TurnType.PASS
+                && selectedGame.getTurns().get(selectedGame.getTurns().size() - 3).getType() == TurnType.PASS;
     }
     
     public void swapTiles(ObservableList<FieldTileNode> swapTiles, Game game){
@@ -180,8 +214,7 @@ public class GameController extends Controller {
         int turnId = game.getLastTurn().getId() + 1;
         Turn newTurn = game.getTurnBuilder().buildTurn(turnId, getSession().getCurrentUser(), TurnType.SWAP);
         insertTurn(newTurn, game);
-        
-        
+        game.addTurn(newTurn);
     }
 
     public boolean challenge(Language language, User requester, User receiver, Competition comp) {

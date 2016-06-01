@@ -31,11 +31,32 @@ public class TurnBuilder {
 
     }
 
-    public ArrayList<Turn> buildEndTurns(Turn challengerTurn, Turn opponentTurn){
-        int challengerScore = challengerTurn.getScore();
-        int opponentScore = opponentTurn.getScore();
+    public ArrayList<Turn> buildEndTurns(Turn lastTurn, Turn secondToLastTurn){
+        int subtractFromLastTurn = 0;
+        int subtractFromSecondToLastTurn = 0;
 
-        return null;
+        for (Tile tile : lastTurn.getRack()) {
+            subtractFromLastTurn -= tile.getValue();
+        }
+
+        for (Tile tile : secondToLastTurn.getRack()) {
+            subtractFromSecondToLastTurn -= tile.getValue();
+        }
+
+        if (lastTurn.getRack().isEmpty()){
+            subtractFromLastTurn += subtractFromSecondToLastTurn;
+        }
+
+        if (secondToLastTurn.getRack().isEmpty()){
+            subtractFromSecondToLastTurn += subtractFromLastTurn;
+        }
+
+        Turn firstEndTurn = new Turn(lastTurn.getId()+1, subtractFromSecondToLastTurn,secondToLastTurn.getUser(),TurnType.END);
+        Turn secondEndTurn = new Turn(lastTurn.getId()+2, subtractFromLastTurn,lastTurn.getUser(),TurnType.END);
+        ArrayList<Turn> returnList = new ArrayList<>();
+        returnList.add(firstEndTurn);
+        returnList.add(secondEndTurn);
+        return returnList;
     }
 
 
@@ -51,13 +72,6 @@ public class TurnBuilder {
     }
 
     public Turn buildTurn(int newTurnId, User user, TurnType turnType){
-        if (turnType == TurnType.END){
-           if (!currentRack.isEmpty()){
-               for (Tile tile : currentRack) {
-                   score -= tile.getValue();
-               }
-           }
-        }
         return new Turn(newTurnId,
                 getScore(),
                 user,
