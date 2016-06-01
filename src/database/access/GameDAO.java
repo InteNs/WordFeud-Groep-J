@@ -150,16 +150,18 @@ public class GameDAO extends DAO {
                 turn.getScore(),
                 TurnType.format(turn.getType())
         );
-        StringBuilder insertRackQuery = new StringBuilder(SQL.INSERT.INSERTRACKTILES);
-        ArrayList<Object> insertRackvalues = new ArrayList<>();
-        turn.getRack().forEach(tile -> {
-            insertRackQuery.append("(?,?,?),");
-            insertRackvalues.addAll(Arrays.asList(game.getId(), tile.getId(), turn.getId()));
-        });
-        insertRackQuery.deleteCharAt(insertRackQuery.length()-1);
-        insertRackQuery.append((";"));
+        if (!turn.getRack().isEmpty()){
+            StringBuilder insertRackQuery = new StringBuilder(SQL.INSERT.INSERTRACKTILES);
+            ArrayList<Object> insertRackvalues = new ArrayList<>();
+            turn.getRack().forEach(tile -> {
+                insertRackQuery.append("(?,?,?),");
+                insertRackvalues.addAll(Arrays.asList(game.getId(), tile.getId(), turn.getId()));
+            });
+            insertRackQuery.deleteCharAt(insertRackQuery.length()-1);
+            insertRackQuery.append((";"));
 
-        database.insert(insertRackQuery.toString(), insertRackvalues);
+            database.insert(insertRackQuery.toString(), insertRackvalues);
+        }
 
         switch (turn.getType()) {
             case BEGIN:
@@ -199,5 +201,9 @@ public class GameDAO extends DAO {
 
     public void createGame(int compId, String requester, Language language, String receiver) {
         database.insert(SQL.INSERT.CREATEGAME, compId, requester, language.toString(), receiver);
+    }
+
+    public void updateGameState(GameState gameState, Game selectedGame){
+        database.update(SQL.UPDATE.UPDATEGAMESTATE, GameState.format(gameState), selectedGame.getId());
     }
 }

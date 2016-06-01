@@ -31,6 +31,35 @@ public class TurnBuilder {
 
     }
 
+    public ArrayList<Turn> buildEndTurns(Turn lastTurn, Turn secondToLastTurn){
+        int subtractFromLastTurn = 0;
+        int subtractFromSecondToLastTurn = 0;
+
+        for (Tile tile : lastTurn.getRack()) {
+            subtractFromLastTurn -= tile.getValue();
+        }
+
+        for (Tile tile : secondToLastTurn.getRack()) {
+            subtractFromSecondToLastTurn -= tile.getValue();
+        }
+
+        if (lastTurn.getRack().isEmpty()){
+            subtractFromLastTurn += subtractFromSecondToLastTurn;
+        }
+
+        if (secondToLastTurn.getRack().isEmpty()){
+            subtractFromSecondToLastTurn += subtractFromLastTurn;
+        }
+
+        Turn firstEndTurn = new Turn(lastTurn.getId()+1, subtractFromSecondToLastTurn,secondToLastTurn.getUser(),TurnType.END);
+        Turn secondEndTurn = new Turn(lastTurn.getId()+2, subtractFromLastTurn,lastTurn.getUser(),TurnType.END);
+        ArrayList<Turn> returnList = new ArrayList<>();
+        returnList.add(firstEndTurn);
+        returnList.add(secondEndTurn);
+        return returnList;
+    }
+
+
     public String getTurnWord(Field[][] gameBoard, ObservableList<Field> fieldsChanged){
        if (fieldsChanged.isEmpty()){
            return null;
@@ -43,7 +72,7 @@ public class TurnBuilder {
     }
 
     public Turn buildTurn(int newTurnId, User user, TurnType turnType){
-       return new Turn(newTurnId,
+        return new Turn(newTurnId,
                 getScore(),
                 user,
                 turnType,

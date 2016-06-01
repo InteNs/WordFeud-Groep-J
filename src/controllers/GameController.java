@@ -8,10 +8,8 @@ import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import models.*;
 import views.components.FieldTileNode;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class GameController extends Controller {
@@ -136,14 +134,41 @@ public class GameController extends Controller {
 
         if (wordsNotInDictionary.size() == 0) {
             selectedGame.getTurnBuilder().fillCurrentRack(selectedGame.getPot());
-            Turn newTurn =   selectedGame.getTurnBuilder().buildTurn(
-                    selectedGame.getLastTurn().getId() + 1,
-                    getSession().getCurrentUser(),
-                    TurnType.WORD);
-            gameDAO.insertTurn(selectedGame,newTurn);
-            selectedGame.addTurn(newTurn);
+            insertTurn(selectedGame,TurnType.WORD);
         }
         return wordsNotInDictionary;
+    }
+
+    private void checkForEndGame(Game selectedGame){
+        switch (selectedGame.getLastTurn().getType()){
+            case PASS:
+                if (isThirdPass(selectedGame)){
+                    buildEndTurns(selectedGame);
+                    gameDAO.updateGameState(GameState.FINISHED, selectedGame);
+                }
+                break;
+            case RESIGN:
+                buildEndTurns(selectedGame);
+                gameDAO.updateGameState(GameState.RESIGNED, selectedGame);
+                break;
+            case WORD:
+                if (selectedGame.getLastTurn().getRack().isEmpty()
+                        && selectedGame.getPot().isEmpty()){
+                    buildEndTurns(selectedGame);
+                    gameDAO.updateGameState(GameState.FINISHED, selectedGame);
+                }
+                break;
+            default: break;
+        }
+    }
+
+    private void buildEndTurns(Game selectedGame){
+        for (Turn turn : selectedGame.getTurnBuilder().buildEndTurns(
+                selectedGame.getLastTurn(),
+                selectedGame.getTurns().get(selectedGame.getTurns().size() - 2))) {
+            gameDAO.insertTurn(selectedGame, turn);
+            selectedGame.addTurn(turn);
+        }
     }
 
     public ObservableList<Tile> showPot(Game game) {
@@ -152,36 +177,32 @@ public class GameController extends Controller {
         return null;
     }
 
-    public void insertTurn(Turn turn, Game game) {
-        gameDAO.insertTurn(game, turn);
+    public void passTurn(Game selectedGame){
+        insertTurn(selectedGame,TurnType.PASS);
     }
 
-    public boolean isThirdPass(){
-        int counter = 0;
-        ObservableList<Turn> turns = getSelectedGame().getTurns();
-        for ( int n = turns.size()-1; n > turns.size()-3 ; n--){
-            System.out.println(turns.get(n).getId());
-            if (turns.get(n).getType() == TurnType.PASS){
-                counter++;
-            }
-        }
-        if (counter == 2){
-            return true;
-        } else {
-            return false;
-        }
+    public void resign(Game selectedGame) {
+       insertTurn(selectedGame,TurnType.RESIGN);
+    }
+
+    private void insertTurn(Game selectedGame, TurnType turnType) {
+        Turn newTurn = selectedGame.getTurnBuilder().buildTurn(selectedGame.getLastTurnNumber(), getSession().getCurrentUser(), turnType);
+        gameDAO.insertTurn(selectedGame, newTurn);
+        selectedGame.addTurn(newTurn);
+        checkForEndGame(selectedGame);
+    }
+
+    private boolean isThirdPass(Game selectedGame){
+        return selectedGame.getTurns().get(selectedGame.getTurns().size() - 2).getType() == TurnType.PASS
+                && selectedGame.getTurns().get(selectedGame.getTurns().size() - 3).getType() == TurnType.PASS;
     }
     
-    public void swapTiles(ObservableList<FieldTileNode> swapTiles, Game game){
+    public void swapTiles(ObservableList<FieldTileNode> swapTiles, Game selectedGame){
         for(FieldTileNode field: swapTiles){
-            game.getTurnBuilder().getCurrentRack().remove(field.getTile());
-        } 
-        game.getTurnBuilder().fillCurrentRack(game.getPot());
-        int turnId = game.getLastTurn().getId() + 1;
-        Turn newTurn = game.getTurnBuilder().buildTurn(turnId, getSession().getCurrentUser(), TurnType.SWAP);
-        insertTurn(newTurn, game);
-        
-        
+            selectedGame.getTurnBuilder().getCurrentRack().remove(field.getTile());
+        }
+        selectedGame.getTurnBuilder().fillCurrentRack(selectedGame.getPot());
+        insertTurn(selectedGame,TurnType.SWAP);
     }
 
     public boolean challenge(Language language, User requester, User receiver, Competition comp) {

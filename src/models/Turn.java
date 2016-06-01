@@ -32,6 +32,10 @@ public class Turn {
         this.placedTiles = placedTiles;
     }
 
+    public void setType(TurnType type) {
+        this.type = type;
+    }
+
     public int getId() {
         return id;
     }
