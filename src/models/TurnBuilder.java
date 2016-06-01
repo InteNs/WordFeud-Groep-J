@@ -32,6 +32,35 @@ public class TurnBuilder {
 
     }
 
+    public ArrayList<Turn> buildEndTurns(Turn lastTurn, Turn secondToLastTurn){
+        int subtractFromLastTurn = 0;
+        int subtractFromSecondToLastTurn = 0;
+
+        for (Tile tile : lastTurn.getRack()) {
+            subtractFromLastTurn -= tile.getValue();
+        }
+
+        for (Tile tile : secondToLastTurn.getRack()) {
+            subtractFromSecondToLastTurn -= tile.getValue();
+        }
+
+        if (lastTurn.getRack().isEmpty()){
+            subtractFromLastTurn += subtractFromSecondToLastTurn;
+        }
+
+        if (secondToLastTurn.getRack().isEmpty()){
+            subtractFromSecondToLastTurn += subtractFromLastTurn;
+        }
+
+        Turn firstEndTurn = new Turn(lastTurn.getId()+1, subtractFromSecondToLastTurn,secondToLastTurn.getUser(),TurnType.END);
+        Turn secondEndTurn = new Turn(lastTurn.getId()+2, subtractFromLastTurn,lastTurn.getUser(),TurnType.END);
+        ArrayList<Turn> returnList = new ArrayList<>();
+        returnList.add(firstEndTurn);
+        returnList.add(secondEndTurn);
+        return returnList;
+    }
+
+
     public String getTurnWord(Field[][] gameBoard, ObservableList<Field> fieldsChanged){
        if (fieldsChanged.isEmpty()){
            return null;
@@ -44,7 +73,7 @@ public class TurnBuilder {
     }
 
     public Turn buildTurn(int newTurnId, User user, TurnType turnType){
-       return new Turn(newTurnId,
+        return new Turn(newTurnId,
                 getScore(),
                 user,
                 turnType,
@@ -215,9 +244,19 @@ public class TurnBuilder {
 
     private int calculateTotalScore(ArrayList<ArrayList<Field>> wordsFound) {
         int totalScore = 0;
+        boolean otherAxis = false;
         for (ArrayList<Field> word : wordsFound) {
-            totalScore += calculateWordScore(word);
+            int wordScore = calculateWordScore(word);
+            if (wordsFound.size() == 2 && totalScore < wordScore){
+                otherAxis = true;
+            }
+            totalScore += wordScore ;
         }
+
+        if (otherAxis && fieldsChanged.size() == 1){
+            Collections.swap(wordsFound,0,1);
+        }
+
         if (fieldsChanged.size() == 7) {
             totalScore += 40;
         }

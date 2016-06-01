@@ -40,6 +40,7 @@ public class SQL {
     public class UPDATE {
         public static final String UPDATEPASSWORD = "UPDATE account SET wachtwoord = ? WHERE naam = ?";
         public static final String UPDATEWORDSTATUS = "UPDATE woordenboek SET status = ? WHERE woord = ? AND account_naam = ?";
+        public static final String UPDATEGAMESTATE = "UPDATE wordfeud.spel SET toestand_type = ? WHERE id = ?";
     }
 
     public class COUNT{

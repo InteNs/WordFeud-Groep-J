@@ -47,6 +47,10 @@ public class Game {
         this.playingPot = FXCollections.observableArrayList();
     }
 
+    public int getLastTurnNumber() {
+        return lastTurnNumber;
+    }
+
     public Role getGameMode() {
         return gameMode;
     }

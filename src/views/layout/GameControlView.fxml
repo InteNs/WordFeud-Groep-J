@@ -30,7 +30,7 @@
                             </CustomMenuItem>
                             <CustomMenuItem text="Unspecified Action">
                                 <content>
-                                    <Button fx:id="resignButton" prefHeight="50.0" prefWidth="100.0" text="Opgeven"/>
+                                    <Button fx:id="resignButton" prefHeight="50.0" prefWidth="100.0" text="Opgeven" onAction="#resign"/>
                                 </content>
                             </CustomMenuItem>
                             <CustomMenuItem text="Unspecified Action">
