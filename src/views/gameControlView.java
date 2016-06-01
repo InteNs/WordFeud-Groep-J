@@ -150,7 +150,7 @@ public class gameControlView extends View {
     }
 
     private void setTabs(Role gameMode, User currentTurnUser) {
-        if (gameMode == Role.PLAYER) {
+        if (gameMode == Role.PLAYER || !gameController.getSelectedGame().isGame()) {
             disableTurnControls(true);
             disableGameControls(currentTurnUser.equals(session.getCurrentUser()), false);
         } else if (gameMode == Role.OBSERVER) {

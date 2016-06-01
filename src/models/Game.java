@@ -59,7 +59,9 @@ public class Game {
     }
 
     public boolean isGame() {
-        return gameState == GameState.FINISHED || gameState == GameState.PLAYING;
+        return gameState == GameState.FINISHED
+                || gameState == GameState.PLAYING
+                || gameState == GameState.RESIGNED;
     }
 
     public int getId() {
