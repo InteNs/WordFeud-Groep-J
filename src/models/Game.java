@@ -1,9 +1,6 @@
 package models;
 
-import enumerations.BoardType;
-import enumerations.GameState;
-import enumerations.Language;
-import enumerations.Role;
+import enumerations.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -30,8 +27,9 @@ public class Game {
     private ObservableList<Tile> playingPot;
     private ObservableList<Tile> currentRack;
     private TurnBuilder turnBuilder;
+    private ReactionType reactionType;
 
-    public Game(int id, int lastTurnNumber, int competitionId, User challenger, User opponent, GameState state, BoardType boardType, Language language) {
+    public Game(int id, int lastTurnNumber, int competitionId, User challenger, User opponent, GameState state, BoardType boardType, Language language, ReactionType reaktie_type) {
         this.id = id;
         this.lastTurnNumber = lastTurnNumber;
         this.competitionId = competitionId;
@@ -45,6 +43,7 @@ public class Game {
         this.allTiles = FXCollections.observableArrayList();
         this.currentRack = FXCollections.observableArrayList();
         this.playingPot = FXCollections.observableArrayList();
+        reactionType = reaktie_type;
     }
 
     public int getLastTurnNumber() {
@@ -197,6 +196,7 @@ public class Game {
 
     public void setPot(ArrayList<Tile> tilesForPot) {
         allTiles.setAll(tilesForPot);
+        playingPot.setAll(tilesForPot);
     }
 
     public TurnBuilder getTurnBuilder() {
@@ -258,5 +258,9 @@ public class Game {
 
     public void addTurn(Turn newTurn) {
         turns.add(newTurn);
+    }
+
+    public ReactionType getReactionType() {
+        return reactionType;
     }
 }

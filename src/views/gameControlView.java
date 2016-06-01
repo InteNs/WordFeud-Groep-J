@@ -209,8 +209,9 @@ public class gameControlView extends View {
         boolean aap = gameController.playWord(gameController.getSelectedGame()).isEmpty();
         if (aap) {
             gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
+            selectTurn(gameController.getSelectedGame().getLastTurn());
         }
-        selectTurn(gameController.getSelectedGame().getLastTurn());
+        else clearBoard();
     }
 
     @FXML

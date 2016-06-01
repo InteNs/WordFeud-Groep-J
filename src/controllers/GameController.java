@@ -11,6 +11,7 @@ import views.components.FieldTileNode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class GameController extends Controller {
@@ -118,6 +119,15 @@ public class GameController extends Controller {
             }
             game.setTurnBuilder(previousTurnBuilder);
         }
+
+        getOutgoingChallenges(getSessionController().getCurrentUser())
+                .stream()
+                .filter(game -> game.getReactionType() == ReactionType.ACCEPTED
+                        && game.getGameState() == GameState.REQUEST)
+                .forEach(game -> {
+                    game.setGameState(GameState.PLAYING);
+                    createBeginTurns(game);
+                });
     }
 
     @Override
@@ -229,7 +239,7 @@ public class GameController extends Controller {
 
     private void insertTurn(Game selectedGame, TurnType turnType) {
         Turn newTurn = selectedGame.getTurnBuilder().buildTurn(
-                selectedGame.getLastTurnNumber(),
+                selectedGame.getLastTurn().getId()+1,
                 getSessionController().getCurrentUser(), turnType
         );
         gameDAO.insertTurn(selectedGame, newTurn);
@@ -260,8 +270,8 @@ public class GameController extends Controller {
                             receiver,
                             GameState.REQUEST,
                             BoardType.STANDARD,
-                            language
-                    );
+                            language,
+                            ReactionType.UNKNOWN);
                     games.add(game);
                     gameDAO.createGame(comp.getId(), requester.getName(), language, receiver.getName());
                     return true;
@@ -284,9 +294,17 @@ public class GameController extends Controller {
     }
 
     public void createBeginTurns(Game selectedGame){
+        gameDAO.updateGameState(GameState.PLAYING,selectedGame);
         gameDAO.createPot(selectedGame);
         selectedGame.setPot(gameDAO.selectLettersForPot(selectedGame));
-        selectedGame.getTurnBuilder().buildBeginTurns(selectedGame);
+        for (Turn turn : new TurnBuilder().buildBeginTurns(selectedGame)) {
+            for (int i = 0; i < 7; i++) {
+                int letterFromPot = new Random().nextInt(selectedGame.getPot().size());
+                turn.addRackTile(selectedGame.getPot().get(letterFromPot));
+                selectedGame.getPot().remove(letterFromPot);
+            }
+            gameDAO.insertTurn(selectedGame,turn);
+        }
     }
 
     private boolean isUserInSelectedComp(User requester, Competition comp) {
