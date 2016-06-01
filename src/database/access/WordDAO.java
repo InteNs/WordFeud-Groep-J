@@ -35,4 +35,10 @@ public class WordDAO extends DAO {
                 word.getOwner()
         );
     }
+    public void insertWords(ArrayList<Word> words){
+        for(Word w : words){
+            database.update(SQL.INSERT.INSERTWORD, w.getWord(), w.getLetterset(),w.getStatus().toString().toLowerCase(), w.getOwner());
+        }
+
+    }
 }

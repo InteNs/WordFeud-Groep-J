@@ -35,6 +35,9 @@ public class WordInfoView extends View {
             buttonAccept.setVisible(false);
             buttonDecline.setVisible(false);
         }
+        if (!session.getCurrentUser().hasRole(Role.MODERATOR)) {
+            labelOwner.setVisible(false);
+        }
         labelStatus.setText("Status: " + WordStatus.format(selectedWord.getStatus()));
 
     }

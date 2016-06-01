@@ -3,6 +3,7 @@ package views;
 
 import enumerations.Role;
 import enumerations.WordStatus;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ListView;
@@ -27,6 +28,7 @@ public class WordListView extends View implements Observer {
     //private int listIndex;
 
     public void refresh() {
+        showComponents();
         filter();
     }
 
@@ -37,16 +39,11 @@ public class WordListView extends View implements Observer {
 
     @Override
     public void constructor() {
+        session.getCurrentUser().getRoles().addListener((ListChangeListener<? super Role>) (observable) -> {
+            showComponents();
+        });
         wordController.addObserver(this);
-
-        if (session.getCurrentUser().hasRole(Role.MODERATOR)) {
-
-            if (!accordion.getPanes().contains(acceptedWordPane)) {
-                accordion.getPanes().addAll(acceptedWordPane, pendingWordPane, deniedWordPane);
-            }
-        } else {
-            accordion.getPanes().removeAll(acceptedWordPane, pendingWordPane, deniedWordPane);
-        }
+        showComponents();
         accordion.setExpandedPane(myWordPane);
         myWordList.setItems(wordController.getUserWords(session.getCurrentUser()));
 
@@ -69,6 +66,16 @@ public class WordListView extends View implements Observer {
         acceptedWordList.setItems(wordController.getWords(WordStatus.ACCEPTED));
         pendingWordList.setItems(wordController.getWords(WordStatus.PENDING));
         deniedWordlist.setItems(wordController.getWords(WordStatus.DENIED));
+    }
+
+    private void showComponents(){
+        if (session.getCurrentUser().hasRole(Role.MODERATOR)) {
+            if (!accordion.getPanes().contains(acceptedWordPane)) {
+                accordion.getPanes().addAll(acceptedWordPane, pendingWordPane, deniedWordPane);
+            }
+        } else {
+            accordion.getPanes().removeAll(acceptedWordPane, pendingWordPane, deniedWordPane);
+        }
     }
 
     public void HandleKeyEvent(KeyEvent ke) {
