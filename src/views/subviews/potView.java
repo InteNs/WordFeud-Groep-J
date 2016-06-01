@@ -10,18 +10,23 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import models.Tile;
 import resources.ResourceFactory;
+import views.MainView;
 import views.View;
 import views.components.FieldTileNode;
 
 public class potView extends View {
 
-    public potView(ObservableList<Tile> pot, ResourceFactory resourceFactory) {
+    private MainView mainView;
 
+    public potView(ObservableList<Tile> pot, ResourceFactory resourceFactory, MainView mainview) {
+
+        this.mainView = mainview;
         Stage window = new Stage();
         window.initModality(Modality.WINDOW_MODAL);
         window.initStyle(StageStyle.UNDECORATED);
         TilePane tilePane = new TilePane();
-        tilePane.setMaxHeight(400);
+        window.setMaxHeight(400);
+        window.setMaxWidth(477);
         tilePane.setHgap(10);
         tilePane.setVgap(10);
         tilePane.setStyle("-fx-background-color: gray");
@@ -43,6 +48,8 @@ public class potView extends View {
         scroll.setMaxHeight(400);
 
         Scene scene = new Scene(scroll);
+        window.setX(mainView.gameBoardView.getScene().getWindow().getX() + mainView.gameBoardView.getScene().widthProperty().intValue() /2 - window.getMaxWidth()/2);
+        window.setY(mainView.gameBoardView.getScene().getWindow().getY() + mainView.gameBoardView.getScene().heightProperty().intValue() /2 - window.getMaxHeight()/2);
 
         window.setScene(scene);
         window.show();
