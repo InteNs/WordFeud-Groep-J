@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class GameDAO extends DAO {
 
@@ -193,6 +194,33 @@ public class GameDAO extends DAO {
             case UNDEFINED:
                 break;
         }
+    }
+
+    public void createPot(Game selectedGame){
+        ResultSet result = database.select(SQL.SELECT.LETTERSFORNEWGAME,selectedGame.getLanguage().toString());
+        StringBuilder insertLettersForPotQuery = new StringBuilder(SQL.INSERT.LETTERSFORPOT);
+        ArrayList<Object> insertLettersForPotValues = new ArrayList<>();
+
+        try {
+            int idCounter = 1;
+            while (result.next()){
+                int amountOfLetter = result.getInt("aantal");
+                for (int i = 0; i < amountOfLetter; i++) {
+                    insertLettersForPotQuery.append("(?,?,?,?),");
+                    insertLettersForPotValues.addAll(Arrays.asList(
+                            idCounter,
+                            selectedGame.getId(),
+                            selectedGame.getLanguage().toString(),
+                            result.getString("karakter")));
+                    idCounter++;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        insertLettersForPotQuery.deleteCharAt(insertLettersForPotQuery.length()-1);
+        insertLettersForPotQuery.append(";");
+        database.insert(insertLettersForPotQuery.toString(),insertLettersForPotValues);
     }
 
     public void createGame(int compId, String requester, Language language, String receiver) {
