@@ -32,6 +32,15 @@ public class TurnBuilder {
 
     }
 
+    public ArrayList<Turn> buildBeginTurns(User opponent, User challenger){
+        ArrayList<Turn> returnList = new ArrayList<>();
+        Turn firstBeginTurn = new Turn(1,0, challenger,TurnType.BEGIN);
+        Turn secondBeginTurn = new Turn(2,0, opponent,TurnType.BEGIN);
+        returnList.add(firstBeginTurn);
+        returnList.add(secondBeginTurn);
+        return returnList;
+    }
+
     public ArrayList<Turn> buildEndTurns(Turn lastTurn, Turn secondToLastTurn){
         int subtractFromLastTurn = 0;
         int subtractFromSecondToLastTurn = 0;

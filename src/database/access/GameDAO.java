@@ -193,7 +193,6 @@ public class GameDAO extends DAO {
             case UNDEFINED:
                 break;
         }
-
     }
 
     public void createGame(int compId, String requester, Language language, String receiver) {
