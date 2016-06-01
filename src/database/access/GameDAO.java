@@ -203,8 +203,8 @@ public class GameDAO extends DAO {
         database.insert(SQL.INSERT.CREATEGAME, compId, requester, language.toString(), receiver);
     }
 
-    public void updateGameState(boolean resigned, Game selectedGame){
-        if (resigned){
+    public void updateGameState(GameState gameState, Game selectedGame){
+        if (gameState == GameState.RESIGNED){
             database.update(SQL.UPDATE.UPDATEGAMESTATE, GameState.format(GameState.RESIGNED), selectedGame.getId());
         }else {
             database.update(SQL.UPDATE.UPDATEGAMESTATE, GameState.format(GameState.FINISHED), selectedGame.getId());
