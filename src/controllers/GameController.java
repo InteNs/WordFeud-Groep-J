@@ -215,7 +215,10 @@ public class GameController extends Controller {
     }
 
     private void insertTurn(Game selectedGame, TurnType turnType) {
-        Turn newTurn = selectedGame.getTurnBuilder().buildTurn(selectedGame.getLastTurnNumber(), getSession().getCurrentUser(), turnType);
+        Turn newTurn = selectedGame.getTurnBuilder().buildTurn(
+                selectedGame.getLastTurnNumber(),
+                getSessionController().getCurrentUser(), turnType
+        );
         gameDAO.insertTurn(selectedGame, newTurn);
         selectedGame.addTurn(newTurn);
         checkForEndGame(selectedGame);
