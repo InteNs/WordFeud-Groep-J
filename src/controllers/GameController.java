@@ -115,7 +115,7 @@ public class GameController extends Controller {
             if (game.getTurns().contains(getSelectedTurn())) {
                 Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
                 setSelectedTurn(turn);
-                game.setBoardStateTo(turn, getSessionController().getCurrentUser());
+                //game.setBoardStateTo(turn, getSessionController().getCurrentUser());
             }
             game.setTurnBuilder(previousTurnBuilder);
         }
@@ -176,6 +176,8 @@ public class GameController extends Controller {
     }
 
     public ArrayList<String> playWord(Game selectedGame) {
+        if (selectedGame.getTurnBuilder().verifyCurrentTurn() == null)
+            return null;
         ArrayList<String> wordsNotInDictionary =
                 gameDAO.selectWords(selectedGame, selectedGame.getTurnBuilder().getWordsFoundThisTurn())
                         .stream()

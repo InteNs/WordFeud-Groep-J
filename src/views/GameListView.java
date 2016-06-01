@@ -75,6 +75,7 @@ public class GameListView extends View {
                 game.getPlayers().contains(session.getCurrentUser());
 
         //when player changes to observer or player hide and show proper stuff in view
+        applyViewingMode();
         userRoleBox.setOnAction(event -> {
             applyViewingMode();
         });
@@ -179,6 +180,7 @@ public class GameListView extends View {
     private void selectGame(Game game) {
         if (game != null) {
             gameController.setSelectedGame(game);
+            gameController.setSelectedTurn(game.getLastTurn());
             parent.setContent(parent.gameBoardView);
             parent.setTab(parent.gameControlView);
         }

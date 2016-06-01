@@ -102,6 +102,8 @@ public class TurnBuilder {
             if (fixedAxis != null) {
                 listOfFieldsWithWords = resolveWords(fixedAxis);
                 score = calculateTotalScore(listOfFieldsWithWords);
+                System.out.println(score);
+                System.out.println(listOfFieldsWithWords);
             }
         }
     }
@@ -216,7 +218,8 @@ public class TurnBuilder {
                 }
             }
         }
-
+        if (this.getCurrentRack() != null)
+            System.out.println(validTurn);
         if (validTurn) {
             return fixedAxis;
         } else {

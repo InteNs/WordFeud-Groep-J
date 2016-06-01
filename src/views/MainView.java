@@ -138,6 +138,7 @@ public class MainView extends View implements Initializable {
 
     @FXML
     public void logOut() {
+        isLive = false;
         applicationLoader.loadApp();
     }
 
