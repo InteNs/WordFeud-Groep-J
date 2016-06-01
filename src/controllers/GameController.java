@@ -270,6 +270,12 @@ public class GameController extends Controller {
         gameDAO.updateReactionType(ReactionType.REJECTED, selectedGame);
     }
 
+    public void createBeginTurns(Game selectedGame){
+        gameDAO.createPot(selectedGame);
+        selectedGame.setPot(gameDAO.selectLettersForPot(selectedGame));
+        selectedGame.getTurnBuilder().buildBeginTurns(selectedGame);
+    }
+
     private boolean isUserInSelectedComp(User requester, Competition comp) {
         return getCompetitionController().isUserInCompetition(requester, comp);
     }

@@ -29,13 +29,14 @@ public class TurnBuilder {
     }
 
     public TurnBuilder(){
-
+        this.listOfFieldsWithWords = new ArrayList<>();
+        this.fieldsChanged = FXCollections.observableArrayList();
     }
 
-    public ArrayList<Turn> buildBeginTurns(User opponent, User challenger){
+    public ArrayList<Turn> buildBeginTurns(Game selectedGame){
         ArrayList<Turn> returnList = new ArrayList<>();
-        Turn firstBeginTurn = new Turn(1,0, challenger,TurnType.BEGIN);
-        Turn secondBeginTurn = new Turn(2,0, opponent,TurnType.BEGIN);
+        Turn firstBeginTurn = new Turn(1,0, selectedGame.getChallenger(),TurnType.BEGIN);
+        Turn secondBeginTurn = new Turn(2,0, selectedGame.getOpponent(),TurnType.BEGIN);
         returnList.add(firstBeginTurn);
         returnList.add(secondBeginTurn);
         return returnList;
@@ -77,8 +78,11 @@ public class TurnBuilder {
            this.gameBoard = gameBoard;
            this.fieldsChanged = fieldsChanged;
            verifyAndCalculate();
-           return getWordsFoundThisTurn().get(0);
+          if (!listOfFieldsWithWords.isEmpty()){
+              return getWordsFoundThisTurn().get(0);
+          }
        }
+        return null;
     }
 
     public Turn buildTurn(int newTurnId, User user, TurnType turnType){
@@ -92,7 +96,7 @@ public class TurnBuilder {
 
 
     private void verifyAndCalculate() {
-        listOfFieldsWithWords = null;
+        listOfFieldsWithWords.clear();
         if (!fieldsChanged.isEmpty()) {
             Character fixedAxis = verifyCurrentTurn();
             if (fixedAxis != null) {

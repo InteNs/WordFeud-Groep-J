@@ -51,6 +51,23 @@ public class GameDAO extends DAO {
         return games;
     }
 
+    public ArrayList<Tile> selectLettersForPot(Game selectedGame){
+        ResultSet records = database.select(SQL.SELECT.LETTERSFORGAME,selectedGame.getId());
+        ArrayList<Tile> returnList = new ArrayList<>();
+        try {
+            while (records.next()){
+                returnList.add(new Tile(
+                        records.getInt("id"),
+                        records.getInt("waarde"),
+                        records.getString("lettertype_karakter").charAt(0)
+                ));
+            }
+            } catch (SQLException e) {
+            printError(e);
+        }
+        return returnList;
+    }
+
     public ArrayList<Turn> selectTurns(Game game) {
         ArrayList<Turn> turns = new ArrayList<>();
         ArrayList<Tile> tiles = new ArrayList<>();
@@ -216,7 +233,7 @@ public class GameDAO extends DAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            printError(e);
         }
         insertLettersForPotQuery.deleteCharAt(insertLettersForPotQuery.length()-1);
         insertLettersForPotQuery.append(";");
