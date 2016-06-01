@@ -224,20 +224,20 @@ public class GameController extends Controller {
         checkForEndGame(selectedGame);
     }
 
-    private boolean isThirdPass(Game selectedGame){
+    private boolean isThirdPass(Game selectedGame) {
         return selectedGame.getTurns().get(selectedGame.getTurns().size() - 2).getType() == TurnType.PASS
                 && selectedGame.getTurns().get(selectedGame.getTurns().size() - 3).getType() == TurnType.PASS;
     }
-    
-    public void swapTiles(ObservableList<FieldTileNode> swapTiles, Game selectedGame){
-        for(FieldTileNode field: swapTiles){
+
+    public void swapTiles(ObservableList<FieldTileNode> swapTiles, Game selectedGame) {
+        for (FieldTileNode field : swapTiles) {
             selectedGame.getTurnBuilder().getCurrentRack().remove(field.getTile());
         }
         selectedGame.getTurnBuilder().fillCurrentRack(selectedGame.getPot());
-        insertTurn(selectedGame,TurnType.SWAP);
+        insertTurn(selectedGame, TurnType.SWAP);
     }
 
-    public boolean challenge(Language language, User requester, User receiver, Competition comp) {
+    public int challenge(Language language, User requester, User receiver, Competition comp) {
         if (isUserInSelectedComp(requester, comp)) {
             if (!this.playingGame(requester, receiver, comp)) {
                 if (validInvite(requester, receiver)) {
@@ -251,11 +251,16 @@ public class GameController extends Controller {
                     );
                     games.add(game);
                     gameDAO.createGame(comp.getId(), requester.getName(), language, receiver.getName());
-                    return true;
+                    return 0;
+                } else {
+                    return 1;
                 }
+            } else {
+                return 2;
             }
+        } else {
+            return 3;
         }
-        return false;
     }
 
     private boolean validInvite(User requester, User receiver) {
