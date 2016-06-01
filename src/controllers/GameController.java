@@ -115,7 +115,7 @@ public class GameController extends Controller {
             if (game.getTurns().contains(getSelectedTurn())) {
                 Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
                 setSelectedTurn(turn);
-                //game.setBoardStateTo(turn, getSessionController().getCurrentUser());
+                game.setBoardStateTo(turn, getSessionController().getCurrentUser());
             }
             game.setTurnBuilder(previousTurnBuilder);
         }
@@ -132,9 +132,8 @@ public class GameController extends Controller {
 
     @Override
     public void refill() {
-        if (!games.equals(fetchedGames) && games.stream().allMatch(game ->
-            game.deepEquals(fetchedGames.get(fetchedGames.indexOf(game)))
-        ))
+        if (!games.equals(fetchedGames) || !games.stream().allMatch(game ->
+                game.deepEquals(fetchedGames.get(fetchedGames.indexOf(game)))))
             games.setAll(fetchedGames);
     }
 
@@ -243,7 +242,7 @@ public class GameController extends Controller {
 
     private void insertTurn(Game selectedGame, TurnType turnType) {
         Turn newTurn = selectedGame.getTurnBuilder().buildTurn(
-                selectedGame.getLastTurn().getId()+1,
+                selectedGame.getLastTurn().getId() + 1,
                 getSessionController().getCurrentUser(), turnType
         );
         gameDAO.insertTurn(selectedGame, newTurn);
@@ -289,16 +288,16 @@ public class GameController extends Controller {
         return !requester.getName().equals(receiver.getName());
     }
 
-    public void acceptInvite(Game selectedGame){
+    public void acceptInvite(Game selectedGame) {
         gameDAO.updateReactionType(ReactionType.ACCEPTED, selectedGame);
     }
 
-    public void rejectInvite(Game selectedGame){
+    public void rejectInvite(Game selectedGame) {
         gameDAO.updateReactionType(ReactionType.REJECTED, selectedGame);
     }
 
-    public void createBeginTurns(Game selectedGame){
-        gameDAO.updateGameState(GameState.PLAYING,selectedGame);
+    private void createBeginTurns(Game selectedGame) {
+        gameDAO.updateGameState(GameState.PLAYING, selectedGame);
         gameDAO.createPot(selectedGame);
         selectedGame.setPot(gameDAO.selectLettersForPot(selectedGame));
         for (Turn turn : new TurnBuilder().buildBeginTurns(selectedGame)) {
@@ -307,7 +306,7 @@ public class GameController extends Controller {
                 turn.addRackTile(selectedGame.getPot().get(letterFromPot));
                 selectedGame.getPot().remove(letterFromPot);
             }
-            gameDAO.insertTurn(selectedGame,turn);
+            gameDAO.insertTurn(selectedGame, turn);
         }
     }
 
