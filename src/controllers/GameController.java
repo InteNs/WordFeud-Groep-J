@@ -8,24 +8,27 @@ import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import models.*;
 import views.components.FieldTileNode;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameController extends Controller {
 
+    private ArrayList<Game> fetchedGames;
+    private ArrayList<Turn> fetchedTurns;
+    private ArrayList<Message> fetchedMessages;
     private ObservableList<Game> games;
     private ObjectProperty<Game> selectedGame;
     private ObjectProperty<Role> currentRole;
     private ObjectProperty<Turn> selectedTurn;
 
-    public GameController(ControllerFactory factory) {
-        super(factory);
+    public GameController(ControllerFactory controllerFactory) {
+        super(controllerFactory);
         games = FXCollections.observableArrayList();
         selectedGame = new SimpleObjectProperty<>();
         selectedTurn = new SimpleObjectProperty<>();
         currentRole = new SimpleObjectProperty<>();
-        selectedGameProperty().addListener((o, oV, nV) -> loadGame(nV, getCurrentRole()));
     }
 
     public void setCurrentRole(Role currentRole) {
@@ -68,11 +71,20 @@ public class GameController extends Controller {
         return games.filtered(Game::isGame);
     }
 
+    public ObservableList<Game> getGames(Competition competition) {
+        return games.filtered(game -> game.getCompetitionId() == competition.getId());
+    }
+
     public void loadGame(Game game, Role gameMode) {
         if (game == null) return;
-        game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
-        game.setTurns(gameDAO.selectTurns(game));
-        game.setMessages(gameDAO.selectMessages(game));
+        if (fetchedTurns == null || fetchedMessages == null) fetch();
+        if (game.getEmptyGameBoard() == null)
+            game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
+        if (!game.getTurns().equals(fetchedTurns))
+            game.setTurns(fetchedTurns);
+        if (!(game.getMessages().size() == fetchedMessages.size()))
+            game.setMessages(fetchedMessages);
+
         game.setGameMode(gameMode);
     }
 
@@ -80,19 +92,36 @@ public class GameController extends Controller {
     public void refresh() {
         if (games.contains(getSelectedGame())) {
             Game game = games.get(games.indexOf(getSelectedGame()));
+            TurnBuilder previousTurnBuilder = getSelectedGame().getTurnBuilder();
+            Field[][] previousBoard = getSelectedGame().getEmptyGameBoard();
+            game.setBoard(previousBoard);
             loadGame(game, getCurrentRole());
+
             setSelectedGame(game);
 
             if (game.getTurns().contains(getSelectedTurn())) {
                 Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
                 setSelectedTurn(turn);
+                game.setBoardStateTo(turn, getSessionController().getCurrentUser());
             }
+            game.setTurnBuilder(previousTurnBuilder);
         }
     }
 
     @Override
     public void refill() {
-        games.setAll(gameDAO.selectGames());
+        if (!games.equals(fetchedGames))
+            games.setAll(fetchedGames);
+    }
+
+    @Override
+    public void fetch() {
+        fetchedGames = gameDAO.selectGames();
+        if (getSelectedGame() != null) {
+            fetchedMessages = gameDAO.selectMessages(getSelectedGame());
+            fetchedTurns = gameDAO.selectTurns(getSelectedGame());
+
+        }
     }
 
     public void setPlayerRack(Game game, List<Tile> tiles) {
@@ -100,7 +129,7 @@ public class GameController extends Controller {
     }
 
     public void setBoardState(Game game, Turn turn) {
-        game.setBoardStateTo(turn, getSession().getCurrentUser());
+        game.setBoardStateTo(turn, getSessionController().getCurrentUser());
     }
 
     public void placeTile(Game game, Field field, Tile tile) {
@@ -186,7 +215,10 @@ public class GameController extends Controller {
     }
 
     private void insertTurn(Game selectedGame, TurnType turnType) {
-        Turn newTurn = selectedGame.getTurnBuilder().buildTurn(selectedGame.getLastTurnNumber(), getSession().getCurrentUser(), turnType);
+        Turn newTurn = selectedGame.getTurnBuilder().buildTurn(
+                selectedGame.getLastTurnNumber(),
+                getSessionController().getCurrentUser(), turnType
+        );
         gameDAO.insertTurn(selectedGame, newTurn);
         selectedGame.addTurn(newTurn);
         checkForEndGame(selectedGame);
@@ -209,7 +241,14 @@ public class GameController extends Controller {
         if (isUserInSelectedComp(requester, comp)) {
             if (!this.playingGame(requester, receiver, comp)) {
                 if (validInvite(requester, receiver)) {
-                    Game game = new Game(0, 0, comp.getId(), requester, receiver, GameState.REQUEST, BoardType.STANDARD, language);
+                    Game game = new Game(
+                            0, 0, comp.getId(),
+                            requester,
+                            receiver,
+                            GameState.REQUEST,
+                            BoardType.STANDARD,
+                            language
+                    );
                     games.add(game);
                     gameDAO.createGame(comp.getId(), requester.getName(), language, receiver.getName());
                     return true;
@@ -220,25 +259,20 @@ public class GameController extends Controller {
     }
 
     private boolean validInvite(User requester, User receiver) {
-        if (!requester.getName().equals(receiver.getName())) return true;
-        return false;
+        return !requester.getName().equals(receiver.getName());
     }
 
     private boolean isUserInSelectedComp(User requester, Competition comp) {
-        if (getCompetitionController().isUserInCompetition(requester, comp)) return true;
-        return false;
+        return getCompetitionController().isUserInCompetition(requester, comp);
     }
 
-    public boolean playingGame(User challenger, User opponent, Competition comp) {
-        for (Game g : games) {
-            if (g.getChallenger().equals(challenger) && g.getOpponent().equals(opponent) || (g.getChallenger().equals(opponent) && g.getOpponent().equals(challenger))) {
-                if (g.getGameState() != GameState.FINISHED) {
-                    if (g.getCompetitionId() == comp.getId()) {
+    private boolean playingGame(User challenger, User opponent, Competition comp) {
+        for (Game g : games)
+            if (g.getChallenger().equals(challenger) && g.getOpponent().equals(opponent)
+                    || (g.getChallenger().equals(opponent) && g.getOpponent().equals(challenger)))
+                if (g.getGameState() != GameState.FINISHED)
+                    if (g.getCompetitionId() == comp.getId())
                         return true;
-                    }
-                }
-            }
-        }
         return false;
     }
 }

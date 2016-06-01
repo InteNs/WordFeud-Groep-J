@@ -16,6 +16,10 @@ public class CreateCompetitionView extends View {
 
     @Override
     public void refresh() {
+    }
+
+    @Override
+    public void clear() {
         invalidCompetitionNameLabel.setVisible(false);
         competitionName.clear();
     }

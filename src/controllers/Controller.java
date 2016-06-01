@@ -5,7 +5,23 @@ import database.access.GameDAO;
 import database.access.UserDAO;
 import database.access.WordDAO;
 
-public abstract class Controller {
+import java.util.Observable;
+
+public abstract class Controller extends Observable {
+
+    protected UserDAO userDAO;
+    protected GameDAO gameDAO;
+    protected CompetitionDAO competitionDAO;
+    protected WordDAO wordDAO;
+    private ControllerFactory controllerFactory;
+
+    public Controller(ControllerFactory factory) {
+        this.controllerFactory = factory;
+        competitionDAO = new CompetitionDAO();
+        gameDAO = new GameDAO();
+        userDAO = new UserDAO();
+        wordDAO = new WordDAO();
+    }
 
     public UserController getUserController() {
         return controllerFactory.GetUserController();
@@ -19,28 +35,18 @@ public abstract class Controller {
         return controllerFactory.getCompetitionController();
     }
 
-    public SessionController getSession() {
+    public SessionController getSessionController() {
         return controllerFactory.getSessionController();
     }
-    public WordController getWordController(){return controllerFactory.getWordController();}
 
-    protected ControllerFactory controllerFactory;
-    protected UserDAO userDAO;
-    protected GameDAO gameDAO;
-    protected CompetitionDAO competitionDAO;
-    protected WordDAO wordDAO;
-
-    public Controller(ControllerFactory factory) {
-        this.controllerFactory = factory;
-        competitionDAO = new CompetitionDAO();
-        gameDAO = new GameDAO();
-        userDAO = new UserDAO();
-        wordDAO = new WordDAO();
+    public WordController getWordController() {
+        return controllerFactory.getWordController();
     }
-
 
     public abstract void refresh();
 
     public abstract void refill();
+
+    public abstract void fetch();
 
 }

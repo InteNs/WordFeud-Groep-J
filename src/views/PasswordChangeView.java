@@ -20,6 +20,11 @@ public class PasswordChangeView extends View {
 
     @Override
     public void refresh() {
+
+    }
+
+    @Override
+    public void clear() {
         oldPassField.clear();
         newPassField1.clear();
         newPassField2.clear();

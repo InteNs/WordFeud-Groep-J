@@ -21,6 +21,7 @@ import models.Game;
 import models.Tile;
 import models.Turn;
 import views.components.FieldTileNode;
+import views.subviews.JokerView;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -169,7 +170,7 @@ public class GameBoardView extends View {
         });
     }
 
-    public void clear() {
+    public void clearBoard() {
         //get changed fields
         ObservableList<Field> fields = gameController.getFieldsChanged(gameController.getSelectedGame());
         //for every blank space in rack
@@ -216,6 +217,11 @@ public class GameBoardView extends View {
 
     @Override
     public void refresh() {
+    }
+
+    @Override
+    public void clear() {
+
     }
 
     @Override

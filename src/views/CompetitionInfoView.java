@@ -7,6 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import models.Competition;
 
+import java.util.Objects;
+
 public class CompetitionInfoView extends View {
 
     @FXML private Label competitionName;
@@ -18,9 +20,11 @@ public class CompetitionInfoView extends View {
 
     @Override
     public void constructor() {
-        competitionController.selectedCompetitionProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) setInfo(newValue);
-        });
+        competitionController.selectedCompetitionProperty()
+                .addListener((o, oldValue, newValue) -> {
+                    if (!Objects.equals(oldValue, newValue) && newValue != null)
+                        setInfo(newValue);
+                });
     }
 
     private void setInfo(Competition competition) {
@@ -48,11 +52,17 @@ public class CompetitionInfoView extends View {
                 session.getCurrentUser(),
                 competitionController.getSelectedCompetition()
         );
-        setInfo(competitionController.getSelectedCompetition());
+        refresh();
     }
 
     @Override
     public void refresh() {
+        if (competitionController.getSelectedCompetition() != null)
+            setInfo(competitionController.getSelectedCompetition());
+    }
+
+    @Override
+    public void clear() {
         gameChart.getData().clear();
         playerChart.getData().clear();
         scoreChart.getData().clear();

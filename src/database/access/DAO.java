@@ -5,8 +5,12 @@ import database.Database;
 abstract class DAO {
     protected Database database;
 
+    public void close() {
+        database.close();
+    }
+
     public DAO() {
-        database = new Database();
+        this.database = Database.getInstance();
     }
 
     protected void printError(Exception e) {

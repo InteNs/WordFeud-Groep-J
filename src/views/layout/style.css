@@ -18,6 +18,15 @@
     -fx-background-radius: 0;
 }
 
+.custom-toggle:selected {
+    -fx-background-color: lawngreen;
+}
+
+.custom-toggle {
+    -fx-background-color: orangered;
+    -fx-graphic: url("../../resources/icons/refresh.png");
+}
+
 .game-label {
     -fx-text-alignment: center;
     -fx-pref-width: 60;
@@ -40,6 +49,13 @@
 .spinner:disabled .text-field {
     -fx-text-fill: #000000;
     -fx-opacity: 1.0;
+}
+
+.cell-text-field {
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-alignment: center;
+    -fx-pref-height: 25;
 }
 
 .current-player-label {

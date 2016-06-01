@@ -25,6 +25,11 @@ public class SwapTileView extends View {
     }
 
     @Override
+    public void clear() {
+
+    }
+
+    @Override
     public void constructor() {
         // TODO Auto-generated method stub
        

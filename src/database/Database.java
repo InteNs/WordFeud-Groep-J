@@ -13,7 +13,11 @@ public class Database {
     private final String USERNAME = "wordfeud";
     private final String PASSWORD = "wordfeud01";
     private final String DRIVER = "com.mysql.jdbc.Driver";
+    private static Database database = new Database();
 
+    public static Database getInstance() {
+        return database;
+    }
 
     private Connection connection;
     private PreparedStatement statement;
@@ -32,11 +36,11 @@ public class Database {
      * close any open statement or resultSet made with this connection
      */
     public void close() {
-//        try {
-//            if (connection != null)
-//                connection.close();
-//        } catch (SQLException ignored) {
-//        }
+        try {
+            if (connection != null)
+                connection.close();
+        } catch (SQLException ignored) {
+        }
     }
 
     /**
@@ -189,7 +193,7 @@ public class Database {
     }
 
     private Connection connection() throws SQLException {
-        if (connection != null) return connection;
+        if (connection != null && !connection.isClosed()) return connection;
         connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
         return connection;
     }

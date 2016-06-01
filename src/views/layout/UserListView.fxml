@@ -10,16 +10,14 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
         </padding>
         <TextField fx:id="filterField" promptText="zoeken..."/>
-        <ListView fx:id="currentUserList" maxHeight="27"/>
-        <Accordion fx:id="userLists" VBox.vgrow="ALWAYS">
-            <panes>
-                <TitledPane text="alle accounts">
-                    <ListView fx:id="userList"/>
-                </TitledPane>
-                <TitledPane fx:id="compUserPane" text="accounts binnen: ">
-                    <ListView fx:id="compUserList"/>
-                </TitledPane>
-            </panes>
-        </Accordion>
+        <TextField styleClass="cell-text-field" fx:id="currentUserField" editable="false"/>
+        <SplitPane fx:id="lists" VBox.vgrow="ALWAYS" dividerPositions="1" orientation="VERTICAL">
+            <TitledPane  expanded="true" fx:id="allUsersPane" text="alle accounts">
+                <ListView prefHeight="999999" fx:id="allUsersList"/>
+            </TitledPane>
+            <TitledPane expanded="true" fx:id="compUsersPane" text="accounts binnen: ">
+                <ListView prefHeight="999999" fx:id="compUsersList"/>
+            </TitledPane>
+        </SplitPane>
     </VBox>
 </Tab>

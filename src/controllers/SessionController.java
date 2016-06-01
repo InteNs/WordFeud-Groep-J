@@ -7,8 +7,8 @@ import models.User;
 public class SessionController extends Controller {
     private ObjectProperty<User> currentUser = new SimpleObjectProperty<>();
 
-    public SessionController(ControllerFactory factory) {
-        super(factory);
+    public SessionController(ControllerFactory controllerFactory) {
+        super(controllerFactory);
     }
 
     public ObjectProperty<User> currentUserProperty() {
@@ -31,11 +31,16 @@ public class SessionController extends Controller {
 
     @Override
     public void refresh() {
-
+        setCurrentUser(getUserController().getUser(getCurrentUser().getName()));
     }
 
     @Override
     public void refill() {
+
+    }
+
+    @Override
+    public void fetch() {
 
     }
 }

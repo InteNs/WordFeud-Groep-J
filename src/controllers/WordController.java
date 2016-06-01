@@ -8,12 +8,16 @@ import javafx.collections.ObservableList;
 import models.User;
 import models.Word;
 
+import java.util.ArrayList;
+
 public class WordController extends Controller {
+
+    private ArrayList<Word> fetched;
     private ObjectProperty<Word> selectedWord;
     private ObservableList<Word> words;
 
-    public WordController(ControllerFactory factory) {
-        super(factory);
+    public WordController(ControllerFactory controllerFactory) {
+        super(controllerFactory);
         words = FXCollections.observableArrayList();
         selectedWord = new SimpleObjectProperty<>();
     }
@@ -37,7 +41,14 @@ public class WordController extends Controller {
 
     @Override
     public void refill() {
-        words.setAll(wordDAO.getWords());
+        if (!words.equals(fetched))
+            words.setAll(fetched);
+    }
+
+    @Override
+    public void fetch() {
+        fetched = wordDAO.getWords();
+        wordDAO.close();
     }
 
     public ObservableList<Word> getWords(WordStatus status) {
@@ -53,10 +64,10 @@ public class WordController extends Controller {
     }
 
     public boolean updateWordStatus(Word word, WordStatus status) {
-        if (wordDAO.updateWordStatus(word, status)) {
-            word.setStatus(status);
-            return true;
-        }
-        return false;
+        wordDAO.updateWordStatus(word, status);
+        word.setStatus(status);
+        setChanged();
+        notifyObservers();
+        return true;
     }
 }

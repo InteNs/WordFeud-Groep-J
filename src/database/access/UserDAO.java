@@ -27,7 +27,6 @@ public class UserDAO extends DAO {
         } catch (SQLException e) {
             printError(e);
         }
-        database.close();
         return users;
     }
 
@@ -57,7 +56,6 @@ public class UserDAO extends DAO {
         } catch (SQLException e) {
             printError(e);
         }
-        database.close();
         return user;
     }
 
@@ -91,7 +89,6 @@ public class UserDAO extends DAO {
         } catch (SQLException e) {
             printError(e);
         }
-        database.close();
     }
 
     public void updatePassword(User user, String password) {

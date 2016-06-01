@@ -25,7 +25,6 @@ public class GameDAO extends DAO {
         } catch (Exception e) {
             printError(e);
         }
-        database.close();
         return messages;
     }
 
@@ -48,7 +47,6 @@ public class GameDAO extends DAO {
         } catch (Exception e) {
             printError(e);
         }
-        database.close();
         return games;
     }
 
@@ -57,6 +55,7 @@ public class GameDAO extends DAO {
         ArrayList<Tile> tiles = new ArrayList<>();
         ResultSet records = database.select(SQL.SELECT.TURNSFORGAME, game.getId());
         ResultSet tileRecords = database.select(SQL.SELECT.LETTERSFORGAME, game.getId());
+        if (records == null || tileRecords == null) return null;
         try {
             while (tileRecords.next()) {
                 tiles.add(new Tile(
@@ -105,7 +104,6 @@ public class GameDAO extends DAO {
         } catch (SQLException e) {
             printError(e);
         }
-        database.close();
         game.setPot(tiles);
         return turns;
     }
@@ -122,7 +120,6 @@ public class GameDAO extends DAO {
         } catch (SQLException e) {
             printError(e);
         }
-        database.close();
         return fields;
     }
 

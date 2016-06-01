@@ -1,69 +1,92 @@
 package views;
 
+import enumerations.Role;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Accordion;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import models.Competition;
 import models.User;
+
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public class UserListView extends View {
-    @FXML private ListView<User> userList;
-    @FXML private ListView<User> currentUserList;
-    @FXML private ListView<User> compUserList;
-    @FXML private TitledPane compUserPane;
-    @FXML private Accordion userLists;
+    @FXML private TextField currentUserField;
     @FXML private TextField filterField;
+    @FXML private ListView<User> allUsersList;
+    @FXML private ListView<User> compUsersList;
+    @FXML private TitledPane compUsersPane;
+    @FXML private TitledPane allUsersPane;
+    @FXML private SplitPane lists;
 
     private FilteredList<User> filteredUsers;
+    private Predicate<User> filterText, filterComp;
 
-    public void refresh(){
+    public void refresh() {
+        if (competitionController.getSelectedCompetition() != null)
+            showCompUsers(competitionController.getSelectedCompetition(), false);
+    }
+
+    @Override
+    public void clear() {
+
     }
 
     @Override
     public void constructor() {
         filteredUsers = new FilteredList<>(userController.getUsers());
 
-        Predicate<User> filterCurrent = user ->
-                user.equals(session.getCurrentUser());
-        Predicate<User> filterText = user ->
+        filterText = user ->
                 user.getName().toLowerCase().contains(filterField.getText().toLowerCase());
-        Predicate<User> filterComp = user -> competitionController.getSelectedCompetition() != null
+        filterComp = user -> competitionController.getSelectedCompetition() != null
                 && competitionController.getSelectedCompetition().getPlayers().contains(user);
 
-        userList.setItems(filteredUsers);
-        currentUserList.setItems(filteredUsers.filtered(filterCurrent));
+        allUsersList.setItems(filteredUsers);
+
+        if (!session.getCurrentUser().hasRole(Role.ADMINISTRATOR))
+            lists.getItems().remove(allUsersPane);
 
         competitionController.selectedCompetitionProperty().addListener((observable, oldValue, newValue) -> {
-            userLists.getPanes().remove(compUserPane);
-            if(newValue != null && !newValue.getPlayers().isEmpty()) {
-                userLists.getPanes().add(compUserPane);
-                userLists.setExpandedPane(compUserPane);
-                compUserPane.setText("Accounts binnen: " + newValue.toString());
-                compUserList.setItems((filteredUsers.filtered(filterComp)));
-            }
+            if (newValue != null && !Objects.equals(newValue, oldValue))
+                compUsersList.setItems(filteredUsers.filtered(filterComp));
+                showCompUsers(newValue, true);
         });
 
-        filterField.textProperty().addListener(observable ->
-            filteredUsers.setPredicate(filterText)
-        );
+        filterField.textProperty().addListener(observable -> {
+            filteredUsers.setPredicate(null);
+            filteredUsers.setPredicate(filterText);
+        });
 
-        currentUserList.setOnMouseClicked(e -> select(session.getCurrentUser()));
+        currentUserField.setText(session.getCurrentUser().toString());
+        currentUserField.setOnMouseClicked(e -> select(session.getCurrentUser()));
 
-        userList.getSelectionModel().selectedItemProperty().addListener((o1, o2, newValue) ->
-                select(newValue)
-        );
-        compUserList.getSelectionModel().selectedItemProperty().addListener((o1, o2, newValue) ->
-        selectChallenge(newValue) 
-        );
-        
-        
+        allUsersList.getSelectionModel().selectedItemProperty()
+                .addListener((o, oldValue, newValue) -> {
+                    if (newValue != null && !Objects.equals(oldValue, newValue)) select(newValue);
+                });
+
+        compUsersList.getSelectionModel().selectedItemProperty()
+                .addListener((o, oldValue, newValue) -> {
+                    if (newValue != null && !Objects.equals(oldValue, newValue))
+                        selectChallenge(newValue);
+                });
     }
-    
-    private void selectChallenge(User user){
-        parent.getChallengeView().setDefaultText();
+
+    private void showCompUsers(Competition newValue, boolean isNew) {
+        if (!newValue.getPlayers().isEmpty()) {
+            if (!lists.getItems().contains(compUsersPane))
+                lists.getItems().add(compUsersPane);
+
+            compUsersPane.setText("Accounts binnen: " + newValue.toString());
+            if (isNew) lists.setDividerPosition(0, 0.5);
+        } else lists.getItems().remove(compUsersPane);
+    }
+
+    private void selectChallenge(User user) {
+        parent.getChallengeView().clear();
         userController.setSelectedUser(user);
         parent.setContent(parent.challengeView);
     }

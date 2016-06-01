@@ -8,21 +8,19 @@ import javafx.scene.paint.Color;
 
 public class RegisterView extends View {
 
-    @FXML
-    private TextField userNameField;
-    @FXML
-    private PasswordField userPassField1;
-    @FXML
-    private PasswordField userPassField2;
-    @FXML
-    private Label invalidUserLabel;
-    @FXML
-    private Label usernameReq;
-    @FXML
-    private Label passwordReq;
+    @FXML private TextField userNameField;
+    @FXML private PasswordField userPassField1;
+    @FXML private PasswordField userPassField2;
+    @FXML private Label invalidUserLabel;
+    @FXML private Label usernameReq;
+    @FXML private Label passwordReq;
 
     @Override
     public void refresh() {
+    }
+
+    @Override
+    public void clear() {
         userNameField.clear();
         userPassField1.clear();
         userPassField2.clear();
@@ -42,6 +40,8 @@ public class RegisterView extends View {
                 invalidUserLabel.setTextFill(Color.web("#00ff00"));
                 invalidUserLabel.setText("registreren geslaagd");
                 invalidUserLabel.setVisible(true);
+                try { Thread.sleep(2000);} catch (InterruptedException ignored) {}
+                openLoginView();
             }
         } else {
             invalidUserLabel.setText("gebruikersnaam niet beschikbaar");
@@ -53,7 +53,7 @@ public class RegisterView extends View {
     @FXML
     public void openLoginView() {
         parent.setContent(parent.loginView);
-        refresh();
+        clear();
     }
 
     // Check if username meets the requirements (5 -25 char)

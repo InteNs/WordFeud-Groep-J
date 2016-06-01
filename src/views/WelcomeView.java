@@ -13,6 +13,11 @@ public class WelcomeView extends View {
     }
 
     @Override
+    public void clear() {
+
+    }
+
+    @Override
     public void constructor() {
         helloUserLabel.setText("Hallo "+ session.getCurrentUser() + "!");
     }

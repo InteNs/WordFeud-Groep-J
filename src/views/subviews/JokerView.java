@@ -1,4 +1,4 @@
-package views;
+package views.subviews;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,6 +14,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import resources.ResourceFactory;
+import views.MainView;
+import views.View;
 
 public class JokerView extends View {
     private char returnValue = '!';
@@ -22,6 +24,11 @@ public class JokerView extends View {
 
     @Override
     public void refresh() {
+    }
+
+    @Override
+    public void clear() {
+
     }
 
     @Override

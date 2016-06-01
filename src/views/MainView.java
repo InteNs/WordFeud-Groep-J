@@ -1,12 +1,12 @@
 package views;
 
 import controllers.ControllerFactory;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -16,6 +16,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class MainView extends View implements Initializable {
     /*declare your view here if you need it*/
@@ -29,6 +33,7 @@ public class MainView extends View implements Initializable {
     @FXML public VBox passwordChangeView;
     @FXML public VBox challengeView;
     @FXML public ProgressIndicator loadIndicator;
+    @FXML public ToggleButton threadToggle;
     @FXML public ToolBar toolBar;
     @FXML public TabPane control;
     @FXML public SplitPane mainContent;
@@ -43,10 +48,10 @@ public class MainView extends View implements Initializable {
     @FXML private GameListView gameListViewController;
     @FXML private CompetitionInfoView competitionInfoViewController;
     @FXML private CompetitionListView competitionListViewController;
-    @FXML private LoginView    loginViewController;
-    @FXML private WelcomeView  welcomeViewController;
-    @FXML private RegisterView  registerViewController;
-    @FXML private UserInfoView  userInfoViewController;
+    @FXML private LoginView loginViewController;
+    @FXML private WelcomeView welcomeViewController;
+    @FXML private RegisterView registerViewController;
+    @FXML private UserInfoView userInfoViewController;
     @FXML private GameBoardView gameBoardViewController;
     @FXML private CreateCompetitionView createCompetitionViewController;
     @FXML private PasswordChangeView passwordChangeViewController;
@@ -61,6 +66,7 @@ public class MainView extends View implements Initializable {
     private int controlIndex;
     private double dividerPos;
     private Main applicationLoader;
+    private boolean isLive;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -91,20 +97,32 @@ public class MainView extends View implements Initializable {
 
         ));
         views.forEach(view -> view.init(this));
+
+
     }
 
     public void login() {
+        //load controllers
+        controllerFactory.fetchControllers();
         controllerFactory.refreshControllers();
+        //load views
         views.forEach(View::constructor);
+        //enable control
+        setControl(true);
+        toolBar.setDisable(false);
         constructor();
+        isLive = true;
+        threadToggle.setSelected(true);
     }
 
     @FXML
     public void refresh() {
-        loadIndicator.setVisible(true);
-        controllerFactory.refreshControllers();
-        views.forEach(View::refresh);
-        loadIndicator.setVisible(false);
+
+    }
+
+    @Override
+    public void clear() {
+
     }
 
     public ControllerFactory getControllerFactory() {
@@ -113,7 +131,7 @@ public class MainView extends View implements Initializable {
 
     @FXML
     public void toggleControl(ActionEvent actionEvent) {
-        setControl(!((ToggleButton)actionEvent.getSource()).isSelected());
+        setControl(!((ToggleButton) actionEvent.getSource()).isSelected());
     }
 
     @FXML
@@ -126,11 +144,10 @@ public class MainView extends View implements Initializable {
      * @param visible whether the control tabs should be visible
      */
     public void setControl(Boolean visible) {
-        if(visible){
+        if (visible) {
             mainContent.getItems().add(controlIndex, control);
             mainContent.setDividerPositions(dividerPos);
-        }
-        else if(mainContent.getItems().contains(control)){
+        } else if (mainContent.getItems().contains(control)) {
             controlIndex = mainContent.getItems().indexOf(control);
             dividerPos = mainContent.getDividerPositions()[0];
             mainContent.getItems().remove(control);
@@ -152,16 +169,34 @@ public class MainView extends View implements Initializable {
 
     @Override
     public void constructor() {
+        //disable control tab if no game selected
         gameControlView.setDisable(controllerFactory.getGameController().getSelectedGame() == null);
         controllerFactory.getGameController().selectedGameProperty().addListener((observable, oldValue, newValue) -> {
             gameControlView.setDisable(newValue == null);
         });
-        setContent(welcomeView);
-        setControl(true);
-        toolBar.setDisable(false);
+
+        //when controltab is selected, the gameboardview will show
         control.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == gameControlView) setContent(gameBoardView);
         });
+
+        //define and start live reload thread
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread thread = new Thread(r);
+            thread.setDaemon(true);
+            return thread;
+        });
+
+        scheduler.scheduleAtFixedRate((() -> {
+            if (!isLive) return;
+            loadIndicator.setVisible(true);
+            controllerFactory.fetchControllers();
+            Platform.runLater(() -> {
+                controllerFactory.refreshControllers();
+                views.forEach(View::refresh);
+                loadIndicator.setVisible(false);
+            });
+        }), 0, 5, SECONDS);
     }
 
     public void setApplicationLoader(Main applicationLoader) {
@@ -172,15 +207,19 @@ public class MainView extends View implements Initializable {
         setContent(passwordChangeView);
     }
 
-    public GameBoardView getGameBoardView (){
-       return gameBoardViewController;
+    public GameBoardView getGameBoardView() {
+        return gameBoardViewController;
     }
 
-    public WordInfoView getWordInfoView(){
+    public WordInfoView getWordInfoView() {
         return wordInfoViewController;
     }
 
     public ChallengeView getChallengeView(){
         return challengeViewController;
+    }
+
+    public void doThread(ActionEvent actionEvent) {
+        isLive = ((ToggleButton)actionEvent.getSource()).isSelected();
     }
 }

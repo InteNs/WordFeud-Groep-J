@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class CompetitionDAO extends DAO {
 
+
     public ArrayList<Competition> selectCompetitions() {
         ResultSet rs = database.select(SQL.ALL.COMPETITIONS);
         ArrayList<Competition> competitions = new ArrayList<>();
@@ -21,7 +22,6 @@ public class CompetitionDAO extends DAO {
         } catch (Exception e) {
             printError(e);
         }
-        database.close();
         return competitions;
     }
 
@@ -55,7 +55,6 @@ public class CompetitionDAO extends DAO {
         } catch (SQLException e) {
             printError(e);
         }
-        database.close();
         return pairs;
     }
 }

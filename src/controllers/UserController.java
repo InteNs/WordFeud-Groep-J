@@ -7,13 +7,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.User;
 
+import java.util.ArrayList;
+
 public class UserController extends Controller {
 
+    private ArrayList<User> fetched;
     private ObservableList<User> users;
     private ObjectProperty<User> selectedUser;
 
-    public UserController(ControllerFactory factory) {
-        super(factory);
+    public UserController(ControllerFactory controllerFactory) {
+        super(controllerFactory);
         users = FXCollections.observableArrayList();
         selectedUser = new SimpleObjectProperty<>();
     }
@@ -22,12 +25,12 @@ public class UserController extends Controller {
         return selectedUser;
     }
 
-    public void setSelectedUser(User user) {
-        selectedUser.set(user);
-    }
-
     public User getSelectedUser() {
         return selectedUser.get();
+    }
+
+    public void setSelectedUser(User user) {
+        selectedUser.set(user);
     }
 
     public ObservableList<User> getUsers() {
@@ -36,18 +39,19 @@ public class UserController extends Controller {
 
     public User getUser(String name) {
         User user = new User(name);
-        if(users.contains(user))
+        if (users.contains(user))
             return users.get(users.indexOf(user));
         return null;
     }
 
     /**
      * check if user exists, checks database if no users in memory
+     *
      * @param username name of user to check
      * @return true if user already exists
      */
     public boolean userExists(String username) {
-        if(users != null)
+        if (users != null)
             return getUser(username) != null;
         else
             return userDAO.selectUser(username, null) != null;
@@ -60,7 +64,7 @@ public class UserController extends Controller {
 
     public boolean isValidUsername(String username) {
         return username.length() >= 5 & username.length() <= 25
-                && username.matches("[a-zA-Z0-9]+" );
+                && username.matches("[a-zA-Z0-9]+");
     }
 
     public boolean isValidPassword(String password) {
@@ -68,12 +72,13 @@ public class UserController extends Controller {
     }
 
     public void setRole(User user, Role role, Boolean enabled) {
-        if (enabled)
-            if(userDAO.insertUserRole(user, role))
-                user.addRole(role);
-        else
-            if(userDAO.deleteUserRole(user, role))
-                user.removeRole(role);
+        if (enabled) {
+            userDAO.insertUserRole(user, role);
+            user.addRole(role);
+        } else {
+            userDAO.deleteUserRole(user, role);
+            user.removeRole(role);
+        }
     }
 
     public boolean checkPassword(User user, String oldPassword) {
@@ -81,18 +86,26 @@ public class UserController extends Controller {
     }
 
     public void changePassword(String password) {
-        User user = getSession().getCurrentUser();
+        User user = getSessionController().getCurrentUser();
         userDAO.updatePassword(user, password);
     }
 
     @Override
     public void refresh() {
-        userDAO.setAllStats(users);
+        //userDAO.setAllStats(users);
         if (users.contains(getSelectedUser())) setSelectedUser(users.get(users.indexOf(getSelectedUser())));
     }
 
     @Override
     public void refill() {
-        users.setAll(userDAO.selectUsers());
+        if (!users.equals(fetched) || !users.stream().allMatch(user ->
+                user.deepEquals(fetched.get(fetched.indexOf(user)))))
+            users.setAll(fetched);
+    }
+
+    @Override
+    public void fetch() {
+        fetched = userDAO.selectUsers();
+        userDAO.close();
     }
 }

@@ -1,5 +1,6 @@
 package views;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -17,8 +18,12 @@ public class LoginView extends View {
     public void login(){
         if (session.login(userNameField.getText(), userPassField.getText())) {
             progress.setVisible(true);
-            parent.login();
-            refresh();
+            Platform.runLater(() ->{
+                parent.login();
+                parent.setContent(parent.welcomeView);
+                clear();
+            });
+
         } else
             invalidUserLabel.setVisible(true);
     }
@@ -29,6 +34,10 @@ public class LoginView extends View {
 
     @Override
     public void refresh() {
+    }
+
+    @Override
+    public void clear() {
         userNameField.clear();
         userPassField.clear();
         invalidUserLabel.setVisible(false);
