@@ -204,10 +204,6 @@ public class GameDAO extends DAO {
     }
 
     public void updateGameState(GameState gameState, Game selectedGame){
-        if (gameState == GameState.RESIGNED){
-            database.update(SQL.UPDATE.UPDATEGAMESTATE, GameState.format(GameState.RESIGNED), selectedGame.getId());
-        }else {
-            database.update(SQL.UPDATE.UPDATEGAMESTATE, GameState.format(GameState.FINISHED), selectedGame.getId());
-        }
+        database.update(SQL.UPDATE.UPDATEGAMESTATE, GameState.format(gameState), selectedGame.getId());
     }
 }
