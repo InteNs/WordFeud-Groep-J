@@ -32,6 +32,7 @@ public class gameControlView extends View {
     @FXML private Button shuffleButton;
     @FXML private Button clearButton;
     @FXML private Button extraFunctionsButton;
+    @FXML private Button potButton;
     @FXML private ContextMenu contextMenu;
     @FXML private Label potLabel;
     @FXML private Spinner<Turn> turnSpinner;
@@ -111,6 +112,14 @@ public class gameControlView extends View {
         if (newGame.getPot().size() < 7) {
             swapButton.setDisable(true);
         }
+        if(gameController.getSelectedGame().getPot().size() < 1){
+            potButton.setDisable(true);
+            System.out.println(gameController.getSelectedGame().getPot());
+        }
+        if(gameController.getSelectedGame().getPot().size() > 0){
+            potButton.setDisable(false);
+        }
+        
     }
 
     private void selectTurn(Turn newValue) {
@@ -162,8 +171,10 @@ public class gameControlView extends View {
     @FXML
     public void showPot() {
         ObservableList<Tile> tiles = gameController.showPot(gameController.getSelectedGame());
-        if (tiles != null) {
-            new potView(tiles, resourceFactory, parent);
+        if(gameController.showPot(gameController.getSelectedGame()).size() > 0){
+            if (tiles != null) {
+                new potView(tiles, resourceFactory, parent);
+            }
         }
     }
 
