@@ -1,7 +1,6 @@
 package database.access;
 
 import database.Database;
-import database.DatabaseFactory;
 
 abstract class DAO {
     protected Database database;
@@ -10,8 +9,8 @@ abstract class DAO {
         database.close();
     }
 
-    public DAO(DatabaseFactory databaseFactory) {
-        this.database = databaseFactory.getDatabase();
+    public DAO() {
+        this.database = Database.getInstance();
     }
 
     protected void printError(Exception e) {

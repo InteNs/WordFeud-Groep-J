@@ -1,6 +1,5 @@
 package controllers;
 
-import database.DatabaseFactory;
 import enumerations.Role;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -16,8 +15,8 @@ public class UserController extends Controller {
     private ObservableList<User> users;
     private ObjectProperty<User> selectedUser;
 
-    public UserController(ControllerFactory controllerFactory, DatabaseFactory databaseFactory) {
-        super(controllerFactory, databaseFactory);
+    public UserController(ControllerFactory controllerFactory) {
+        super(controllerFactory);
         users = FXCollections.observableArrayList();
         selectedUser = new SimpleObjectProperty<>();
     }

@@ -1,6 +1,5 @@
 package controllers;
 
-import database.DatabaseFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -18,8 +17,8 @@ public class CompetitionController extends Controller {
     private ObservableList<Competition> competitions;
     private ObjectProperty<Competition> selectedCompetition;
 
-    public CompetitionController(ControllerFactory controllerFactory, DatabaseFactory databaseFactory) {
-        super(controllerFactory, databaseFactory);
+    public CompetitionController(ControllerFactory controllerFactory) {
+        super(controllerFactory);
         competitions = FXCollections.observableArrayList();
         selectedCompetition = new SimpleObjectProperty<>();
     }

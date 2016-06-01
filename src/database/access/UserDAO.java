@@ -1,6 +1,5 @@
 package database.access;
 
-import database.DatabaseFactory;
 import database.SQL;
 import enumerations.Role;
 import models.User;
@@ -11,11 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO extends DAO {
-
-
-    public UserDAO(DatabaseFactory databaseFactory) {
-        super(databaseFactory);
-    }
 
     public ArrayList<User> selectUsers() {
         ArrayList<User> users = new ArrayList<>();

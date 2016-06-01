@@ -1,6 +1,5 @@
 package database.access;
 
-import database.DatabaseFactory;
 import database.SQL;
 import javafx.util.Pair;
 import models.Competition;
@@ -12,9 +11,6 @@ import java.util.ArrayList;
 
 public class CompetitionDAO extends DAO {
 
-    public CompetitionDAO(DatabaseFactory databaseFactory) {
-        super(databaseFactory);
-    }
 
     public ArrayList<Competition> selectCompetitions() {
         ResultSet rs = database.select(SQL.ALL.COMPETITIONS);

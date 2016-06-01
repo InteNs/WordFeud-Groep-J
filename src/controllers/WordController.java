@@ -1,6 +1,5 @@
 package controllers;
 
-import database.DatabaseFactory;
 import enumerations.WordStatus;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -17,8 +16,8 @@ public class WordController extends Controller {
     private ObjectProperty<Word> selectedWord;
     private ObservableList<Word> words;
 
-    public WordController(ControllerFactory controllerFactory, DatabaseFactory databaseFactory) {
-        super(controllerFactory, databaseFactory);
+    public WordController(ControllerFactory controllerFactory) {
+        super(controllerFactory);
         words = FXCollections.observableArrayList();
         selectedWord = new SimpleObjectProperty<>();
     }

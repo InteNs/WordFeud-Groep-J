@@ -1,6 +1,5 @@
 package database.access;
 
-import database.DatabaseFactory;
 import database.SQL;
 import enumerations.*;
 import javafx.util.Pair;
@@ -12,10 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameDAO extends DAO {
-
-    public GameDAO(DatabaseFactory databaseFactory) {
-        super(databaseFactory);
-    }
 
     public ArrayList<Message> selectMessages(Game game) {
         ArrayList<Message> messages = new ArrayList<>();

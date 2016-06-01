@@ -1,7 +1,5 @@
 package controllers;
 
-import database.DatabaseFactory;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,12 +10,6 @@ public class ControllerFactory {
     private CompetitionController competitionController;
     private SessionController sessionController;
     private WordController wordController;
-
-    private DatabaseFactory databaseFactory;
-
-    public ControllerFactory() {
-        this.databaseFactory = new DatabaseFactory();
-    }
 
     public List<Controller> getControllers() {
         return Arrays.asList(
@@ -47,31 +39,31 @@ public class ControllerFactory {
 
     public UserController GetUserController(){
         if(userController == null)
-            userController = new UserController(this, databaseFactory);
+            userController = new UserController(this);
         return userController;
     }
 
     public CompetitionController getCompetitionController() {
         if(competitionController == null)
-            competitionController = new CompetitionController(this, databaseFactory);
+            competitionController = new CompetitionController(this);
         return competitionController;
     }
 
     public GameController getGameController() {
         if (gameController == null)
-            gameController = new GameController(this, databaseFactory);
+            gameController = new GameController(this);
         return gameController;
     }
 
     public SessionController getSessionController() {
         if (sessionController == null)
-            sessionController = new SessionController(this, databaseFactory);
+            sessionController = new SessionController(this);
         return sessionController;
     }
 
     public WordController getWordController() {
         if (wordController== null)
-            wordController = new WordController(this, databaseFactory);
+            wordController = new WordController(this);
         return wordController;
     }
 }

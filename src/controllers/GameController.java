@@ -1,6 +1,5 @@
 package controllers;
 
-import database.DatabaseFactory;
 import enumerations.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -9,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import models.*;
 import views.components.FieldTileNode;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,8 +23,8 @@ public class GameController extends Controller {
     private ObjectProperty<Role> currentRole;
     private ObjectProperty<Turn> selectedTurn;
 
-    public GameController(ControllerFactory controllerFactory, DatabaseFactory databaseFactory) {
-        super(controllerFactory, databaseFactory);
+    public GameController(ControllerFactory controllerFactory) {
+        super(controllerFactory);
         games = FXCollections.observableArrayList();
         selectedGame = new SimpleObjectProperty<>();
         selectedTurn = new SimpleObjectProperty<>();

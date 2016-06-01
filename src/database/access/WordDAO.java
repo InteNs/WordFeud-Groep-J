@@ -1,6 +1,5 @@
 package database.access;
 
-import database.DatabaseFactory;
 import database.SQL;
 import enumerations.WordStatus;
 import models.Word;
@@ -10,10 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class WordDAO extends DAO {
-
-    public WordDAO(DatabaseFactory databaseFactory) {
-        super(databaseFactory);
-    }
 
     public ArrayList<Word> getWords() {
         ResultSet rs = database.select(SQL.ALL.WORDS);

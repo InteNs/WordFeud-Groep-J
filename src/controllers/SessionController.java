@@ -1,6 +1,5 @@
 package controllers;
 
-import database.DatabaseFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import models.User;
@@ -8,8 +7,8 @@ import models.User;
 public class SessionController extends Controller {
     private ObjectProperty<User> currentUser = new SimpleObjectProperty<>();
 
-    public SessionController(ControllerFactory controllerFactory, DatabaseFactory databaseFactory) {
-        super(controllerFactory, databaseFactory);
+    public SessionController(ControllerFactory controllerFactory) {
+        super(controllerFactory);
     }
 
     public ObjectProperty<User> currentUserProperty() {

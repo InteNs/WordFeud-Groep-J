@@ -13,7 +13,11 @@ public class Database {
     private final String USERNAME = "wordfeud";
     private final String PASSWORD = "wordfeud01";
     private final String DRIVER = "com.mysql.jdbc.Driver";
+    private static Database database = new Database();
 
+    public static Database getInstance() {
+        return database;
+    }
 
     private Connection connection;
     private PreparedStatement statement;

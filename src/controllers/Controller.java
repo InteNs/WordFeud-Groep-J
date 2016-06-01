@@ -1,6 +1,5 @@
 package controllers;
 
-import database.DatabaseFactory;
 import database.access.CompetitionDAO;
 import database.access.GameDAO;
 import database.access.UserDAO;
@@ -16,12 +15,12 @@ public abstract class Controller extends Observable {
     protected WordDAO wordDAO;
     private ControllerFactory controllerFactory;
 
-    public Controller(ControllerFactory factory, DatabaseFactory databaseFactory) {
+    public Controller(ControllerFactory factory) {
         this.controllerFactory = factory;
-        competitionDAO = new CompetitionDAO(databaseFactory);
-        gameDAO = new GameDAO(databaseFactory);
-        userDAO = new UserDAO(databaseFactory);
-        wordDAO = new WordDAO(databaseFactory);
+        competitionDAO = new CompetitionDAO();
+        gameDAO = new GameDAO();
+        userDAO = new UserDAO();
+        wordDAO = new WordDAO();
     }
 
     public UserController getUserController() {
