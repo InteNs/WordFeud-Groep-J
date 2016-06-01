@@ -202,4 +202,8 @@ public class GameDAO extends DAO {
     public void updateGameState(GameState gameState, Game selectedGame){
         database.update(SQL.UPDATE.UPDATEGAMESTATE, GameState.format(gameState), selectedGame.getId());
     }
+
+    public void updateReactionType(ReactionType reactionType, Game selectedGame) {
+        database.update(SQL.UPDATE.UPDATEREACTIONTYPE,ReactionType.format(reactionType), selectedGame.getId());
+    }
 }

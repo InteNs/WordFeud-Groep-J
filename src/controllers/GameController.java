@@ -262,6 +262,14 @@ public class GameController extends Controller {
         return !requester.getName().equals(receiver.getName());
     }
 
+    public void acceptInvite(Game selectedGame){
+        gameDAO.updateReactionType(ReactionType.ACCEPTED, selectedGame);
+    }
+
+    public void rejectInvite(Game selectedGame){
+        gameDAO.updateReactionType(ReactionType.REJECTED, selectedGame);
+    }
+
     private boolean isUserInSelectedComp(User requester, Competition comp) {
         return getCompetitionController().isUserInCompetition(requester, comp);
     }
