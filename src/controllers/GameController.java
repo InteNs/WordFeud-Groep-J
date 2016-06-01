@@ -263,7 +263,7 @@ public class GameController extends Controller {
         insertTurn(selectedGame, TurnType.SWAP);
     }
 
-    public boolean challenge(Language language, User requester, User receiver, Competition comp) {
+    public int challenge(Language language, User requester, User receiver, Competition comp) {
         if (isUserInSelectedComp(requester, comp)) {
             if (!this.playingGame(requester, receiver, comp)) {
                 if (validInvite(requester, receiver)) {
@@ -277,11 +277,16 @@ public class GameController extends Controller {
                             ReactionType.UNKNOWN);
                     games.add(game);
                     gameDAO.createGame(comp.getId(), requester.getName(), language, receiver.getName());
-                    return true;
+                    return 0;
+                } else {
+                    return 1;
                 }
+            } else {
+                return 2;
             }
+        } else {
+            return 3;
         }
-        return false;
     }
 
     private boolean validInvite(User requester, User receiver) {
