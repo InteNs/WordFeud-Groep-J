@@ -1,6 +1,7 @@
 package models;
 
 
+import enumerations.BoardType;
 import enumerations.FieldType;
 import enumerations.TurnType;
 import javafx.collections.FXCollections;
@@ -82,7 +83,7 @@ public class TurnBuilder {
     }
 
 
-    private void verifyAndCalculate() {
+    public void verifyAndCalculate() {
         listOfFieldsWithWords = null;
         if (!fieldsChanged.isEmpty()) {
             Character fixedAxis = verifyCurrentTurn();
@@ -328,4 +329,9 @@ public class TurnBuilder {
         while (currentRack.size() < 7 && !playingPot.isEmpty())
             currentRack.add(playingPot.get(new Random().nextInt(playingPot.size())));
     }
+
+    public void setGameBoard(Field[][] gameBoard) {
+        this.gameBoard = gameBoard;
+    }
+
 }
