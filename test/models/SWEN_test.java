@@ -8,11 +8,6 @@ import enumerations.BoardType;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertNotNull;
-
 public class SWEN_test {
 
 
@@ -27,30 +22,30 @@ public class SWEN_test {
 
     }
 
+    private Tile t(char character) {
+        switch (character) {
+            case 'A': return new Tile('A', 1);
+            case 'P': return new Tile('P', 4);
+        }
+        return null;
+    }
+
     // Manier van Jeroen
     @Test
     public void fieldsChanged(){
 
-        Tile a = new Tile('A');
-        Tile p = new Tile('P');
-        turnbuilder.getGameBoard()[7][7].setTile(a);
-        turnbuilder.getGameBoard()[7][8].setTile(a);
-        turnbuilder.getGameBoard()[7][9].setTile(p);
+        turnbuilder.getGameBoard()[7][7].setTile(t('A'));
+        turnbuilder.getGameBoard()[7][8].setTile(t('A'));
+        turnbuilder.getGameBoard()[7][9].setTile(t('P'));
 
-        for(int i = 0; i < turnbuilder.getGameBoard().length; i ++){
-            for(int x = 0; x < turnbuilder.getGameBoard().length; x ++) {
-                if(x == (turnbuilder.getGameBoard().length -1)){
-                    System.out.println(turnbuilder.getGameBoard()[ i ][ x ].toString());
-                } else {
-                    System.out.print(turnbuilder.getGameBoard()[ i ][ x ].toString());
-                }
+        printGameBoard();
 
-            }
-        }
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[8][8],t('A'));
 
-        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[8][8], new Tile(0, 1, 'A'));
-        // turnbuilder.verifyAndCalculate();
-        System.out.println(turnbuilder.getScore());
+        //prints debug info(score + wordsFound
+        turnbuilder.verifyAndCalculate();
+
+        printGameBoard();
     }
 
     // Manier van Christoph
@@ -86,4 +81,18 @@ public class SWEN_test {
 
         System.out.println(turn.getScore());
     }*/
+
+
+    private void printGameBoard() {
+        for(int i = 0; i < turnbuilder.getGameBoard().length; i ++){
+            for(int x = 0; x < turnbuilder.getGameBoard().length; x ++) {
+                if(x == (turnbuilder.getGameBoard().length -1)){
+                    System.out.println(turnbuilder.getGameBoard()[ i ][ x ].toString());
+                } else {
+                    System.out.print(turnbuilder.getGameBoard()[ i ][ x ].toString());
+                }
+
+            }
+        }
+    }
 }

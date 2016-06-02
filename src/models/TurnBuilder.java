@@ -1,7 +1,6 @@
 package models;
 
 
-import enumerations.BoardType;
 import enumerations.FieldType;
 import enumerations.TurnType;
 import javafx.collections.FXCollections;
@@ -90,20 +89,28 @@ public class TurnBuilder {
                 new ArrayList<>(getCurrentRack()));
     }
 
-    private void verifyAndCalculate() {
+    public void verifyAndCalculate() {
         listOfFieldsWithWords.clear();
         if (!fieldsChanged.isEmpty()) {
             Character fixedAxis = verifyCurrentTurn();
             if (fixedAxis != null) {
                 listOfFieldsWithWords = resolveWords(fixedAxis);
                 score = calculateTotalScore(listOfFieldsWithWords);
-                System.out.println(score);
-                System.out.println(listOfFieldsWithWords);
+                debug();
             }
         }
     }
 
-    private int getScore() {
+    private void debug() {
+        System.out.println("score: " + score);
+        listOfFieldsWithWords.forEach(fields -> {
+            System.out.print("word: ");
+            fields.stream().map(Field::getTile).forEach(System.out::print);
+            System.out.print("\n");
+        });
+    }
+
+    public int getScore() {
         return score;
     }
 
