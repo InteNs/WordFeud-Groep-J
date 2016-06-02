@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<Tab text="uitnodigingen" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
+     fx:controller="views.ChallengeListView">
+    <VBox spacing="5">
+        <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+        </padding>
+        <TextField fx:id="filterField" promptText="zoeken..."/>
+        <SplitPane fx:id="lists" VBox.vgrow="ALWAYS" dividerPositions="0.5" orientation="VERTICAL">
+            <TitledPane  expanded="true" fx:id="incomingChallengePane" text="ontvangen uitnodigingen">
+                <ListView prefHeight="999999" fx:id="incomingChallengeList"/>
+            </TitledPane>
+            <TitledPane expanded="true" fx:id="outgoingChallengePane" text="verzonden uitnodigingen">
+                <ListView prefHeight="999999" fx:id="outgoingChallengeList"/>
+            </TitledPane>
+        </SplitPane>
+    </VBox>
+</Tab>

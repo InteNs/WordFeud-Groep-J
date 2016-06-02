@@ -18,8 +18,9 @@
             <fx:include fx:id="gameListView" source="GameListView.fxml"/>
             <fx:include fx:id="userListView" source="UserListView.fxml"/>
             <fx:include fx:id="competitionListView" source="CompetitionListView.fxml"/>
-            <fx:include fx:id="gameControlView" source="GameControlView.fxml"/>
+            <fx:include fx:id="challengeListView" source="ChallengeListView.fxml"/>
             <fx:include fx:id="wordListView" source="WordListView.fxml"/>
+            <fx:include fx:id="gameControlView" source="GameControlView.fxml"/>
         </TabPane>
         <VBox minHeight="720.0" minWidth="620.0" SplitPane.resizableWithParent="false">
             <Region maxHeight="-Infinity" minHeight="-Infinity" styleClass="tab-aligned"/>

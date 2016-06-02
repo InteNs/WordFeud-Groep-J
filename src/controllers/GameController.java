@@ -11,6 +11,7 @@ import views.components.FieldTileNode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class GameController extends Controller {
@@ -31,16 +32,16 @@ public class GameController extends Controller {
         currentRole = new SimpleObjectProperty<>();
     }
 
-    public void setCurrentRole(Role currentRole) {
-        this.currentRole.set(currentRole);
-    }
-
     public ObjectProperty<Role> currentRoleProperty() {
         return currentRole;
     }
 
     public Role getCurrentRole() {
         return currentRole.get();
+    }
+
+    public void setCurrentRole(Role currentRole) {
+        this.currentRole.set(currentRole);
     }
 
     public ObjectProperty<Game> selectedGameProperty() {
@@ -75,6 +76,18 @@ public class GameController extends Controller {
         return games.filtered(game -> game.getCompetitionId() == competition.getId());
     }
 
+    public ObservableList<Game> getOutgoingChallenges(User challenger) {
+        return games.filtered(game ->
+                game.getGameState() == GameState.REQUEST
+                        && game.getChallenger().equals(challenger));
+    }
+
+    public ObservableList<Game> getIncomingChallenges(User opponent) {
+        return games.filtered(game ->
+                game.getGameState() == GameState.REQUEST
+                        && game.getOpponent().equals(opponent));
+    }
+
     public void loadGame(Game game, Role gameMode) {
         if (game == null) return;
         if (fetchedTurns == null || fetchedMessages == null) fetch();
@@ -106,11 +119,21 @@ public class GameController extends Controller {
             }
             game.setTurnBuilder(previousTurnBuilder);
         }
+
+        getOutgoingChallenges(getSessionController().getCurrentUser())
+                .stream()
+                .filter(game -> game.getReactionType() == ReactionType.ACCEPTED
+                        && game.getGameState() == GameState.REQUEST)
+                .forEach(game -> {
+                    game.setGameState(GameState.PLAYING);
+                    createBeginTurns(game);
+                });
     }
 
     @Override
     public void refill() {
-        if (!games.equals(fetchedGames))
+        if (!games.equals(fetchedGames) || !games.stream().allMatch(game ->
+                game.deepEquals(fetchedGames.get(fetchedGames.indexOf(game)))))
             games.setAll(fetchedGames);
     }
 
@@ -154,6 +177,8 @@ public class GameController extends Controller {
     }
 
     public ArrayList<String> playWord(Game selectedGame) {
+        if (selectedGame.getTurnBuilder().verifyCurrentTurn() == null)
+            return null;
         ArrayList<String> wordsNotInDictionary =
                 gameDAO.selectWords(selectedGame, selectedGame.getTurnBuilder().getWordsFoundThisTurn())
                         .stream()
@@ -163,15 +188,15 @@ public class GameController extends Controller {
 
         if (wordsNotInDictionary.size() == 0) {
             selectedGame.getTurnBuilder().fillCurrentRack(selectedGame.getPot());
-            insertTurn(selectedGame,TurnType.WORD);
+            insertTurn(selectedGame, TurnType.WORD);
         }
         return wordsNotInDictionary;
     }
 
-    private void checkForEndGame(Game selectedGame){
-        switch (selectedGame.getLastTurn().getType()){
+    private void checkForEndGame(Game selectedGame) {
+        switch (selectedGame.getLastTurn().getType()) {
             case PASS:
-                if (isThirdPass(selectedGame)){
+                if (isThirdPass(selectedGame)) {
                     buildEndTurns(selectedGame);
                     gameDAO.updateGameState(GameState.FINISHED, selectedGame);
                 }
@@ -182,16 +207,17 @@ public class GameController extends Controller {
                 break;
             case WORD:
                 if (selectedGame.getLastTurn().getRack().isEmpty()
-                        && selectedGame.getPot().isEmpty()){
+                        && selectedGame.getPot().isEmpty()) {
                     buildEndTurns(selectedGame);
                     gameDAO.updateGameState(GameState.FINISHED, selectedGame);
                 }
                 break;
-            default: break;
+            default:
+                break;
         }
     }
 
-    private void buildEndTurns(Game selectedGame){
+    private void buildEndTurns(Game selectedGame) {
         for (Turn turn : selectedGame.getTurnBuilder().buildEndTurns(
                 selectedGame.getLastTurn(),
                 selectedGame.getTurns().get(selectedGame.getTurns().size() - 2))) {
@@ -206,17 +232,17 @@ public class GameController extends Controller {
         return null;
     }
 
-    public void passTurn(Game selectedGame){
-        insertTurn(selectedGame,TurnType.PASS);
+    public void passTurn(Game selectedGame) {
+        insertTurn(selectedGame, TurnType.PASS);
     }
 
     public void resign(Game selectedGame) {
-       insertTurn(selectedGame,TurnType.RESIGN);
+        insertTurn(selectedGame, TurnType.RESIGN);
     }
 
     private void insertTurn(Game selectedGame, TurnType turnType) {
         Turn newTurn = selectedGame.getTurnBuilder().buildTurn(
-                selectedGame.getLastTurnNumber(),
+                selectedGame.getLastTurn().getId() + 1,
                 getSessionController().getCurrentUser(), turnType
         );
         gameDAO.insertTurn(selectedGame, newTurn);
@@ -247,8 +273,8 @@ public class GameController extends Controller {
                             receiver,
                             GameState.REQUEST,
                             BoardType.STANDARD,
-                            language
-                    );
+                            language,
+                            ReactionType.UNKNOWN);
                     games.add(game);
                     gameDAO.createGame(comp.getId(), requester.getName(), language, receiver.getName());
                     return 0;
@@ -265,6 +291,28 @@ public class GameController extends Controller {
 
     private boolean validInvite(User requester, User receiver) {
         return !requester.getName().equals(receiver.getName());
+    }
+
+    public void acceptInvite(Game selectedGame) {
+        gameDAO.updateReactionType(ReactionType.ACCEPTED, selectedGame);
+    }
+
+    public void rejectInvite(Game selectedGame) {
+        gameDAO.updateReactionType(ReactionType.REJECTED, selectedGame);
+    }
+
+    private void createBeginTurns(Game selectedGame) {
+        gameDAO.updateGameState(GameState.PLAYING, selectedGame);
+        gameDAO.createPot(selectedGame);
+        selectedGame.setPot(gameDAO.selectLettersForPot(selectedGame));
+        for (Turn turn : new TurnBuilder().buildBeginTurns(selectedGame)) {
+            for (int i = 0; i < 7; i++) {
+                int letterFromPot = new Random().nextInt(selectedGame.getPot().size());
+                turn.addRackTile(selectedGame.getPot().get(letterFromPot));
+                selectedGame.getPot().remove(letterFromPot);
+            }
+            gameDAO.insertTurn(selectedGame, turn);
+        }
     }
 
     private boolean isUserInSelectedComp(User requester, Competition comp) {

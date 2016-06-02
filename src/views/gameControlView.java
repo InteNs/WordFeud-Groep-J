@@ -14,6 +14,8 @@ import models.*;
 import views.components.ChatCell;
 import views.components.FieldTileNode;
 import views.subviews.potView;
+
+import java.util.ArrayList;
 import java.util.Objects;
 
 
@@ -148,7 +150,7 @@ public class gameControlView extends View {
     }
 
     private void setTabs(Role gameMode, User currentTurnUser) {
-        if (gameMode == Role.PLAYER) {
+        if (gameMode == Role.PLAYER || !gameController.getSelectedGame().isGame()) {
             disableTurnControls(true);
             disableGameControls(currentTurnUser.equals(session.getCurrentUser()), false);
         } else if (gameMode == Role.OBSERVER) {
@@ -206,11 +208,13 @@ public class gameControlView extends View {
     }
 
     public void playWord() {
-        boolean aap = gameController.playWord(gameController.getSelectedGame()).isEmpty();
-        if (aap) {
+        ArrayList<String> words = gameController.playWord(gameController.getSelectedGame());
+
+        if (words != null && words.isEmpty()) {
             gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
+            selectTurn(gameController.getSelectedGame().getLastTurn());
         }
-        selectTurn(gameController.getSelectedGame().getLastTurn());
+        else clearBoard();
     }
 
     @FXML

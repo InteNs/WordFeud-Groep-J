@@ -59,8 +59,6 @@ public class Database {
         } catch (SQLException e) {
             printError(e);
             return 0;
-        } finally {
-            close();
         }
     }
 
@@ -166,7 +164,6 @@ public class Database {
         } catch (SQLException e) {
             printError(e);
         }
-        close();
         return result;
     }
 
@@ -212,8 +209,6 @@ public class Database {
         } catch (SQLException e) {
             printError(e);
             return false;
-        } finally {
-            close();
         }
     }
 }
