@@ -13,6 +13,11 @@ public class Tile {
         this.character = character;
     }
 
+    public Tile(char character, int value) {
+        this.character = character;
+        this.value = value;
+    }
+
     public Tile(int id, int value, Character character) {
         this.id = id;
         this.value = value;

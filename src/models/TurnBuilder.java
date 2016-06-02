@@ -89,24 +89,32 @@ public class TurnBuilder {
                 new ArrayList<>(getCurrentRack()));
     }
 
-    private void verifyAndCalculate() {
+    public void verifyAndCalculate() {
         listOfFieldsWithWords.clear();
         if (!fieldsChanged.isEmpty()) {
             Character fixedAxis = verifyCurrentTurn();
             if (fixedAxis != null) {
                 listOfFieldsWithWords = resolveWords(fixedAxis);
                 score = calculateTotalScore(listOfFieldsWithWords);
-                System.out.println(score);
-                System.out.println(listOfFieldsWithWords);
+                debug();
             }
         }
     }
 
-    private int getScore() {
+    private void debug() {
+        System.out.println("score: " + score);
+        listOfFieldsWithWords.forEach(fields -> {
+            System.out.print("word: ");
+            fields.stream().map(Field::getTile).forEach(System.out::print);
+            System.out.print("\n");
+        });
+    }
+
+    public int getScore() {
         return score;
     }
 
-    private ArrayList<Tile> getTilesChangedThisTurn() {
+    public ArrayList<Tile> getTilesChangedThisTurn() {
         return fieldsChanged.stream()
                 .map(Field::getTile)
                 .collect(Collectors.toCollection(ArrayList<Tile>::new));
@@ -380,4 +388,9 @@ public class TurnBuilder {
         while (currentRack.size() < 7 && !playingPot.isEmpty())
             currentRack.add(playingPot.get(new Random().nextInt(playingPot.size())));
     }
+
+    public void setGameBoard(Field[][] gameBoard) {
+        this.gameBoard = gameBoard;
+    }
+
 }
