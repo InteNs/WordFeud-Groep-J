@@ -27,6 +27,14 @@
     -fx-graphic: url("../../resources/icons/refresh.png");
 }
 
+.Logout {
+    -fx-graphic: url("../../resources/icons/LOGOUT2.png");
+}
+
+.close-tab {
+    -fx-graphic: url("../../resources/icons/CLOSE_TAB2.png");
+}
+
 .game-label {
     -fx-text-alignment: center;
     -fx-pref-width: 60;

@@ -58,6 +58,7 @@ public class MainView extends View implements Initializable {
     @FXML private gameControlView gameControlViewController;
     @FXML private WordListView wordListViewController;
     @FXML private WordInfoView wordInfoViewController;
+    @FXML private ChallengeListView challengeListViewController;
     @FXML private ChallengeView challengeViewController;
 
     private ControllerFactory controllerFactory;
@@ -93,6 +94,7 @@ public class MainView extends View implements Initializable {
                 gameControlViewController,
                 wordListViewController,
                 wordInfoViewController,
+                challengeListViewController,
                 challengeViewController
 
         ));
@@ -136,6 +138,7 @@ public class MainView extends View implements Initializable {
 
     @FXML
     public void logOut() {
+        isLive = false;
         applicationLoader.loadApp();
     }
 
