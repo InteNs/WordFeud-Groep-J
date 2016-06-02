@@ -114,7 +114,7 @@ public class TurnBuilder {
         return score;
     }
 
-    private ArrayList<Tile> getTilesChangedThisTurn() {
+    public ArrayList<Tile> getTilesChangedThisTurn() {
         return fieldsChanged.stream()
                 .map(Field::getTile)
                 .collect(Collectors.toCollection(ArrayList<Tile>::new));

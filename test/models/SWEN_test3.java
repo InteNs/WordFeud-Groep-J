@@ -3,12 +3,16 @@ package models;
 /**
  * Created by jeroen on 2-6-2016.
  */
+
 import database.access.GameDAO;
 import enumerations.BoardType;
 import org.junit.Before;
 import org.junit.Test;
 
-public class SWEN_test {
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+public class SWEN_test3 {
 
 
     private TurnBuilder turnbuilder;
@@ -19,7 +23,6 @@ public class SWEN_test {
         turnbuilder = new TurnBuilder();
         gameDAO = new GameDAO();
         turnbuilder.setGameBoard(gameDAO.selectFieldsForBoard(BoardType.STANDARD));
-
     }
 
     private Tile t(char character) {
@@ -30,24 +33,20 @@ public class SWEN_test {
         return null;
     }
 
-    // Manier van Jeroen
     @Test
-    public void fieldsChanged(){
-
-        turnbuilder.getGameBoard()[7][7].setTile(t('A'));
-        turnbuilder.getGameBoard()[7][8].setTile(t('A'));
-        turnbuilder.getGameBoard()[7][9].setTile(t('P'));
-
-        printGameBoard();
-
+    public void wordNotInOneLine(){
+        // A valid word is placed wrong
         turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[8][8],t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[8][9],t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[9][10],t('P'));
 
-        //prints debug info(score + wordsFound
-        turnbuilder.verifyAndCalculate();
+        assertTrue("tiles are added", turnbuilder.getTilesChangedThisTurn().size() > 0);
+        assertNull("turn is not valid", turnbuilder.verifyCurrentTurn());
+        assertTrue("score is 0", turnbuilder.getScore() == 0);
 
         printGameBoard();
-    }
 
+    }
 
 
     private void printGameBoard() {
@@ -58,7 +57,6 @@ public class SWEN_test {
                 } else {
                     System.out.print(turnbuilder.getGameBoard()[ i ][ x ].toString());
                 }
-
             }
         }
     }
