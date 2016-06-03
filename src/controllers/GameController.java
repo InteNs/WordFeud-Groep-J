@@ -89,13 +89,11 @@ public class GameController extends Controller {
 
     public void loadGame(Game game, Role gameMode) {
         if (game == null) return;
-        if (fetchedTurns == null || fetchedMessages == null) fetch();
+        fetch();
         if (game.getEmptyGameBoard() == null)
             game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
-        if (game.getTurns().size() < fetchedTurns.size())
-            game.setTurns(fetchedTurns);
-        if ((game.getMessages().size() < fetchedMessages.size()))
-            game.setMessages(fetchedMessages);
+        game.setTurns(fetchedTurns);
+        game.setMessages(fetchedMessages);
 
         game.setGameMode(gameMode);
     }
@@ -108,13 +106,16 @@ public class GameController extends Controller {
             Field[][] previousBoard = getSelectedGame().getEmptyGameBoard();
             game.setBoard(previousBoard);
             loadGame(game, getCurrentRole());
-
             setSelectedGame(game);
 
             if (game.getTurns().contains(getSelectedTurn())) {
                 Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
-                setSelectedTurn(turn);
                 game.setBoardStateTo(turn, getSessionController().getCurrentUser());
+                if (getCurrentRole() == Role.PLAYER) {
+                    setSelectedTurn(null);
+                    setSelectedTurn(game.getLastTurn());
+                }
+                else setSelectedTurn(turn);
             }
             game.setTurnBuilder(previousTurnBuilder);
         }
