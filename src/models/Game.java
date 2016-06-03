@@ -223,11 +223,14 @@ public class Game {
         return clonedGameBoard;
     }
 
-    public User getNextUser() {
-        if ((lastTurnNumber & 1) == 0)
-            return challenger;
-        else
-            return opponent;
+    public String getNextUser() {
+        if (!(this.getGameState() == GameState.FINISHED || this.getGameState() == GameState.RESIGNED)) {
+            if ((lastTurnNumber & 1) == 0)
+                return "currentUser";
+            else
+                return "opponent";
+        }
+        return "afgelopen";
     }
 
     @Override
