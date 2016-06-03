@@ -30,6 +30,5 @@
         <Label alignment="CENTER" layoutY="14.0" prefHeight="35.0" prefWidth="361.0" style="-fx-font-size: 25" text="Rollen">
         </Label>
     </Pane>
-    <Button alignment="CENTER" layoutX="40.0" layoutY="402.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" text="Uitnodigen" />
     <Label fx:id="passwordLabel" alignment="CENTER" layoutX="-1.0" layoutY="42.0" prefHeight="17.0" prefWidth="600.0" text="wachtwoord" />
 </Pane>
