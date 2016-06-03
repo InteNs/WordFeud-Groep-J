@@ -39,13 +39,13 @@ public class SubmitWordView extends View {
         this.gameLanguage = gameLanguage;
         owner = user;
         cbList = new ArrayList<>();
-        //  window.initModality(Modality.WINDOW_MODAL);
-        //   window.initStyle(StageStyle.UNDECORATED);
+        window.initModality(Modality.WINDOW_MODAL);
+        window.initStyle(StageStyle.UNDECORATED);
         TilePane tilePane = new TilePane();
         tilePane.setMaxHeight(400);
         tilePane.setHgap(10);
         tilePane.setVgap(10);
-        tilePane.setStyle("-fx-background-color: gray");
+        tilePane.setStyle("-fx-background-color: white");
         tilePane.setOnMouseClicked(event -> window.close());
         window.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) window.close();
