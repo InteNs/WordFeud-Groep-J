@@ -24,15 +24,12 @@ public class TurnBuilder {
 
 
     public TurnBuilder(Field[][] gameBoard, ObservableList<Tile> currentRack) {
-        System.out.println(currentRack);
         this.gameBoard = gameBoard;
         this.currentRack = currentRack;
         this.listOfFieldsWithWords = new ArrayList<>();
         this.fieldsChanged = FXCollections.observableArrayList();
         this.pot = FXCollections.observableArrayList();
-        this.fieldsChanged.addListener((ListChangeListener<? super Field>) observable -> {
-            verifyAndCalculate();
-        });
+        this.fieldsChanged.addListener((ListChangeListener<? super Field>) observable -> verifyAndCalculate());
     }
 
     public TurnBuilder() {
