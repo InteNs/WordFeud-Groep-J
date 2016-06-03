@@ -11,6 +11,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import main.Main;
+import services.RefreshService;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -63,11 +64,11 @@ public class MainView extends View implements Initializable {
 
     private ControllerFactory controllerFactory;
     private ArrayList<View> views;
+    private RefreshService refreshService;
 
     private int controlIndex;
     private double dividerPos;
     private Main applicationLoader;
-    private boolean isLive;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -96,7 +97,6 @@ public class MainView extends View implements Initializable {
                 wordInfoViewController,
                 challengeListViewController,
                 challengeViewController
-
         ));
         views.forEach(view -> view.init(this));
 
@@ -113,8 +113,8 @@ public class MainView extends View implements Initializable {
         setControl(true);
         toolBar.setDisable(false);
         constructor();
-        isLive = true;
         threadToggle.setSelected(true);
+        refreshService = new RefreshService(controllerFactory,views,loadIndicator);
     }
 
     @FXML
@@ -138,7 +138,7 @@ public class MainView extends View implements Initializable {
 
     @FXML
     public void logOut() {
-        isLive = false;
+        refreshService.stopRefresh();
         applicationLoader.loadApp();
     }
 
@@ -182,24 +182,6 @@ public class MainView extends View implements Initializable {
         control.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == gameControlView) setContent(gameBoardView);
         });
-
-        //define and start live reload thread
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
-            Thread thread = new Thread(r);
-            thread.setDaemon(true);
-            return thread;
-        });
-
-        scheduler.scheduleAtFixedRate((() -> {
-            if (!isLive) return;
-            loadIndicator.setVisible(true);
-            controllerFactory.fetchControllers();
-            Platform.runLater(() -> {
-                controllerFactory.refreshControllers();
-                views.forEach(View::refresh);
-                loadIndicator.setVisible(false);
-            });
-        }), 0, 5, SECONDS);
     }
 
     public void setApplicationLoader(Main applicationLoader) {
@@ -223,6 +205,11 @@ public class MainView extends View implements Initializable {
     }
 
     public void doThread(ActionEvent actionEvent) {
-        isLive = ((ToggleButton)actionEvent.getSource()).isSelected();
+        if (((ToggleButton)actionEvent.getSource()).isSelected()){
+           refreshService.startRefresh();
+        } else {
+            refreshService.stopRefresh();
+        }
+
     }
 }
