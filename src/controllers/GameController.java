@@ -96,7 +96,7 @@ public class GameController extends Controller {
             game.setTurns(fetchedTurns);
         if ((game.getMessages().size() < fetchedMessages.size()))
             game.setMessages(fetchedMessages);
-        
+
         game.setGameMode(gameMode);
     }
 
