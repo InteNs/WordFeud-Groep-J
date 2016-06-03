@@ -109,14 +109,15 @@ public class GameController extends Controller {
             Field[][] previousBoard = getSelectedGame().getEmptyGameBoard();
             game.setBoard(previousBoard);
             loadGame(game, getCurrentRole());
+
             setSelectedGame(game);
 
             if (game.getTurns().contains(getSelectedTurn())) {
                 Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
+                setSelectedTurn(turn);
                 game.setBoardStateTo(turn, getSessionController().getCurrentUser());
                 game.setTurnBuilder(previousTurnBuilder);
                 if (getCurrentRole() == Role.PLAYER) {
-                    //setSelectedTurn(null);
                     setSelectedTurn(game.getLastTurn());
                 } else setSelectedTurn(turn);
             }
