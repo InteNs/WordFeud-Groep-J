@@ -84,7 +84,7 @@ public class SubmitWordView extends View {
     private void submitWords() {
         for (CheckBox cb : cbList) {
             if (cb.isSelected()) {
-                Word word = new Word(cb.getUserData().toString(), owner.getName(), gameLanguage.toString(), WordStatus.PENDING);
+                Word word = new Word(cb.getUserData().toString().toLowerCase(), owner.getName(), gameLanguage.toString(), WordStatus.PENDING);
                 wordList.add(word);
             }
             window.close();
