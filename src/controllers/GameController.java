@@ -96,7 +96,9 @@ public class GameController extends Controller {
         if (game.getEmptyGameBoard() == null)
             game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
         game.setAllTiles(fetchedTiles);
-        game.setTurns(fetchedTurns);
+        ArrayList<Turn> difference = new ArrayList<>(fetchedTurns);
+        difference.removeAll(game.getTurns());
+        game.getTurns().addAll(difference);
         game.setMessages(fetchedMessages);
         game.setGameMode(gameMode);
     }
@@ -115,11 +117,11 @@ public class GameController extends Controller {
             if (game.getTurns().contains(getSelectedTurn())) {
                 Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
                 setSelectedTurn(turn);
-                game.setBoardStateTo(turn, getSessionController().getCurrentUser());
-                game.setTurnBuilder(previousTurnBuilder);
                 if (getCurrentRole() == Role.PLAYER) {
                     setSelectedTurn(game.getLastTurn());
                 } else setSelectedTurn(turn);
+                game.setBoardStateTo(turn, getSessionController().getCurrentUser());
+                game.setTurnBuilder(previousTurnBuilder);
             }
         }
         getOutgoingChallenges(getSessionController().getCurrentUser())

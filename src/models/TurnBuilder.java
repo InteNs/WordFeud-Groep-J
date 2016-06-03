@@ -402,6 +402,9 @@ public class TurnBuilder {
     }
 
     public void setPot(ArrayList<Tile> pot) {
+        currentRack.stream().filter(pot::contains).forEach(tile -> {
+            System.out.println(tile.getCharacter() + "IS STILL IN POT");
+        });
         this.pot = FXCollections.observableArrayList(pot);
     }
 }

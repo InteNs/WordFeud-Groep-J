@@ -43,8 +43,9 @@ public class gameControlView extends View {
 
     @Override
     public void refresh() {
-        if (gameController.getSelectedGame() != null && !gameController.getSelectedGame().getTurns().isEmpty())
+        if (gameController.getSelectedGame() != null && !gameController.getSelectedGame().getTurns().isEmpty()) {
             showGame(gameController.getSelectedGame(), false);
+        }
     }
 
     @Override
@@ -92,8 +93,8 @@ public class gameControlView extends View {
     private void showGame(Game newGame, boolean isNew) {
         chatList.setItems(newGame.getMessages());
         if (isNew) chatList.scrollTo(chatList.getItems().size());
-        turnList.setItems(newGame.getTurns());
         turnSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(newGame.getTurns()));
+        turnList.setItems(newGame.getTurns());
         if (newGame.getGameMode() == Role.PLAYER) selectTurn(newGame.getLastTurn());
         else if (newGame.getGameMode() == Role.OBSERVER) {
             if (newGame.getTurns().contains(gameController.getSelectedTurn())) {
