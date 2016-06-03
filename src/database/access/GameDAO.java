@@ -81,6 +81,7 @@ public class GameDAO extends DAO {
                         tileRecords.getString("lettertype_karakter").charAt(0)
                 ));
             }
+            game.setAllTiles(tiles);
 
             while (records.next()) {
                 Turn turn = new Turn(
@@ -121,7 +122,6 @@ public class GameDAO extends DAO {
         } catch (SQLException e) {
             printError(e);
         }
-        game.setAllTiles(tiles);
         return turns;
     }
 

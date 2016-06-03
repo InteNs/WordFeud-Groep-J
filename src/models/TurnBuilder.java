@@ -403,4 +403,8 @@ public class TurnBuilder {
     public ObservableList<Tile> getPot() {
         return pot;
     }
+
+    public void setPot(ArrayList<Tile> pot) {
+        this.pot = FXCollections.observableArrayList(pot);
+    }
 }

@@ -185,15 +185,16 @@ public class Game {
 
             if (turn.equals(turnToDisplay)) {
                 ArrayList<Tile> rack = new ArrayList<>();
-                if (getGameMode() == Role.OBSERVER || turn.getUser().equals(watcher) && turn.getType() != TurnType.BEGIN) {
-                    rack = turns.get(turns.indexOf(turn) - 2).getRack();
-                } else if (getGameMode() == Role.PLAYER && turn.getUser().equals(watcher)) {
+                if (!watcher.equals(turn.getUser()) && turn.getId() != 1) {
+                    rack = turns.get(turns.indexOf(turn) - 1).getRack();
+                } else if (gameMode == Role.OBSERVER || watcher.equals(turn.getUser())) {
                     rack = turn.getRack();
                 }
                 turnBuilder = new TurnBuilder(gameboard, FXCollections.observableArrayList(rack));
-
+                turnBuilder.setPot(pot);
                 break;
             }
+
         }
     }
 

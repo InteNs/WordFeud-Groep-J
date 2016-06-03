@@ -94,6 +94,7 @@ public class GameController extends Controller {
         fetch();
         if (game.getEmptyGameBoard() == null)
             game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
+        game.setAllTiles(gameDAO.selectLettersForPot(game));
         game.setTurns(fetchedTurns);
         game.setMessages(fetchedMessages);
         game.setGameMode(gameMode);
