@@ -323,7 +323,7 @@ public class GameController extends Controller {
         for (Game g : games)
             if (g.getChallenger().equals(challenger) && g.getOpponent().equals(opponent)
                     || (g.getChallenger().equals(opponent) && g.getOpponent().equals(challenger)))
-                if (g.getGameState() != GameState.FINISHED)
+                if (g.getGameState() != GameState.FINISHED || g.getGameState()!= GameState.RESIGNED)
                     if (g.getCompetitionId() == comp.getId())
                         return true;
         return false;
