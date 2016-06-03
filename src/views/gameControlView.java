@@ -227,7 +227,7 @@ public class gameControlView extends View {
     public void swapTiles() {
          clearBoard();
          ObservableList<Tile> currentRack = gameController.getSelectedGame().getTurnBuilder().getCurrentRack();
-         SwapTileView swapTileView = new SwapTileView(resourceFactory);
+         SwapTileView swapTileView = new SwapTileView(parent, resourceFactory);
          ObservableList<FieldTileNode> selectedTiles = swapTileView.swapTiles(currentRack);
          if(selectedTiles != null){
             gameController.swapTiles(selectedTiles, gameController.getSelectedGame());
