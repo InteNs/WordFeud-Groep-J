@@ -8,6 +8,7 @@ import enumerations.BoardType;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -43,31 +44,70 @@ public class SWEN_test {
 
     @Test
     public void testPath2_tilesNotPlacedOverStartTile(){
-        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[9][9],t('A'));
-        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[9][10],t('A'));
-        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[9][11],t('P'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[8][9],t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[8][10],t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[8][11],t('P'));
 
         assertTrue("tiles are added", turnbuilder.getTilesChangedThisTurn().size() > 0);
         assertNull("turn is not valid", turnbuilder.verifyCurrentTurn());
         assertTrue("score is 0", turnbuilder.getScore() == 0);
-
-        printGameBoard();
     }
 
     @Test
     public void testPath3_wordNotInOneLine(){
         // A valid word is not on 1 axis
-        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[8][8],t('A'));
-        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[8][9],t('A'));
-        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[9][10],t('P'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[7][7],t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[7][8],t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[8][9],t('P'));
 
         assertTrue("tiles are added", turnbuilder.getTilesChangedThisTurn().size() > 0);
         assertNull("turn is not valid", turnbuilder.verifyCurrentTurn());
         assertTrue("score is 0", turnbuilder.getScore() == 0);
 
-        printGameBoard();
     }
 
+    @Test
+    public void testPath4_emptySpaceInXAxis(){
+        // A word is placed with a empty space on the x axis.
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[7][7],t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[7][8],t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[7][10],t('P'));
+
+        assertTrue("tiles are added", turnbuilder.getTilesChangedThisTurn().size() > 0);
+        assertNull("turn is not valid", turnbuilder.verifyCurrentTurn());
+        assertTrue("score is 0", turnbuilder.getScore() == 0);
+
+    }
+
+    @Test
+    public void testPath5_invalidWord(){
+        // Tiles are placed on correct spots, but word is incorrect
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[7][7],t('A'));
+
+        assertTrue("tiles are added", turnbuilder.getTilesChangedThisTurn().size() > 0);
+        assertNull("turn is not valid", turnbuilder.verifyCurrentTurn());
+        assertTrue("score is 0", turnbuilder.getScore() == 0);
+    }
+
+    @Test
+    public void testPath9_invalidWord(){
+        // Tiles are placed on correct spots, but word is incorrect
+        turnbuilder.getGameBoard()[7][7].setTile(t('A'));
+        turnbuilder.getGameBoard()[7][8].setTile(t('A'));
+        turnbuilder.getGameBoard()[7][9].setTile(t('P'));
+
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[8][9],t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[8][10],t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[8][11],t('P'));
+
+
+        assertTrue("tiles are added", turnbuilder.getTilesChangedThisTurn().size() > 0);
+        assertNotNull(turnbuilder.verifyCurrentTurn());
+        turnbuilder.verifyAndCalculate();
+        assertTrue("score is 0", turnbuilder.getScore() == 12);
+
+        printGameBoard();
+    }
 
 
     private void printGameBoard() {
