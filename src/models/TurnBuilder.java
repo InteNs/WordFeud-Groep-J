@@ -20,13 +20,16 @@ public class TurnBuilder {
     private ObservableList<Field> fieldsChanged;
     private ArrayList<ArrayList<Field>> listOfFieldsWithWords;
     private int score;
+    private ObservableList<Tile> pot;
 
 
     public TurnBuilder(Field[][] gameBoard, ObservableList<Tile> currentRack) {
+        System.out.println(currentRack);
         this.gameBoard = gameBoard;
         this.currentRack = currentRack;
         this.listOfFieldsWithWords = new ArrayList<>();
         this.fieldsChanged = FXCollections.observableArrayList();
+        this.pot = FXCollections.observableArrayList();
         this.fieldsChanged.addListener((ListChangeListener<? super Field>) observable -> {
             verifyAndCalculate();
         });
@@ -96,7 +99,7 @@ public class TurnBuilder {
             if (fixedAxis != null) {
                 listOfFieldsWithWords = resolveWords(fixedAxis);
                 score = calculateTotalScore(listOfFieldsWithWords);
-                debug();
+                //debug();
             }
         }
     }
@@ -134,6 +137,10 @@ public class TurnBuilder {
 
     public ObservableList<Tile> getCurrentRack() {
         return currentRack;
+    }
+
+    public void setCurrentRack(ObservableList<Tile> currentRack) {
+        this.currentRack = currentRack;
     }
 
     public ObservableList<Field> getFieldsChanged() {
@@ -393,4 +400,7 @@ public class TurnBuilder {
         this.gameBoard = gameBoard;
     }
 
+    public ObservableList<Tile> getPot() {
+        return pot;
+    }
 }

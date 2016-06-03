@@ -8,7 +8,9 @@ import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import models.*;
 import views.components.FieldTileNode;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -114,8 +116,7 @@ public class GameController extends Controller {
                 if (getCurrentRole() == Role.PLAYER) {
                     //setSelectedTurn(null);
                     setSelectedTurn(game.getLastTurn());
-                }
-                else setSelectedTurn(turn);
+                } else setSelectedTurn(turn);
             }
         }
         getOutgoingChallenges(getSessionController().getCurrentUser())
@@ -292,22 +293,24 @@ public class GameController extends Controller {
     }
 
     public void acceptInvite(Game selectedGame) {
+        selectedGame.setReactionType(ReactionType.ACCEPTED);
         gameDAO.updateReactionType(ReactionType.ACCEPTED, selectedGame);
     }
 
     public void rejectInvite(Game selectedGame) {
+        selectedGame.setReactionType(ReactionType.REJECTED);
         gameDAO.updateReactionType(ReactionType.REJECTED, selectedGame);
     }
 
     private void createBeginTurns(Game selectedGame) {
         gameDAO.updateGameState(GameState.PLAYING, selectedGame);
         gameDAO.createPot(selectedGame);
-        selectedGame.setPot(gameDAO.selectLettersForPot(selectedGame));
+        ArrayList<Tile> pot = gameDAO.selectLettersForPot(selectedGame);
         for (Turn turn : new TurnBuilder().buildBeginTurns(selectedGame)) {
             for (int i = 0; i < 7; i++) {
-                int letterFromPot = new Random().nextInt(selectedGame.getPot().size());
-                turn.addRackTile(selectedGame.getPot().get(letterFromPot));
-                selectedGame.getPot().remove(letterFromPot);
+                int letterFromPot = new Random().nextInt(pot.size());
+                turn.addRackTile(pot.get(letterFromPot));
+                pot.remove(letterFromPot);
             }
             gameDAO.insertTurn(selectedGame, turn);
         }
@@ -318,12 +321,8 @@ public class GameController extends Controller {
     }
 
     private boolean playingGame(User challenger, User opponent, Competition comp) {
-        for (Game g : games)
-            if (g.getChallenger().equals(challenger) && g.getOpponent().equals(opponent)
-                    || (g.getChallenger().equals(opponent) && g.getOpponent().equals(challenger)))
-                if (g.getGameState() != GameState.FINISHED || g.getGameState()!= GameState.RESIGNED)
-                    if (g.getCompetitionId() == comp.getId())
-                        return true;
-        return false;
+        return comp.getGames().stream().anyMatch(game ->
+                game.getPlayers().containsAll(Arrays.asList(challenger, opponent))
+                        && game.isActive());
     }
 }

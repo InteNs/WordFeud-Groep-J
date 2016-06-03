@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class Turn {
     private int id;
+    private int amountSwapped;
     private int score;
     private String word;
     private User user;
@@ -30,6 +31,14 @@ public class Turn {
         this.type = type;
         rack = playerRack;
         this.placedTiles = placedTiles;
+    }
+
+    public int getAmountSwapped() {
+        return amountSwapped;
+    }
+
+    public void setAmountSwapped(int amountSwapped) {
+        this.amountSwapped = amountSwapped;
     }
 
     public void setType(TurnType type) {
