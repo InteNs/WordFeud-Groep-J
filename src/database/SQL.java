@@ -33,7 +33,7 @@ public class SQL {
         public static final String INSERTMESSAGE = "INSERT INTO chatregel (chatregel.spel_id,chatregel.account_naam,chatregel.bericht) VALUES (?,?,?);";
         public static final String CREATEGAME = "INSERT INTO spel (competitie_id, toestand_type, account_naam_uitdager, reaktie_type, bord_naam, letterset_naam, account_naam_tegenstander) VALUES (?, 'request', ?, 'unknown', 'standard', ?, ?);";
         public static final String LETTERSFORPOT = "INSERT INTO letter(id, spel_id, lettertype_letterset_code, lettertype_karakter) VALUES";
-        public static final String INSERTWORD = "INSERT INTO `wordfeud`.`woordenboek` (`woord`, `letterset_code`, `status`, `account_naam`) VALUES (?, ?, ?, ?);";
+        public static final String INSERTWORD = "INSERT INTO woordenboek (`woord`, `letterset_code`, `status`, `account_naam`) VALUES (?, ?, ?, ?);";
     }
 
     public class DELETE {
