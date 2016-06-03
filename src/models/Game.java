@@ -185,9 +185,9 @@ public class Game {
 
             if (turn.equals(turnToDisplay)) {
                 ArrayList<Tile> rack = new ArrayList<>();
-                if (getGameMode() == Role.OBSERVER || turn.getUser().equals(watcher)) {
+                if (getGameMode() == Role.OBSERVER || turn.getUser().equals(watcher) && turn.getType() != TurnType.BEGIN) {
                     rack = turns.get(turns.indexOf(turn) - 2).getRack();
-                } else if (getGameMode() == Role.PLAYER && !turn.getUser().equals(watcher)) {
+                } else if (getGameMode() == Role.PLAYER && turn.getUser().equals(watcher)) {
                     rack = turn.getRack();
                 }
                 turnBuilder = new TurnBuilder(gameboard, FXCollections.observableArrayList(rack));
