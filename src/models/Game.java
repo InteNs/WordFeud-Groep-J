@@ -230,7 +230,7 @@ public class Game {
             else
                 return "opponent";
         }
-        return "afgelopen";
+        return "ended";
     }
 
     @Override

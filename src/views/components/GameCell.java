@@ -29,7 +29,7 @@ public class GameCell extends ListCell<Game> {
             else
                 infoLabel.setText("[" + game.getId() + "]\tSpel tussen " + game.getChallenger() + " en " + game.getOpponent());
 
-            if (game.getNextUser().equals("afgelopen"))
+            if (game.getNextUser().equals("ended"))
                 lastTurnLabel.setText("[" + game.getLanguage() + "]\t\t Game is afgelopen");
             else if (game.getNextUser().equals("currentUser"))
                 lastTurnLabel.setText("[" + game.getLanguage() + "]\t\tJij bent aan de beurt!");
