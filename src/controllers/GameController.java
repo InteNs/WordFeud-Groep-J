@@ -9,17 +9,16 @@ import javafx.util.Pair;
 import models.*;
 import views.components.FieldTileNode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameController extends Controller {
 
     private ArrayList<Game> fetchedGames;
     private ArrayList<Turn> fetchedTurns;
+    private ArrayList<Tile> fetchedTiles;
     private ArrayList<Message> fetchedMessages;
+
     private ObservableList<Game> games;
     private ObjectProperty<Game> selectedGame;
     private ObjectProperty<Role> currentRole;
@@ -90,11 +89,13 @@ public class GameController extends Controller {
     }
 
     public void loadGame(Game game, Role gameMode) {
+
         if (game == null) return;
-        fetch();
+        if (!Objects.deepEquals(game.getTurns(), fetchedTurns)) fetch();
+
         if (game.getEmptyGameBoard() == null)
             game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
-        game.setAllTiles(gameDAO.selectLettersForPot(game));
+        game.setAllTiles(fetchedTiles);
         game.setTurns(fetchedTurns);
         game.setMessages(fetchedMessages);
         game.setGameMode(gameMode);
@@ -141,6 +142,7 @@ public class GameController extends Controller {
     public void fetch() {
         fetchedGames = gameDAO.selectGames();
         if (getSelectedGame() != null) {
+            fetchedTiles = gameDAO.selectLettersForPot(getSelectedGame());
             fetchedMessages = gameDAO.selectMessages(getSelectedGame());
             fetchedTurns = gameDAO.selectTurns(getSelectedGame());
 

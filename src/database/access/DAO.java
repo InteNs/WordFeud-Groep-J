@@ -6,7 +6,7 @@ abstract class DAO {
     protected Database database;
 
     public void close() {
-        database.close();
+        //database.close();
     }
 
     public DAO() {

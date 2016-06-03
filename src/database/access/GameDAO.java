@@ -85,6 +85,7 @@ public class GameDAO extends DAO {
 
             while (records.next()) {
                 Turn turn = new Turn(
+                        game.getId(),
                         records.getInt("beurt"),
                         records.getInt("score"),
                         new User(records.getString("account_naam")),
