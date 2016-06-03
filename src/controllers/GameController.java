@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import models.*;
 import views.components.FieldTileNode;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -93,11 +92,11 @@ public class GameController extends Controller {
         if (fetchedTurns == null || fetchedMessages == null) fetch();
         if (game.getEmptyGameBoard() == null)
             game.setBoard(gameDAO.selectFieldsForBoard(game.getBoardType()));
-        if (!game.getTurns().equals(fetchedTurns))
+        if (game.getTurns().size() < fetchedTurns.size())
             game.setTurns(fetchedTurns);
-        if (!(game.getMessages().size() == fetchedMessages.size()))
+        if ((game.getMessages().size() < fetchedMessages.size()))
             game.setMessages(fetchedMessages);
-
+        
         game.setGameMode(gameMode);
     }
 
