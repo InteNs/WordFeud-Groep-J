@@ -10,7 +10,7 @@ public class SQL {
         public static final String USERWITHCREDS = "SELECT\n  a.naam,\n  a.wachtwoord,\n  r.rol_type\nFROM account a\n  LEFT JOIN accountrol r ON a.naam = r.account_naam\nWHERE naam = ?\n      AND wachtwoord = ?";
         public static final String USERWITHNAME = "SELECT\n  a.naam,\n  a.wachtwoord,\n  r.rol_type\nFROM account a\n  LEFT JOIN accountrol r ON a.naam = accountrol.account_naam\nWHERE a.naam = ?";
         public static final String COMPFOROWNER = "SELECT id FROM competitie WHERE account_naam_eigenaar = ?";
-        public static final String LETTERSFORNEWGAME = "SELECT wordfeud.lettertype.karakter, wordfeud.lettertype.aantal FROM wordfeud.lettertype WHERE letterset_code = ?";
+        public static final String LETTERSFORNEWGAME = "SELECT lettertype.karakter, lettertype.aantal FROM lettertype WHERE letterset_code = ?";
     }
 
     public class ALL {
@@ -32,7 +32,7 @@ public class SQL {
         public static final String INSERTPLAYER = "INSERT INTO deelnemer (account_naam, competitie_id) VALUES (?, ?);";
         public static final String INSERTMESSAGE = "INSERT INTO chatregel (chatregel.spel_id,chatregel.account_naam,chatregel.bericht) VALUES (?,?,?);";
         public static final String CREATEGAME = "INSERT INTO spel (competitie_id, toestand_type, account_naam_uitdager, reaktie_type, bord_naam, letterset_naam, account_naam_tegenstander) VALUES (?, 'request', ?, 'unknown', 'standard', ?, ?);";
-        public static final String LETTERSFORPOT = "INSERT INTO wordfeud.letter(id, spel_id, lettertype_letterset_code, lettertype_karakter) VALUES";
+        public static final String LETTERSFORPOT = "INSERT INTO letter(id, spel_id, lettertype_letterset_code, lettertype_karakter) VALUES";
     }
 
     public class DELETE {
@@ -42,8 +42,8 @@ public class SQL {
     public class UPDATE {
         public static final String UPDATEPASSWORD = "UPDATE account SET wachtwoord = ? WHERE naam = ?";
         public static final String UPDATEWORDSTATUS = "UPDATE woordenboek SET status = ? WHERE woord = ? AND account_naam = ?";
-        public static final String UPDATEGAMESTATE = "UPDATE wordfeud.spel SET toestand_type = ? WHERE id = ?";
-        public static final String UPDATEREACTIONTYPE = "UPDATE wordfeud.spel SET reaktie_type = ? WHERE id = ?";
+        public static final String UPDATEGAMESTATE = "UPDATE spel SET toestand_type = ? WHERE id = ?";
+        public static final String UPDATEREACTIONTYPE = "UPDATE spel SET reaktie_type = ? WHERE id = ?";
 
     }
 
