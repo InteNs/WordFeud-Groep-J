@@ -40,7 +40,7 @@
                             </CustomMenuItem>
                             <CustomMenuItem text="Unspecified Action">
                                 <content>
-                                    <Button prefHeight="50.0" prefWidth="100.0" text="Pot" onAction="#showPot"/>
+                                    <Button fx:id="potButton" prefHeight="50.0" prefWidth="100.0" text="Pot" onAction="#showPot"/>
                                 </content>
                             </CustomMenuItem>
                         </items>
