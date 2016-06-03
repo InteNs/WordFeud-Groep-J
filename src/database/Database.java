@@ -9,9 +9,9 @@ import java.util.Collection;
 
 public class Database {
 
-    private final String URL = "jdbc:mysql://77.172.146.212:3306/wordfeud";
-    private final String USERNAME = "wordfeud";
-    private final String PASSWORD = "wordfeud01";
+    private final String URL = "jdbc:mysql://databases.aii.avans.nl:3306/1_wordfeud_ij";
+    private final String USERNAME = "42IN04SOj";
+    private final String PASSWORD = "abcdef";
     private final String DRIVER = "com.mysql.jdbc.Driver";
     private static Database database = new Database();
 
