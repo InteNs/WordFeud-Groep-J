@@ -70,4 +70,8 @@ public class WordController extends Controller {
         notifyObservers();
         return true;
     }
+
+    public void submitWords(ArrayList<Word> words){
+        wordDAO.insertWords(words);
+    }
 }

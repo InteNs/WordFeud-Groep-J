@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import models.*;
 import views.components.ChatCell;
 import views.components.FieldTileNode;
+import views.subviews.SubmitWordView;
 import views.subviews.potView;
 
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class gameControlView extends View {
                 });
 
         extraFunctionsButton.setOnMouseClicked(event ->
-                contextMenu.show(extraFunctionsButton, event.getScreenX(), event.getScreenY())
+                        contextMenu.show(extraFunctionsButton, event.getScreenX(), event.getScreenY())
         );
 
         turnSpinner.valueProperty().addListener((o, oldValue, newValue) -> {
@@ -84,7 +85,7 @@ public class gameControlView extends View {
                 .addListener((o, oldValue, newValue) -> {
                     if (!Objects.equals(oldValue, newValue) && newValue != null)
                         gameController.loadGame(newValue, gameController.getCurrentRole());
-                        showGame(newValue, true);
+                    showGame(newValue, true);
                 });
     }
 
@@ -98,8 +99,7 @@ public class gameControlView extends View {
             if (newGame.getTurns().contains(gameController.getSelectedTurn())) {
                 selectTurn(gameController.getSelectedTurn());
                 //turnList.scrollTo(gameController.getSelectedTurn());
-            }
-            else {
+            } else {
                 selectTurn(newGame.getLastTurn());
                 turnList.scrollTo(newGame.getLastTurn());
             }
@@ -150,7 +150,7 @@ public class gameControlView extends View {
     }
 
     private void setTabs(Role gameMode, User currentTurnUser) {
-        if (gameMode == Role.PLAYER || !gameController.getSelectedGame().isGame()) {
+        if (gameMode == Role.PLAYER) {
             disableTurnControls(true);
             disableGameControls(currentTurnUser.equals(session.getCurrentUser()), false);
         } else if (gameMode == Role.OBSERVER) {
@@ -163,7 +163,7 @@ public class gameControlView extends View {
     public void showPot() {
         ObservableList<Tile> tiles = gameController.showPot(gameController.getSelectedGame());
         if (tiles != null) {
-            new potView(tiles, resourceFactory, parent);
+            new potView(tiles, resourceFactory);
         }
     }
 
@@ -213,8 +213,15 @@ public class gameControlView extends View {
         if (words != null && words.isEmpty()) {
             gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
             selectTurn(gameController.getSelectedGame().getLastTurn());
+        } else {
+            showSubmitWord(words);
+            clearBoard();
         }
-        else clearBoard();
+    }
+
+    public void showSubmitWord(ArrayList<String> words) {
+        SubmitWordView submitWordView = new SubmitWordView(words, gameController.getSelectedGame().getLanguage(), session.getCurrentUser());
+        wordController.submitWords(submitWordView.getWordList());
     }
 
     @FXML
@@ -223,7 +230,7 @@ public class gameControlView extends View {
         gameController.passTurn(gameController.getSelectedGame());
         selectTurn(gameController.getSelectedGame().getLastTurn());
     }
-    
+
     public void swapTiles() {
          clearBoard();
          ObservableList<Tile> currentRack = gameController.getSelectedGame().getTurnBuilder().getCurrentRack();
@@ -232,11 +239,11 @@ public class gameControlView extends View {
          if(selectedTiles != null){
             gameController.swapTiles(selectedTiles, gameController.getSelectedGame());
             selectTurn(gameController.getSelectedGame().getLastTurn());
-         }
+        }
     }
 
 
-    public void resign(){
+    public void resign() {
         clearBoard();
         gameController.resign(gameController.getSelectedGame());
         selectTurn(gameController.getSelectedGame().getLastTurn());
