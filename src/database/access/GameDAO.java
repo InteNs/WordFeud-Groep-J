@@ -14,24 +14,27 @@ public class GameDAO extends DAO {
 
     public ArrayList<Message> selectMessages(Game game) {
         ArrayList<Message> messages = new ArrayList<>();
+        ResultSet records = null;
         try {
-            ResultSet records = database.select(SQL.SELECT.MESSAGESFORGAME, game.getId());
+            records = database.select(SQL.SELECT.MESSAGESFORGAME, game.getId());
             while (records.next()) {
                 messages.add(new Message(
                         new User(records.getString("account_naam")),
                         records.getString("bericht"),
                         records.getTimestamp("tijdstip")));
             }
-        } catch (Exception e) {
-            printError(e);
+        } catch (SQLException | NullPointerException e) {
+            if (!recordsAreNull(e, records))
+                printError(e);
         }
         return messages;
     }
 
     public ArrayList<Game> selectGames() {
         ArrayList<Game> games = new ArrayList<>();
+        ResultSet records = null;
         try {
-            ResultSet records = database.select(SQL.ALL.GAMES);
+            records = database.select(SQL.ALL.GAMES);
             while (records.next()) {
                 games.add(new Game(
                         records.getInt("id"),
@@ -44,25 +47,28 @@ public class GameDAO extends DAO {
                         Language.parse(records.getString("letterset_naam")),
                         ReactionType.parse(records.getString("reaktie_type"))));
             }
-        } catch (Exception e) {
-            printError(e);
+        } catch (SQLException | NullPointerException e) {
+            if (!recordsAreNull(e, records))
+                printError(e);
         }
         return games;
     }
 
-    public ArrayList<Tile> selectLettersForPot(Game selectedGame){
+    public ArrayList<Tile> selectLettersForPot(Game selectedGame) {
         ArrayList<Tile> returnList = new ArrayList<>();
+        ResultSet records = null;
         try {
-            ResultSet records = database.select(SQL.SELECT.LETTERSFORGAME,selectedGame.getId());
-            while (records.next()){
+            records = database.select(SQL.SELECT.LETTERSFORGAME, selectedGame.getId());
+            while (records.next()) {
                 returnList.add(new Tile(
                         records.getInt("id"),
                         records.getInt("waarde"),
                         records.getString("lettertype_karakter").charAt(0)
                 ));
             }
-            } catch (SQLException e) {
-            printError(e);
+        } catch (SQLException | NullPointerException e) {
+            if (!recordsAreNull(e, records))
+                printError(e);
         }
         return returnList;
     }
@@ -70,9 +76,11 @@ public class GameDAO extends DAO {
     public ArrayList<Turn> selectTurns(Game game) {
         ArrayList<Turn> turns = new ArrayList<>();
         ArrayList<Tile> tiles = new ArrayList<>();
+        ResultSet records = null;
+        ResultSet tileRecords = null;
         try {
-            ResultSet tileRecords = database.select(SQL.SELECT.LETTERSFORGAME, game.getId());
-            ResultSet records = database.select(SQL.SELECT.TURNSFORGAME, game.getId());
+            tileRecords = database.select(SQL.SELECT.LETTERSFORGAME, game.getId());
+            records = database.select(SQL.SELECT.TURNSFORGAME, game.getId());
             while (tileRecords.next()) {
                 tiles.add(new Tile(
                         tileRecords.getInt("id"),
@@ -119,23 +127,26 @@ public class GameDAO extends DAO {
                     }
                 }
             }
-        } catch (SQLException e) {
-            printError(e);
+        } catch (SQLException | NullPointerException e) {
+            if (!recordsAreNull(e, records, tileRecords))
+                printError(e);
         }
         return turns;
     }
 
     public Field[][] selectFieldsForBoard(BoardType boardType) {
         Field[][] fields = new Field[15][15];
+        ResultSet records = null;
         try {
-            ResultSet records = database.select(SQL.SELECT.TILESFORBOARD, boardType.toString());
+            records = database.select(SQL.SELECT.TILESFORBOARD, boardType.toString());
             while (records.next()) {
                 int x = records.getInt("x") - 1;
                 int y = records.getInt("y") - 1;
                 fields[(y)][x] = new Field(FieldType.parse(records.getString("tegeltype_soort")), x, y);
             }
-        } catch (SQLException e) {
-            printError(e);
+        } catch (SQLException | NullPointerException e) {
+            if (!recordsAreNull(e, records))
+                printError(e);
         }
         return fields;
     }
@@ -164,14 +175,14 @@ public class GameDAO extends DAO {
                 turn.getScore(),
                 TurnType.format(turn.getType())
         );
-        if (!turn.getRack().isEmpty()){
+        if (!turn.getRack().isEmpty()) {
             StringBuilder insertRackQuery = new StringBuilder(SQL.INSERT.INSERTRACKTILES);
             ArrayList<Object> insertRackvalues = new ArrayList<>();
             turn.getRack().forEach(tile -> {
                 insertRackQuery.append("(?,?,?),");
                 insertRackvalues.addAll(Arrays.asList(game.getId(), tile.getId(), turn.getId()));
             });
-            insertRackQuery.deleteCharAt(insertRackQuery.length()-1);
+            insertRackQuery.deleteCharAt(insertRackQuery.length() - 1);
             insertRackQuery.append((";"));
 
             database.insert(insertRackQuery.toString(), insertRackvalues);
@@ -203,7 +214,7 @@ public class GameDAO extends DAO {
                             tile.getReplacedJokerAsString())
                     );
                 });
-                insertPlacedQuery.deleteCharAt(insertPlacedQuery.length()-1);
+                insertPlacedQuery.deleteCharAt(insertPlacedQuery.length() - 1);
                 insertPlacedQuery.append(";");
                 database.insert(insertPlacedQuery.toString(), insertPlacedValues);
                 break;
@@ -212,42 +223,44 @@ public class GameDAO extends DAO {
         }
     }
 
-    public void createPot(Game selectedGame){
+    public void createPot(Game selectedGame) {
         StringBuilder insertLettersForPotQuery = new StringBuilder(SQL.INSERT.LETTERSFORPOT);
         ArrayList<Object> insertLettersForPotValues = new ArrayList<>();
+        ResultSet records = null;
 
         try {
-            ResultSet result = database.select(SQL.SELECT.LETTERSFORNEWGAME,selectedGame.getLanguage().toString());
+            records = database.select(SQL.SELECT.LETTERSFORNEWGAME, selectedGame.getLanguage().toString());
             int idCounter = 1;
-            while (result.next()){
-                int amountOfLetter = result.getInt("aantal");
+            while (records.next()) {
+                int amountOfLetter = records.getInt("aantal");
                 for (int i = 0; i < amountOfLetter; i++) {
                     insertLettersForPotQuery.append("(?,?,?,?),");
                     insertLettersForPotValues.addAll(Arrays.asList(
                             idCounter,
                             selectedGame.getId(),
                             selectedGame.getLanguage().toString(),
-                            result.getString("karakter")));
+                            records.getString("karakter")));
                     idCounter++;
                 }
             }
-        } catch (SQLException e) {
-            printError(e);
+        } catch (SQLException | NullPointerException e) {
+            if (!recordsAreNull(e, records))
+                printError(e);
         }
-        insertLettersForPotQuery.deleteCharAt(insertLettersForPotQuery.length()-1);
+        insertLettersForPotQuery.deleteCharAt(insertLettersForPotQuery.length() - 1);
         insertLettersForPotQuery.append(";");
-        database.insert(insertLettersForPotQuery.toString(),insertLettersForPotValues);
+        database.insert(insertLettersForPotQuery.toString(), insertLettersForPotValues);
     }
 
     public void createGame(int compId, String requester, Language language, String receiver) {
         database.insert(SQL.INSERT.CREATEGAME, compId, requester, language.toString(), receiver);
     }
 
-    public void updateGameState(GameState gameState, Game selectedGame){
+    public void updateGameState(GameState gameState, Game selectedGame) {
         database.update(SQL.UPDATE.UPDATEGAMESTATE, GameState.format(gameState), selectedGame.getId());
     }
 
     public void updateReactionType(ReactionType reactionType, Game selectedGame) {
-        database.update(SQL.UPDATE.UPDATEREACTIONTYPE,ReactionType.format(reactionType), selectedGame.getId());
+        database.update(SQL.UPDATE.UPDATEREACTIONTYPE, ReactionType.format(reactionType), selectedGame.getId());
     }
 }

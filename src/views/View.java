@@ -18,7 +18,7 @@ public abstract class View {
     public abstract void constructor();
 
     protected void init(MainView parent) {
-        controllerFactory = parent.getControllerFactory();
+        controllerFactory = ControllerFactory.getInstance();
         userController = controllerFactory.GetUserController();
         gameController = controllerFactory.getGameController();
         competitionController = controllerFactory.getCompetitionController();

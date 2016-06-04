@@ -17,8 +17,8 @@ public class CompetitionController extends Controller {
     private ObservableList<Competition> competitions;
     private ObjectProperty<Competition> selectedCompetition;
 
-    public CompetitionController(ControllerFactory controllerFactory) {
-        super(controllerFactory);
+    public CompetitionController() {
+        super();
         competitions = FXCollections.observableArrayList();
         selectedCompetition = new SimpleObjectProperty<>();
     }

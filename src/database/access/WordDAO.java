@@ -12,18 +12,20 @@ public class WordDAO extends DAO {
 
     public ArrayList<Word> getWords() {
         ArrayList<Word> wordList = new ArrayList<>();
+        ResultSet records = null;
         try {
-            ResultSet rs = database.select(SQL.ALL.WORDS);
-            while (rs.next()) {
+            records = database.select(SQL.ALL.WORDS);
+            while (records.next()) {
                 wordList.add(new Word(
-                        rs.getString("woord"),
-                        rs.getString("account_naam"),
-                        rs.getString("letterset_code"),
-                        WordStatus.parse(rs.getString("status"))
+                        records.getString("woord"),
+                        records.getString("account_naam"),
+                        records.getString("letterset_code"),
+                        WordStatus.parse(records.getString("status"))
                 ));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException | NullPointerException e) {
+            if (!recordsAreNull(e, records))
+                printError(e);
         }
         return wordList;
     }

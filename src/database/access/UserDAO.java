@@ -39,7 +39,7 @@ public class UserDAO extends DAO {
      * @return the user if it exists
      */
     public User selectUser(String username, String password) {
-        ResultSet records;
+        ResultSet records = null;
         User user = null;
         try {
             if (password != null) {
@@ -58,8 +58,9 @@ public class UserDAO extends DAO {
                     user.addRole(Role.parse(records.getString("rol_type")));
                 }
             }
-        } catch (SQLException e) {
-            printError(e);
+        } catch (SQLException | NullPointerException e) {
+            if (!recordsAreNull(e, records))
+                printError(e);
         }
         return user;
     }
@@ -81,19 +82,21 @@ public class UserDAO extends DAO {
     }
 
     public void setAllStats(List<User> users) {
+        ResultSet records = null;
         try {
-            ResultSet rs = database.select(SQL.ALL.WINSLOSES);
+            records = database.select(SQL.ALL.WINSLOSES);
 
-            while (rs.next()) {
+            while (records.next()) {
                 for (User user : users) {
-                    if (user.getName().equals(rs.getString("account_naam"))) {
-                        user.setWins(rs.getInt("wins"));
-                        user.setLoses(rs.getInt("lost"));
+                    if (user.getName().equals(records.getString("account_naam"))) {
+                        user.setWins(records.getInt("wins"));
+                        user.setLoses(records.getInt("lost"));
                     }
                 }
             }
-        } catch (SQLException e) {
-            printError(e);
+        } catch (SQLException | NullPointerException e) {
+            if (!recordsAreNull(e, records))
+                printError(e);
         }
     }
 

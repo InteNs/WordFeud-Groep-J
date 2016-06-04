@@ -15,8 +15,8 @@ public class UserController extends Controller {
     private ObservableList<User> users;
     private ObjectProperty<User> selectedUser;
 
-    public UserController(ControllerFactory controllerFactory) {
-        super(controllerFactory);
+    public UserController() {
+        super();
         users = FXCollections.observableArrayList();
         selectedUser = new SimpleObjectProperty<>();
     }

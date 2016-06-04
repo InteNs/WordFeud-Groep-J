@@ -15,8 +15,8 @@ public abstract class Controller extends Observable {
     protected WordDAO wordDAO;
     private ControllerFactory controllerFactory;
 
-    public Controller(ControllerFactory factory) {
-        this.controllerFactory = factory;
+    public Controller() {
+        this.controllerFactory = ControllerFactory.getInstance();
         competitionDAO = new CompetitionDAO();
         gameDAO = new GameDAO();
         userDAO = new UserDAO();

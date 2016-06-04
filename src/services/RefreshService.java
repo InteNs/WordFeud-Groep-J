@@ -27,7 +27,6 @@ public class RefreshService {
                loadIndicator.setVisible(false);
            });
        };
-        startRefresh();
     }
 
     public void stopRefresh(){

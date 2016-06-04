@@ -5,11 +5,14 @@ import java.util.List;
 
 public class ControllerFactory {
 
+    private static ControllerFactory controllerFactory = new ControllerFactory();
+
     private UserController userController;
     private GameController gameController;
     private CompetitionController competitionController;
     private SessionController sessionController;
     private WordController wordController;
+    private FeedbackController feedbackController;
 
     public List<Controller> getControllers() {
         return Arrays.asList(
@@ -19,6 +22,10 @@ public class ControllerFactory {
                 getSessionController(),
                 getWordController()
         );
+    }
+
+    public static ControllerFactory getInstance() {
+        return controllerFactory;
     }
 
     public void resetControllers() {
@@ -39,31 +46,37 @@ public class ControllerFactory {
 
     public UserController GetUserController(){
         if(userController == null)
-            userController = new UserController(this);
+            userController = new UserController();
         return userController;
+    }
+
+    public FeedbackController getFeedbackController(){
+        if(feedbackController == null)
+            feedbackController = new FeedbackController();
+        return feedbackController;
     }
 
     public CompetitionController getCompetitionController() {
         if(competitionController == null)
-            competitionController = new CompetitionController(this);
+            competitionController = new CompetitionController();
         return competitionController;
     }
 
     public GameController getGameController() {
         if (gameController == null)
-            gameController = new GameController(this);
+            gameController = new GameController();
         return gameController;
     }
 
     public SessionController getSessionController() {
         if (sessionController == null)
-            sessionController = new SessionController(this);
+            sessionController = new SessionController();
         return sessionController;
     }
 
     public WordController getWordController() {
         if (wordController== null)
-            wordController = new WordController(this);
+            wordController = new WordController();
         return wordController;
     }
 }

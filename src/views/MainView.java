@@ -5,7 +5,6 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -63,8 +62,6 @@ public class MainView extends View implements Initializable {
     @FXML private WordInfoView wordInfoViewController;
     @FXML private ChallengeListView challengeListViewController;
     @FXML private ChallengeView challengeViewController;
-
-    private ControllerFactory controllerFactory;
     private ArrayList<View> views;
     private RefreshService refreshService;
 
@@ -78,12 +75,12 @@ public class MainView extends View implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setControl(false);
         setContent(loginView);
-        controllerFactory = new ControllerFactory();
         /*
         Put your viewController in this list for it
         get access to parent, and have it's constructor called
         */
         views = new ArrayList<>(Arrays.asList(
+                this,
                 userListViewController,
                 gameListViewController,
                 competitionInfoViewController,
@@ -103,8 +100,6 @@ public class MainView extends View implements Initializable {
                 challengeViewController
         ));
         views.forEach(view -> view.init(this));
-
-
     }
 
     public void login() {
@@ -114,15 +109,15 @@ public class MainView extends View implements Initializable {
         //load views
         views.forEach(View::constructor);
         //enable control
-        constructor();
         toolBar.setDisable(false);
 
         controlToggle.setSelected(false);
-
         setControl(true);
+
         refreshService = new RefreshService(controllerFactory, views, loadIndicator);
-        threadToggle.setSelected(false);
-        threadToggle.fire();
+        threadToggle.setSelected(true);
+        doThread();
+
     }
 
     @FXML
@@ -208,6 +203,7 @@ public class MainView extends View implements Initializable {
 
     public void setApplicationLoader(Main applicationLoader) {
         this.applicationLoader = applicationLoader;
+        controllerFactory.getFeedbackController().setApplication(applicationLoader);
     }
 
     public void changePass() {
@@ -226,9 +222,8 @@ public class MainView extends View implements Initializable {
         return challengeViewController;
     }
 
-    public void doThread(ActionEvent actionEvent) {
-
-        if (((ToggleButton) actionEvent.getSource()).isSelected()) {
+    public void doThread() {
+        if (threadToggle.isSelected()) {
             refreshService.startRefresh();
             spin(true);
         } else {

@@ -30,6 +30,20 @@
     -fx-background-image: url("../../resources/icons/Lock-3-icon.png");
 }
 
+.error-icon {
+    -fx-graphic: url("../../resources/icons/Close-icon.png");
+}
+
+.error-text {
+    -fx-text-fill: red;
+}
+
+.error-box {
+    -fx-background-color: #BDBDBD;
+    -fx-border-color: #3c3c3c;
+    -fx-border-width: 3;
+}
+
 .progress-indicator {
     -fx-progress-color: black;
 }
