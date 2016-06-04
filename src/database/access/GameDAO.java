@@ -9,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class GameDAO extends DAO {
 
@@ -82,9 +81,11 @@ public class GameDAO extends DAO {
                         tileRecords.getString("lettertype_karakter").charAt(0)
                 ));
             }
+            game.setAllTiles(tiles);
 
             while (records.next()) {
                 Turn turn = new Turn(
+                        game.getId(),
                         records.getInt("beurt"),
                         records.getInt("score"),
                         new User(records.getString("account_naam")),
@@ -122,7 +123,6 @@ public class GameDAO extends DAO {
         } catch (SQLException e) {
             printError(e);
         }
-        game.setPot(tiles);
         return turns;
     }
 

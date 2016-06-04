@@ -179,6 +179,7 @@ public class GameListView extends View {
     private void selectGame(Game game) {
         if (game != null) {
             gameController.setSelectedGame(game);
+            gameController.loadGame(gameController.getSelectedGame(),gameController.getCurrentRole());
             gameController.setSelectedTurn(game.getLastTurn());
             parent.setContent(parent.gameBoardView);
             parent.setTab(parent.gameControlView);
