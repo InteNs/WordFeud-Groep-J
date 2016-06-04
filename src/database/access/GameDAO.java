@@ -270,7 +270,7 @@ public class GameDAO extends DAO {
         try {
             result = database.select(SQL.SELECT.POT,selectedGame.getId());
             while (result.next()){
-                returnList.add(new Tile(result.getInt("id"),
+                returnList.add(new Tile(result.getInt("letter_id"),
                         result.getInt("waarde"),
                         result.getString("karakter").charAt(0)));
             }

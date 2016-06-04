@@ -223,13 +223,13 @@ public class gameControlView extends View {
     public void playWord() {
         ArrayList<String> words = gameController.playWord(gameController.getSelectedGame());
 
-        if (words != null && words.isEmpty()) {
-            gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
-            selectTurn(gameController.getSelectedGame().getLastTurn());
-        } else {
-            showSubmitWord(words);
-            clearBoard();
+        if (words != null) {
+            if (words.isEmpty()) {
+                gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
+                selectTurn(gameController.getSelectedGame().getLastTurn());
+            } else showSubmitWord(words);
         }
+        clear();
     }
 
     public void showSubmitWord(ArrayList<String> words) {
