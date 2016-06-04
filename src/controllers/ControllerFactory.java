@@ -25,7 +25,12 @@ public class ControllerFactory {
     }
 
     public static ControllerFactory getInstance() {
+        if (controllerFactory == null) controllerFactory = new ControllerFactory();
         return controllerFactory;
+    }
+
+    public static void destroyInstance() {
+        controllerFactory = null;
     }
 
     public void resetControllers() {

@@ -1,17 +1,14 @@
 package views.subviews;
 
-import controllers.ControllerFactory;
-import controllers.WordController;
-import database.access.WordDAO;
 import enumerations.Language;
 import enumerations.WordStatus;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
@@ -21,11 +18,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import models.User;
 import models.Word;
-import resources.ResourceFactory;
 import views.View;
 
-import javax.naming.spi.ResolveResult;
-import java.awt.*;
 import java.util.ArrayList;
 
 public class SubmitWordView extends View {
@@ -47,9 +41,7 @@ public class SubmitWordView extends View {
         tilePane.setVgap(10);
         tilePane.setStyle("-fx-background-color: white");
         tilePane.setOnMouseClicked(event -> window.close());
-        window.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) window.close();
-        });
+
 
 
         VBox vbox = new VBox();
@@ -79,6 +71,9 @@ public class SubmitWordView extends View {
         });
         window.setScene(scene);
         window.showAndWait();
+        window.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) window.close();
+        });
     }
 
     private void submitWords() {

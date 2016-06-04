@@ -227,7 +227,8 @@ public class gameControlView extends View {
             if (words.isEmpty()) {
                 gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
                 selectTurn(gameController.getSelectedGame().getLastTurn());
-            } else showSubmitWord(words);
+            } else
+                showSubmitWord(words);
         }
         clear();
     }
