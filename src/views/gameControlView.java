@@ -109,7 +109,8 @@ public class gameControlView extends View {
 
         setPotLabel(newGame);
         setTabs(gameController.getCurrentRole(), newGame.getLastTurn().getUser());
-        disableChat(!newGame.getPlayers().contains(session.getCurrentUser()));
+        disableChat(gameController.getCurrentRole() == Role.OBSERVER
+                || !newGame.getPlayers().contains(session.getCurrentUser()));
         if (newGame.getPot().size() < 7) {
             swapButton.setDisable(true);
         }
