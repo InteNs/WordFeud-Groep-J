@@ -15,34 +15,20 @@ import java.util.function.Predicate;
 
 public class GameListView extends View {
 
-    @FXML
-    private SplitPane lists;
-    @FXML
-    private Accordion gameLists;
-    @FXML
-    private Accordion compGameLists;
-    @FXML
-    private TextField filterField;
-    @FXML
-    private ListView<Game> myCompGamesList;
-    @FXML
-    private ListView<Game> myGamesList;
-    @FXML
-    private ListView<Game> allGamesList;
-    @FXML
-    private ListView<Game> allCompGamesList;
-    @FXML
-    private TitledPane myCompGamesPane;
-    @FXML
-    private TitledPane myGamesPane;
-    @FXML
-    private TitledPane allCompGamesPane;
-    @FXML
-    private TitledPane allGamesPane;
-    @FXML
-    private ChoiceBox<GameState> gameStateBox;
-    @FXML
-    private ChoiceBox<Role> userRoleBox;
+    @FXML private SplitPane lists;
+    @FXML private Accordion gameLists;
+    @FXML private Accordion compGameLists;
+    @FXML private TextField filterField;
+    @FXML private ListView<Game> myCompGamesList;
+    @FXML private ListView<Game> myGamesList;
+    @FXML private ListView<Game> allGamesList;
+    @FXML private ListView<Game> allCompGamesList;
+    @FXML private TitledPane myCompGamesPane;
+    @FXML private TitledPane myGamesPane;
+    @FXML private TitledPane allCompGamesPane;
+    @FXML private TitledPane allGamesPane;
+    @FXML private ChoiceBox<GameState> gameStateBox;
+    @FXML private ChoiceBox<Role> userRoleBox;
 
     private FilteredList<Game> filteredGames;
     private Predicate<Game> filterText, filterComp, filterUser;
@@ -112,20 +98,30 @@ public class GameListView extends View {
 
     private void applyViewingMode(boolean isNew) {
         gameController.setCurrentRole(userRoleBox.getValue());
-        compGameLists.getPanes().remove(allCompGamesPane);
-        gameLists.getPanes().remove(allGamesPane);
+        if (isNew)
+            showAllPanes(false);
         if (userRoleBox.getValue() == Role.PLAYER) {
+            showAllPanes(false);
             gameStateBox.setVisible(false);
             gameStateBox.getSelectionModel().select(GameState.PLAYING);
             gameLists.setExpandedPane(myGamesPane);
             compGameLists.setExpandedPane(myCompGamesPane);
-        } else if (userRoleBox.getValue() == Role.OBSERVER) {
-            compGameLists.getPanes().add(allCompGamesPane);
-            gameLists.getPanes().add(allGamesPane);
-            if (isNew) gameStateBox.getSelectionModel().select(GameState.FINISHED);
+        } else if (userRoleBox.getValue() == Role.OBSERVER && isNew) {
+            showAllPanes(true);
+            gameStateBox.getSelectionModel().select(GameState.FINISHED);
             gameStateBox.setVisible(true);
             gameLists.setExpandedPane(allGamesPane);
             compGameLists.setExpandedPane(allCompGamesPane);
+        }
+    }
+
+    private void showAllPanes(boolean showAll) {
+        if (showAll) {
+            compGameLists.getPanes().add(allCompGamesPane);
+            gameLists.getPanes().add(allGamesPane);
+        } else {
+            compGameLists.getPanes().remove(allCompGamesPane);
+            gameLists.getPanes().remove(allGamesPane);
         }
     }
 
@@ -172,8 +168,7 @@ public class GameListView extends View {
     }
 
     private void filter(GameState state) {
-        filteredGames.setPredicate(null);
-        filteredGames.setPredicate(((Predicate<Game>) game -> game.getGameState() == state).and(filterText));
+        filteredGames.setPredicate(filterText.and(game -> game.getGameState() == state));
     }
 
     private void selectGame(Game game) {
