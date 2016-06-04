@@ -1,7 +1,10 @@
 package views;
 
 import controllers.ControllerFactory;
-import javafx.application.Platform;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,6 +13,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 import main.Main;
 import services.RefreshService;
 
@@ -17,10 +22,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class MainView extends View implements Initializable {
     /*declare your view here if you need it*/
@@ -43,6 +44,7 @@ public class MainView extends View implements Initializable {
     @FXML public Tab userListView;
     @FXML public Tab gameListView;
     @FXML public Pane wordInfoView;
+    @FXML public ToggleButton controlToggle;
 
     /*Declare your viewControllers here*/
     @FXML private UserListView userListViewController;
@@ -69,6 +71,8 @@ public class MainView extends View implements Initializable {
     private int controlIndex;
     private double dividerPos;
     private Main applicationLoader;
+
+    private Timeline rotationAnimation;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -110,11 +114,15 @@ public class MainView extends View implements Initializable {
         //load views
         views.forEach(View::constructor);
         //enable control
-        setControl(true);
-        toolBar.setDisable(false);
         constructor();
-        threadToggle.setSelected(true);
-        refreshService = new RefreshService(controllerFactory,views,loadIndicator);
+        toolBar.setDisable(false);
+
+        controlToggle.setSelected(false);
+
+        setControl(true);
+        refreshService = new RefreshService(controllerFactory, views, loadIndicator);
+        threadToggle.setSelected(false);
+        threadToggle.fire();
     }
 
     @FXML
@@ -132,8 +140,8 @@ public class MainView extends View implements Initializable {
     }
 
     @FXML
-    public void toggleControl(ActionEvent actionEvent) {
-        setControl(!((ToggleButton) actionEvent.getSource()).isSelected());
+    public void toggleControl() {
+        setControl(!controlToggle.isSelected());
     }
 
     @FXML
@@ -144,6 +152,7 @@ public class MainView extends View implements Initializable {
 
     /**
      * set the control (tab pane) visible or not (makes content fill window)
+     *
      * @param visible whether the control tabs should be visible
      */
     public void setControl(Boolean visible) {
@@ -163,6 +172,7 @@ public class MainView extends View implements Initializable {
 
     /**
      * set or add content to app's view (clears content if node == null)
+     *
      * @param node the node to set as content
      */
     public void setContent(Node node) {
@@ -182,6 +192,18 @@ public class MainView extends View implements Initializable {
         control.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == gameControlView) setContent(gameBoardView);
         });
+
+
+        Rotate rotationTransform = new Rotate(0, threadToggle.getWidth() / 2, threadToggle.getHeight() / 2);
+        threadToggle.getTransforms().add(rotationTransform);
+
+        rotationAnimation = new Timeline(
+                new KeyFrame(Duration.seconds(2), new KeyValue(
+                        rotationTransform.angleProperty(),
+                        -360
+                ))
+        );
+        rotationAnimation.setCycleCount(Animation.INDEFINITE);
     }
 
     public void setApplicationLoader(Main applicationLoader) {
@@ -200,16 +222,24 @@ public class MainView extends View implements Initializable {
         return wordInfoViewController;
     }
 
-    public ChallengeView getChallengeView(){
+    public ChallengeView getChallengeView() {
         return challengeViewController;
     }
 
     public void doThread(ActionEvent actionEvent) {
-        if (((ToggleButton)actionEvent.getSource()).isSelected()){
-           refreshService.startRefresh();
+
+        if (((ToggleButton) actionEvent.getSource()).isSelected()) {
+            refreshService.startRefresh();
+            spin(true);
         } else {
             refreshService.stopRefresh();
+            spin(false);
         }
 
+    }
+
+    private void spin(boolean spin) {
+        if (spin) rotationAnimation.play();
+        else rotationAnimation.pause();
     }
 }

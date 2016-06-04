@@ -13,8 +13,9 @@ public class UserDAO extends DAO {
 
     public ArrayList<User> selectUsers() {
         ArrayList<User> users = new ArrayList<>();
-        ResultSet records = database.select(SQL.ALL.USERS);
         try {
+            ResultSet records = database.select(SQL.ALL.USERS);
+
             while (records.next()) {
                 User user = new User(records.getString("naam"), records.getString("wachtwoord"));
                 if (users.contains(user)) {
@@ -32,21 +33,25 @@ public class UserDAO extends DAO {
 
     /**
      * select user from database
+     *
      * @param username username
      * @param password null to not check password
      * @return the user if it exists
      */
     public User selectUser(String username, String password) {
         ResultSet records;
-        if (password != null)
-            records = database.select(SQL.SELECT.USERWITHCREDS, username, password);
-        else
-            records = database.select(SQL.SELECT.USERWITHNAME, username);
         User user = null;
         try {
+            if (password != null) {
+                records = database.select(SQL.SELECT.USERWITHCREDS, username, password);
+            } else {
+                records = database.select(SQL.SELECT.USERWITHNAME, username);
+            }
+
+
             while (records.next()) {
                 if (records.getString("naam").equals(username)) {
-                    if(password != null & !records.getString("wachtwoord").equals(password))
+                    if (password != null & !records.getString("wachtwoord").equals(password))
                         return null;
                     if (user == null)
                         user = new User(username, password);
@@ -76,8 +81,9 @@ public class UserDAO extends DAO {
     }
 
     public void setAllStats(List<User> users) {
-        ResultSet rs = database.select(SQL.ALL.WINSLOSES);
         try {
+            ResultSet rs = database.select(SQL.ALL.WINSLOSES);
+
             while (rs.next()) {
                 for (User user : users) {
                     if (user.getName().equals(rs.getString("account_naam"))) {

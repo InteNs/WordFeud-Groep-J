@@ -5,12 +5,14 @@
 <VBox stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="views.MainView">
     <ToolBar fx:id="toolBar" disable="true" prefHeight="40.0" prefWidth="200.0">
-        <ToggleButton styleClass="close-tab" mnemonicParsing="false" onAction="#toggleControl"/>
-        <Button mnemonicParsing="false" onAction="#changePass" text="wachtwoord wijzigen"/>
-        <Button styleClass="Logout" mnemonicParsing="false" onAction="#logOut"/>
+        <ToggleButton fx:id="controlToggle" selected="true" styleClass="close-tab" mnemonicParsing="false" onAction="#toggleControl"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <ProgressIndicator fx:id="loadIndicator" prefHeight="20.0" prefWidth="20.0" visible="false"/>
-        <ToggleButton fx:id="threadToggle" styleClass="custom-toggle" mnemonicParsing="false" onAction="#doThread"/>
+        <StackPane>
+            <ToggleButton fx:id="threadToggle" styleClass="custom-toggle" mnemonicParsing="false" onAction="#doThread"/>
+            <ProgressIndicator fx:id="loadIndicator" prefHeight="20.0" prefWidth="20.0" visible="false"/>
+        </StackPane>
+        <Button mnemonicParsing="false" styleClass="change-pass" onAction="#changePass"/>
+        <Button styleClass="Logout" mnemonicParsing="false" onAction="#logOut"/>
     </ToolBar>
     <SplitPane fx:id="mainContent" dividerPositions="0.5" minWidth="1000" VBox.vgrow="ALWAYS">
         <TabPane fx:id="control" minWidth="350.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE"

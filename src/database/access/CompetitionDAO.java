@@ -13,9 +13,9 @@ public class CompetitionDAO extends DAO {
 
 
     public ArrayList<Competition> selectCompetitions() {
-        ResultSet rs = database.select(SQL.ALL.COMPETITIONS);
         ArrayList<Competition> competitions = new ArrayList<>();
         try {
+            ResultSet rs = database.select(SQL.ALL.COMPETITIONS);
             while (rs.next()) {
                 competitions.add(new Competition(rs.getInt("id"), new User(rs.getString("account_naam_eigenaar")), rs.getString("omschrijving"), rs.getInt("gemiddelde_score")));
             }
@@ -44,8 +44,8 @@ public class CompetitionDAO extends DAO {
 
     public ArrayList<Pair<String, Integer>> getPlayerMap() {
         ArrayList<Pair<String, Integer>> pairs = new ArrayList<>();
-        ResultSet records = database.select(SQL.ALL.PLAYERSCOMPS);
         try {
+            ResultSet records = database.select(SQL.ALL.PLAYERSCOMPS);
             while (records.next()) {
                 pairs.add(new Pair<>(
                         records.getString("account_naam"),

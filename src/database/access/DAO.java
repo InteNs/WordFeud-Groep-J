@@ -14,9 +14,7 @@ abstract class DAO {
     }
 
     protected void printError(Exception e) {
-        if(e instanceof NullPointerException)
-            System.err.println(" ResultSet was null!");
-        else
-            e.printStackTrace();
+        System.out.println(e.getClass());
+        System.out.println(e.getMessage());
     }
 }

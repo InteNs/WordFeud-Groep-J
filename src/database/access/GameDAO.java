@@ -14,8 +14,8 @@ public class GameDAO extends DAO {
 
     public ArrayList<Message> selectMessages(Game game) {
         ArrayList<Message> messages = new ArrayList<>();
-        ResultSet records = database.select(SQL.SELECT.MESSAGESFORGAME, game.getId());
         try {
+            ResultSet records = database.select(SQL.SELECT.MESSAGESFORGAME, game.getId());
             while (records.next()) {
                 messages.add(new Message(
                         new User(records.getString("account_naam")),
@@ -29,9 +29,9 @@ public class GameDAO extends DAO {
     }
 
     public ArrayList<Game> selectGames() {
-        ResultSet records = database.select(SQL.ALL.GAMES);
         ArrayList<Game> games = new ArrayList<>();
         try {
+            ResultSet records = database.select(SQL.ALL.GAMES);
             while (records.next()) {
                 games.add(new Game(
                         records.getInt("id"),
@@ -51,9 +51,9 @@ public class GameDAO extends DAO {
     }
 
     public ArrayList<Tile> selectLettersForPot(Game selectedGame){
-        ResultSet records = database.select(SQL.SELECT.LETTERSFORGAME,selectedGame.getId());
         ArrayList<Tile> returnList = new ArrayList<>();
         try {
+            ResultSet records = database.select(SQL.SELECT.LETTERSFORGAME,selectedGame.getId());
             while (records.next()){
                 returnList.add(new Tile(
                         records.getInt("id"),
@@ -70,10 +70,9 @@ public class GameDAO extends DAO {
     public ArrayList<Turn> selectTurns(Game game) {
         ArrayList<Turn> turns = new ArrayList<>();
         ArrayList<Tile> tiles = new ArrayList<>();
-        ResultSet records = database.select(SQL.SELECT.TURNSFORGAME, game.getId());
-        ResultSet tileRecords = database.select(SQL.SELECT.LETTERSFORGAME, game.getId());
-        if (records == null || tileRecords == null) return null;
         try {
+            ResultSet tileRecords = database.select(SQL.SELECT.LETTERSFORGAME, game.getId());
+            ResultSet records = database.select(SQL.SELECT.TURNSFORGAME, game.getId());
             while (tileRecords.next()) {
                 tiles.add(new Tile(
                         tileRecords.getInt("id"),
@@ -128,8 +127,8 @@ public class GameDAO extends DAO {
 
     public Field[][] selectFieldsForBoard(BoardType boardType) {
         Field[][] fields = new Field[15][15];
-        ResultSet records = database.select(SQL.SELECT.TILESFORBOARD, boardType.toString());
         try {
+            ResultSet records = database.select(SQL.SELECT.TILESFORBOARD, boardType.toString());
             while (records.next()) {
                 int x = records.getInt("x") - 1;
                 int y = records.getInt("y") - 1;
@@ -214,11 +213,11 @@ public class GameDAO extends DAO {
     }
 
     public void createPot(Game selectedGame){
-        ResultSet result = database.select(SQL.SELECT.LETTERSFORNEWGAME,selectedGame.getLanguage().toString());
         StringBuilder insertLettersForPotQuery = new StringBuilder(SQL.INSERT.LETTERSFORPOT);
         ArrayList<Object> insertLettersForPotValues = new ArrayList<>();
 
         try {
+            ResultSet result = database.select(SQL.SELECT.LETTERSFORNEWGAME,selectedGame.getLanguage().toString());
             int idCounter = 1;
             while (result.next()){
                 int amountOfLetter = result.getInt("aantal");

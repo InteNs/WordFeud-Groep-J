@@ -18,21 +18,44 @@
     -fx-background-radius: 0;
 }
 
-.custom-toggle:selected {
-    -fx-background-color: lawngreen;
-}
-
 .custom-toggle {
-    -fx-background-color: orangered;
-    -fx-graphic: url("../../resources/icons/refresh.png");
+    -fx-background-image: url("../../resources/icons/refresh-icon.png");
 }
 
 .Logout {
-    -fx-graphic: url("../../resources/icons/LOGOUT2.png");
+    -fx-background-image: url("../../resources/icons/Power-3-icon.png");
+}
+
+.change-pass {
+    -fx-background-image: url("../../resources/icons/Lock-3-icon.png");
+}
+
+.progress-indicator {
+    -fx-progress-color: black;
+}
+.tool-bar .button {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 40;
+    -fx-background-color: transparent;
+    -fx-background-position: center;
+    -fx-pref-width: 40;
+    -fx-pref-height: 40;
+}
+
+.tool-bar .toggle-button {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 40;
+    -fx-background-color: transparent;
+    -fx-background-position: center;
+    -fx-pref-width: 40;
+    -fx-pref-height: 40;
 }
 
 .close-tab {
-    -fx-graphic: url("../../resources/icons/CLOSE_TAB2.png");
+    -fx-background-image: url("../../resources/icons/Eye-Invisible-icon.png");
+}
+.close-tab:selected {
+    -fx-background-image: url("../../resources/icons/Eye-Visible-icon.png");
 }
 
 .game-label {

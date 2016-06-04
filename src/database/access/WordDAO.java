@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public class WordDAO extends DAO {
 
     public ArrayList<Word> getWords() {
-        ResultSet rs = database.select(SQL.ALL.WORDS);
         ArrayList<Word> wordList = new ArrayList<>();
         try {
+            ResultSet rs = database.select(SQL.ALL.WORDS);
             while (rs.next()) {
                 wordList.add(new Word(
                         rs.getString("woord"),
