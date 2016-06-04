@@ -15,8 +15,8 @@
         <Button styleClass="Logout" mnemonicParsing="false" onAction="#logOut"/>
     </ToolBar>
     <SplitPane fx:id="mainContent" dividerPositions="0.5" minWidth="1000" VBox.vgrow="ALWAYS">
-        <TabPane fx:id="control" minWidth="350.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE"
-                 SplitPane.resizableWithParent="false">
+        <TabPane fx:id="control" minWidth="300.0" rotateGraphic="false" tabClosingPolicy="UNAVAILABLE"
+                 SplitPane.resizableWithParent="true">
             <fx:include fx:id="gameListView" source="GameListView.fxml"/>
             <fx:include fx:id="userListView" source="UserListView.fxml"/>
             <fx:include fx:id="competitionListView" source="CompetitionListView.fxml"/>
@@ -24,7 +24,7 @@
             <fx:include fx:id="wordListView" source="WordListView.fxml"/>
             <fx:include fx:id="gameControlView" source="GameControlView.fxml"/>
         </TabPane>
-        <VBox minHeight="720.0" minWidth="620.0" SplitPane.resizableWithParent="false">
+        <VBox minHeight="720.0" minWidth="620.0" SplitPane.resizableWithParent="true">
             <Region maxHeight="-Infinity" minHeight="-Infinity" styleClass="tab-aligned"/>
             <StackPane fx:id="content" VBox.vgrow="ALWAYS">
                 <fx:include fx:id="loginView" source="LoginView.fxml"/>

@@ -77,25 +77,6 @@
     -fx-pref-width: 60;
 }
 
-.spinner:disabled {
-    -fx-opacity: 1;
-}
-
-.spinner:disabled .increment-arrow {
-    visibility: hidden;
-}
-.spinner:disabled .decrement-arrow {
-    visibility: hidden;
-}
-
-.spinner .text-field {
-    -fx-alignment: center;
-}
-.spinner:disabled .text-field {
-    -fx-text-fill: #000000;
-    -fx-opacity: 1.0;
-}
-
 .cell-text-field {
     -fx-border-radius: 0;
     -fx-background-radius: 0;
@@ -122,4 +103,27 @@
     -fx-background-color: #dddddd;
     -fx-background-radius: 5;
     -fx-padding: 5;
+}
+
+.custom-spinner {
+    -fx-min-width: 100;
+}
+
+.custom-spinner:disabled {
+    -fx-opacity: 1;
+}
+
+.custom-spinner:disabled .increment-arrow {
+    visibility: hidden;
+}
+.custom-spinner:disabled .decrement-arrow {
+    visibility: hidden;
+}
+
+.custom-spinner .text-field {
+    -fx-alignment: center;
+}
+.custom-spinner:disabled .text-field {
+    -fx-text-fill: #000000;
+    -fx-opacity: 1.0;
 }

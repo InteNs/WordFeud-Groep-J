@@ -6,6 +6,8 @@ import enumerations.Feedback;
 import main.Main;
 import views.subviews.FeedbackView;
 
+import java.net.UnknownHostException;
+
 public class FeedbackController extends Controller {
 
     private Main application;
@@ -30,10 +32,11 @@ public class FeedbackController extends Controller {
         String message = "";
         Feedback feedback = null;
         if ( e instanceof CommunicationsException
-                || e instanceof ShittyDatabaseException) {
+                || e instanceof ShittyDatabaseException
+                || e instanceof UnknownHostException) {
             message =
                     "Geen connectie met de database mogelijk,\n" +
-                    "check uw internet verbidning of meld dit bij de systeembeheerder";
+                    "check uw internet verbinding of meld dit bij de systeembeheerder";
             feedback = Feedback.ERROR;
         }
 

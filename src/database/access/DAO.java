@@ -28,6 +28,7 @@ abstract class DAO {
                     return true;
                 }
         }
+        e.printStackTrace();
         return false;
     }
 
