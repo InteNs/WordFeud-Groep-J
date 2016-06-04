@@ -23,15 +23,11 @@
 }
 
 .Logout {
-    -fx-background-image: url("../../resources/icons/Power-3-icon.png");
+    -fx-background-image: url("../../resources/icons/Power-icon.png");
 }
 
 .change-pass {
     -fx-background-image: url("../../resources/icons/Lock-3-icon.png");
-}
-
-.error-icon {
-    -fx-graphic: url("../../resources/icons/Close-icon.png");
 }
 
 .error-text {
