@@ -136,14 +136,9 @@ public class Database {
      * @param values to insert into question marks
      * @return the resultset
      */
-    public ResultSet select(String query, Object... values) {
-        try {
-            setStatement(query, values);
-            return statement.executeQuery();
-        } catch (SQLException e) {
-            printError(e);
-            return null;
-        }
+    public ResultSet select(String query, Object... values) throws SQLException {
+        setStatement(query, values);
+        return statement.executeQuery();
     }
 
     /**

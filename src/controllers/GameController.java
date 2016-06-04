@@ -24,8 +24,8 @@ public class GameController extends Controller {
     private ObjectProperty<Role> currentRole;
     private ObjectProperty<Turn> selectedTurn;
 
-    public GameController(ControllerFactory controllerFactory) {
-        super(controllerFactory);
+    public GameController() {
+        super();
         games = FXCollections.observableArrayList();
         selectedGame = new SimpleObjectProperty<>();
         selectedTurn = new SimpleObjectProperty<>();

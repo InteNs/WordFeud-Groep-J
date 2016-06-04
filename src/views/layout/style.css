@@ -18,45 +18,59 @@
     -fx-background-radius: 0;
 }
 
-.custom-toggle:selected {
-    -fx-background-color: lawngreen;
-}
-
 .custom-toggle {
-    -fx-background-color: orangered;
-    -fx-graphic: url("../../resources/icons/refresh.png");
+    -fx-background-image: url("../../resources/icons/refresh-icon.png");
 }
 
 .Logout {
-    -fx-graphic: url("../../resources/icons/LOGOUT2.png");
+    -fx-background-image: url("../../resources/icons/Power-icon.png");
+}
+
+.change-pass {
+    -fx-background-image: url("../../resources/icons/Lock-3-icon.png");
+}
+
+.error-text {
+    -fx-text-fill: red;
+}
+
+.error-box {
+    -fx-background-color: #BDBDBD;
+    -fx-border-color: #3c3c3c;
+    -fx-border-width: 3;
+}
+
+.progress-indicator {
+    -fx-progress-color: black;
+}
+.tool-bar .button {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 40;
+    -fx-background-color: transparent;
+    -fx-background-position: center;
+    -fx-pref-width: 40;
+    -fx-pref-height: 40;
+}
+
+.tool-bar .toggle-button {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 40;
+    -fx-background-color: transparent;
+    -fx-background-position: center;
+    -fx-pref-width: 40;
+    -fx-pref-height: 40;
 }
 
 .close-tab {
-    -fx-graphic: url("../../resources/icons/CLOSE_TAB2.png");
+    -fx-background-image: url("../../resources/icons/Eye-Invisible-icon.png");
+}
+.close-tab:selected {
+    -fx-background-image: url("../../resources/icons/Eye-Visible-icon.png");
 }
 
 .game-label {
     -fx-text-alignment: center;
     -fx-pref-width: 60;
-}
-
-.spinner:disabled {
-    -fx-opacity: 1;
-}
-
-.spinner:disabled .increment-arrow {
-    visibility: hidden;
-}
-.spinner:disabled .decrement-arrow {
-    visibility: hidden;
-}
-
-.spinner .text-field {
-    -fx-alignment: center;
-}
-.spinner:disabled .text-field {
-    -fx-text-fill: #000000;
-    -fx-opacity: 1.0;
 }
 
 .cell-text-field {
@@ -85,4 +99,27 @@
     -fx-background-color: #dddddd;
     -fx-background-radius: 5;
     -fx-padding: 5;
+}
+
+.custom-spinner {
+    -fx-min-width: 100;
+}
+
+.custom-spinner:disabled {
+    -fx-opacity: 1;
+}
+
+.custom-spinner:disabled .increment-arrow {
+    visibility: hidden;
+}
+.custom-spinner:disabled .decrement-arrow {
+    visibility: hidden;
+}
+
+.custom-spinner .text-field {
+    -fx-alignment: center;
+}
+.custom-spinner:disabled .text-field {
+    -fx-text-fill: #000000;
+    -fx-opacity: 1.0;
 }

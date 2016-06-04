@@ -13,14 +13,16 @@ public class CompetitionDAO extends DAO {
 
 
     public ArrayList<Competition> selectCompetitions() {
-        ResultSet rs = database.select(SQL.ALL.COMPETITIONS);
         ArrayList<Competition> competitions = new ArrayList<>();
+        ResultSet records = null;
         try {
-            while (rs.next()) {
-                competitions.add(new Competition(rs.getInt("id"), new User(rs.getString("account_naam_eigenaar")), rs.getString("omschrijving"), rs.getInt("gemiddelde_score")));
+            records = database.select(SQL.ALL.COMPETITIONS);
+            while (records.next()) {
+                competitions.add(new Competition(records.getInt("id"), new User(records.getString("account_naam_eigenaar")), records.getString("omschrijving"), records.getInt("gemiddelde_score")));
             }
-        } catch (Exception e) {
-            printError(e);
+        } catch (SQLException | NullPointerException e) {
+            if (!recordsAreNull(e, records))
+                printError(e);
         }
         return competitions;
     }
@@ -44,16 +46,18 @@ public class CompetitionDAO extends DAO {
 
     public ArrayList<Pair<String, Integer>> getPlayerMap() {
         ArrayList<Pair<String, Integer>> pairs = new ArrayList<>();
-        ResultSet records = database.select(SQL.ALL.PLAYERSCOMPS);
+        ResultSet records = null;
         try {
+            records = database.select(SQL.ALL.PLAYERSCOMPS);
             while (records.next()) {
                 pairs.add(new Pair<>(
                         records.getString("account_naam"),
                         records.getInt("competitie_id")
                 ));
             }
-        } catch (SQLException e) {
-            printError(e);
+        } catch (SQLException | NullPointerException e) {
+            if (!recordsAreNull(e, records))
+                printError(e);
         }
         return pairs;
     }

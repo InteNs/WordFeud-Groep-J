@@ -1,6 +1,7 @@
 package views;
 
 import enumerations.Role;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -177,12 +178,12 @@ public class GameBoardView extends View {
         nodes.stream()
                 .filter(FieldTileNode::isPlaceHolder)
                 .forEach(fieldTileNode -> {
-            if (fields.isEmpty()) return;
-            Field field = fields.get(0);
-            fieldTileNode.setTile(field.getTile());
-            gameController.removeTile(gameController.getSelectedGame(), field);
-            findNodeInGrid(field.getX(), field.getY()).redrawImage();
-        });
+                    if (fields.isEmpty()) return;
+                    Field field = fields.get(0);
+                    fieldTileNode.setTile(field.getTile());
+                    gameController.removeTile(gameController.getSelectedGame(), field);
+                    findNodeInGrid(field.getX(), field.getY()).redrawImage();
+                });
         setCurrentRack(gameController.getSelectedGame(), nodes);
     }
 
@@ -226,12 +227,25 @@ public class GameBoardView extends View {
 
     @Override
     public void constructor() {
+        stackPane.widthProperty().addListener(observable -> sizeBoard());
+        stackPane.heightProperty().addListener(observable -> sizeBoard());
         gameController.selectedTurnProperty().addListener((observable, oldValue, selectedTurn) -> {
             if (selectedTurn != null) {
                 gameController.setBoardState(gameController.getSelectedGame(), selectedTurn);
                 displayGameBoard(gameController.getSelectedGame(), selectedTurn);
                 displayPlayerRack(gameController.getSelectedGame(), selectedTurn);
             }
+        });
+    }
+
+    private void sizeBoard() {
+        Platform.runLater(() -> {
+            int minSize = (int) Math.min(stackPane.getWidth(), stackPane.getHeight()) - 20;
+
+            gameBoardGrid.getChildren().forEach(node -> {
+                ((FieldTileNode) node).setSize(minSize/15);
+                ((FieldTileNode) node).redrawImage();
+            });
         });
     }
 

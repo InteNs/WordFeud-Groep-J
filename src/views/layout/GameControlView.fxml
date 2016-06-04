@@ -5,40 +5,40 @@
 <?import javafx.scene.layout.*?>
 <Tab text="spelbestuur" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
      fx:controller="views.gameControlView">
-    <VBox stylesheets="@style.css" spacing="5.0">
+    <VBox minWidth="300" stylesheets="@style.css" spacing="5.0">
         <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
         </padding>
-        <Spinner fx:id="turnSpinner" prefHeight="50.0" prefWidth="999999.0"/>
+        <Spinner fx:id="turnSpinner" styleClass="custom-spinner" prefHeight="50.0" prefWidth="Infinity"/>
         <HBox fx:id="buttonBox" alignment="CENTER" spacing="5.0" VBox.vgrow="NEVER">
-            <Button fx:id="playButton" prefHeight="50.0" prefWidth="10000" text="Speel" onAction="#playWord"/>
-            <Button fx:id="shuffleButton" prefHeight="50.0" prefWidth="10000" onAction="#shuffle" text="Shuffle"/>
-            <Button fx:id="clearButton" prefHeight="50.0" prefWidth="10000" onAction="#clearBoard" text="Clear"/>
-            <Button fx:id="extraFunctionsButton" prefHeight="50.0" prefWidth="10000" text="Overig">
+            <Button fx:id="playButton" prefHeight="50.0" prefWidth="1000" text="Speel" onAction="#playWord"/>
+            <Button fx:id="shuffleButton" prefHeight="50.0" prefWidth="1000" onAction="#shuffle" text="Shuffle"/>
+            <Button fx:id="clearButton" prefHeight="50.0" prefWidth="1000" onAction="#clearBoard" text="Clear"/>
+            <Button fx:id="extraFunctionsButton" prefHeight="50.0" prefWidth="1000" text="Overig">
                 <contextMenu>
                     <ContextMenu fx:id="contextMenu" anchorLocation="CONTENT_TOP_RIGHT">
                         <items>
-                            <CustomMenuItem hideOnClick="false" text="Unspecified Action">
+                            <CustomMenuItem hideOnClick="true">
                                 <content>
                                     <Button prefHeight="50.0" prefWidth="100.0" text="Jokers" onAction="#showJokers"/>
                                 </content>
                             </CustomMenuItem>
-                            <CustomMenuItem text="Unspecified Action">
+                            <CustomMenuItem hideOnClick="true">
                                 <content>
                                     <Button fx:id="swapButton" prefHeight="50.0" prefWidth="100.0" text="Ruilen" onAction="#swapTiles" />
                                 </content>
                             </CustomMenuItem>
-                            <CustomMenuItem text="Unspecified Action">
+                            <CustomMenuItem hideOnClick="true">
                                 <content>
                                     <Button fx:id="resignButton" prefHeight="50.0" prefWidth="100.0" text="Opgeven" onAction="#resign"/>
                                 </content>
                             </CustomMenuItem>
-                            <CustomMenuItem text="Unspecified Action">
+                            <CustomMenuItem hideOnClick="true">
                                 <content>
                                     <Button fx:id="passButton" prefHeight="50.0" prefWidth="100.0" text="Pass" onAction="#pass"/>
                                 </content>
                             </CustomMenuItem>
-                            <CustomMenuItem text="Unspecified Action">
+                            <CustomMenuItem hideOnClick="true">
                                 <content>
                                     <Button fx:id="potButton" prefHeight="50.0" prefWidth="100.0" text="Pot" onAction="#showPot"/>
                                 </content>
@@ -57,7 +57,7 @@
             <Label fx:id="potLabel" text="Aantal letters in pot:15"/>
         </HBox>
         <StackPane fx:id="turnChat" VBox.vgrow="ALWAYS">
-            <ListView fx:id="turnList" fixedCellSize="25.0"/>
+            <ListView fx:id="turnList"/>
             <VBox fx:id="chatBox" spacing="5">
                 <ListView fx:id="chatList" VBox.vgrow="ALWAYS"/>
                 <HBox spacing="5">

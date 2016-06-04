@@ -35,8 +35,8 @@ public class ResourceFactory {
     private void loadImage(String name, Boolean highRes) {
         try {
             File file = new File(getClass().getResource(name).getFile());
-            if (highRes) imagesHighRes.put(name, new Image(new FileInputStream(file), 80, 80, true, true));
-            if (!highRes) imagesLowRes.put(name, new Image(new FileInputStream(file), 40, 40, true, true));
+            if (highRes) imagesHighRes.put(name, new Image(new FileInputStream(file), 100, 100, true, true));
+            if (!highRes) imagesLowRes.put(name, new Image(new FileInputStream(file), 100, 100, true, true));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

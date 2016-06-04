@@ -16,8 +16,8 @@ public class WordController extends Controller {
     private ObjectProperty<Word> selectedWord;
     private ObservableList<Word> words;
 
-    public WordController(ControllerFactory controllerFactory) {
-        super(controllerFactory);
+    public WordController() {
+        super();
         words = FXCollections.observableArrayList();
         selectedWord = new SimpleObjectProperty<>();
     }

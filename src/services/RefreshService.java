@@ -13,15 +13,9 @@ import java.util.concurrent.TimeUnit;
 public class RefreshService {
 
     private ScheduledExecutorService scheduler;
-    private ControllerFactory controllerFactory;
-    private ArrayList<View> views;
-    private ProgressIndicator loadIndicator;
     private Runnable refreshTask;
 
     public RefreshService(ControllerFactory controllerFactory, ArrayList<View> views, ProgressIndicator loadIndicator) {
-        this.controllerFactory = controllerFactory;
-        this.views = views;
-        this.loadIndicator = loadIndicator;
 
         //Creates the task that scheduler should complete
        refreshTask = () -> {
@@ -33,7 +27,6 @@ public class RefreshService {
                loadIndicator.setVisible(false);
            });
        };
-        startRefresh();
     }
 
     public void stopRefresh(){
