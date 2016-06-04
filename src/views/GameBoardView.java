@@ -1,7 +1,6 @@
 package views;
 
 import enumerations.Role;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -239,14 +238,7 @@ public class GameBoardView extends View {
     }
 
     private void sizeBoard() {
-        Platform.runLater(() -> {
-            int minSize = (int) Math.min(stackPane.getWidth(), stackPane.getHeight()) - 20;
-
-            gameBoardGrid.getChildren().forEach(node -> {
-                ((FieldTileNode) node).setSize(minSize/15);
-                ((FieldTileNode) node).redrawImage();
-            });
-        });
+        
     }
 
     public void showJokers() {
