@@ -17,6 +17,7 @@ public class GameController extends Controller {
     private ArrayList<Game> fetchedGames;
     private ArrayList<Turn> fetchedTurns;
     private ArrayList<Tile> fetchedTiles;
+    private ArrayList<Tile> fetchedPot;
     private ArrayList<Message> fetchedMessages;
 
     private ObservableList<Game> games;
@@ -122,6 +123,7 @@ public class GameController extends Controller {
                 } else setSelectedTurn(turn);
                 game.setBoardStateTo(turn, getSessionController().getCurrentUser());
                 game.setTurnBuilder(previousTurnBuilder);
+                game.getTurnBuilder().setPot(fetchedPot);
             }
         }
         getOutgoingChallenges(getSessionController().getCurrentUser())
@@ -145,6 +147,7 @@ public class GameController extends Controller {
     public void fetch() {
         fetchedGames = gameDAO.selectGames();
         if (getSelectedGame() != null) {
+            fetchedPot = gameDAO.selectPot(getSelectedGame());
             fetchedTiles = gameDAO.selectLettersForPot(getSelectedGame());
             fetchedMessages = gameDAO.selectMessages(getSelectedGame());
             fetchedTurns = gameDAO.selectTurns(getSelectedGame());
