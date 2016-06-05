@@ -176,6 +176,7 @@ public class GameListView extends View {
             gameController.setSelectedGame(game);
             gameController.loadGame(gameController.getSelectedGame(),gameController.getCurrentRole());
             gameController.setSelectedTurn(game.getLastTurn());
+            parent.reload();
             parent.setContent(parent.gameBoardView);
             parent.setTab(parent.gameControlView);
         }
