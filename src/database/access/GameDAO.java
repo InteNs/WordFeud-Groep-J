@@ -263,4 +263,21 @@ public class GameDAO extends DAO {
     public void updateReactionType(ReactionType reactionType, Game selectedGame) {
         database.update(SQL.UPDATE.UPDATEREACTIONTYPE, ReactionType.format(reactionType), selectedGame.getId());
     }
+
+    public ArrayList<Tile> selectPot(Game selectedGame) {
+        ArrayList<Tile> returnList = new ArrayList<>();
+        ResultSet result = null;
+        try {
+            result = database.select(SQL.SELECT.POT,selectedGame.getId());
+            while (result.next()){
+                returnList.add(new Tile(result.getInt("letter_id"),
+                        result.getInt("waarde"),
+                        result.getString("karakter").charAt(0)));
+            }
+        } catch (SQLException | NullPointerException e) {
+            if (!recordsAreNull(e, result))
+                printError(e);
+        }
+        return returnList;
+    }
 }

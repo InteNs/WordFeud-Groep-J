@@ -6,6 +6,8 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -59,7 +61,6 @@ public class gameControlView extends View {
         chatList.setCellFactory(param -> new ChatCell(param, session.getCurrentUser()));
         chatList.addEventFilter(MouseEvent.MOUSE_PRESSED, Event::consume);
 
-
         turnSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
         turnList.getSelectionModel().selectedItemProperty()
                 .addListener((o, oldValue, newValue) -> {
@@ -68,7 +69,7 @@ public class gameControlView extends View {
                 });
 
         extraFunctionsButton.setOnMouseClicked(event ->
-                        contextMenu.show(extraFunctionsButton, event.getScreenX(), event.getScreenY())
+                contextMenu.show(extraFunctionsButton, event.getScreenX(), event.getScreenY())
         );
 
         turnSpinner.valueProperty().addListener((o, oldValue, newValue) -> {
@@ -114,14 +115,14 @@ public class gameControlView extends View {
         if (newGame.getPot().size() < 7) {
             swapButton.setDisable(true);
         }
-        if(gameController.getSelectedGame().getPot().size() < 1){
+        if (gameController.getSelectedGame().getPot().size() < 1) {
             potButton.setDisable(true);
             System.out.println(gameController.getSelectedGame().getPot());
         }
-        if(gameController.getSelectedGame().getPot().size() > 0){
+        if (gameController.getSelectedGame().getPot().size() > 0) {
             potButton.setDisable(false);
         }
-        
+
     }
 
     private void selectTurn(Turn newValue) {
@@ -170,16 +171,6 @@ public class gameControlView extends View {
         }
     }
 
-    @FXML
-    public void showPot() {
-        ObservableList<Tile> tiles = gameController.showPot(gameController.getSelectedGame());
-        if(gameController.showPot(gameController.getSelectedGame()).size() > 0){
-            if (tiles != null) {
-                new potView(tiles, resourceFactory, parent);
-            }
-        }
-    }
-
     private void disableGameControls(boolean disable, boolean includeRackControls) {
         playButton.setDisable(disable);
         passButton.setDisable(disable);
@@ -201,64 +192,83 @@ public class gameControlView extends View {
     }
 
     @FXML
-    public void sendMessage() {
+    public void sendMessageAction(Event event) {
+        if (event instanceof KeyEvent) {
+            if (((KeyEvent) event).getCode() != KeyCode.ENTER) return;
+            event.consume();
+        }
         if (!chatTextArea.getText().trim().isEmpty()) {
-            gameController.sendMessage(gameController.getSelectedGame(), session.getCurrentUser(), chatTextArea.getText());
+            gameController.sendMessage(
+                    gameController.getSelectedGame(),
+                    session.getCurrentUser(),
+                    chatTextArea.getText());
             chatTextArea.clear();
         }
     }
 
+    @FXML
     public void showJokers() {
         parent.getGameBoardView().showJokers();
     }
 
+    @FXML
     public void shuffle() {
         parent.getGameBoardView().shuffleRack();
     }
 
+    @FXML
     public void clearBoard() {
         parent.getGameBoardView().clearBoard();
     }
 
-    public void playWord() {
-        ArrayList<String> words = gameController.playWord(gameController.getSelectedGame());
-
-        if (words != null && words.isEmpty()) {
-            gameController.loadGame(gameController.getSelectedGame(), gameController.getCurrentRole());
-            selectTurn(gameController.getSelectedGame().getLastTurn());
-        } else {
-            showSubmitWord(words);
-            clearBoard();
+    @FXML
+    public void showPot() {
+        ObservableList<Tile> tiles = gameController.showPot(gameController.getSelectedGame());
+        if (gameController.showPot(gameController.getSelectedGame()).size() > 0) {
+            if (tiles != null) {
+                new potView(tiles, resourceFactory, parent);
+            }
         }
     }
 
-    public void showSubmitWord(ArrayList<String> words) {
-        SubmitWordView submitWordView = new SubmitWordView(words, gameController.getSelectedGame().getLanguage(), session.getCurrentUser());
-        wordController.submitWords(submitWordView.getWordList());
+    @FXML
+    public void playWord() {
+        ArrayList<String> words = gameController.playWord(gameController.getSelectedGame());
+        if (words == null) return;
+        if (words.isEmpty())
+            parent.reload();
+        else {
+            SubmitWordView submitWordView = new SubmitWordView(
+                    words,
+                    gameController.getSelectedGame().getLanguage(),
+                    session.getCurrentUser()
+            );
+            wordController.submitWords(submitWordView.getWordList());
+        }
     }
 
     @FXML
     public void pass() {
         clearBoard();
         gameController.passTurn(gameController.getSelectedGame());
-        selectTurn(gameController.getSelectedGame().getLastTurn());
+        parent.reload();
     }
 
+    @FXML
     public void swapTiles() {
-         clearBoard();
-         ObservableList<Tile> currentRack = gameController.getSelectedGame().getTurnBuilder().getCurrentRack();
-         SwapTileView swapTileView = new SwapTileView(parent, resourceFactory);
-         ObservableList<FieldTileNode> selectedTiles = swapTileView.swapTiles(currentRack);
-         if(selectedTiles != null){
+        clearBoard();
+        ObservableList<FieldTileNode> selectedTiles = new SwapTileView(parent, resourceFactory)
+                .swapTiles(gameController.getSelectedGame().getTurnBuilder().getCurrentRack());
+        if (selectedTiles != null) {
             gameController.swapTiles(selectedTiles, gameController.getSelectedGame());
-            selectTurn(gameController.getSelectedGame().getLastTurn());
         }
+        parent.reload();
     }
 
-
+    @FXML
     public void resign() {
         clearBoard();
         gameController.resign(gameController.getSelectedGame());
-        selectTurn(gameController.getSelectedGame().getLastTurn());
+        parent.reload();
     }
 }

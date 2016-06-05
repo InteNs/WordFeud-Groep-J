@@ -390,7 +390,7 @@ public class TurnBuilder {
 
     public void fillCurrentRack(ObservableList<Tile> playingPot) {
         while (currentRack.size() < 7 && !playingPot.isEmpty())
-            currentRack.add(playingPot.get(new Random().nextInt(playingPot.size())));
+            currentRack.add(playingPot.remove(new Random().nextInt(playingPot.size())));
     }
 
     public void setGameBoard(Field[][] gameBoard) {

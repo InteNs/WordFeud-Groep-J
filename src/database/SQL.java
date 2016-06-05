@@ -11,6 +11,7 @@ public class SQL {
         public static final String USERWITHNAME = "SELECT\n  a.naam,\n  a.wachtwoord,\n  r.rol_type\nFROM account a\n  LEFT JOIN accountrol r ON a.naam = accountrol.account_naam\nWHERE a.naam = ?";
         public static final String COMPFOROWNER = "SELECT id FROM competitie WHERE account_naam_eigenaar = ?";
         public static final String LETTERSFORNEWGAME = "SELECT lettertype.karakter, lettertype.aantal FROM lettertype WHERE letterset_code = ?";
+        public static final String POT = "SELECT pot.letter_id, lettertype.waarde, pot.karakter FROM pot LEFT JOIN lettertype ON pot.karakter = lettertype.karakter WHERE spel_id=? GROUP BY letter_id";
     }
 
     public class ALL {

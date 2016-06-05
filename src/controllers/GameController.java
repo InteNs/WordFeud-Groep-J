@@ -17,6 +17,7 @@ public class GameController extends Controller {
     private ArrayList<Game> fetchedGames;
     private ArrayList<Turn> fetchedTurns;
     private ArrayList<Tile> fetchedTiles;
+    private ArrayList<Tile> fetchedPot;
     private ArrayList<Message> fetchedMessages;
 
     private ObservableList<Game> games;
@@ -106,24 +107,23 @@ public class GameController extends Controller {
     @Override
     public void refresh() {
         if (games.contains(getSelectedGame())) {
-            Game game = games.get(games.indexOf(getSelectedGame()));
-            TurnBuilder previousTurnBuilder = getSelectedGame().getTurnBuilder();
-            Field[][] previousBoard = getSelectedGame().getEmptyGameBoard();
-            game.setBoard(previousBoard);
-            loadGame(game, getCurrentRole());
+            Game previousGame = getSelectedGame();
+            if (previousGame.getTurns().size() < fetchedTurns.size()) {
+                Game game = games.get(games.indexOf(previousGame));
+                loadGame(game, getCurrentRole());
 
-            setSelectedGame(game);
+                setSelectedGame(game);
 
-            if (game.getTurns().contains(getSelectedTurn())) {
-                Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
-                setSelectedTurn(turn);
-                if (getCurrentRole() == Role.PLAYER) {
-                    setSelectedTurn(game.getLastTurn());
-                } else setSelectedTurn(turn);
-                game.setBoardStateTo(turn, getSessionController().getCurrentUser());
-                game.setTurnBuilder(previousTurnBuilder);
+                if (game.getTurns().contains(getSelectedTurn())) {
+                    Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
+                    if (getCurrentRole() == Role.PLAYER) {
+                        setSelectedTurn(game.getLastTurn());
+                    } else
+                        setSelectedTurn(turn);
+                }
             }
         }
+
         getOutgoingChallenges(getSessionController().getCurrentUser())
                 .stream()
                 .filter(game -> game.getReactionType() == ReactionType.ACCEPTED
@@ -145,6 +145,7 @@ public class GameController extends Controller {
     public void fetch() {
         fetchedGames = gameDAO.selectGames();
         if (getSelectedGame() != null) {
+            fetchedPot = gameDAO.selectPot(getSelectedGame());
             fetchedTiles = gameDAO.selectLettersForPot(getSelectedGame());
             fetchedMessages = gameDAO.selectMessages(getSelectedGame());
             fetchedTurns = gameDAO.selectTurns(getSelectedGame());

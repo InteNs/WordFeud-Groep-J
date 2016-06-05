@@ -1,6 +1,7 @@
 package views;
 
 import controllers.ControllerFactory;
+import database.Database;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -120,9 +121,13 @@ public class MainView extends View implements Initializable {
 
     }
 
-    @FXML
+    @Override
     public void refresh() {
 
+    }
+
+    public void reload() {
+        doThread();
     }
 
     @Override
@@ -142,6 +147,8 @@ public class MainView extends View implements Initializable {
     @FXML
     public void logOut() {
         refreshService.stopRefresh();
+        ControllerFactory.destroyInstance();
+        Database.destroyInstance();
         applicationLoader.loadApp();
     }
 
@@ -232,7 +239,6 @@ public class MainView extends View implements Initializable {
         }
 
     }
-
     private void spin(boolean spin) {
         if (spin) rotationAnimation.play();
         else rotationAnimation.pause();
