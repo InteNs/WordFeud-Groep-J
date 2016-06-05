@@ -107,10 +107,10 @@ public class GameController extends Controller {
     @Override
     public void refresh() {
         if (games.contains(getSelectedGame())) {
-            Game game = games.get(games.indexOf(getSelectedGame()));
-            TurnBuilder previousTurnBuilder = getSelectedGame().getTurnBuilder();
-            Field[][] previousBoard = getSelectedGame().getEmptyGameBoard();
-            game.setBoard(previousBoard);
+            Game previousGame = getSelectedGame();
+            Game game = games.get(games.indexOf(previousGame));
+            game.setBoard(previousGame.getEmptyGameBoard());
+
             loadGame(game, getCurrentRole());
 
             setSelectedGame(game);
@@ -120,10 +120,13 @@ public class GameController extends Controller {
                 setSelectedTurn(turn);
                 if (getCurrentRole() == Role.PLAYER) {
                     setSelectedTurn(game.getLastTurn());
-                } else setSelectedTurn(turn);
+                } else
+                    setSelectedTurn(turn);
+
                 game.setBoardStateTo(turn, getSessionController().getCurrentUser());
-                game.setTurnBuilder(previousTurnBuilder);
+                game.setTurnBuilder(previousGame.getTurnBuilder());
                 game.getTurnBuilder().setPot(fetchedPot);
+                game.getTurnBuilder().setGameBoard(previousGame.getTurnBuilder().getGameBoard());
             }
         }
         getOutgoingChallenges(getSessionController().getCurrentUser())
