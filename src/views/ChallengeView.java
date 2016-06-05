@@ -39,7 +39,6 @@ public class ChallengeView extends View {
         User requester = session.getCurrentUser();
         User receiver = userController.getSelectedUser();
 
-
         if (!languageBox.getSelectionModel().isEmpty()) {
             int feedback = gameController.challenge(languageBox.getValue(), requester, receiver, comp);
             setFeedback(feedback);
@@ -47,6 +46,7 @@ public class ChallengeView extends View {
             this.setFeedback(4);
         }
     }
+
 
     private void setFeedback(int feedback) {
         challenge.setTextFill(Color.RED);

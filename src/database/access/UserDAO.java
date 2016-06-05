@@ -85,7 +85,7 @@ public class UserDAO extends DAO {
     public void setAllStats(List<User> users) {
         ResultSet records = null;
         try {
-            records = database.select(SQL.ALL.WINSLOSES);
+            records = database.select(SQL.ALL.STATS);
 
             while (records.next()) {
                 for (User user : users) {
