@@ -2,22 +2,27 @@ package views.components;
 
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
 
-public class ScoreOverlay {
+public class ScoreOverlay extends AnchorPane {
 
 
-    public StackPane showScoreOverlay(int score) {
+    public ScoreOverlay(int score) {
         Text scoreToDisplay = createText(String.valueOf(score));
         Circle scoreBubble = encircle(scoreToDisplay);
 
+        this.setFocusTraversable(true);
+        this.setPickOnBounds(false);
         StackPane layout = new StackPane();
+        layout.setFocusTraversable(true);
+        layout.setPickOnBounds(false);
         layout.getChildren().addAll(scoreBubble,scoreToDisplay);
-        return layout;
+        this.getChildren().add(layout);
     }
 
     private Text createText(String string) {

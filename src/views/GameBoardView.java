@@ -12,10 +12,7 @@ import javafx.scene.effect.SepiaTone;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import models.Field;
 import models.Game;
 import models.Tile;
@@ -76,7 +73,6 @@ public class GameBoardView extends View {
                         }
                         event.consume();
                         fieldNode.redrawImage();
-                        stackPane.getChildren().addAll(scoreOverlay.showScoreOverlay(gameController.getSelectedGame().getTurnBuilder().getScore()));
                     });
 
                     fieldNode.setOnDragDetected(event -> {
@@ -229,6 +225,7 @@ public class GameBoardView extends View {
 
     @Override
     public void constructor() {
+
         gameController.selectedTurnProperty().addListener((observable, oldValue, selectedTurn) -> {
             if (selectedTurn != null) {
                 showTurn(gameController.getSelectedGame(), selectedTurn);
@@ -239,9 +236,20 @@ public class GameBoardView extends View {
                 showTurn(gameController.getSelectedGame(), gameController.getSelectedTurn());
             }
         });
+        gameController.selectedGameProperty().addListener((observable, oldValue, newValue) -> {
+           if (newValue != null){
+               newValue.getTurnBuilder().getFieldsChanged().addListener((ListChangeListener<? super Field>) observable1 -> {
+                   if (newValue.getTurnBuilder().getFieldsChanged().isEmpty() || newValue.getTurnBuilder().getScore() == 0){
+                       stackPane.getChildren().remove(scoreOverlay);
+                   } else {
+                       stackPane.getChildren().add(new ScoreOverlay(newValue.getTurnBuilder().getScore()));
+                   }
+               });
+           }
+        });
         stackPane.widthProperty().addListener(e -> sizeBoard());
         stackPane.heightProperty().addListener(e -> sizeBoard());
-        scoreOverlay = new ScoreOverlay();
+
     }
 
     private void showTurn(Game game, Turn turn) {
