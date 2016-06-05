@@ -226,19 +226,32 @@ public class GameBoardView extends View {
 
     @Override
     public void constructor() {
-        stackPane.widthProperty().addListener(observable -> sizeBoard());
-        stackPane.heightProperty().addListener(observable -> sizeBoard());
         gameController.selectedTurnProperty().addListener((observable, oldValue, selectedTurn) -> {
             if (selectedTurn != null) {
-                gameController.setBoardState(gameController.getSelectedGame(), selectedTurn);
-                displayGameBoard(gameController.getSelectedGame(), selectedTurn);
-                displayPlayerRack(gameController.getSelectedGame(), selectedTurn);
+                showTurn(gameController.getSelectedGame(), selectedTurn);
             }
         });
+        gameController.currentRoleProperty().addListener((observable, oldValue, newValue) -> {
+            if (gameController.getSelectedGame() != null && gameController.getSelectedTurn() != null) {
+                showTurn(gameController.getSelectedGame(), gameController.getSelectedTurn());
+            }
+        });
+        stackPane.widthProperty().addListener(e -> sizeBoard());
+        stackPane.heightProperty().addListener(e -> sizeBoard());
+    }
+
+    private void showTurn(Game game, Turn turn) {
+        gameController.setBoardState(game, turn);
+        displayGameBoard(game, turn);
+        displayPlayerRack(game, turn);
     }
 
     private void sizeBoard() {
-        
+        double base = 1.0;
+        double norm = 600;
+        double min = Math.min(stackPane.getWidth(), stackPane.getHeight());
+        gameBoardGrid.setScaleX(base * min/norm);
+        gameBoardGrid.setScaleY(base * min/norm);
     }
 
     public void showJokers() {
