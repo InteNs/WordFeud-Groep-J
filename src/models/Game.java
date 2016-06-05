@@ -2,6 +2,7 @@ package models;
 
 import enumerations.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.sql.Timestamp;
@@ -40,10 +41,10 @@ public class Game {
         this.turns = FXCollections.observableArrayList();
         this.allTiles = FXCollections.observableArrayList();
         reactionType = reaktie_type;
-    }
 
-    public int getLastTurnNumber() {
-        return lastTurnNumber;
+        turns.addListener((ListChangeListener<? super Turn>) observable ->
+            this.lastTurnNumber = getLastTurn().getId()
+        );
     }
 
     public Role getGameMode() {
@@ -283,6 +284,7 @@ public class Game {
         if (id != game.id) return false;
         if (competitionId != game.competitionId) return false;
         if (gameState != game.gameState) return false;
+        if (lastTurnNumber != game.lastTurnNumber) return false;
         return reactionType == game.reactionType;
     }
 

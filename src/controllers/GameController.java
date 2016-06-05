@@ -116,6 +116,7 @@ public class GameController extends Controller {
                 setSelectedTurn(game.getLastTurn());
             }
             getSelectedGame().getTurnBuilder().setPot(fetchedPot);
+            getSelectedGame().setMessages(fetchedMessages);
         }
         getOutgoingChallenges(getSessionController().getCurrentUser())
                 .stream()
