@@ -222,7 +222,8 @@ public class GameController extends Controller {
     private void buildEndTurns(Game selectedGame) {
         for (Turn turn : selectedGame.getTurnBuilder().buildEndTurns(
                 selectedGame.getLastTurn(),
-                selectedGame.getTurns().get(selectedGame.getTurns().size() - 2))) {
+                selectedGame.getTurns().get(selectedGame.getTurns().size() - 2),
+                selectedGame)) {
             gameDAO.insertTurn(selectedGame, turn);
             selectedGame.addTurn(turn);
         }

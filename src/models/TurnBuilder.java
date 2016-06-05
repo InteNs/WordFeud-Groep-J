@@ -46,7 +46,7 @@ public class TurnBuilder {
         return returnList;
     }
 
-    public ArrayList<Turn> buildEndTurns(Turn lastTurn, Turn secondToLastTurn) {
+    public ArrayList<Turn> buildEndTurns(Turn lastTurn, Turn secondToLastTurn, Game selectedGame) {
         int subtractFromLastTurn = 0;
         int subtractFromSecondToLastTurn = 0;
 
@@ -62,13 +62,19 @@ public class TurnBuilder {
         if (secondToLastTurn.getRack().isEmpty())
             subtractFromSecondToLastTurn += subtractFromLastTurn;
 
-        if (subtractFromLastTurn < 0){
-            subtractFromLastTurn = 0;
+        int nominalChallenger = selectedGame.getScore(lastTurn.getUser(),lastTurn);
+        int nominalOpponent= selectedGame.getScore(secondToLastTurn.getUser(),lastTurn);
+
+        if ((nominalChallenger - subtractFromLastTurn) < 0){
+            int difference = subtractFromLastTurn - nominalChallenger;
+            subtractFromLastTurn -= difference;
         }
 
-        if (subtractFromSecondToLastTurn < 0){
-            subtractFromSecondToLastTurn = 0;
+        if ((nominalOpponent - subtractFromSecondToLastTurn) < 0){
+            int difference = subtractFromSecondToLastTurn - nominalOpponent;
+            subtractFromSecondToLastTurn -= difference;
         }
+
         Turn firstEndTurn = new Turn(lastTurn.getId() + 1,
                 subtractFromSecondToLastTurn, secondToLastTurn.getUser(), TurnType.END);
         Turn secondEndTurn = new Turn(lastTurn.getId() + 2,
