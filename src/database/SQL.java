@@ -19,7 +19,8 @@ public class SQL {
         public static final String GAMES = "SELECT spel.*, MAX(beurt.id) AS last_turn\n" + "FROM spel\nLEFT JOIN beurt ON spel.id = beurt.spel_id\nGROUP BY spel.id";
         public static final String COMPETITIONS = "SELECT C.id, C.omschrijving, C.account_naam_eigenaar, AVG(R.gemiddelde_score) AS gemiddelde_score FROM competitie AS C LEFT JOIN rank_avg AS R ON C.id = R.competitie_id GROUP BY C.id;";
         public static final String PLAYERSCOMPS = "SELECT * FROM deelnemer";
-        public static final String WINSLOSES = "SELECT w.account_naam, wins,lost FROM rank_nr_wins w JOIN rank_nr_lost l ON w.account_naam = l.account_naam";
+      //  public static final String WINSLOSES = "SELECT * FROM rank_nr_wins w JOIN rank_nr_lost l ON w.account_naam = l.account_naam";
+        public static final String WINSLOSES = "SELECT * FROM competitiestand";
         public static final String WORDS = "SELECT * FROM woordenboek WHERE account_naam != 'bookowner'";
     }
 
