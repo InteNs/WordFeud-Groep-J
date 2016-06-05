@@ -170,10 +170,10 @@ public class Game {
             for (Tile tile : turn.getPlacedTiles()) {
                 gameboard[tile.getY()][tile.getX()].setTile(tile);
                 changed.add(gameboard[tile.getY()][tile.getX()]);
-                pot.remove(tile);
+                //pot.remove(tile);
             }
             //remove rack from pot and re-add swapped tiles
-            pot.removeAll(turn.getRack());
+            //pot.removeAll(turn.getRack());
 //            if (turn.getType() == TurnType.SWAP) {
 //                ArrayList<Tile> difference = new ArrayList<>(turns.get(turns.indexOf(turn) - 2).getRack());
 //                difference.removeAll(turn.getRack());
@@ -191,7 +191,7 @@ public class Game {
                     rack = turn.getRack();
                 }
                 turnBuilder = new TurnBuilder(gameboard, FXCollections.observableArrayList(rack));
-                turnBuilder.setPot(pot);
+                //turnBuilder.setPot(pot);
                 break;
             }
 
