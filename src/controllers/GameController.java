@@ -86,11 +86,10 @@ public class GameController extends Controller {
     public ObservableList<Game> getIncomingChallenges(User opponent) {
         return games.filtered(game ->
                 game.getGameState() == GameState.REQUEST
-                        && game.getOpponent().equals(opponent));
+                        && game.getOpponent().equals(opponent) && game.getReactionType() == ReactionType.UNKNOWN);
     }
 
     public void loadGame(Game game, Role gameMode) {
-
         if (game == null) return;
         if (!Objects.deepEquals(game.getTurns(), fetchedTurns)) fetch();
 
@@ -118,7 +117,6 @@ public class GameController extends Controller {
             }
             getSelectedGame().getTurnBuilder().setPot(fetchedPot);
         }
-
         getOutgoingChallenges(getSessionController().getCurrentUser())
                 .stream()
                 .filter(game -> game.getReactionType() == ReactionType.ACCEPTED
