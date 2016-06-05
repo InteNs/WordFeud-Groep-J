@@ -112,7 +112,6 @@ public class GameController extends Controller {
             if (previousGame.getTurns().size() != fetchedTurns.size()) {
                 Game game = games.get(games.indexOf(previousGame));
                 loadGame(game, getCurrentRole());
-                game.getTurnBuilder().setPot(fetchedPot);
                 checkForEndGame(game);
                 setSelectedGame(game);
 
@@ -124,6 +123,7 @@ public class GameController extends Controller {
                         setSelectedTurn(turn);
                 }
             }
+            getSelectedGame().getTurnBuilder().setPot(fetchedPot);
         }
 
         getOutgoingChallenges(getSessionController().getCurrentUser())
