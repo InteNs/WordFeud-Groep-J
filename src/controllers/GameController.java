@@ -114,14 +114,7 @@ public class GameController extends Controller {
                 loadGame(game, getCurrentRole());
                 checkForEndGame(game);
                 setSelectedGame(game);
-
-                if (game.getTurns().contains(getSelectedTurn())) {
-                    Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
-                    if (getCurrentRole() == Role.PLAYER) {
-                        setSelectedTurn(game.getLastTurn());
-                    } else
-                        setSelectedTurn(turn);
-                }
+                setSelectedTurn(game.getLastTurn());
             }
             getSelectedGame().getTurnBuilder().setPot(fetchedPot);
         }
@@ -202,6 +195,9 @@ public class GameController extends Controller {
     }
 
     private void checkForEndGame(Game selectedGame) {
+        if (!selectedGame.getLastTurn().getUser().equals(getSessionController().getCurrentUser()))
+            return;
+
         switch (selectedGame.getLastTurn().getType()) {
             case PASS:
                 if (isThirdPass(selectedGame)) {

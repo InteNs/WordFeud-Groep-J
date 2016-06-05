@@ -199,6 +199,7 @@ public class Game {
     }
 
     public ObservableList<Tile> getPot() {
+        if (turnBuilder == null) return null;
         return turnBuilder.getPot();
     }
 

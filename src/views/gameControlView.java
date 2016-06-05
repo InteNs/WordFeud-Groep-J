@@ -122,13 +122,10 @@ public class gameControlView extends View {
         if (gameController.getSelectedGame().getPot().size() > 0) {
             potButton.setDisable(false);
         }
-
     }
 
     private void selectTurn(Turn newValue) {
-        if (newValue == null) return;
         gameController.setSelectedTurn(newValue);
-        setPotLabel(gameController.getSelectedGame());
         turnSpinner.getValueFactory().setValue(newValue);
         turnList.getSelectionModel().select(newValue);
         Game game = gameController.getSelectedGame();
