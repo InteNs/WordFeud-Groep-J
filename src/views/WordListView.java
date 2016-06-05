@@ -29,7 +29,6 @@ public class WordListView extends View implements Observer {
 
     public void refresh() {
         showComponents();
-        filter();
     }
 
     @Override

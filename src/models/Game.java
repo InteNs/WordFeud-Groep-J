@@ -19,6 +19,8 @@ public class Game {
     private GameState gameState;
     private Role gameMode;
     private User opponent;
+    private int opponentScore;
+    private int challengerScore;
     private User challenger;
     private Language language;
     private BoardType boardType;
@@ -45,6 +47,22 @@ public class Game {
         turns.addListener((ListChangeListener<? super Turn>) observable ->
             this.lastTurnNumber = getLastTurn().getId()
         );
+    }
+
+    public void setOpponentScore(int score) {
+        opponentScore = score;
+    }
+
+    public void setChallengerScore(int score) {
+        challengerScore = score;
+    }
+
+    public int getOpponentScore() {
+        return opponentScore;
+    }
+
+    public int getChallengerScore() {
+        return challengerScore;
     }
 
     public Role getGameMode() {
@@ -162,27 +180,23 @@ public class Game {
      * @param turnToDisplay the last turn to be added to the board
      */
     public void setBoardStateTo(Turn turnToDisplay, User watcher) {
-        Field[][] gameboard = cloneGameBoard(emptyGameBoard);
-        ArrayList<Tile> pot = new ArrayList<>(allTiles);
+        Field[][] gameBoard = cloneGameBoard(emptyGameBoard);
         for (Turn turn : turns) {
             // save fields for building turn word
             ArrayList<Field> changed = new ArrayList<>();
-            //place tile + remove placed tile from pot
+            //place tile
             for (Tile tile : turn.getPlacedTiles()) {
-                gameboard[tile.getY()][tile.getX()].setTile(tile);
-                changed.add(gameboard[tile.getY()][tile.getX()]);
-                //pot.remove(tile);
+                gameBoard[tile.getY()][tile.getX()].setTile(tile);
+                changed.add(gameBoard[tile.getY()][tile.getX()]);
             }
-            //remove rack from pot and re-add swapped tiles
-            //pot.removeAll(turn.getRack());
-//            if (turn.getType() == TurnType.SWAP) {
-//                ArrayList<Tile> difference = new ArrayList<>(turns.get(turns.indexOf(turn) - 2).getRack());
-//                difference.removeAll(turn.getRack());
-//                turn.setAmountSwapped(difference.size());
-//                pot.addAll(difference);
-//            }
+            //save amount of tiles swapped
+            if (turn.getType() == TurnType.SWAP) {
+                ArrayList<Tile> difference = new ArrayList<>(turns.get(turns.indexOf(turn) - 2).getRack());
+                difference.removeAll(turn.getRack());
+                turn.setAmountSwapped(difference.size());
+            }
             //set turn word
-            turn.setWord(new TurnBuilder().getTurnWord(gameboard, FXCollections.observableArrayList(changed)));
+            turn.setWord(new TurnBuilder().getTurnWord(gameBoard, FXCollections.observableArrayList(changed)));
 
             if (turn.equals(turnToDisplay)) {
                 ArrayList<Tile> rack = new ArrayList<>();
@@ -191,7 +205,7 @@ public class Game {
                 } else if (!watcher.equals(turn.getUser()) && turn.getId() != 1) {
                     rack = turns.get(turns.indexOf(turn) - 1).getRack();
                 }
-                turnBuilder = new TurnBuilder(gameboard, FXCollections.observableArrayList(rack));
+                turnBuilder = new TurnBuilder(gameBoard, FXCollections.observableArrayList(rack));
                 //turnBuilder.setPot(pot);
                 break;
             }

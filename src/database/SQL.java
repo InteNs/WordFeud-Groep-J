@@ -16,8 +16,8 @@ public class SQL {
 
     public class ALL {
         public static final String USERS = "SELECT\n  a.naam,\n  a.wachtwoord,\n  r.rol_type\nFROM account a\n  LEFT JOIN accountrol r on a.naam = r.account_naam";
-        public static final String GAMES = "SELECT spel.*, MAX(beurt.id) AS last_turn\n" + "FROM spel\nLEFT JOIN beurt ON spel.id = beurt.spel_id\nGROUP BY spel.id";
-        public static final String COMPETITIONS = "SELECT C.id, C.omschrijving, C.account_naam_eigenaar, AVG(R.gemiddelde_score) AS gemiddelde_score FROM competitie AS C LEFT JOIN rank_avg AS R ON C.id = R.competitie_id GROUP BY C.id;";
+        public static final String GAMES = "SELECT spel.*, MAX(beurt.id) AS last_turn, score.totaalscore, score.account_naam\nFROM spel\nLEFT JOIN beurt ON spel.id = beurt.spel_id\n  LEFT JOIN score ON score.spel_id = spel.id\nGROUP BY score.account_naam, spel.id\nORDER BY id";
+        public static final String COMPETITIONS = "SELECT\n  C.id,\n  C.omschrijving,\n  C.account_naam_eigenaar,\n  AVG(R.gemiddelde_score) AS gemiddelde_score\nFROM competitie AS C LEFT JOIN rank_avg AS R ON C.id = R.competitie_id\nGROUP BY C.id;";
         public static final String PLAYERSCOMPS = "SELECT * FROM deelnemer";
         public static final String WINSLOSES = "SELECT w.account_naam, wins,lost FROM rank_nr_wins w JOIN rank_nr_lost l ON w.account_naam = l.account_naam";
         public static final String WORDS = "SELECT * FROM woordenboek WHERE account_naam != 'bookowner'";

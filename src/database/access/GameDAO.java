@@ -36,7 +36,7 @@ public class GameDAO extends DAO {
         try {
             records = database.select(SQL.ALL.GAMES);
             while (records.next()) {
-                games.add(new Game(
+                Game game = new Game(
                         records.getInt("id"),
                         records.getInt("last_turn"),
                         records.getInt("competitie_id"),
@@ -45,7 +45,18 @@ public class GameDAO extends DAO {
                         GameState.parse(records.getString("toestand_type")),
                         BoardType.parse(records.getString("bord_naam")),
                         Language.parse(records.getString("letterset_naam")),
-                        ReactionType.parse(records.getString("reaktie_type"))));
+                        ReactionType.parse(records.getString("reaktie_type"))
+                );
+                if (games.contains(game))
+                    game = games.get(games.indexOf(game));
+                else
+                    games.add(game);
+
+                if (game.getChallenger().getName().equals(records.getString("account_naam"))) {
+                    game.setChallengerScore(records.getInt("totaalscore"));
+                } else if (game.getOpponent().getName().equals(records.getString("account_naam"))) {
+                    game.setOpponentScore(records.getInt("totaalscore"));
+                }
             }
         } catch (SQLException | NullPointerException e) {
             if (!recordsAreNull(e, records))
