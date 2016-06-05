@@ -108,27 +108,22 @@ public class GameController extends Controller {
     public void refresh() {
         if (games.contains(getSelectedGame())) {
             Game previousGame = getSelectedGame();
-            Game game = games.get(games.indexOf(previousGame));
-            game.setBoard(previousGame.getEmptyGameBoard());
+            if (previousGame.getTurns().size() < fetchedTurns.size()) {
+                Game game = games.get(games.indexOf(previousGame));
+                loadGame(game, getCurrentRole());
 
-            loadGame(game, getCurrentRole());
+                setSelectedGame(game);
 
-            setSelectedGame(game);
-
-            if (game.getTurns().contains(getSelectedTurn())) {
-                Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
-                setSelectedTurn(turn);
-                if (getCurrentRole() == Role.PLAYER) {
-                    setSelectedTurn(game.getLastTurn());
-                } else
-                    setSelectedTurn(turn);
-
-                game.setBoardStateTo(turn, getSessionController().getCurrentUser());
-                game.setTurnBuilder(previousGame.getTurnBuilder());
-                game.getTurnBuilder().setPot(fetchedPot);
-                game.getTurnBuilder().setGameBoard(previousGame.getTurnBuilder().getGameBoard());
+                if (game.getTurns().contains(getSelectedTurn())) {
+                    Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
+                    if (getCurrentRole() == Role.PLAYER) {
+                        setSelectedTurn(game.getLastTurn());
+                    } else
+                        setSelectedTurn(turn);
+                }
             }
         }
+
         getOutgoingChallenges(getSessionController().getCurrentUser())
                 .stream()
                 .filter(game -> game.getReactionType() == ReactionType.ACCEPTED
