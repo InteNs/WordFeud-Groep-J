@@ -12,6 +12,7 @@ public class SQL {
         public static final String COMPFOROWNER = "SELECT id FROM competitie WHERE account_naam_eigenaar = ?";
         public static final String LETTERSFORNEWGAME = "SELECT lettertype.karakter, lettertype.aantal FROM lettertype WHERE letterset_code = ?";
         public static final String POT = "SELECT pot.letter_id, lettertype.waarde, pot.karakter FROM pot LEFT JOIN lettertype ON pot.karakter = lettertype.karakter WHERE spel_id=? GROUP BY letter_id";
+        public static final String TOPPLAYERS = "SELECT account_naam, aantal_gewonnen_spellen FROM competitiestand WHERE competitie_id = ? ORDER BY aantal_gewonnen_spellen DESC LIMIT 5;";
     }
 
     public class ALL {

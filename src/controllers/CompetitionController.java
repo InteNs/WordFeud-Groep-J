@@ -80,6 +80,10 @@ public class CompetitionController extends Controller {
         return competitions.filtered(competition -> competition.getPlayers().contains(user));
     }
 
+    public ArrayList<Pair<String, Integer>> getTopPlayers(int id){
+        return competitionDAO.getTopPlayers(id);
+    }
+
     @Override
     public void refresh() {
         playerMap.forEach(set ->
