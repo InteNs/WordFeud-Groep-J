@@ -96,7 +96,7 @@ public class gameControlView extends View {
         chatList.setItems(newGame.getMessages());
         if (isNew) chatList.scrollTo(chatList.getItems().size());
         turnSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(newGame.getTurns()));
-        turnList.setItems(newGame.getTurns());
+        turnList.getItems().setAll(newGame.getLastTurn());
         if (newGame.getGameMode() == Role.PLAYER) selectTurn(newGame.getLastTurn());
         else if (newGame.getGameMode() == Role.OBSERVER) {
             if (newGame.getTurns().contains(gameController.getSelectedTurn())) {
