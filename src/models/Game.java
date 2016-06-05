@@ -174,12 +174,12 @@ public class Game {
             }
             //remove rack from pot and re-add swapped tiles
             pot.removeAll(turn.getRack());
-            if (turn.getType() == TurnType.SWAP) {
-                ArrayList<Tile> difference = new ArrayList<>(turns.get(turns.indexOf(turn) - 2).getRack());
-                difference.removeAll(turn.getRack());
-                turn.setAmountSwapped(difference.size());
-                pot.addAll(difference);
-            }
+//            if (turn.getType() == TurnType.SWAP) {
+//                ArrayList<Tile> difference = new ArrayList<>(turns.get(turns.indexOf(turn) - 2).getRack());
+//                difference.removeAll(turn.getRack());
+//                turn.setAmountSwapped(difference.size());
+//                pot.addAll(difference);
+//            }
             //set turn word
             turn.setWord(new TurnBuilder().getTurnWord(gameboard, FXCollections.observableArrayList(changed)));
 

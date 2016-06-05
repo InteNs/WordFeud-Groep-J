@@ -106,12 +106,13 @@ public class GameController extends Controller {
 
     @Override
     public void refresh() {
+
         if (games.contains(getSelectedGame())) {
             Game previousGame = getSelectedGame();
-            if (previousGame.getTurns().size() < fetchedTurns.size()) {
+            if (previousGame.getTurns().size() != fetchedTurns.size()) {
                 Game game = games.get(games.indexOf(previousGame));
                 loadGame(game, getCurrentRole());
-
+                checkForEndGame(game);
                 setSelectedGame(game);
 
                 if (game.getTurns().contains(getSelectedTurn())) {
@@ -252,8 +253,6 @@ public class GameController extends Controller {
                 getSessionController().getCurrentUser(), turnType
         );
         gameDAO.insertTurn(selectedGame, newTurn);
-        selectedGame.addTurn(newTurn);
-        checkForEndGame(selectedGame);
     }
 
     private boolean isThirdPass(Game selectedGame) {
