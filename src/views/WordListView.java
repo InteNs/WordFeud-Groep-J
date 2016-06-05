@@ -35,8 +35,6 @@ public class WordListView extends View implements Observer {
     @FXML
     private Accordion accordion;
 
-    //private int listIndex;
-
     public void refresh() {
         showComponents();
     }
