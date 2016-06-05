@@ -21,6 +21,7 @@ import models.Game;
 import models.Tile;
 import models.Turn;
 import views.components.FieldTileNode;
+import views.components.ScoreOverlay;
 import views.subviews.JokerView;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 public class GameBoardView extends View {
 
     ObservableList<FieldTileNode> nodes;
+    private ScoreOverlay scoreOverlay;
     @FXML
     private VBox root;
     @FXML
@@ -74,6 +76,7 @@ public class GameBoardView extends View {
                         }
                         event.consume();
                         fieldNode.redrawImage();
+                        stackPane.getChildren().addAll(scoreOverlay.showScoreOverlay(gameController.getSelectedGame().getTurnBuilder().getScore()));
                     });
 
                     fieldNode.setOnDragDetected(event -> {
@@ -238,6 +241,7 @@ public class GameBoardView extends View {
         });
         stackPane.widthProperty().addListener(e -> sizeBoard());
         stackPane.heightProperty().addListener(e -> sizeBoard());
+        scoreOverlay = new ScoreOverlay();
     }
 
     private void showTurn(Game game, Turn turn) {
