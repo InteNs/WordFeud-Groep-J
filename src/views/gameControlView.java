@@ -235,12 +235,9 @@ public class gameControlView extends View {
         if (words.isEmpty())
             parent.reload();
         else {
-            SubmitWordView submitWordView = new SubmitWordView(
-                    words,
-                    gameController.getSelectedGame().getLanguage(),
-                    session.getCurrentUser()
-            );
+            SubmitWordView submitWordView = new SubmitWordView(words, gameController.getSelectedGame().getLanguage(), session.getCurrentUser(),parent);
             wordController.submitWords(submitWordView.getWordList());
+            clearBoard();
         }
     }
 
