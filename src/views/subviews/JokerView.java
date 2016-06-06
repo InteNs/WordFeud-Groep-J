@@ -49,8 +49,6 @@ public class JokerView extends View {
 
         TilePane tilePane = new TilePane();
         tilePane.setStyle("-fx-background-color: gray");
-        window.setMinWidth(640);
-        window.setMinHeight(370);
         tilePane.setPrefColumns(7);
         tilePane.setVgap(10);
         tilePane.setHgap(10);
@@ -59,6 +57,7 @@ public class JokerView extends View {
         Label infoLabel = new Label ("Klik hier je keuze aan of toets de letter in op je toetsenbord");
         infoLabel.setFont(Font.font ("Verdana", 20));
         HBox hbox = new HBox();
+        hbox.setPadding(new Insets(0,0,15,0));
         hbox.getChildren().add(infoLabel);
         hbox.setAlignment(Pos.CENTER);
 
@@ -75,7 +74,7 @@ public class JokerView extends View {
         VBox vBox = new VBox(tilePane);
         vBox.setPadding(new Insets(10, 10, 10, 10));
         BorderPane borderpane = new BorderPane();
-        borderpane.setTop(hbox);
+        borderpane.setBottom(hbox);
         borderpane.setCenter(vBox);
         Scene scene = new Scene(borderpane);
         window.setScene(scene);
@@ -86,9 +85,10 @@ public class JokerView extends View {
                 }
             }
         });
-        window.setX(mainView.gameBoardView.getScene().getWindow().getX() + mainView.gameBoardView.getScene().widthProperty().intValue() /2 - window.getMinWidth()/2);
-        window.setY(mainView.gameBoardView.getScene().getWindow().getY() + mainView.gameBoardView.getScene().heightProperty().intValue() /2 - window.getMinHeight()/2);
-
+        window.show();
+        window.setX(mainView.gameBoardView.getScene().getWindow().getX() + mainView.gameBoardView.getScene().widthProperty().intValue() /2 - window.getWidth()/2);
+        window.setY(mainView.gameBoardView.getScene().getWindow().getY() + mainView.gameBoardView.getScene().heightProperty().intValue() /2 - window.getHeight()/2);
+        window.hide();
         window.showAndWait();
         return returnValue;
     }

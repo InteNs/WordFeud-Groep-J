@@ -16,6 +16,7 @@ import models.*;
 import views.components.ChatCell;
 import views.components.FieldTileNode;
 import views.subviews.SubmitWordView;
+import views.subviews.SwapTileView;
 import views.subviews.potView;
 
 import java.util.ArrayList;
