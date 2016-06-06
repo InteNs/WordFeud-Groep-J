@@ -46,28 +46,38 @@ public class TurnBuilder {
         return returnList;
     }
 
-    public ArrayList<Turn> buildEndTurns(Turn lastTurn, Turn secondToLastTurn) {
+    public ArrayList<Turn> buildEndTurns(Turn lastTurn, Turn secondToLastTurn, Game selectedGame) {
         int subtractFromLastTurn = 0;
         int subtractFromSecondToLastTurn = 0;
+        int nominalChallenger = selectedGame.getScore(lastTurn.getUser(),lastTurn);
+        int nominalOpponent= selectedGame.getScore(secondToLastTurn.getUser(),lastTurn);
 
-        for (Tile tile : lastTurn.getRack())
-            subtractFromLastTurn -= tile.getValue();
-
-        for (Tile tile : secondToLastTurn.getRack())
-            subtractFromSecondToLastTurn -= tile.getValue();
-
-        if (lastTurn.getRack().isEmpty())
-            subtractFromLastTurn += subtractFromSecondToLastTurn;
-
-        if (secondToLastTurn.getRack().isEmpty())
-            subtractFromSecondToLastTurn += subtractFromLastTurn;
-
-        if (subtractFromLastTurn < 0){
-            subtractFromLastTurn = 0;
-        }
-
-        if (subtractFromSecondToLastTurn < 0){
+        if (lastTurn.getType() == TurnType.RESIGN){
+            subtractFromLastTurn -= nominalChallenger;
             subtractFromSecondToLastTurn = 0;
+        } else {
+
+            for (Tile tile : lastTurn.getRack())
+                subtractFromLastTurn -= tile.getValue();
+
+            for (Tile tile : secondToLastTurn.getRack())
+                subtractFromSecondToLastTurn -= tile.getValue();
+
+            if (lastTurn.getRack().isEmpty())
+                subtractFromLastTurn += subtractFromSecondToLastTurn;
+
+            if (secondToLastTurn.getRack().isEmpty())
+                subtractFromSecondToLastTurn += subtractFromLastTurn;
+
+            if ((nominalChallenger + subtractFromLastTurn) < 0){
+                int difference = subtractFromLastTurn - nominalChallenger;
+                subtractFromLastTurn -= difference;
+            }
+
+            if ((nominalOpponent + subtractFromSecondToLastTurn) < 0){
+                int difference = subtractFromSecondToLastTurn - nominalOpponent;
+                subtractFromSecondToLastTurn -= difference;
+            }
         }
         Turn firstEndTurn = new Turn(lastTurn.getId() + 1,
                 subtractFromSecondToLastTurn, secondToLastTurn.getUser(), TurnType.END);
@@ -88,6 +98,9 @@ public class TurnBuilder {
     }
 
     public Turn buildTurn(int newTurnId, User user, TurnType turnType) {
+        if (turnType != TurnType.WORD && turnType != TurnType.END){
+            score = 0;
+        }
         return new Turn(newTurnId,
                 getScore(),
                 user,
@@ -106,15 +119,6 @@ public class TurnBuilder {
                 //debug();
             }
         }
-    }
-
-    private void debug() {
-        System.out.println("score: " + score);
-        listOfFieldsWithWords.forEach(fields -> {
-            System.out.print("word: ");
-            fields.stream().map(Field::getTile).forEach(System.out::print);
-            System.out.print("\n");
-        });
     }
 
     public int getScore() {
@@ -268,9 +272,6 @@ public class TurnBuilder {
                 validTurn = false;
         }
 
-        if (this.getCurrentRack() != null)
-            System.out.println(validTurn);
-
         if (validTurn)
             return fixedAxis;
         else
@@ -409,9 +410,6 @@ public class TurnBuilder {
     }
 
     public void setPot(ArrayList<Tile> pot) {
-        currentRack.stream().filter(pot::contains).forEach(tile -> {
-            System.out.println(tile.getCharacter() + "IS STILL IN POT");
-        });
         this.pot = FXCollections.observableArrayList(pot);
     }
 }

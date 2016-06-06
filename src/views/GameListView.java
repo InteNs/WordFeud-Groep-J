@@ -38,6 +38,10 @@ public class GameListView extends View {
         setViewingMode(false, null);
         applyViewingMode(false);
         showCompGames(competitionController.getSelectedCompetition(), false);
+        myGamesList.refresh();
+        allCompGamesList.refresh();
+        allGamesList.refresh();
+        myCompGamesList.refresh();
     }
 
     @Override
@@ -71,7 +75,7 @@ public class GameListView extends View {
         //add action listeners to lists
         myGamesList.setOnMouseClicked(event -> selectGame(myGamesList.getSelectionModel().getSelectedItem()));
         allGamesList.setOnMouseClicked(event -> selectGame(allGamesList.getSelectionModel().getSelectedItem()));
-        compGameLists.setOnMouseClicked(event -> selectGame(myCompGamesList.getSelectionModel().getSelectedItem()));
+        myCompGamesList.setOnMouseClicked(event -> selectGame(myCompGamesList.getSelectionModel().getSelectedItem()));
         allCompGamesList.setOnMouseClicked(event -> selectGame(allCompGamesList.getSelectionModel().getSelectedItem()));
 
         //fill all lists and select default viewing mode
@@ -176,6 +180,7 @@ public class GameListView extends View {
             gameController.setSelectedGame(game);
             gameController.loadGame(gameController.getSelectedGame(),gameController.getCurrentRole());
             gameController.setSelectedTurn(game.getLastTurn());
+            parent.reload();
             parent.setContent(parent.gameBoardView);
             parent.setTab(parent.gameControlView);
         }

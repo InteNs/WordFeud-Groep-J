@@ -16,6 +16,7 @@ import models.*;
 import views.components.ChatCell;
 import views.components.FieldTileNode;
 import views.subviews.SubmitWordView;
+import views.subviews.SwapTileView;
 import views.subviews.potView;
 
 import java.util.ArrayList;
@@ -96,7 +97,7 @@ public class gameControlView extends View {
         chatList.setItems(newGame.getMessages());
         if (isNew) chatList.scrollTo(chatList.getItems().size());
         turnSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(newGame.getTurns()));
-        turnList.setItems(newGame.getTurns());
+        turnList.getItems().setAll(newGame.getTurns());
         if (newGame.getGameMode() == Role.PLAYER) selectTurn(newGame.getLastTurn());
         else if (newGame.getGameMode() == Role.OBSERVER) {
             if (newGame.getTurns().contains(gameController.getSelectedTurn())) {
@@ -117,18 +118,14 @@ public class gameControlView extends View {
         }
         if (gameController.getSelectedGame().getPot().size() < 1) {
             potButton.setDisable(true);
-            System.out.println(gameController.getSelectedGame().getPot());
         }
         if (gameController.getSelectedGame().getPot().size() > 0) {
             potButton.setDisable(false);
         }
-
     }
 
     private void selectTurn(Turn newValue) {
-        if (newValue == null) return;
         gameController.setSelectedTurn(newValue);
-        setPotLabel(gameController.getSelectedGame());
         turnSpinner.getValueFactory().setValue(newValue);
         turnList.getSelectionModel().select(newValue);
         Game game = gameController.getSelectedGame();
