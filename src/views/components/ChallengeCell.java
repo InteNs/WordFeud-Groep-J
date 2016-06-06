@@ -1,5 +1,6 @@
 package views.components;
 
+import controllers.CompetitionController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -15,10 +16,12 @@ public class ChallengeCell extends ListCell<Game> {
 
     private final User currentUser;
     private final EventHandler<ActionEvent> handler;
+    private CompetitionController competitionController;
 
-    public ChallengeCell(User currentUser, EventHandler<ActionEvent> handler) {
+    public ChallengeCell(User currentUser, EventHandler<ActionEvent> handler, CompetitionController competitionController) {
         this.currentUser = currentUser;
         this.handler = handler;
+        this.competitionController = competitionController;
     }
 
     @Override
@@ -27,13 +30,17 @@ public class ChallengeCell extends ListCell<Game> {
         if(empty) setGraphic(null);
         else {
             Label gameLabel = new Label();
-            VBox vBox = new VBox(gameLabel);
+            Label gameInfoLabel = new Label();
+            VBox vBox = new VBox(gameLabel,gameInfoLabel);
             gameLabel.setAlignment(Pos.CENTER);
+            gameInfoLabel.setAlignment(Pos.CENTER);
             if (item.getChallenger().equals(currentUser)) {
-                gameLabel.setText("uitnodiging naar " + item.getOpponent());
+                gameLabel.setText("uitnodiging naar " + item.getOpponent() + " in " + competitionController.getCompetition(item.getCompetitionId()).getName());
+                gameInfoLabel.setText("[" + item.getLanguage().toString() + "] [" + item.getBoardType().toString() + "]");
             }
             else {
-                gameLabel.setText("uitnodiging van " + item.getChallenger());
+                gameLabel.setText("uitnodiging van " + item.getChallenger() + " uit " + competitionController.getCompetition(item.getCompetitionId()).getName());
+                gameInfoLabel.setText("[" + item.getLanguage().toString() + "] [" + item.getBoardType().toString() + "]");
                 Button accept = new Button("accepteer");
                 Button reject = new Button("wijs af");
                 accept.setOnAction(handler);
