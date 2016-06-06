@@ -31,6 +31,8 @@ public class ChallengeView extends View {
     private Label lAvg_score;
     @FXML
     private Label lTotal_games;
+
+    @FXML private  Label lName;
     private Competition selectedComp;
     private User selectedUser;
 
@@ -73,6 +75,7 @@ public class ChallengeView extends View {
     private void setStats(User selectedUser, Competition comp) {
         int wins = selectedUser.getStat(comp.getId()).getWins();
         int lost = selectedUser.getStat(comp.getId()).getLost();
+        lName.setText(selectedUser.toString());
         lAvg_score.setText("Gemiddelde score: " + selectedUser.getStat(comp.getId()).getAvg_score());
         lTotal_games.setText("Totaal aantal spellen:" + selectedUser.getStat(comp.getId()).getTotal_games());
         FadeTransition ft = new FadeTransition(Duration.millis(1000), lNoStats);
@@ -87,8 +90,8 @@ public class ChallengeView extends View {
             winLoseChart.setOpacity(1);
             ObservableList<PieChart.Data> pieChartData =
                     FXCollections.observableArrayList(
-                            new PieChart.Data("Gewonnen", selectedUser.getStat(comp.getId()).getWins()),
-                            new PieChart.Data("Verloren", selectedUser.getStat(comp.getId()).getLost()));
+                            new PieChart.Data("Gewonnen( "+ selectedUser.getStat(comp.getId()).getWins() + ")", selectedUser.getStat(comp.getId()).getWins()),
+                            new PieChart.Data("Verloren("+ selectedUser.getStat(comp.getId()).getLost() + ")", selectedUser.getStat(comp.getId()).getLost()));
             winLoseChart.setVisible(true);
             winLoseChart.setData(pieChartData);
             lNoStats.setVisible(false);
@@ -103,7 +106,6 @@ public class ChallengeView extends View {
     @Override
     public void clear() {
         challenge.setTextFill(Color.BLACK);
-        challenge.setText("Uitdagen");
     }
 
     @Override
