@@ -49,8 +49,8 @@ public class JokerView extends View {
 
         TilePane tilePane = new TilePane();
         tilePane.setStyle("-fx-background-color: gray");
-        window.setMaxWidth(640);
-        window.setMaxHeight(370);
+        window.setMinWidth(640);
+        window.setMinHeight(370);
         tilePane.setPrefColumns(7);
         tilePane.setVgap(10);
         tilePane.setHgap(10);
@@ -86,8 +86,8 @@ public class JokerView extends View {
                 }
             }
         });
-        window.setX(mainView.gameBoardView.getScene().getWindow().getX() + mainView.gameBoardView.getScene().widthProperty().intValue() /2 - window.getMaxWidth()/2);
-        window.setY(mainView.gameBoardView.getScene().getWindow().getY() + mainView.gameBoardView.getScene().heightProperty().intValue() /2 - window.getMaxHeight()/2);
+        window.setX(mainView.gameBoardView.getScene().getWindow().getX() + mainView.gameBoardView.getScene().widthProperty().intValue() /2 - window.getMinWidth()/2);
+        window.setY(mainView.gameBoardView.getScene().getWindow().getY() + mainView.gameBoardView.getScene().heightProperty().intValue() /2 - window.getMinHeight()/2);
 
         window.showAndWait();
         return returnValue;

@@ -50,8 +50,8 @@ public class SwapTileView extends View {
     
     public ObservableList<FieldTileNode> swapTiles(ObservableList<Tile> currentRack){
         Stage window = new Stage();
-        window.setMaxHeight(200);
-        window.setMaxWidth(640);
+        window.setMinHeight(200);
+        window.setMinWidth(640);
         window.initStyle(StageStyle.UNDECORATED);
         window.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) window.close();
@@ -100,8 +100,8 @@ public class SwapTileView extends View {
         
        Scene scene = new Scene(vBox);
        window.setScene(scene);
-       window.setX(mainView.gameBoardView.getScene().getWindow().getX() + mainView.gameBoardView.getScene().widthProperty().intValue() /2 - window.getMaxWidth()/2);
-       window.setY(mainView.gameBoardView.getScene().getWindow().getY() + mainView.gameBoardView.getScene().heightProperty().intValue() /2 - window.getMaxHeight()/2);
+       window.setX(mainView.gameBoardView.getScene().getWindow().getX() + mainView.gameBoardView.getScene().widthProperty().intValue() /2 - window.getMinWidth()/2);
+       window.setY(mainView.gameBoardView.getScene().getWindow().getY() + mainView.gameBoardView.getScene().heightProperty().intValue() /2 - window.getMinHeight()/2);
        window.showAndWait(); 
        
        if(returnvalue == null){
