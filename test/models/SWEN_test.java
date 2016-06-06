@@ -104,6 +104,46 @@ public class SWEN_test {
     }
 
     @Test
+    public void testPath7_isWordConneted(){
+        // A valid word is not on 1 axis
+        turnbuilder.getGameBoard()[7][7].setTile(t('A'));
+        turnbuilder.getGameBoard()[7][8].setTile(t('A'));
+        turnbuilder.getGameBoard()[7][9].setTile(t('P'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[8][9],t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[9][9],t('P'));
+
+        assertTrue("tiles are added", turnbuilder.getTilesChangedThisTurn().size() > 0);
+        assertTrue("turn is not valid", turnbuilder.verifyCurrentTurn() != null );
+        assertTrue("score is 0", turnbuilder.getScore() == 0);
+
+        printGameBoard();
+    }
+
+    @Test
+    public void testPath8_extraScoreApplied(){
+        // A valid word is not on 1 axis
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[7][2],t('J'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[7][3],t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[7][4],t('C'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[7][5],t('U'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[7][6],t('Z'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[7][7],t('Z'));
+
+        assertTrue("turn is not valid", turnbuilder.verifyCurrentTurn() != null );
+        turnbuilder.verifyAndCalculate();
+        System.out.println(turnbuilder.getScore());
+
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[7][8],t('I'));
+
+        assertTrue("turn is not valid", turnbuilder.verifyCurrentTurn() != null );
+        turnbuilder.verifyAndCalculate();
+        System.out.println(turnbuilder.getScore());
+
+        assertTrue("tiles are added", turnbuilder.getScore() == 2*(4+1+5+2+5+5+2)+40);
+        printGameBoard();
+    }
+
+    @Test
     public void testPath9_invalidWord(){
         // Tiles are placed on correct spots, but word is incorrect
         turnbuilder.getGameBoard()[7][7].setTile(t('A'));
