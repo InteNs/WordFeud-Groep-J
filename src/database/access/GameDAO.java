@@ -279,7 +279,7 @@ public class GameDAO extends DAO {
         ArrayList<Tile> returnList = new ArrayList<>();
         ResultSet result = null;
         try {
-            result = database.select(SQL.SELECT.POT,selectedGame.getId());
+            result = database.select(SQL.SELECT.POT,selectedGame.getId(), selectedGame.getLanguage().toString());
             while (result.next()){
                 returnList.add(new Tile(result.getInt("letter_id"),
                         result.getInt("waarde"),
