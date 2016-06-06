@@ -16,6 +16,7 @@ public class CompetitionController extends Controller {
     private ArrayList<Competition> fetched;
     private ObservableList<Competition> competitions;
     private ObjectProperty<Competition> selectedCompetition;
+    private ArrayList<Pair<String, Integer>> topPlayers;
 
     public CompetitionController() {
         super();
@@ -80,6 +81,10 @@ public class CompetitionController extends Controller {
         return competitions.filtered(competition -> competition.getPlayers().contains(user));
     }
 
+    public ArrayList<Pair<String, Integer>> getTopPlayers(){
+        return topPlayers;
+    }
+
     @Override
     public void refresh() {
         playerMap.forEach(set ->
@@ -103,6 +108,7 @@ public class CompetitionController extends Controller {
     public void fetch() {
         fetched = competitionDAO.selectCompetitions();
         playerMap = competitionDAO.getPlayerMap();
+        if(getSelectedCompetition() != null) topPlayers = competitionDAO.getTopPlayers(getSelectedCompetition());
         competitionDAO.close();
     }
 
