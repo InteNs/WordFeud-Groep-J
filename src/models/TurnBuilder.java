@@ -49,32 +49,36 @@ public class TurnBuilder {
     public ArrayList<Turn> buildEndTurns(Turn lastTurn, Turn secondToLastTurn, Game selectedGame) {
         int subtractFromLastTurn = 0;
         int subtractFromSecondToLastTurn = 0;
-
-        for (Tile tile : lastTurn.getRack())
-            subtractFromLastTurn -= tile.getValue();
-
-        for (Tile tile : secondToLastTurn.getRack())
-            subtractFromSecondToLastTurn -= tile.getValue();
-
-        if (lastTurn.getRack().isEmpty())
-            subtractFromLastTurn += subtractFromSecondToLastTurn;
-
-        if (secondToLastTurn.getRack().isEmpty())
-            subtractFromSecondToLastTurn += subtractFromLastTurn;
-
         int nominalChallenger = selectedGame.getScore(lastTurn.getUser(),lastTurn);
         int nominalOpponent= selectedGame.getScore(secondToLastTurn.getUser(),lastTurn);
 
-        if ((nominalChallenger - subtractFromLastTurn) < 0){
-            int difference = subtractFromLastTurn - nominalChallenger;
-            subtractFromLastTurn -= difference;
-        }
+        if (lastTurn.getType() == TurnType.RESIGN){
+            subtractFromLastTurn -= nominalChallenger;
+            subtractFromSecondToLastTurn = 0;
+        } else {
 
-        if ((nominalOpponent - subtractFromSecondToLastTurn) < 0){
-            int difference = subtractFromSecondToLastTurn - nominalOpponent;
-            subtractFromSecondToLastTurn -= difference;
-        }
+            for (Tile tile : lastTurn.getRack())
+                subtractFromLastTurn -= tile.getValue();
 
+            for (Tile tile : secondToLastTurn.getRack())
+                subtractFromSecondToLastTurn -= tile.getValue();
+
+            if (lastTurn.getRack().isEmpty())
+                subtractFromLastTurn += subtractFromSecondToLastTurn;
+
+            if (secondToLastTurn.getRack().isEmpty())
+                subtractFromSecondToLastTurn += subtractFromLastTurn;
+
+            if ((nominalChallenger - subtractFromLastTurn) < 0){
+                int difference = subtractFromLastTurn - nominalChallenger;
+                subtractFromLastTurn -= difference;
+            }
+
+            if ((nominalOpponent - subtractFromSecondToLastTurn) < 0){
+                int difference = subtractFromSecondToLastTurn - nominalOpponent;
+                subtractFromSecondToLastTurn -= difference;
+            }
+        }
         Turn firstEndTurn = new Turn(lastTurn.getId() + 1,
                 subtractFromSecondToLastTurn, secondToLastTurn.getUser(), TurnType.END);
         Turn secondEndTurn = new Turn(lastTurn.getId() + 2,
@@ -94,6 +98,9 @@ public class TurnBuilder {
     }
 
     public Turn buildTurn(int newTurnId, User user, TurnType turnType) {
+        if (turnType != TurnType.WORD && turnType != TurnType.END){
+            score = 0;
+        }
         return new Turn(newTurnId,
                 getScore(),
                 user,
