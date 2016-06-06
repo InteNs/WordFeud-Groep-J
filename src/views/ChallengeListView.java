@@ -19,13 +19,13 @@ public class ChallengeListView extends View implements EventHandler<ActionEvent>
     @Override
     public void refresh() {
         incomingChallengeList.setCellFactory(param ->
-                new ChallengeCell(session.getCurrentUser(), this)
+                new ChallengeCell(session.getCurrentUser(), this, session.getCompetitionController())
         );
         incomingChallengeList.setItems(
                 gameController.getIncomingChallenges(session.getCurrentUser())
         );
         outgoingChallengeList.setCellFactory(param ->
-                new ChallengeCell(session.getCurrentUser(), this)
+                new ChallengeCell(session.getCurrentUser(), this , session.getCompetitionController())
         );
         outgoingChallengeList.setItems(
                 gameController.getOutgoingChallenges(session.getCurrentUser())
@@ -40,13 +40,13 @@ public class ChallengeListView extends View implements EventHandler<ActionEvent>
     @Override
     public void constructor() {
         incomingChallengeList.setCellFactory(param ->
-                new ChallengeCell(session.getCurrentUser(), this)
+                new ChallengeCell(session.getCurrentUser(), this, session.getCompetitionController())
         );
         incomingChallengeList.setItems(
                 gameController.getIncomingChallenges(session.getCurrentUser())
         );
         outgoingChallengeList.setCellFactory(param ->
-                new ChallengeCell(session.getCurrentUser(), this)
+                new ChallengeCell(session.getCurrentUser(), this, session.getCompetitionController())
         );
         outgoingChallengeList.setItems(
                 gameController.getOutgoingChallenges(session.getCurrentUser())
