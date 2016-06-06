@@ -98,6 +98,9 @@ public class TurnBuilder {
     }
 
     public Turn buildTurn(int newTurnId, User user, TurnType turnType) {
+        if (turnType != TurnType.WORD && turnType != TurnType.END){
+            score = 0;
+        }
         return new Turn(newTurnId,
                 getScore(),
                 user,
