@@ -185,4 +185,8 @@ public class GameListView extends View {
             parent.setTab(parent.gameControlView);
         }
     }
+
+    public void setVisible(boolean visible){
+        this.setVisible(visible);
+    }
 }

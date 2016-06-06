@@ -80,7 +80,7 @@ public class Game {
     }
 
     public boolean isActive() {
-        return gameState == GameState.PLAYING || gameState == GameState.REQUEST;
+        return gameState == GameState.PLAYING || (gameState == GameState.REQUEST && reactionType != ReactionType.REJECTED);
     }
 
     public int getId() {
