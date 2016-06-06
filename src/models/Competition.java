@@ -90,10 +90,29 @@ public class Competition {
         Competition that = (Competition) o;
 
         return id == that.id;
+
     }
 
     @Override
     public int hashCode() {
         return id;
+    }
+
+    public boolean deepEquals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Competition that = (Competition) o;
+
+        if (id != that.id) return false;
+        if (players != null ? !players.equals(that.players) : that.players != null) return false;
+
+        return true;
+    }
+
+    public int deepHashCode() {
+        int result = id;
+        result = 31 * result + (players != null ? players.hashCode() : 0);
+        return result;
     }
 }

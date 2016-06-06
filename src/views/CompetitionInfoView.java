@@ -89,7 +89,7 @@ public class CompetitionInfoView extends View {
                 session.getCurrentUser(),
                 competitionController.getSelectedCompetition()
         );
-        refresh();
+        parent.reload();
     }
 
     @Override

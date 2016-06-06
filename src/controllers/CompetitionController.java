@@ -25,11 +25,7 @@ public class CompetitionController extends Controller {
     }
 
     public boolean addUserInCompetition(User user, Competition competition) {
-        if (competitionDAO.insertPlayer(user, competition)) {
-            competition.addPlayer(user);
-            return true;
-        }
-        return false;
+        return competitionDAO.insertPlayer(user, competition);
     }
 
     public boolean isUserInCompetition(User thisUser, Competition thisCompetition) {
@@ -94,13 +90,15 @@ public class CompetitionController extends Controller {
         competitions.forEach(competition ->
                 competition.setGames(getGameController().getGames(competition)));
 
-        if(competitions.contains(getSelectedCompetition()))
+        if(competitions.contains(getSelectedCompetition())) {
             setSelectedCompetition(competitions.get(competitions.indexOf(getSelectedCompetition())));
+        }
     }
 
     @Override
     public void refill() {
-        if (!competitions.equals(fetched))
+        if (!competitions.equals(fetched) || !competitions.stream().allMatch(game ->
+                game.deepEquals(fetched.get(fetched.indexOf(game)))))
             competitions.setAll(fetched);
     }
 
