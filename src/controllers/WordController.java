@@ -1,6 +1,5 @@
 package controllers;
 
-import enumerations.Language;
 import enumerations.WordStatus;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -9,22 +8,20 @@ import javafx.collections.ObservableList;
 import models.User;
 import models.Word;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class WordController extends Controller {
 
     private ArrayList<Word> fetched;
     private ObjectProperty<Word> selectedWord;
     private ObservableList<Word> words;
-    private ArrayList<String> existingWords;
     private ArrayList<String> wordsList;
 
     public WordController() {
         super();
         words = FXCollections.observableArrayList();
         selectedWord = new SimpleObjectProperty<>();
-        existingWords = new ArrayList<>();
         wordsList = new ArrayList<>();
     }
 
@@ -32,12 +29,12 @@ public class WordController extends Controller {
         return selectedWord.get();
     }
 
-    public ObjectProperty<Word> selectedWordProperty() {
-        return selectedWord;
-    }
-
     public void setSelectedWord(Word selectedWord) {
         this.selectedWord.set(selectedWord);
+    }
+
+    public ObjectProperty<Word> selectedWordProperty() {
+        return selectedWord;
     }
 
     @Override
@@ -72,13 +69,10 @@ public class WordController extends Controller {
         return true;
     }
 
-    public boolean wordInList(String word) {
-        for (Word w : words) {
-            if (w.getWord().equals(word)) {
-                return true;
-            }
-        }
-        return false;
+    private boolean isWordInList(String word) {
+        return this.words.stream()
+                .map(Word::getWord)
+                .anyMatch(s -> s.equals(word));
     }
 
     public ArrayList<String> getWordsList() {
@@ -87,21 +81,27 @@ public class WordController extends Controller {
 
     public ArrayList<String> existingWords(ArrayList<String> words) {
         ArrayList<String> result = new ArrayList<>();
-        for (String s : words) {
-            wordsList.add(s.toLowerCase());
-            if (wordInList(s.toLowerCase())) {
-                result.add(s.toLowerCase());
-                wordsList.remove(s.toLowerCase());
+        for (String word : words) {
+            wordsList.add(word);
+            if (isWordInList(word)) {
+                result.add(word);
+                wordsList.remove(word);
             }
         }
         return result;
     }
 
-    public void submitWords(ArrayList<Word> words) {
-        wordDAO.insertWords(words);
+    public void submitWords(ArrayList<String> words) {
+        wordDAO.insertWords(words.stream()
+                .map(this::createWord)
+                .collect(Collectors.toCollection(ArrayList<Word>::new)));
     }
 
-    public Word createWord(String wordString, String owner, String letterSet, WordStatus status) {
-        return new Word(wordString, owner, letterSet, status);
+    private Word createWord(String wordString) {
+        return new Word(
+                wordString.toLowerCase(),
+                getSessionController().getCurrentUser().getName(),
+                getGameController().getSelectedGame().getLanguage().toString(),
+                WordStatus.PENDING);
     }
 }
