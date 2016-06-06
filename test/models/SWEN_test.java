@@ -297,6 +297,61 @@ public class SWEN_test {
         printGameBoard();
     }
 
+    @Test
+    public void testPath18_TwoWordsSameDL(){
+        turnbuilder.getGameBoard()[7][7].setTile(t('R'));
+        turnbuilder.getGameBoard()[6][7].setTile(t('R'));
+        turnbuilder.getGameBoard()[5][7].setTile(t('R'));
+        turnbuilder.getGameBoard()[4][7].setTile(t('R'));
+        turnbuilder.getGameBoard()[5][8].setTile(t('R'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[4][8], t('A'));
+
+        assertTrue("Tiles are added", turnbuilder.getTilesChangedThisTurn().size() > 0);
+        assertNotNull("Turn is valid", turnbuilder.verifyCurrentTurn());
+        turnbuilder.verifyAndCalculate();
+        assertTrue("Score is 6", turnbuilder.getScore() == 6);
+
+        printGameBoard();
+    }
+
+    @Test
+    public void testPath19_TwoWordsSameDW(){
+        turnbuilder.getGameBoard()[7][7].setTile(t('R'));
+        turnbuilder.getGameBoard()[6][7].setTile(t('R'));
+        turnbuilder.getGameBoard()[5][7].setTile(t('R'));
+        turnbuilder.getGameBoard()[4][7].setTile(t('R'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[3][7], t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[3][8], t('A'));
+
+        assertTrue("Tiles are added", turnbuilder.getTilesChangedThisTurn().size() > 0);
+        assertNotNull("Turn is valid", turnbuilder.verifyCurrentTurn());
+        turnbuilder.verifyAndCalculate();
+        assertTrue("Score is 14", turnbuilder.getScore() == 14);
+
+        printGameBoard();
+    }
+
+    @Test
+    public void testPath20_MultipleWords(){
+        turnbuilder.getGameBoard()[7][7].setTile(t('R'));
+        turnbuilder.getGameBoard()[6][7].setTile(t('R'));
+        turnbuilder.getGameBoard()[5][7].setTile(t('R'));
+        turnbuilder.getGameBoard()[4][7].setTile(t('R'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[7][8], t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[6][8], t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[5][8], t('A'));
+        turnbuilder.addPlacedTile(turnbuilder.getGameBoard()[4][8], t('A'));
+
+        assertTrue("Tiles are added", turnbuilder.getTilesChangedThisTurn().size() > 0);
+        assertNotNull("Turn is valid", turnbuilder.verifyCurrentTurn());
+        turnbuilder.verifyAndCalculate();
+        assertTrue("Score is 14", turnbuilder.getScore() == 14);
+
+        printGameBoard();
+
+    }
+
+
     private void printGameBoard() {
         for(int i = 0; i < turnbuilder.getGameBoard().length; i ++){
             for(int x = 0; x < turnbuilder.getGameBoard().length; x ++) {
