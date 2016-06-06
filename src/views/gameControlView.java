@@ -1,7 +1,9 @@
 package views;
 
 
+import controllers.SessionController;
 import enumerations.Role;
+import enumerations.WordStatus;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -26,7 +28,6 @@ public class gameControlView extends View {
 
     @FXML private ListView<Message> chatList;
     @FXML private ListView<Turn> turnList;
-    @FXML private HBox buttonBox;
     @FXML private Button playButton;
     @FXML private Button passButton;
     @FXML private Button swapButton;
@@ -69,7 +70,7 @@ public class gameControlView extends View {
                 });
 
         extraFunctionsButton.setOnMouseClicked(event ->
-                contextMenu.show(extraFunctionsButton, event.getScreenX(), event.getScreenY())
+                        contextMenu.show(extraFunctionsButton, event.getScreenX(), event.getScreenY())
         );
 
         turnSpinner.valueProperty().addListener((o, oldValue, newValue) -> {
@@ -234,14 +235,16 @@ public class gameControlView extends View {
     @FXML
     public void playWord() {
         ArrayList<String> words = gameController.playWord(gameController.getSelectedGame());
+        ArrayList<String> existingWords = wordController.existingWords(words);
+        ArrayList<Word> submittedWords = new ArrayList<>();
+        words = wordController.getWordsList();
         if (words == null) return;
-        if (words.isEmpty())
-            parent.reload();
-        else {
-            SubmitWordView submitWordView = new SubmitWordView(words, gameController.getSelectedGame().getLanguage(), session.getCurrentUser(),parent);
-            wordController.submitWords(submitWordView.getWordList());
-            clearBoard();
-        }
+            SubmitWordView submitWordView = new SubmitWordView(words,existingWords, gameController.getSelectedGame().getLanguage(), session.getCurrentUser(), parent);
+            words.clear();
+            existingWords.clear();
+        for(String w : submitWordView.submitWords())
+            submittedWords.add(wordController.createWord(w.toLowerCase(), session.getCurrentUser().toString(), gameController.getSelectedGame().getLanguage().toString(), WordStatus.PENDING));
+            wordController.submitWords(submittedWords);
     }
 
     @FXML

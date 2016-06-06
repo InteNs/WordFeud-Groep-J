@@ -92,7 +92,7 @@ public class UserController extends Controller {
 
     @Override
     public void refresh() {
-        //userDAO.setAllStats(users);
+        userDAO.setAllStats(users);
         if (users.contains(getSelectedUser())) setSelectedUser(users.get(users.indexOf(getSelectedUser())));
     }
 

@@ -8,6 +8,18 @@ public class Word {
     private String letterset;
     private WordStatus status;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Word word1 = (Word) o;
+
+        if (!word.equals(word1.word)) return false;
+        return status == word1.status;
+
+    }
+
     public Word(String word, String owner, String letterset, WordStatus status) {
         this.word = word;
         this.owner = owner;
@@ -39,16 +51,6 @@ public class Word {
         this.status = status;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Word word1 = (Word) o;
-
-        return word.equals(word1.word);
-
-    }
 
     @Override
     public int hashCode() {
