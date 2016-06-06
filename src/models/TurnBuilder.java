@@ -114,15 +114,6 @@ public class TurnBuilder {
         }
     }
 
-    private void debug() {
-        System.out.println("score: " + score);
-        listOfFieldsWithWords.forEach(fields -> {
-            System.out.print("word: ");
-            fields.stream().map(Field::getTile).forEach(System.out::print);
-            System.out.print("\n");
-        });
-    }
-
     public int getScore() {
         return score;
     }
@@ -274,9 +265,6 @@ public class TurnBuilder {
                 validTurn = false;
         }
 
-        if (this.getCurrentRack() != null)
-            System.out.println(validTurn);
-
         if (validTurn)
             return fixedAxis;
         else
@@ -415,9 +403,6 @@ public class TurnBuilder {
     }
 
     public void setPot(ArrayList<Tile> pot) {
-        currentRack.stream().filter(pot::contains).forEach(tile -> {
-            System.out.println(tile.getCharacter() + "IS STILL IN POT");
-        });
         this.pot = FXCollections.observableArrayList(pot);
     }
 }

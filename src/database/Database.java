@@ -183,7 +183,7 @@ public class Database {
 
     private void printError(Exception e) {
         try {
-            System.out.println(e.getMessage() + "\nquery: " + statement.toString().split(":")[1]);
+            System.err.println(e.getMessage() + "\nquery: " + statement.toString().split(":")[1]);
         } catch (Exception e1) {
             if (e instanceof CommunicationsException) System.err.println("no connection to database!");
         }

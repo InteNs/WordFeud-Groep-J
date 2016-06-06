@@ -117,7 +117,6 @@ public class gameControlView extends View {
         }
         if (gameController.getSelectedGame().getPot().size() < 1) {
             potButton.setDisable(true);
-            System.out.println(gameController.getSelectedGame().getPot());
         }
         if (gameController.getSelectedGame().getPot().size() > 0) {
             potButton.setDisable(false);
