@@ -86,7 +86,7 @@ public class TurnBuilder {
         verifyAndCalculate();
         if (!listOfFieldsWithWords.isEmpty()) {
             //gets the last field of the primary word found
-            setBubbleField(listOfFieldsWithWords.get(0).get(listOfFieldsWithWords.get(0).size()));
+            setBubbleField(listOfFieldsWithWords.get(0).get(listOfFieldsWithWords.get(0).size()-1));
             return getWordsFoundThisTurn().get(0);
         }
         return null;
