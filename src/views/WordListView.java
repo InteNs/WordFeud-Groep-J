@@ -15,7 +15,7 @@ import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
 
-public class WordListView extends View implements Observer {
+public class WordListView extends View {
     @FXML
     private ListView<Word> myWordList;
     @FXML
@@ -37,6 +37,7 @@ public class WordListView extends View implements Observer {
 
     public void refresh() {
         showComponents();
+        filter();
     }
 
     @Override
@@ -49,27 +50,17 @@ public class WordListView extends View implements Observer {
         session.getCurrentUser().getRoles().addListener((ListChangeListener<? super Role>) (observable) -> {
             showComponents();
         });
-        wordController.addObserver(this);
         showComponents();
         accordion.setExpandedPane(myWordPane);
         myWordList.setItems(wordController.getUserWords(session.getCurrentUser()));
-
-        myWordList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            select(newValue);
-        });
-        acceptedWordList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            select(newValue);
-        });
-        deniedWordlist.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            select(newValue);
-        });
-        pendingWordList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            select(newValue);
-        });
-
+        myWordList.setOnMouseClicked(event -> select(myWordList.getSelectionModel().getSelectedItem()));
+        acceptedWordList.setOnMouseClicked(event -> select(acceptedWordList.getSelectionModel().getSelectedItem()));
+        deniedWordlist.setOnMouseClicked(event -> select(deniedWordlist.getSelectionModel().getSelectedItem()));
+        pendingWordList.setOnMouseClicked(event -> select(pendingWordList.getSelectionModel().getSelectedItem()));
     }
 
     private void filter() {
+
         acceptedWordList.setItems(wordController.getWords(WordStatus.ACCEPTED));
         pendingWordList.setItems(wordController.getWords(WordStatus.PENDING));
         deniedWordlist.setItems(wordController.getWords(WordStatus.DENIED));
@@ -79,9 +70,13 @@ public class WordListView extends View implements Observer {
         if (session.getCurrentUser().hasRole(Role.MODERATOR)) {
             if (!accordion.getPanes().contains(acceptedWordPane)) {
                 accordion.getPanes().addAll(acceptedWordPane, pendingWordPane, deniedWordPane);
+                acceptedWordList.setItems(wordController.getWords(WordStatus.ACCEPTED));
+                pendingWordList.setItems(wordController.getWords(WordStatus.PENDING));
+                deniedWordlist.setItems(wordController.getWords(WordStatus.DENIED));
             }
         } else {
             accordion.getPanes().removeAll(acceptedWordPane, pendingWordPane, deniedWordPane);
+
         }
     }
 
@@ -98,11 +93,7 @@ public class WordListView extends View implements Observer {
     public void select(Word word) {
         wordController.setSelectedWord(word);
         parent.setContent(parent.wordInfoView);
-    }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        filter();
     }
 }
 

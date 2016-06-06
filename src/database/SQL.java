@@ -51,6 +51,6 @@ public class SQL {
     }
 
     public class COUNT{
-        public static final String COUNTWORDS = "SELECT COUNT(woordenboek.woord ) FROM woordenboek WHERE woord =? AND woordenboek.letterset_code=?;";
+        public static final String COUNTWORDS = "SELECT COUNT(woordenboek.woord ) FROM woordenboek WHERE woord =? AND woordenboek.letterset_code=? AND status='accepted';";
     }
 }
