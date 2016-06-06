@@ -37,6 +37,7 @@ public class CompetitionInfoView extends View {
                 .addListener((o, oldValue, newValue) -> {
                     if (!Objects.equals(oldValue, newValue) && newValue != null)
                         setInfo(newValue);
+                        parent.reload();
                 });
     }
 
@@ -48,11 +49,11 @@ public class CompetitionInfoView extends View {
         prepareChart(scoreChart, "Gemiddelde score", competition.getCompetitionScoreAvgerage());
         gameChart.setText("Aantal games: " + competition.getAmountOfGames());
         playerChart.setText("Aantal spelers: " + competition.getAmountOfUsers());
-        setRanking(competition.getId());
+        setRanking();
     }
 
-    private void setRanking(int id) {
-        ArrayList<Pair<String, Integer>> topPlayers = competitionController.getTopPlayers(id);
+    private void setRanking() {
+        ArrayList<Pair<String, Integer>> topPlayers = competitionController.getTopPlayers();
         ArrayList<Label> names = new ArrayList<>(Arrays.asList(
                 name1, name2, name3, name4, name5
         ));
@@ -65,9 +66,11 @@ public class CompetitionInfoView extends View {
         for (Label l : games) {
             l.setText("");
         }
-        for (int i = 0; i < topPlayers.size(); i++) {
-            names.get(i).setText(topPlayers.get(i).getKey());
-            games.get(i).setText(topPlayers.get(i).getValue().toString());
+        if (topPlayers != null){
+            for (int i = 0; i < topPlayers.size(); i++) {
+                names.get(i).setText(topPlayers.get(i).getKey());
+                games.get(i).setText(topPlayers.get(i).getValue().toString());
+            }
         }
     }
 
