@@ -62,11 +62,11 @@ public class CompetitionDAO extends DAO {
         return pairs;
     }
 
-    public ArrayList<Pair<String, Integer>> getTopPlayers(int id){
+    public ArrayList<Pair<String, Integer>> getTopPlayers(Competition comp){
         ArrayList<Pair<String, Integer>> pairs = new ArrayList<>();
         ResultSet rs = null;
         try {
-            rs = database.select(SQL.SELECT.TOPPLAYERS, id);
+            rs = database.select(SQL.SELECT.TOPPLAYERS, comp.getId());
             while(rs.next()){
                 pairs.add(new Pair<>(
                         rs.getString("account_naam"),

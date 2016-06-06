@@ -26,6 +26,7 @@ public class LoginView extends View {
     }
     @FXML
     public void openRegisterView () {
+        clear();
         parent.setContent(parent.registerView);
     }
 

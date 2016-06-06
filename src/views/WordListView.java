@@ -11,25 +11,32 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyEvent;
 import models.Word;
 
+import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
 
 public class WordListView extends View implements Observer {
-    @FXML private ListView<Word> myWordList;
-    @FXML private ListView<Word> acceptedWordList;
-    @FXML private ListView<Word> pendingWordList;
-    @FXML private ListView<Word> deniedWordlist;
-    @FXML private TitledPane acceptedWordPane;
-    @FXML private TitledPane pendingWordPane;
-    @FXML private TitledPane deniedWordPane;
-    @FXML private TitledPane myWordPane;
-    @FXML private Accordion accordion;
-
-    //private int listIndex;
+    @FXML
+    private ListView<Word> myWordList;
+    @FXML
+    private ListView<Word> acceptedWordList;
+    @FXML
+    private ListView<Word> pendingWordList;
+    @FXML
+    private ListView<Word> deniedWordlist;
+    @FXML
+    private TitledPane acceptedWordPane;
+    @FXML
+    private TitledPane pendingWordPane;
+    @FXML
+    private TitledPane deniedWordPane;
+    @FXML
+    private TitledPane myWordPane;
+    @FXML
+    private Accordion accordion;
 
     public void refresh() {
         showComponents();
-        filter();
     }
 
     @Override
@@ -68,7 +75,7 @@ public class WordListView extends View implements Observer {
         deniedWordlist.setItems(wordController.getWords(WordStatus.DENIED));
     }
 
-    private void showComponents(){
+    private void showComponents() {
         if (session.getCurrentUser().hasRole(Role.MODERATOR)) {
             if (!accordion.getPanes().contains(acceptedWordPane)) {
                 accordion.getPanes().addAll(acceptedWordPane, pendingWordPane, deniedWordPane);

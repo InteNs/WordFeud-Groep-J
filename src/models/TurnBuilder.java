@@ -62,6 +62,13 @@ public class TurnBuilder {
         if (secondToLastTurn.getRack().isEmpty())
             subtractFromSecondToLastTurn += subtractFromLastTurn;
 
+        if (subtractFromLastTurn < 0){
+            subtractFromLastTurn = 0;
+        }
+
+        if (subtractFromSecondToLastTurn < 0){
+            subtractFromSecondToLastTurn = 0;
+        }
         Turn firstEndTurn = new Turn(lastTurn.getId() + 1,
                 subtractFromSecondToLastTurn, secondToLastTurn.getUser(), TurnType.END);
         Turn secondEndTurn = new Turn(lastTurn.getId() + 2,

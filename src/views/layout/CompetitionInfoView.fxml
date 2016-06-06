@@ -6,11 +6,12 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="654.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.CompetitionInfoView">
+<VBox alignment="CENTER" prefHeight="654.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.CompetitionInfoView">
     <children>
         <HBox alignment="CENTER" prefHeight="110.0" prefWidth="600.0">
             <children>
@@ -51,6 +52,9 @@
                            </font>
                         </Label>
                      </children>
+                     <VBox.margin>
+                        <Insets top="30.0" />
+                     </VBox.margin>
                   </HBox>
                     </children>
                 </VBox>
@@ -58,7 +62,7 @@
         </HBox>
         <HBox alignment="CENTER" prefHeight="999999.0" prefWidth="999999.0">
             <children>
-            <VBox alignment="CENTER_LEFT" prefHeight="509.0" prefWidth="251.0">
+            <VBox alignment="CENTER_LEFT" prefHeight="499.0" prefWidth="284.0">
                <children>
                   <Label alignment="CENTER" text="Ranking">
                      <VBox.margin>
@@ -70,108 +74,136 @@
                   </Label>
                   <HBox prefHeight="23.0" prefWidth="251.0">
                      <children>
-                        <Label prefHeight="21.0" prefWidth="111.0" text="Plaats" />
-                        <Label prefHeight="21.0" prefWidth="108.0" text="Speler">
+                        <Label minWidth="-Infinity" prefHeight="20.0" prefWidth="40.0" text="Plaats" />
+                        <Label minWidth="-Infinity" prefHeight="20.0" prefWidth="45.0" text="Speler">
                            <HBox.margin>
-                              <Insets left="50.0" />
+                              <Insets left="45.0" />
                            </HBox.margin>
                         </Label>
-                        <Label alignment="CENTER_RIGHT" prefHeight="21.0" prefWidth="174.0" text="Gewonnen spellen">
+                        <Label minWidth="-Infinity" prefHeight="20.0" prefWidth="75.0" text="Gewonnen" textAlignment="JUSTIFY">
                            <HBox.margin>
-                              <Insets left="25.0" />
+                              <Insets left="30.0" />
                            </HBox.margin>
                         </Label>
                      </children>
                   </HBox>
+                  <Separator prefWidth="200.0">
+                     <padding>
+                        <Insets bottom="5.0" />
+                     </padding>
+                  </Separator>
                   <HBox prefHeight="31.0" prefWidth="251.0">
                      <children>
-                        <Label minWidth="-Infinity" prefHeight="21.0" prefWidth="15.0" text="1">
+                        <Label minWidth="-Infinity" prefHeight="20.0" prefWidth="15.0" text="1">
                            <font>
                               <Font size="15.0" />
                            </font>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
                         </Label>
-                        <Label fx:id="name1" minWidth="-Infinity" prefHeight="17.0" prefWidth="75.0" text="Label">
+                        <Label fx:id="name1" minWidth="-Infinity" prefHeight="20.0" prefWidth="75.0" text="Label">
                            <HBox.margin>
                               <Insets left="70.0" />
                            </HBox.margin>
                         </Label>
-                        <Label fx:id="games1" alignment="TOP_RIGHT" prefHeight="17.0" prefWidth="45.0" text="Label">
+                        <Label fx:id="games1" alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="45.0" text="Label">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Label>
                      </children>
                   </HBox>
+                  <Separator prefWidth="200.0">
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </Separator>
                   <HBox prefHeight="30.0" prefWidth="251.0">
                      <children>
-                        <Label minWidth="-Infinity" prefHeight="21.0" prefWidth="15.0" text="2">
+                        <Label minWidth="-Infinity" prefHeight="20.0" prefWidth="15.0" text="2">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label fx:id="name2" minWidth="-Infinity" prefHeight="17.0" prefWidth="75.0" text="Label">
+                        <Label fx:id="name2" minWidth="-Infinity" prefHeight="20.0" prefWidth="75.0" text="Label">
                            <HBox.margin>
                               <Insets left="70.0" />
                            </HBox.margin>
                         </Label>
-                        <Label fx:id="games2" alignment="TOP_RIGHT" prefHeight="17.0" prefWidth="45.0" text="Label">
+                        <Label fx:id="games2" alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="45.0" text="Label">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Label>
                      </children>
                   </HBox>
+                  <Separator prefWidth="200.0">
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </Separator>
                   <HBox prefHeight="30.0" prefWidth="251.0">
                      <children>
-                        <Label minWidth="-Infinity" prefHeight="21.0" prefWidth="15.0" text="3">
+                        <Label minWidth="-Infinity" prefHeight="20.0" prefWidth="15.0" text="3">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label fx:id="name3" minWidth="-Infinity" prefHeight="17.0" prefWidth="75.0" text="Label">
+                        <Label fx:id="name3" minWidth="-Infinity" prefHeight="20.0" prefWidth="75.0" text="Label">
                            <HBox.margin>
                               <Insets left="70.0" />
                            </HBox.margin>
                         </Label>
-                        <Label fx:id="games3" alignment="TOP_RIGHT" prefHeight="17.0" prefWidth="45.0" text="Label">
+                        <Label fx:id="games3" alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="45.0" text="Label">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Label>
                      </children>
                   </HBox>
+                  <Separator prefWidth="200.0">
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </Separator>
                   <HBox prefHeight="29.0" prefWidth="251.0">
                      <children>
-                        <Label minWidth="-Infinity" prefHeight="21.0" prefWidth="15.0" text="4">
+                        <Label minWidth="-Infinity" prefHeight="20.0" prefWidth="15.0" text="4">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label fx:id="name4" minWidth="-Infinity" prefHeight="17.0" prefWidth="75.0" text="Label">
+                        <Label fx:id="name4" minWidth="-Infinity" prefHeight="20.0" prefWidth="75.0" text="Label">
                            <HBox.margin>
                               <Insets left="70.0" />
                            </HBox.margin>
                         </Label>
-                        <Label fx:id="games4" alignment="TOP_RIGHT" prefHeight="17.0" prefWidth="45.0" text="Label">
+                        <Label fx:id="games4" alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="45.0" text="Label">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Label>
                      </children>
                   </HBox>
+                  <Separator prefWidth="200.0">
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </Separator>
                   <HBox prefHeight="24.0" prefWidth="251.0">
                      <children>
-                        <Label minWidth="-Infinity" prefHeight="21.0" prefWidth="15.0" text="5">
+                        <Label minWidth="-Infinity" prefHeight="20.0" prefWidth="15.0" text="5">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label fx:id="name5" minWidth="-Infinity" prefHeight="17.0" prefWidth="75.0" text="Label">
+                        <Label fx:id="name5" minWidth="-Infinity" prefHeight="20.0" prefWidth="75.0" text="Label">
                            <HBox.margin>
                               <Insets left="70.0" />
                            </HBox.margin>
                         </Label>
-                        <Label fx:id="games5" alignment="TOP_RIGHT" prefHeight="17.0" prefWidth="45.0" text="Label">
+                        <Label fx:id="games5" alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="45.0" text="Label">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -180,7 +212,7 @@
                   </HBox>
                </children>
             </VBox>
-                <BarChart fx:id="scoreChart" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="378.0" prefWidth="293.0">
+                <BarChart fx:id="scoreChart" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="400.0" prefWidth="300.0">
                     <xAxis>
                         <CategoryAxis side="BOTTOM" />
                     </xAxis>
@@ -192,7 +224,7 @@
         </HBox>
         <HBox prefHeight="49.0" prefWidth="600.0">
             <children>
-                <Button onAction="#showGames" mnemonicParsing="false" prefWidth="999999.0" text="Spellen">
+                <Button mnemonicParsing="false" onAction="#showGames" prefWidth="999999.0" text="Spellen">
                     <padding>
                         <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                     </padding>
@@ -200,7 +232,7 @@
                         <Insets bottom="10.0" left="20.0" />
                     </HBox.margin>
                 </Button>
-                <Button onAction="#showPlayers" mnemonicParsing="false" prefWidth="999999.0" text="Spelers">
+                <Button mnemonicParsing="false" onAction="#showPlayers" prefWidth="999999.0" text="Spelers">
                     <padding>
                         <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                     </padding>

@@ -18,7 +18,18 @@ public class ChallengeListView extends View implements EventHandler<ActionEvent>
 
     @Override
     public void refresh() {
-
+        incomingChallengeList.setCellFactory(param ->
+                new ChallengeCell(session.getCurrentUser(), this)
+        );
+        incomingChallengeList.setItems(
+                gameController.getIncomingChallenges(session.getCurrentUser())
+        );
+        outgoingChallengeList.setCellFactory(param ->
+                new ChallengeCell(session.getCurrentUser(), this)
+        );
+        outgoingChallengeList.setItems(
+                gameController.getOutgoingChallenges(session.getCurrentUser())
+        );
     }
 
     @Override
@@ -47,9 +58,10 @@ public class ChallengeListView extends View implements EventHandler<ActionEvent>
         Button source = (Button) event.getSource();
         if (source.getText().equals("accepteer")) {
             gameController.acceptInvite((Game)source.getUserData());
+
         } else if (source.getText().equals("wijs af")) {
             gameController.rejectInvite((Game)source.getUserData());
         }
-
+        parent.reload();
     }
 }
