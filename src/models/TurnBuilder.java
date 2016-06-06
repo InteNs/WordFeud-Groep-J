@@ -69,12 +69,12 @@ public class TurnBuilder {
             if (secondToLastTurn.getRack().isEmpty())
                 subtractFromSecondToLastTurn += subtractFromLastTurn;
 
-            if ((nominalChallenger - subtractFromLastTurn) < 0){
+            if ((nominalChallenger + subtractFromLastTurn) < 0){
                 int difference = subtractFromLastTurn - nominalChallenger;
                 subtractFromLastTurn -= difference;
             }
 
-            if ((nominalOpponent - subtractFromSecondToLastTurn) < 0){
+            if ((nominalOpponent + subtractFromSecondToLastTurn) < 0){
                 int difference = subtractFromSecondToLastTurn - nominalOpponent;
                 subtractFromSecondToLastTurn -= difference;
             }

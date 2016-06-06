@@ -111,9 +111,9 @@ public class GameController extends Controller {
             if (previousGame.getTurns().size() != fetchedTurns.size()) {
                 Game game = games.get(games.indexOf(previousGame));
                 loadGame(game, getCurrentRole());
-                checkForEndGame(game);
                 setSelectedGame(game);
                 setSelectedTurn(game.getLastTurn());
+                checkForEndGame(game);
             }
             getSelectedGame().getTurnBuilder().setPot(fetchedPot);
             getSelectedGame().setMessages(fetchedMessages);

@@ -234,6 +234,14 @@ public class Game {
         return selectedTurn.equals(getLastTurn());
     }
 
+    public User getWinner() {
+        return (opponentScore > challengerScore) ? opponent : challenger;
+    }
+
+    public int getWinnerScore() {
+       return  (opponentScore > challengerScore) ? opponentScore : challengerScore;
+    }
+
     private Field[][] cloneGameBoard(Field[][] emptyGameBoard) {
         Field[][] clonedGameBoard = new Field[15][15];
         for (int y = 0; y < emptyGameBoard.length; y++) {
