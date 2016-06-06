@@ -73,8 +73,9 @@ public class CompetitionDAO extends DAO {
                         rs.getInt("aantal_gewonnen_spellen")
                 ));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException | NullPointerException e) {
+            if (!recordsAreNull(e, rs))
+                printError(e);
         }
         return pairs;
     }

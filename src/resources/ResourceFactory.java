@@ -2,9 +2,7 @@ package resources;
 
 import javafx.scene.image.Image;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 
 
@@ -33,12 +31,8 @@ public class ResourceFactory {
 
 
     private void loadImage(String name, Boolean highRes) {
-        try {
-            File file = new File(getClass().getResource(name).getFile());
-            if (highRes) imagesHighRes.put(name, new Image(new FileInputStream(file), 100, 100, true, true));
-            if (!highRes) imagesLowRes.put(name, new Image(new FileInputStream(file), 100, 100, true, true));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        InputStream inputStream = getClass().getResourceAsStream(name);
+        if (highRes) imagesHighRes.put(name, new Image(inputStream, 100, 100, true, true));
+        if (!highRes) imagesLowRes.put(name, new Image(inputStream, 100, 100, true, true));
     }
 }

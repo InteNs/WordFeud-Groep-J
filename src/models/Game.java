@@ -17,7 +17,6 @@ public class Game {
     private int lastTurnNumber;
     private ObservableList<Message> messages;
     private GameState gameState;
-    private Role gameMode;
     private User opponent;
     private int opponentScore;
     private int challengerScore;
@@ -63,14 +62,6 @@ public class Game {
 
     public int getChallengerScore() {
         return challengerScore;
-    }
-
-    public Role getGameMode() {
-        return gameMode;
-    }
-
-    public void setGameMode(Role gameMode) {
-        this.gameMode = gameMode;
     }
 
     public boolean isGame() {
@@ -179,7 +170,7 @@ public class Game {
      *
      * @param turnToDisplay the last turn to be added to the board
      */
-    public void setBoardStateTo(Turn turnToDisplay, User watcher) {
+    public void setBoardStateTo(Turn turnToDisplay, User watcher, Role watchRole) {
         Field[][] gameBoard = cloneGameBoard(emptyGameBoard);
         for (Turn turn : turns) {
             // save fields for building turn word
@@ -200,7 +191,7 @@ public class Game {
 
             if (turn.equals(turnToDisplay)) {
                 ArrayList<Tile> rack = new ArrayList<>();
-                if (gameMode == Role.OBSERVER || watcher.equals(turn.getUser())) {
+                if (watchRole == Role.OBSERVER || watcher.equals(turn.getUser())) {
                     rack = turn.getRack();
                 } else if (!watcher.equals(turn.getUser()) && turn.getId() != 1) {
                     rack = turns.get(turns.indexOf(turn) - 1).getRack();
