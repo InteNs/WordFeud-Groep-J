@@ -26,8 +26,10 @@ public class UserListView extends View {
     private Predicate<User> filterText, filterComp;
 
     public void refresh() {
-        if (competitionController.getSelectedCompetition() != null)
+        if (competitionController.getSelectedCompetition() != null) {
             showCompUsers(competitionController.getSelectedCompetition(), false);
+            compUsersList.setItems(filteredUsers.filtered(filterComp));
+        }
     }
 
     @Override
@@ -50,9 +52,10 @@ public class UserListView extends View {
             lists.getItems().remove(allUsersPane);
 
         competitionController.selectedCompetitionProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && !Objects.equals(newValue, oldValue))
+            if (newValue != null && !newValue.deepEquals(oldValue)) {
                 compUsersList.setItems(filteredUsers.filtered(filterComp));
                 showCompUsers(newValue, true);
+            }
         });
 
         filterField.textProperty().addListener(observable -> {
