@@ -21,6 +21,7 @@ public class TurnBuilder {
     private ArrayList<ArrayList<Field>> listOfFieldsWithWords;
     private int score;
     private ObservableList<Tile> pot;
+    private Field bubbleField;
 
 
     public TurnBuilder(Field[][] gameBoard, ObservableList<Tile> currentRack) {
@@ -35,6 +36,14 @@ public class TurnBuilder {
     public TurnBuilder() {
         this.listOfFieldsWithWords = new ArrayList<>();
         this.fieldsChanged = FXCollections.observableArrayList();
+    }
+
+    public Field getBubbleField() {
+        return bubbleField;
+    }
+
+    public void setBubbleField(Field bubbleField) {
+        this.bubbleField = bubbleField;
     }
 
     public ArrayList<Turn> buildBeginTurns(Game selectedGame) {
@@ -75,8 +84,11 @@ public class TurnBuilder {
         this.gameBoard = gameBoard;
         this.fieldsChanged = fieldsChanged;
         verifyAndCalculate();
-        if (!listOfFieldsWithWords.isEmpty())
+        if (!listOfFieldsWithWords.isEmpty()) {
+            //gets the last field of the primary word found
+            setBubbleField(listOfFieldsWithWords.get(0).get(listOfFieldsWithWords.get(0).size()));
             return getWordsFoundThisTurn().get(0);
+        }
         return null;
     }
 
