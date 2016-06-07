@@ -29,7 +29,6 @@ public class ResourceFactory {
         }
     }
 
-
     private void loadImage(String name, Boolean highRes) {
         InputStream inputStream = getClass().getResourceAsStream(name);
         if (highRes) imagesHighRes.put(name, new Image(inputStream, 100, 100, true, true));

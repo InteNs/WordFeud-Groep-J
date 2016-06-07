@@ -106,9 +106,12 @@ public class UserController extends Controller {
         userDAO.updatePassword(user, password);
     }
 
+    public void setAllStats(){
+        userDAO.setAllStats(users);
+    }
+
     @Override
     public void refresh() {
-        //userDAO.setAllStats(users);
         if (users.contains(getSelectedUser())) setSelectedUser(users.get(users.indexOf(getSelectedUser())));
     }
 

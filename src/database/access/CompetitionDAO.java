@@ -64,17 +64,17 @@ public class CompetitionDAO extends DAO {
 
     public ArrayList<Pair<String, Integer>> getTopPlayers(Competition comp){
         ArrayList<Pair<String, Integer>> pairs = new ArrayList<>();
-        ResultSet rs = null;
+        ResultSet records = null;
         try {
-            rs = database.select(SQL.SELECT.TOPPLAYERS, comp.getId());
-            while(rs.next()){
+            records = database.select(SQL.SELECT.TOPPLAYERS, comp.getId());
+            while(records.next()){
                 pairs.add(new Pair<>(
-                        rs.getString("account_naam"),
-                        rs.getInt("aantal_gewonnen_spellen")
+                        records.getString("account_naam"),
+                        records.getInt("aantal_gewonnen_spellen")
                 ));
             }
         } catch (SQLException | NullPointerException e) {
-            if (!recordsAreNull(e, rs))
+            if (!recordsAreNull(e, records))
                 printError(e);
         }
         return pairs;

@@ -9,22 +9,20 @@ public class User {
     private String name;
     private String password;
     private ObservableList<Role> roles;
-    private int wins;
-    private int loses;
+    private ObservableList<Stat> stats;
+
 
     public User(String name) {
         this.name = name;
         roles = FXCollections.observableArrayList();
-        wins = 0;
-        loses = 0;
+        stats = FXCollections.observableArrayList();
     }
 
     public User(String name, String password) {
         this.name = name;
         this.password = password;
         roles = FXCollections.observableArrayList();
-        wins = 0;
-        loses = 0;
+        stats = FXCollections.observableArrayList();
     }
 
 
@@ -32,9 +30,8 @@ public class User {
         this.name = name;
         this.password = password;
         roles = FXCollections.observableArrayList();
+        stats = FXCollections.observableArrayList();
         roles.add(startingRole);
-        wins = 0;
-        loses = 0;
     }
 
     public String getName() {
@@ -66,21 +63,6 @@ public class User {
         return roles.contains(role);
     }
 
-    public int getWins() {
-        return wins;
-    }
-
-    public int getLoses() {
-        return loses;
-    }
-
-    public void setWins(Integer wins) {
-        this.wins = wins;
-    }
-
-    public void setLoses(Integer loses) {
-        this.loses = loses;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -116,4 +98,26 @@ public class User {
         result = 31 * result + (roles != null ? roles.hashCode() : 0);
         return result;
     }
+
+    public Stat getStat(int competitionID){
+        for (Stat s: stats) {
+            if(s.getCompetitionID() == competitionID) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public ObservableList<Stat> getStats() {
+        return stats;
+    }
+
+    public void addStat(Stat stat){
+        stats.add(stat);
+    }
+
+    public void setStats(ObservableList<Stat> stats) {
+        this.stats = stats;
+    }
+
 }

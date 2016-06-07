@@ -55,7 +55,7 @@ public class SubmitWordView extends View {
             label1.setText("Deze woorden zijn niet geldig! \n" +
                     "Selecteer de woorden die je wil indienen.");
         } else {
-            label1.setText(("Dit word niet geldig! \n" +
+            label1.setText(("Dit woord niet gseldig! \n" +
                     "Selecteer het als je het wil indienen."));
         }
         label1.setTextAlignment(TextAlignment.CENTER);

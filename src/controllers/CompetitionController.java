@@ -97,8 +97,7 @@ public class CompetitionController extends Controller {
 
     @Override
     public void refill() {
-        if (!competitions.equals(fetched) || !competitions.stream().allMatch(game ->
-                game.deepEquals(fetched.get(fetched.indexOf(game)))))
+        if (!competitions.equals(fetched))
             competitions.setAll(fetched);
     }
 

@@ -18,7 +18,6 @@ import java.util.Objects;
 
 public class UserInfoView extends View {
     @FXML private Label userNameLabel;
-    @FXML private Label lNoStats;
     @FXML private Label passwordLabel;
     @FXML private ListView<Competition> myCompetitions;
     @FXML private CheckBox checkPlayer;
@@ -26,12 +25,14 @@ public class UserInfoView extends View {
     @FXML private CheckBox checkAdmin;
     @FXML private CheckBox checkObserver;
     @FXML private Pane rolesPane;
-    @FXML private PieChart winloseChart;
-
+    private User selectedUser;
     @Override
     public void constructor() {
         userController.selectedUserProperty().addListener((observable, oldValue, newValue) -> {
-            if (!Objects.equals(oldValue, newValue)) showUser(newValue, true);
+            if (!Objects.equals(oldValue, newValue)) {
+                selectedUser = newValue;
+                showUser(newValue, true);
+            }
         });
     }
 
@@ -39,37 +40,12 @@ public class UserInfoView extends View {
         if (newValue == null) return;
         userNameLabel.setText(newValue.toString());
         passwordLabel.setText("wachtwoord: " + newValue.getPassword());
-        myCompetitions.setItems(competitionController.getCompetitions(newValue));
 
         if (!session.getCurrentUser().hasRole(Role.ADMINISTRATOR)) {
             rolesPane.setVisible(false);
             passwordLabel.setVisible(false);
         }
         getRoles(newValue);
-        setStats(newValue, isNew);
-    }
-
-    private void setStats(User selectedUser, boolean isNew) {
-        FadeTransition ft = new FadeTransition(Duration.millis(1000), lNoStats);
-        ft.setFromValue(0.0);
-        ft.setToValue(1.0);
-        ft.setCycleCount(1);
-
-        if (selectedUser.getWins() == 0 && selectedUser.getLoses() == 0) {
-            lNoStats.setVisible(true);
-            winloseChart.setVisible(false);
-            if (isNew) ft.play();
-
-        } else {
-            winloseChart.setOpacity(1);
-            ObservableList<PieChart.Data> pieChartData =
-                    FXCollections.observableArrayList(
-                            new PieChart.Data("Gewonnen", selectedUser.getWins()),
-                            new PieChart.Data("Verloren", selectedUser.getLoses()));
-            winloseChart.setVisible(true);
-            winloseChart.setData(pieChartData);
-            lNoStats.setVisible(false);
-        }
     }
 
     private void getRoles(User selectedUser) {

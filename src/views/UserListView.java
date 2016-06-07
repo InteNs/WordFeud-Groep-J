@@ -26,9 +26,10 @@ public class UserListView extends View {
     private Predicate<User> filterText, filterComp;
 
     public void refresh() {
+        loadStats();
         if (competitionController.getSelectedCompetition() != null) {
             showCompUsers(competitionController.getSelectedCompetition(), false);
-            compUsersList.setItems(filteredUsers.filtered(filterComp));
+            //compUsersList.setItems(filteredUsers.filtered(filterComp));
         }
     }
 
@@ -39,6 +40,7 @@ public class UserListView extends View {
 
     @Override
     public void constructor() {
+
         filteredUsers = new FilteredList<>(userController.getUsers());
 
         filterText = user ->
@@ -97,6 +99,10 @@ public class UserListView extends View {
     private void select(User user) {
         userController.setSelectedUser(user);
         parent.setContent(parent.userInfoView);
+    }
+
+    private void loadStats(){
+        userController.setAllStats();
     }
 }
 
