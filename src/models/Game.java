@@ -42,6 +42,7 @@ public class Game {
         this.turns = FXCollections.observableArrayList();
         this.allTiles = FXCollections.observableArrayList();
         reactionType = reaktie_type;
+        this.turnBuilder = new TurnBuilder();
 
         turns.addListener((ListChangeListener<? super Turn>) observable ->
             this.lastTurnNumber = getLastTurn().getId()
