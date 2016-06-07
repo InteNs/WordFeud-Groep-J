@@ -374,8 +374,12 @@ public class TurnBuilder {
                 word.clear();
             }
         }
-        if (word.size() > 1) {
-            return word;
+        if (word.size() > 1 ) {
+            for (Field field : word) {
+                if (fieldsChanged.contains(field)){
+                    return word;
+                }
+            }
         }
         return null;
     }
