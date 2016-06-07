@@ -47,6 +47,15 @@ public class SwapTileView extends View {
 
     }
 
+    /**
+     * Creates a view for swapping tiles. Shows the current rack of tiles and those can be selected
+     * The selected tiles are returned when clicked on the swap button
+     * The view always opens in the center of the mainview
+     * When clicked outside the view, the view closes
+     * @param currentRack
+     * @return
+     */
+
     public ObservableList<FieldTileNode> swapTiles(ObservableList<Tile> currentRack) {
         Stage window = new Stage();
         window.initStyle(StageStyle.UNDECORATED);
