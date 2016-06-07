@@ -233,16 +233,21 @@ public class gameControlView extends View {
     @FXML
     public void playWord() {
         ArrayList<String> words = gameController.playWord(gameController.getSelectedGame());
+        if (words == null) return;
         ArrayList<String> existingWords = wordController.existingWords(words);
         ArrayList<Word> submittedWords = new ArrayList<>();
         words = wordController.getWordsList();
-        if (words == null) return;
-            SubmitWordView submitWordView = new SubmitWordView(words,existingWords,parent);
+        if (words.isEmpty())
+            parent.reload();
+        else {
+            SubmitWordView submitWordView = new SubmitWordView(words, existingWords, parent);
             words.clear();
             existingWords.clear();
-        for(String w : submitWordView.submitWords())
-            submittedWords.add(wordController.createWord(w.toLowerCase(),gameController.getSelectedGame().getLanguage().toString()));
+            for (String w : submitWordView.submitWords())
+                submittedWords.add(wordController.createWord(w.toLowerCase(), gameController.getSelectedGame().getLanguage().toString()));
             wordController.submitWords(submittedWords);
+            parent.reload();
+        }
     }
 
     @FXML
