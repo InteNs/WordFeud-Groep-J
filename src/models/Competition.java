@@ -57,6 +57,10 @@ public class Competition {
         return players.size();
     }
 
+    public boolean hasUser(User user) {
+        return players.contains(user);
+    }
+
     public int getAmountOfGames() {
         return games.filtered(Game::isGame).size();
     }
