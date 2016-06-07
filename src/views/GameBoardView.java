@@ -66,6 +66,7 @@ public class GameBoardView extends View {
                         fieldNode.setCursor(Cursor.OPEN_HAND);
                         gameController.placeTile(selectedGame, fieldNode.getField(), tileBeingDragged);
                         event.setDropCompleted(true);
+                        // Checks if the tile placed is a joker, gets selected tile from jokerview and replaces it
                         if (gameController.isJokerTile(tileBeingDragged)) {
                             JokerView jokerView = new JokerView(resourceFactory, parent);
                             char choice = jokerView.jokerChoice();
@@ -254,6 +255,7 @@ public class GameBoardView extends View {
         gameBoardGrid.setScaleY(base * min/norm);
     }
 
+    // Checks the gameboard for jokers, the highlights them
     public void showJokers() {
         for (Node field : gameBoardGrid.getChildren()) {
             FieldTileNode fieldnode = (FieldTileNode) field;
