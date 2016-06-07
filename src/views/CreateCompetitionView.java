@@ -28,6 +28,9 @@ public class CreateCompetitionView extends View {
     public void constructor() {
     }
 
+    /**
+     *        Creates competition if name is valid & if current account doesn't have a competition
+     */
     public void createCompetition() {
         if (checkCompetitionName(competitionName.getText())) {
             if (!competitionController.createCompetition(competitionName.getText())) {

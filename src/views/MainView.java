@@ -53,6 +53,7 @@ public class MainView extends View implements Initializable {
     @FXML public Tab wordListView;
     @FXML public Pane wordInfoView;
     @FXML public ToggleButton controlToggle;
+    @FXML public Label userLabel;
 
     /*Declare your viewControllers here*/
     @FXML private UserListView userListViewController;
@@ -129,6 +130,7 @@ public class MainView extends View implements Initializable {
         doThread();
 
         TabService.hideForbiddenTabs(this, session.getCurrentUser());
+        userLabel.setText(session.getCurrentUser().getName());
     }
 
     @Override
