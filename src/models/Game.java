@@ -2,6 +2,7 @@ package models;
 
 import enumerations.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.sql.Timestamp;
@@ -18,6 +19,8 @@ public class Game {
     private GameState gameState;
     private Role gameMode;
     private User opponent;
+    private int opponentScore;
+    private int challengerScore;
     private User challenger;
     private Language language;
     private BoardType boardType;
@@ -40,10 +43,26 @@ public class Game {
         this.turns = FXCollections.observableArrayList();
         this.allTiles = FXCollections.observableArrayList();
         reactionType = reaktie_type;
+
+        turns.addListener((ListChangeListener<? super Turn>) observable ->
+            this.lastTurnNumber = getLastTurn().getId()
+        );
     }
 
-    public int getLastTurnNumber() {
-        return lastTurnNumber;
+    public void setOpponentScore(int score) {
+        opponentScore = score;
+    }
+
+    public void setChallengerScore(int score) {
+        challengerScore = score;
+    }
+
+    public int getOpponentScore() {
+        return opponentScore;
+    }
+
+    public int getChallengerScore() {
+        return challengerScore;
     }
 
     public Role getGameMode() {
@@ -61,7 +80,7 @@ public class Game {
     }
 
     public boolean isActive() {
-        return gameState == GameState.PLAYING || gameState == GameState.REQUEST;
+        return gameState == GameState.PLAYING || (gameState == GameState.REQUEST && reactionType != ReactionType.REJECTED);
     }
 
     public int getId() {
@@ -161,37 +180,33 @@ public class Game {
      * @param turnToDisplay the last turn to be added to the board
      */
     public void setBoardStateTo(Turn turnToDisplay, User watcher) {
-        Field[][] gameboard = cloneGameBoard(emptyGameBoard);
-        ArrayList<Tile> pot = new ArrayList<>(allTiles);
+        Field[][] gameBoard = cloneGameBoard(emptyGameBoard);
         for (Turn turn : turns) {
             // save fields for building turn word
             ArrayList<Field> changed = new ArrayList<>();
-            //place tile + remove placed tile from pot
+            //place tile
             for (Tile tile : turn.getPlacedTiles()) {
-                gameboard[tile.getY()][tile.getX()].setTile(tile);
-                changed.add(gameboard[tile.getY()][tile.getX()]);
-                pot.remove(tile);
+                gameBoard[tile.getY()][tile.getX()].setTile(tile);
+                changed.add(gameBoard[tile.getY()][tile.getX()]);
             }
-            //remove rack from pot and re-add swapped tiles
-            pot.removeAll(turn.getRack());
+            //save amount of tiles swapped
             if (turn.getType() == TurnType.SWAP) {
                 ArrayList<Tile> difference = new ArrayList<>(turns.get(turns.indexOf(turn) - 2).getRack());
                 difference.removeAll(turn.getRack());
                 turn.setAmountSwapped(difference.size());
-                pot.addAll(difference);
             }
             //set turn word
-            turn.setWord(new TurnBuilder().getTurnWord(gameboard, FXCollections.observableArrayList(changed)));
+            turn.setWord(new TurnBuilder().getTurnWord(gameBoard, FXCollections.observableArrayList(changed)));
 
             if (turn.equals(turnToDisplay)) {
                 ArrayList<Tile> rack = new ArrayList<>();
-                if (!watcher.equals(turn.getUser()) && turn.getId() != 1) {
-                    rack = turns.get(turns.indexOf(turn) - 1).getRack();
-                } else if (gameMode == Role.OBSERVER || watcher.equals(turn.getUser())) {
+                if (gameMode == Role.OBSERVER || watcher.equals(turn.getUser())) {
                     rack = turn.getRack();
+                } else if (!watcher.equals(turn.getUser()) && turn.getId() != 1) {
+                    rack = turns.get(turns.indexOf(turn) - 1).getRack();
                 }
-                turnBuilder = new TurnBuilder(gameboard, FXCollections.observableArrayList(rack));
-                turnBuilder.setPot(pot);
+                turnBuilder = new TurnBuilder(gameBoard, FXCollections.observableArrayList(rack));
+                //turnBuilder.setPot(pot);
                 break;
             }
 
@@ -199,6 +214,7 @@ public class Game {
     }
 
     public ObservableList<Tile> getPot() {
+        if (turnBuilder == null) return null;
         return turnBuilder.getPot();
     }
 
@@ -216,6 +232,14 @@ public class Game {
 
     public boolean isLastTurn(Turn selectedTurn) {
         return selectedTurn.equals(getLastTurn());
+    }
+
+    public User getWinner() {
+        return (opponentScore > challengerScore) ? opponent : challenger;
+    }
+
+    public int getWinnerScore() {
+       return  (opponentScore > challengerScore) ? opponentScore : challengerScore;
     }
 
     private Field[][] cloneGameBoard(Field[][] emptyGameBoard) {
@@ -282,6 +306,7 @@ public class Game {
         if (id != game.id) return false;
         if (competitionId != game.competitionId) return false;
         if (gameState != game.gameState) return false;
+        if (lastTurnNumber != game.lastTurnNumber) return false;
         return reactionType == game.reactionType;
     }
 

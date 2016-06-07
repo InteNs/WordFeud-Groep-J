@@ -11,13 +11,14 @@ public class SQL {
         public static final String USERWITHNAME = "SELECT\n  a.naam,\n  a.wachtwoord,\n  r.rol_type\nFROM account a\n  LEFT JOIN accountrol r ON a.naam = accountrol.account_naam\nWHERE a.naam = ?";
         public static final String COMPFOROWNER = "SELECT id FROM competitie WHERE account_naam_eigenaar = ?";
         public static final String LETTERSFORNEWGAME = "SELECT lettertype.karakter, lettertype.aantal FROM lettertype WHERE letterset_code = ?";
-        public static final String POT = "SELECT pot.letter_id, lettertype.waarde, pot.karakter FROM pot LEFT JOIN lettertype ON pot.karakter = lettertype.karakter WHERE spel_id=? GROUP BY letter_id";
+        public static final String POT = "SELECT pot.letter_id, lettertype.waarde, pot.karakter FROM pot LEFT JOIN lettertype ON pot.karakter = lettertype.karakter WHERE spel_id=? AND lettertype.letterset_code=? GROUP BY letter_id;";
+        public static final String TOPPLAYERS = "SELECT account_naam, aantal_gewonnen_spellen FROM competitiestand WHERE competitie_id = ? ORDER BY aantal_gewonnen_spellen DESC LIMIT 5;";
     }
 
     public class ALL {
         public static final String USERS = "SELECT\n  a.naam,\n  a.wachtwoord,\n  r.rol_type\nFROM account a\n  LEFT JOIN accountrol r on a.naam = r.account_naam";
-        public static final String GAMES = "SELECT spel.*, MAX(beurt.id) AS last_turn\n" + "FROM spel\nLEFT JOIN beurt ON spel.id = beurt.spel_id\nGROUP BY spel.id";
-        public static final String COMPETITIONS = "SELECT C.id, C.omschrijving, C.account_naam_eigenaar, AVG(R.gemiddelde_score) AS gemiddelde_score FROM competitie AS C LEFT JOIN rank_avg AS R ON C.id = R.competitie_id GROUP BY C.id;";
+        public static final String GAMES = "SELECT spel.*, MAX(beurt.id) AS last_turn, score.totaalscore, score.account_naam\nFROM spel\nLEFT JOIN beurt ON spel.id = beurt.spel_id\n  LEFT JOIN score ON score.spel_id = spel.id\nGROUP BY score.account_naam, spel.id\nORDER BY id";
+        public static final String COMPETITIONS = "SELECT\n  C.id,\n  C.omschrijving,\n  C.account_naam_eigenaar,\n  AVG(R.gemiddelde_score) AS gemiddelde_score\nFROM competitie AS C LEFT JOIN rank_avg AS R ON C.id = R.competitie_id\nGROUP BY C.id;";
         public static final String PLAYERSCOMPS = "SELECT * FROM deelnemer";
         public static final String STATS = "SELECT * FROM competitiestand";
         public static final String WORDS = "SELECT * FROM woordenboek WHERE account_naam != 'bookowner'";

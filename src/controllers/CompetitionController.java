@@ -16,6 +16,7 @@ public class CompetitionController extends Controller {
     private ArrayList<Competition> fetched;
     private ObservableList<Competition> competitions;
     private ObjectProperty<Competition> selectedCompetition;
+    private ArrayList<Pair<String, Integer>> topPlayers;
 
     public CompetitionController() {
         super();
@@ -24,11 +25,7 @@ public class CompetitionController extends Controller {
     }
 
     public boolean addUserInCompetition(User user, Competition competition) {
-        if (competitionDAO.insertPlayer(user, competition)) {
-            competition.addPlayer(user);
-            return true;
-        }
-        return false;
+        return competitionDAO.insertPlayer(user, competition);
     }
 
     public boolean isUserInCompetition(User thisUser, Competition thisCompetition) {
@@ -80,6 +77,10 @@ public class CompetitionController extends Controller {
         return competitions.filtered(competition -> competition.getPlayers().contains(user));
     }
 
+    public ArrayList<Pair<String, Integer>> getTopPlayers(){
+        return topPlayers;
+    }
+
     @Override
     public void refresh() {
         playerMap.forEach(set ->
@@ -89,13 +90,15 @@ public class CompetitionController extends Controller {
         competitions.forEach(competition ->
                 competition.setGames(getGameController().getGames(competition)));
 
-        if(competitions.contains(getSelectedCompetition()))
+        if(competitions.contains(getSelectedCompetition())) {
             setSelectedCompetition(competitions.get(competitions.indexOf(getSelectedCompetition())));
+        }
     }
 
     @Override
     public void refill() {
-        if (!competitions.equals(fetched))
+        if (!competitions.equals(fetched) || !competitions.stream().allMatch(game ->
+                game.deepEquals(fetched.get(fetched.indexOf(game)))))
             competitions.setAll(fetched);
     }
 
@@ -103,6 +106,7 @@ public class CompetitionController extends Controller {
     public void fetch() {
         fetched = competitionDAO.selectCompetitions();
         playerMap = competitionDAO.getPlayerMap();
+        if(getSelectedCompetition() != null) topPlayers = competitionDAO.getTopPlayers(getSelectedCompetition());
         competitionDAO.close();
     }
 

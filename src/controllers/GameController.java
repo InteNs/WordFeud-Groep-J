@@ -105,22 +105,18 @@ public class GameController extends Controller {
 
     @Override
     public void refresh() {
+
         if (games.contains(getSelectedGame())) {
             Game previousGame = getSelectedGame();
-            if (previousGame.getTurns().size() < fetchedTurns.size()) {
+            if (previousGame.getTurns().size() != fetchedTurns.size()) {
                 Game game = games.get(games.indexOf(previousGame));
                 loadGame(game, getCurrentRole());
-
                 setSelectedGame(game);
-
-                if (game.getTurns().contains(getSelectedTurn())) {
-                    Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
-                    if (getCurrentRole() == Role.PLAYER) {
-                        setSelectedTurn(game.getLastTurn());
-                    } else
-                        setSelectedTurn(turn);
-                }
+                setSelectedTurn(game.getLastTurn());
+                checkForEndGame(game);
             }
+            getSelectedGame().getTurnBuilder().setPot(fetchedPot);
+            getSelectedGame().setMessages(fetchedMessages);
         }
         getOutgoingChallenges(getSessionController().getCurrentUser())
                 .stream()
@@ -198,6 +194,9 @@ public class GameController extends Controller {
     }
 
     private void checkForEndGame(Game selectedGame) {
+        if (!selectedGame.getLastTurn().getUser().equals(getSessionController().getCurrentUser()))
+            return;
+
         switch (selectedGame.getLastTurn().getType()) {
             case PASS:
                 if (isThirdPass(selectedGame)) {
@@ -224,7 +223,8 @@ public class GameController extends Controller {
     private void buildEndTurns(Game selectedGame) {
         for (Turn turn : selectedGame.getTurnBuilder().buildEndTurns(
                 selectedGame.getLastTurn(),
-                selectedGame.getTurns().get(selectedGame.getTurns().size() - 2))) {
+                selectedGame.getTurns().get(selectedGame.getTurns().size() - 2),
+                selectedGame)) {
             gameDAO.insertTurn(selectedGame, turn);
             selectedGame.addTurn(turn);
         }
@@ -250,8 +250,6 @@ public class GameController extends Controller {
                 getSessionController().getCurrentUser(), turnType
         );
         gameDAO.insertTurn(selectedGame, newTurn);
-        selectedGame.addTurn(newTurn);
-        checkForEndGame(selectedGame);
     }
 
     private boolean isThirdPass(Game selectedGame) {

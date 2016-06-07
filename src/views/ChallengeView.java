@@ -4,12 +4,10 @@ import enumerations.Language;
 import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import models.Competition;
@@ -34,7 +32,6 @@ public class ChallengeView extends View {
 
     @FXML private  Label lName;
     private Competition selectedComp;
-    private User selectedUser;
 
     public void challenge() {
         Competition comp = competitionController.getSelectedCompetition();
@@ -90,8 +87,10 @@ public class ChallengeView extends View {
             winLoseChart.setOpacity(1);
             ObservableList<PieChart.Data> pieChartData =
                     FXCollections.observableArrayList(
-                            new PieChart.Data("Gewonnen( "+ selectedUser.getStat(comp.getId()).getWins() + ")", selectedUser.getStat(comp.getId()).getWins()),
-                            new PieChart.Data("Verloren("+ selectedUser.getStat(comp.getId()).getLost() + ")", selectedUser.getStat(comp.getId()).getLost()));
+                            new PieChart.Data("Gewonnen( "+ selectedUser.getStat(comp.getId()).getWins() + ")",
+                                    selectedUser.getStat(comp.getId()).getWins()),
+                            new PieChart.Data("Verloren("+ selectedUser.getStat(comp.getId()).getLost() + ")",
+                                    selectedUser.getStat(comp.getId()).getLost()));
             winLoseChart.setVisible(true);
             winLoseChart.setData(pieChartData);
             lNoStats.setVisible(false);
@@ -112,14 +111,11 @@ public class ChallengeView extends View {
     public void constructor() {
         userController.selectedUserProperty().addListener((observable, oldValue, newValue) -> {
             if (!Objects.equals(oldValue, newValue)) {
-                selectedUser = newValue;
                 selectedComp = competitionController.getSelectedCompetition();
                 setStats(newValue, selectedComp);
             }
         });
-        selectedUser = userController.getSelectedUser();
         selectedComp = competitionController.getSelectedCompetition();
-        ;
         languageBox.getItems().setAll(Language.NL, Language.EN);
     }
 }

@@ -31,7 +31,6 @@ public class ResourceFactory {
         }
     }
 
-
     private void loadImage(String name, Boolean highRes) {
         try {
             File file = new File(getClass().getResource(name).getFile());
