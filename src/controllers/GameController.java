@@ -89,7 +89,7 @@ public class GameController extends Controller {
                         && game.getOpponent().equals(opponent) && game.getReactionType() == ReactionType.UNKNOWN);
     }
 
-    public void loadGame(Game game, Role gameMode) {
+    public void loadGame(Game game) {
         if (game == null) return;
         if (!Objects.deepEquals(game.getTurns(), fetchedTurns)) fetch();
 
@@ -100,7 +100,6 @@ public class GameController extends Controller {
         difference.removeAll(game.getTurns());
         game.getTurns().addAll(difference);
         game.setMessages(fetchedMessages);
-        game.setGameMode(gameMode);
     }
 
     @Override
@@ -110,7 +109,7 @@ public class GameController extends Controller {
             Game previousGame = getSelectedGame();
             if (previousGame.getTurns().size() != fetchedTurns.size()) {
                 Game game = games.get(games.indexOf(previousGame));
-                loadGame(game, getCurrentRole());
+                loadGame(game);
                 setSelectedGame(game);
                 setSelectedTurn(game.getLastTurn());
                 checkForEndGame(game);
@@ -152,7 +151,7 @@ public class GameController extends Controller {
     }
 
     public void setBoardState(Game game, Turn turn) {
-        game.setBoardStateTo(turn, getSessionController().getCurrentUser());
+        game.setBoardStateTo(turn, getSessionController().getCurrentUser(), getCurrentRole());
     }
 
     public void placeTile(Game game, Field field, Tile tile) {

@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import models.Competition;
 import models.Game;
 import views.components.GameCell;
@@ -15,6 +16,7 @@ import java.util.function.Predicate;
 
 public class GameListView extends View {
 
+    @FXML private HBox comboBox;
     @FXML private SplitPane lists;
     @FXML private Accordion gameLists;
     @FXML private Accordion compGameLists;
@@ -51,6 +53,9 @@ public class GameListView extends View {
 
     @Override
     public void constructor() {
+
+        userRoleBox.prefWidthProperty().bind(comboBox.widthProperty().divide(2));
+        gameStateBox.prefWidthProperty().bind(comboBox.widthProperty().divide(2));
         filteredGames = new FilteredList<>(gameController.getGames());
 
         gameStateBox.getItems().setAll(GameState.PLAYING, GameState.FINISHED, GameState.RESIGNED);
@@ -97,7 +102,6 @@ public class GameListView extends View {
                 .addListener((o, oldValue, newValue) -> {
                     if (!Objects.equals(newValue, oldValue)) showCompGames(newValue, true);
                 });
-
     }
 
     private void applyViewingMode(boolean isNew) {
@@ -146,8 +150,9 @@ public class GameListView extends View {
     }
 
     private void setChoiceBoxes() {
-        ObservableList<Role> roles = session.getCurrentUser().getRoles().filtered(role ->
-                role == Role.OBSERVER || role == Role.PLAYER).sorted();
+        ObservableList<Role> roles = session.getCurrentUser().getRoles()
+                .filtered(role -> role == Role.OBSERVER || role == Role.PLAYER)
+                .sorted();
         if (userRoleBox.getItems().size() != roles.size()) {
             Role previous = userRoleBox.getValue();
             userRoleBox.getItems().setAll(roles);
@@ -168,7 +173,6 @@ public class GameListView extends View {
                 userRoleBox.getSelectionModel().select(Role.OBSERVER);
             if (select != null) userRoleBox.getSelectionModel().select(select);
         }
-
     }
 
     private void filter(GameState state) {
@@ -178,15 +182,11 @@ public class GameListView extends View {
     private void selectGame(Game game) {
         if (game != null) {
             gameController.setSelectedGame(game);
-            gameController.loadGame(gameController.getSelectedGame(),gameController.getCurrentRole());
+            gameController.loadGame(gameController.getSelectedGame());
             gameController.setSelectedTurn(game.getLastTurn());
             parent.reload();
             parent.setContent(parent.gameBoardView);
             parent.setTab(parent.gameControlView);
         }
-    }
-
-    public void setVisible(boolean visible){
-        this.setVisible(visible);
     }
 }

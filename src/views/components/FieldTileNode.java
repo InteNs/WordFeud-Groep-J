@@ -100,7 +100,7 @@ public class FieldTileNode extends ImageView {
         return resourceFactory.getImage(myString, true);
     }
 
-    public boolean isPlaceHolder() {
+    public boolean isEmptyRackNode() {
         return isPlaceHolder;
     }
 
