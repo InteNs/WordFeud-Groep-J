@@ -63,6 +63,7 @@ public class GameBoardView extends View {
                         fieldNode.setCursor(Cursor.OPEN_HAND);
                         gameController.placeTile(selectedGame, fieldNode.getField(), tileBeingDragged);
                         event.setDropCompleted(true);
+                        // Checks if the tile placed is a joker, gets selected tile from jokerview and replaces it
                         if (tileBeingDragged.isJokerTile()) {
                             JokerView jokerView = new JokerView(resourceFactory, parent);
                             char choice = jokerView.jokerChoice();
@@ -169,6 +170,12 @@ public class GameBoardView extends View {
         });
     }
 
+    /**
+     * returns a comparator comparing the distance to the given node in the (rack)
+     * nodes arrayList
+     * @param tileNode the target
+     * @return
+     */
     private Comparator<FieldTileNode> distanceToNode(FieldTileNode tileNode) {
         return (o1, o2) -> {
             int diff1 = Math.abs(nodes.indexOf(o1) - nodes.indexOf(tileNode));
@@ -263,6 +270,7 @@ public class GameBoardView extends View {
         gameBoardGrid.setScaleY(BASE * minSize / NORM);
     }
 
+    // Checks the gameboard for jokers, the highlights them
     public void showJokers() {
         gameBoardGrid.getChildren().stream()
                 .map(node -> ((FieldTileNode) node))

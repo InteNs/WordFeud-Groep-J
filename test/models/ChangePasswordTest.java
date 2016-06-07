@@ -27,6 +27,7 @@ public class ChangePasswordTest {
     
     @Test
     public void succesfullPasswordChange() throws Exception {
+        // Changes the password, checks if the new inserted password updated
         sessionController.login("changepasswordtest", "test");
         userController.changePassword("nieuwwachtwoord");
         userController.refresh();

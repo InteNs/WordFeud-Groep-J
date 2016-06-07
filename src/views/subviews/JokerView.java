@@ -61,6 +61,7 @@ public class JokerView extends View {
         hbox.getChildren().add(infoLabel);
         hbox.setAlignment(Pos.CENTER);
 
+        // Loops trough the alphabet, gets the image for every letter, sets a mouselistener and displays them.
         for (alphabet = 'A'; alphabet <= 'Z'; alphabet++) {
             ImageView imageView = new ImageView(resourceFactory.getImage(alphabet + ".png", true));
             imageView.setId("" + alphabet);
@@ -78,6 +79,7 @@ public class JokerView extends View {
         borderpane.setCenter(vBox);
         Scene scene = new Scene(borderpane);
         window.setScene(scene);
+        // when the image is selected this method returns the selecter character
         scene.setOnKeyPressed(e -> {
             for (alphabet = 'A'; alphabet <= 'Z'; alphabet++) {
                 if (e.getCode().toString().equals("" + alphabet)) {
@@ -85,6 +87,8 @@ public class JokerView extends View {
                 }
             }
         });
+
+        // Displays the jokerview centered on the application
         window.show();
         window.setX(mainView.gameBoardView.getScene().getWindow().getX() + mainView.gameBoardView.getScene().widthProperty().intValue() /2 - window.getWidth()/2);
         window.setY(mainView.gameBoardView.getScene().getWindow().getY() + mainView.gameBoardView.getScene().heightProperty().intValue() /2 - window.getHeight()/2);
