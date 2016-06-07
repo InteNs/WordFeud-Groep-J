@@ -57,16 +57,32 @@ public class UserController extends Controller {
             return userDAO.selectUser(username, null) != null;
     }
 
+    /**
+     *
+     * @param username name of user to insert
+     * @param password password of user to insert
+     * @return true if insert is succesfull
+     */
     public boolean insertUser(String username, String password) {
         User user = new User(username, password, Role.PLAYER);
         return userDAO.insertUser(user);
     }
 
+    /**
+     *
+     * @param username name of user to check
+     * @return true if username meets the requirements (5 -25 char, only numbers and letters)
+     */
     public boolean isValidUsername(String username) {
         return username.length() >= 5 & username.length() <= 25
                 && username.matches("[a-zA-Z0-9]+");
     }
 
+    /**
+     *
+     * @param password password to check
+     * @return true if password meets the requirements (length: 5 - 25)
+     */
     public boolean isValidPassword(String password) {
         return password.length() >= 5 && password.length() <= 25 && (!password.contains(" "));
     }
