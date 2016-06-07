@@ -17,14 +17,12 @@ public class WordController extends Controller {
     private ArrayList<Word> fetched;
     private ObjectProperty<Word> selectedWord;
     private ObservableList<Word> words;
-    private ArrayList<String> existingWords;
     private ArrayList<String> wordsList;
 
     public WordController() {
         super();
         words = FXCollections.observableArrayList();
         selectedWord = new SimpleObjectProperty<>();
-        existingWords = new ArrayList<>();
         wordsList = new ArrayList<>();
     }
 
@@ -74,7 +72,7 @@ public class WordController extends Controller {
 
     public boolean wordInList(String word) {
         for (Word w : words) {
-            if (w.getWord().equals(word)) {
+            if (w.getWord().equals(word.toLowerCase())) {
                 return true;
             }
         }
@@ -87,11 +85,12 @@ public class WordController extends Controller {
 
     public ArrayList<String> existingWords(ArrayList<String> words) {
         ArrayList<String> result = new ArrayList<>();
+        wordsList.forEach(String::toLowerCase);
         for (String s : words) {
-            wordsList.add(s.toLowerCase());
-            if (wordInList(s.toLowerCase())) {
-                result.add(s.toLowerCase());
-                wordsList.remove(s.toLowerCase());
+            wordsList.add(s);
+            if (wordInList(s)) {
+                result.add(s);
+                wordsList.remove(s);
             }
         }
         return result;
@@ -101,7 +100,7 @@ public class WordController extends Controller {
         wordDAO.insertWords(words);
     }
 
-    public Word createWord(String wordString, String owner, String letterSet, WordStatus status) {
-        return new Word(wordString, owner, letterSet, status);
+    public Word createWord(String wordString,String letterSet) {
+        return new Word(wordString, getSessionController().getCurrentUser().toString(), letterSet, WordStatus.PENDING);
     }
 }

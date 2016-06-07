@@ -1,7 +1,6 @@
 package views.subviews;
 
-import enumerations.Language;
-import enumerations.WordStatus;
+
 import javafx.geometry.*;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -14,22 +13,15 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import models.User;
-import models.Word;
 import views.MainView;
 
 import java.util.ArrayList;
 
 public class SubmitWordView {
     private ArrayList<CheckBox> cbList;
-    private Language gameLanguage;
-    private User owner;
     private Stage window = new Stage();
-    private ArrayList<Word> wordList = new ArrayList<>();
 
-    public SubmitWordView(ArrayList<String> words, ArrayList<String> existingWords, Language gameLanguage, User user, MainView mainView) {
-        this.gameLanguage = gameLanguage;
-        owner = user;
+    public SubmitWordView(ArrayList<String> words, ArrayList<String> existingWords, MainView mainView) {
         cbList = new ArrayList<>();
 
         window.initModality(Modality.WINDOW_MODAL);
@@ -62,24 +54,27 @@ public class SubmitWordView {
         for (String w : words) {
             Label label = new Label(w.toLowerCase());
             label.setPadding(new Insets(10, 10, 10, 10));
+            label.setMinSize(75,10);
             CheckBox checkBox = new CheckBox();
             checkBox.setUserData(w);
             checkBox.setPadding(new Insets(10, 0, 0, 10));
             label.setPadding(new Insets(10, 0, 0, 10));
+            checkBox.setAlignment(Pos.CENTER_RIGHT);
             HBox wordBox = new HBox(label, checkBox);
             wordBox.setAlignment(Pos.CENTER);
             rootVbox.getChildren().addAll(wordBox);
             cbList.add(checkBox);
         }
 
-        if(words.size() > 0 && existingWords.size() > 0){
+        if (words.size() > 0 && existingWords.size() > 0) {
             final Separator separator = new Separator();
-            separator.setPadding(new Insets(10,0,10,0));
+            separator.setPadding(new Insets(10, 0, 10, 0));
             rootVbox.getChildren().add(separator);
         }
 
         if (existingWords.size() > 0) {
             Label lExistingWords = new Label("De volgende woorden zijn ongeldig en al ingediend");
+            lExistingWords.setPadding(new Insets(0,0,10,0));
             lExistingWords.setAlignment(Pos.CENTER);
             rootVbox.getChildren().add(lExistingWords);
             for (String s : existingWords) {
@@ -110,7 +105,7 @@ public class SubmitWordView {
     }
 
     public ArrayList<String> submitWords() {
-        ArrayList<String>  result = new ArrayList<>();
+        ArrayList<String> result = new ArrayList<>();
         for (CheckBox cb : cbList) {
             if (cb.isSelected()) {
                 result.add(cb.getUserData().toString().toLowerCase());
@@ -118,9 +113,5 @@ public class SubmitWordView {
         }
         window.close();
         return result;
-    }
-
-    public ArrayList<Word> getWordList() {
-        return wordList;
     }
 }
