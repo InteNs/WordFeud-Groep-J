@@ -237,11 +237,11 @@ public class gameControlView extends View {
         ArrayList<Word> submittedWords = new ArrayList<>();
         words = wordController.getWordsList();
         if (words == null) return;
-            SubmitWordView submitWordView = new SubmitWordView(words,existingWords, gameController.getSelectedGame().getLanguage(), session.getCurrentUser(), parent);
+            SubmitWordView submitWordView = new SubmitWordView(words,existingWords,parent);
             words.clear();
             existingWords.clear();
         for(String w : submitWordView.submitWords())
-            submittedWords.add(wordController.createWord(w.toLowerCase(), session.getCurrentUser().toString(), gameController.getSelectedGame().getLanguage().toString(), WordStatus.PENDING));
+            submittedWords.add(wordController.createWord(w.toLowerCase(),gameController.getSelectedGame().getLanguage().toString()));
             wordController.submitWords(submittedWords);
     }
 

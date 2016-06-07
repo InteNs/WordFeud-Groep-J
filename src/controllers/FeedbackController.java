@@ -1,6 +1,6 @@
 package controllers;
 
-import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+import com.mysql.jdbc.CommunicationsException;
 import database.ShittyDatabaseException;
 import enumerations.Feedback;
 import main.Main;
