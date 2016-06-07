@@ -85,8 +85,8 @@ public class WordInfoView extends View {
             buttonDecline.setVisible(false);
             labelStatus.setVisible(true);
             labelConfirm.setText(selectedWord + " is geaccepteerd!");
-            refresh();
             doAnimation();
+            parent.reload();
         }
 
     }
@@ -98,8 +98,8 @@ public class WordInfoView extends View {
             buttonDecline.setVisible(false);
             labelStatus.setVisible(true);
             labelConfirm.setText(selectedWord + " is afgewezen!");
-            refresh();
             doAnimation();
+            parent.reload();
         }
     }
 
