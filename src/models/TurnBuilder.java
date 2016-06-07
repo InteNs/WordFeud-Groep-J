@@ -19,7 +19,7 @@ public class TurnBuilder {
     private ObservableList<Tile> currentRack;
     private ObservableList<Field> fieldsChanged;
     private ArrayList<ArrayList<Field>> listOfFieldsWithWords;
-    private int score;
+    private Integer score;
     private ObservableList<Tile> pot;
     private Field bubbleField;
 
@@ -39,7 +39,10 @@ public class TurnBuilder {
     }
 
     public Field getBubbleField() {
-        return bubbleField;
+       if (!listOfFieldsWithWords.isEmpty()){
+           return listOfFieldsWithWords.get(0).get(listOfFieldsWithWords.get(0).size()-1);
+       }
+        return null;
     }
 
     public void setBubbleField(Field bubbleField) {
@@ -86,7 +89,6 @@ public class TurnBuilder {
         verifyAndCalculate();
         if (!listOfFieldsWithWords.isEmpty()) {
             //gets the last field of the primary word found
-            setBubbleField(listOfFieldsWithWords.get(0).get(listOfFieldsWithWords.get(0).size()-1));
             return getWordsFoundThisTurn().get(0);
         }
         return null;
@@ -123,6 +125,11 @@ public class TurnBuilder {
     }
 
     public int getScore() {
+        if (score == null){
+            score = 0;
+        } else {
+            return score;
+        }
         return score;
     }
 

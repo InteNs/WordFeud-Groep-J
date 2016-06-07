@@ -5,9 +5,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <VBox fx:id="root" alignment="CENTER" stylesheets="@style.css" xmlns="http://javafx.com/javafx/null"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.GameBoardView">
     <StackPane VBox.vgrow="ALWAYS" prefWidth="2000" prefHeight="2000" alignment="CENTER" fx:id="stackPane">
+        <Pane fx:id="bubblePane" pickOnBounds="false" focusTraversable="true"/>
         <GridPane alignment="CENTER" fx:id="gameBoardGrid"/>
     </StackPane>
     <HBox fx:id="playerRackGrid" alignment="CENTER" minHeight="84" minWidth="608" spacing="6.0">

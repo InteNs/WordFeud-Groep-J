@@ -38,6 +38,8 @@ public class GameBoardView extends View {
     private HBox playerRackGrid;
     @FXML
     private Tile tileBeingDragged;
+    @FXML
+    private Pane bubblePane;
 
     public void displayGameBoard(Game selectedGame, Turn selectedTurn) {
         Field[][] gameBoard = selectedGame.getTurnBuilder().getGameBoard();
@@ -216,6 +218,7 @@ public class GameBoardView extends View {
 
     @Override
     public void refresh() {
+        tester();
     }
 
     @Override
@@ -236,19 +239,74 @@ public class GameBoardView extends View {
                 showTurn(gameController.getSelectedGame(), gameController.getSelectedTurn());
             }
         });
-        gameController.selectedGameProperty().addListener((observable, oldValue, newValue) -> {
-           if (newValue != null){
-               newValue.getTurnBuilder().getFieldsChanged().addListener((ListChangeListener<? super Field>) observable1 -> {
-                   if (newValue.getTurnBuilder().getFieldsChanged().isEmpty() || newValue.getTurnBuilder().getScore() == 0){
-                       stackPane.getChildren().remove(scoreOverlay);
-                   } else {
-                       stackPane.getChildren().add(new ScoreOverlay(newValue.getTurnBuilder().getScore()));
-                   }
-               });
-           }
-        });
+
         stackPane.widthProperty().addListener(e -> sizeBoard());
         stackPane.heightProperty().addListener(e -> sizeBoard());
+        tester();
+
+    }
+
+    private void tester(){
+//        gameController.selectedGameProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue != null){
+//                newValue.getTurnBuilder().getFieldsChanged().addListener((ListChangeListener<? super Field>) observable1 -> {
+//                    int scoreToShow = gameController.getSelectedGame().getTurnBuilder().getScore();
+//                    if (scoreToShow > 0) {
+//                        scoreOverlay = new ScoreOverlay(scoreToShow);
+//                    }
+//                    if(observable1.getList().isEmpty()){
+//                        bubblePane.getChildren().remove(scoreOverlay);
+//                    } else {
+//                        int xPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().getX();
+//                        int yPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().getY();
+//                        scoreOverlay.setLayoutX(findNodeInGrid(xPosInGameBoard,yPosInGameBoard).getLayoutX()+15);
+//                        scoreOverlay.setLayoutY(findNodeInGrid(xPosInGameBoard,yPosInGameBoard).getLayoutY()+15);
+//                        bubblePane.getChildren().add(scoreOverlay);
+//                    }
+//                });
+//            }
+//        });
+
+//        gameController.selectedGameProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue != null){
+//                newValue.getTurnBuilder().getFieldsChanged().addListener((ListChangeListener<? super Field>) observable1 -> {
+//                    int scoreToShow = gameController.getSelectedGame().getTurnBuilder().getScore();
+//                    if (scoreToShow > 0) {
+//                        scoreOverlay = new ScoreOverlay(scoreToShow);
+//                    }
+//                    if(observable1.getList().isEmpty()){
+//                        bubblePane.getChildren().remove(scoreOverlay);
+//                    } else {
+//                        int xPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().getX();
+//                        int yPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().getY();
+//                       scoreOverlay.nignog(xPosInGameBoard,yPosInGameBoard);
+//                        bubblePane.getChildren().add(scoreOverlay);
+//                    }
+//                });
+//            }
+//        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 
@@ -256,6 +314,20 @@ public class GameBoardView extends View {
         gameController.setBoardState(game, turn);
         displayGameBoard(game, turn);
         displayPlayerRack(game, turn);
+        game.getTurnBuilder().getFieldsChanged().addListener((ListChangeListener<? super Field>) observable -> {
+            int scoreToShow = gameController.getSelectedGame().getTurnBuilder().getScore();
+                    if (scoreToShow > 0) {
+                        scoreOverlay = new ScoreOverlay(scoreToShow);
+                    }
+                    if(observable.getList().isEmpty()){
+                       bubblePane.getChildren().remove(scoreOverlay);
+                    } else {
+                        int xPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().getX();
+                        int yPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().getY();
+                        scoreOverlay.nignog(xPosInGameBoard,yPosInGameBoard);
+                       bubblePane.getChildren().add(scoreOverlay);
+                    }
+        });
     }
 
     private void sizeBoard() {
