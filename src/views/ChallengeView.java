@@ -47,6 +47,7 @@ public class ChallengeView extends View {
     }
 
     private void setFeedback(int feedback) {
+        challenge.setVisible(true);
         challenge.setTextFill(Color.RED);
         switch (feedback) {
             case 0:
@@ -103,7 +104,7 @@ public class ChallengeView extends View {
     @Override
     public void clear() {
         challenge.setTextFill(Color.BLACK);
-        challenge.setText("");
+        challenge.setVisible(false);
     }
 
     @Override
