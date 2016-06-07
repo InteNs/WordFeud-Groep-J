@@ -31,6 +31,7 @@ public class RegisterView extends View {
     public void constructor() {
     }
 
+    // Gets input from user, checks it & opens login view / shows failed login label
     @FXML
     public void register() {
         if (!userController.userExists(userNameField.getText())) {
