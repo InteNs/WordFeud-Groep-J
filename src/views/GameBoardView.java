@@ -218,7 +218,6 @@ public class GameBoardView extends View {
 
     @Override
     public void refresh() {
-        tester();
     }
 
     @Override
@@ -242,72 +241,7 @@ public class GameBoardView extends View {
 
         stackPane.widthProperty().addListener(e -> sizeBoard());
         stackPane.heightProperty().addListener(e -> sizeBoard());
-        tester();
-
-    }
-
-    private void tester(){
-//        gameController.selectedGameProperty().addListener((observable, oldValue, newValue) -> {
-//            if (newValue != null){
-//                newValue.getTurnBuilder().getFieldsChanged().addListener((ListChangeListener<? super Field>) observable1 -> {
-//                    int scoreToShow = gameController.getSelectedGame().getTurnBuilder().getScore();
-//                    if (scoreToShow > 0) {
-//                        scoreOverlay = new ScoreOverlay(scoreToShow);
-//                    }
-//                    if(observable1.getList().isEmpty()){
-//                        bubblePane.getChildren().remove(scoreOverlay);
-//                    } else {
-//                        int xPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().getX();
-//                        int yPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().getY();
-//                        scoreOverlay.setLayoutX(findNodeInGrid(xPosInGameBoard,yPosInGameBoard).getLayoutX()+15);
-//                        scoreOverlay.setLayoutY(findNodeInGrid(xPosInGameBoard,yPosInGameBoard).getLayoutY()+15);
-//                        bubblePane.getChildren().add(scoreOverlay);
-//                    }
-//                });
-//            }
-//        });
-
-//        gameController.selectedGameProperty().addListener((observable, oldValue, newValue) -> {
-//            if (newValue != null){
-//                newValue.getTurnBuilder().getFieldsChanged().addListener((ListChangeListener<? super Field>) observable1 -> {
-//                    int scoreToShow = gameController.getSelectedGame().getTurnBuilder().getScore();
-//                    if (scoreToShow > 0) {
-//                        scoreOverlay = new ScoreOverlay(scoreToShow);
-//                    }
-//                    if(observable1.getList().isEmpty()){
-//                        bubblePane.getChildren().remove(scoreOverlay);
-//                    } else {
-//                        int xPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().getX();
-//                        int yPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().getY();
-//                       scoreOverlay.nignog(xPosInGameBoard,yPosInGameBoard);
-//                        bubblePane.getChildren().add(scoreOverlay);
-//                    }
-//                });
-//            }
-//        });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        scoreOverlay = new ScoreOverlay();
     }
 
     private void showTurn(Game game, Turn turn) {
@@ -316,17 +250,18 @@ public class GameBoardView extends View {
         displayPlayerRack(game, turn);
         game.getTurnBuilder().getFieldsChanged().addListener((ListChangeListener<? super Field>) observable -> {
             int scoreToShow = gameController.getSelectedGame().getTurnBuilder().getScore();
-                    if (scoreToShow > 0) {
-                        scoreOverlay = new ScoreOverlay(scoreToShow);
-                    }
-                    if(observable.getList().isEmpty()){
-                       bubblePane.getChildren().remove(scoreOverlay);
-                    } else {
-                        int xPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().getX();
-                        int yPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().getY();
-                        scoreOverlay.nignog(xPosInGameBoard,yPosInGameBoard);
-                       bubblePane.getChildren().add(scoreOverlay);
-                    }
+            if (observable.getList().isEmpty() && gameController.getSelectedGame().getTurnBuilder().getFieldsChanged().isEmpty()) {
+                scoreOverlay.setVisible(false);
+            } else {
+                int xPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().getX();
+                int yPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().getY();
+                int layoutX = (int)findNodeInGrid(xPosInGameBoard,yPosInGameBoard).getLayoutX();
+                int layoutY = (int)findNodeInGrid(xPosInGameBoard,yPosInGameBoard).getLayoutY();
+
+                scoreOverlay.setCircleInformation(layoutX, layoutY, scoreToShow);
+                bubblePane.getChildren().add(scoreOverlay);
+                scoreOverlay.setVisible(true);
+            }
         });
     }
 
@@ -334,8 +269,8 @@ public class GameBoardView extends View {
         double base = 1.0;
         double norm = 600;
         double min = Math.min(stackPane.getWidth(), stackPane.getHeight());
-        gameBoardGrid.setScaleX(base * min/norm);
-        gameBoardGrid.setScaleY(base * min/norm);
+        gameBoardGrid.setScaleX(base * min / norm);
+        gameBoardGrid.setScaleY(base * min / norm);
     }
 
     public void showJokers() {
