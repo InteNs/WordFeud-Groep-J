@@ -46,8 +46,8 @@ public class ChallengeView extends View {
         }
     }
 
-
     private void setFeedback(int feedback) {
+        challenge.setVisible(true);
         challenge.setTextFill(Color.RED);
         switch (feedback) {
             case 0:
@@ -97,7 +97,6 @@ public class ChallengeView extends View {
         }
     }
 
-
     @Override
     public void refresh() {
     }
@@ -105,6 +104,7 @@ public class ChallengeView extends View {
     @Override
     public void clear() {
         challenge.setTextFill(Color.BLACK);
+        challenge.setVisible(false);
     }
 
     @Override
@@ -114,6 +114,7 @@ public class ChallengeView extends View {
                 selectedComp = competitionController.getSelectedCompetition();
                 if (!selectedComp.hasUser(newValue)) return;
                 setStats(newValue, selectedComp);
+                clear();
             }
         });
         selectedComp = competitionController.getSelectedCompetition();
