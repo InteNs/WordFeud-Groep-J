@@ -29,7 +29,7 @@ public class UserListView extends View {
         loadStats();
         if (competitionController.getSelectedCompetition() != null) {
             showCompUsers(competitionController.getSelectedCompetition(), false);
-            compUsersList.setItems(filteredUsers.filtered(filterComp));
+            //compUsersList.setItems(filteredUsers.filtered(filterComp));
         }
     }
 
