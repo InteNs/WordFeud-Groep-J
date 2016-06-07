@@ -11,9 +11,9 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
         </padding>
         <TextField fx:id="filterField" promptText="zoeken..."/>
-        <HBox>
-            <ChoiceBox styleClass="custom-choice" fx:id="userRoleBox" prefWidth="10000"/>
-            <ChoiceBox styleClass="custom-choice" fx:id="gameStateBox" prefWidth="10000"/>
+        <HBox fx:id="comboBox">
+            <ChoiceBox styleClass="custom-choice" fx:id="userRoleBox"/>
+            <ChoiceBox styleClass="custom-choice" fx:id="gameStateBox"/>
         </HBox>
         <SplitPane fx:id="lists" VBox.vgrow="ALWAYS" dividerPositions="1" orientation="VERTICAL">
             <Accordion fx:id="gameLists" SplitPane.resizableWithParent="false">

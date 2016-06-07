@@ -38,13 +38,12 @@ public class FeedbackController extends Controller {
                     "Geen connectie met de database mogelijk,\n" +
                     "check uw internet verbinding of meld dit bij de systeembeheerder";
             feedback = Feedback.ERROR;
-        }
-
-        if ( e instanceof NullPointerException) {
+        } else if ( e instanceof NullPointerException) {
             message = "Er is iets mis gegaan!";
             feedback = Feedback.WARNING;
+        } else {
+            feedback = Feedback.ERROR;
         }
-
         new FeedbackView(application.getWindow(), message, feedback);
     }
 

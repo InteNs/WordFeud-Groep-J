@@ -88,7 +88,7 @@ public class gameControlView extends View {
         gameController.selectedGameProperty()
                 .addListener((o, oldValue, newValue) -> {
                     if (!Objects.equals(oldValue, newValue) && newValue != null)
-                        gameController.loadGame(newValue, gameController.getCurrentRole());
+                        gameController.loadGame(newValue);
                     showGame(newValue, true);
                 });
     }
@@ -98,8 +98,9 @@ public class gameControlView extends View {
         if (isNew) chatList.scrollTo(chatList.getItems().size());
         turnSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(newGame.getTurns()));
         turnList.getItems().setAll(newGame.getTurns());
-        if (newGame.getGameMode() == Role.PLAYER) selectTurn(newGame.getLastTurn());
-        else if (newGame.getGameMode() == Role.OBSERVER) {
+        if (gameController.getCurrentRole() == Role.PLAYER)
+            selectTurn(newGame.getLastTurn());
+        else if (gameController.getCurrentRole() == Role.OBSERVER) {
             if (newGame.getTurns().contains(gameController.getSelectedTurn())) {
                 selectTurn(gameController.getSelectedTurn());
                 //turnList.scrollTo(gameController.getSelectedTurn());
