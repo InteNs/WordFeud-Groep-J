@@ -29,17 +29,20 @@ public class ChallengeView extends View {
     private Label lAvg_score;
     @FXML
     private Label lTotal_games;
-
-    @FXML private  Label lName;
+    @FXML
+    private Label lName;
     private Competition selectedComp;
 
+    /**
+     * This method calls the challenge method in gameController if the button was pressed after a language
+     * was selected. Also calls the setFeedback method when the challenge method sends a return.
+     */
     public void challenge() {
-        Competition comp = competitionController.getSelectedCompetition();
-        User requester = session.getCurrentUser();
-        User receiver = userController.getSelectedUser();
-
         if (!languageBox.getSelectionModel().isEmpty()) {
-            int feedback = gameController.challenge(languageBox.getValue(), requester, receiver, comp);
+            int feedback = gameController.challenge(languageBox.getValue(),
+                    session.getCurrentUser(),
+                    userController.getSelectedUser(),
+                    competitionController.getSelectedCompetition());
             setFeedback(feedback);
         } else {
             this.setFeedback(4);

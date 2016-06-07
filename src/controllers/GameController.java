@@ -263,10 +263,13 @@ public class GameController extends Controller {
         selectedGame.getTurnBuilder().fillCurrentRack(selectedGame.getPot());
         insertTurn(selectedGame, TurnType.SWAP);
     }
-
+    
     public int challenge(Language language, User requester, User receiver, Competition comp) {
+        /**Check if challenger is in the same competition as the receiver */
         if (isUserInSelectedComp(requester, comp)) {
+            /**Check if the two players arent playing a game in the selected competition already */
             if (!this.playingGame(requester, receiver, comp)) {
+                /**Check if the challenger is not inviting themselves */
                 if (validInvite(requester, receiver)) {
                     Game game = new Game(
                             0, 0, comp.getId(),
