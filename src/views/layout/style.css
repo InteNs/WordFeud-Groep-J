@@ -19,15 +19,15 @@
 }
 
 .custom-toggle {
-    -fx-background-image: url("../../resources/icons/refresh-icon.png");
+    -fx-background-image: url("../../resources/icons/refresh.png");
 }
 
 .Logout {
-    -fx-background-image: url("../../resources/icons/Power-icon.png");
+    -fx-background-image: url("../../resources/icons/power.png");
 }
 
 .change-pass {
-    -fx-background-image: url("../../resources/icons/Lock-3-icon.png");
+    -fx-background-image: url("../../resources/icons/lock.png");
 }
 
 .error-text {
@@ -62,10 +62,10 @@
 }
 
 .close-tab {
-    -fx-background-image: url("../../resources/icons/Eye-Invisible-icon.png");
+    -fx-background-image: url("../../resources/icons/eye-invisible.png");
 }
 .close-tab:selected {
-    -fx-background-image: url("../../resources/icons/Eye-Visible-icon.png");
+    -fx-background-image: url("../../resources/icons/eye-visible.png");
 }
 
 .game-label {
