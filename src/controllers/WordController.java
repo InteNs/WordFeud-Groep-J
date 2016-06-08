@@ -17,13 +17,13 @@ public class WordController extends Controller {
     private ArrayList<Word> fetched;
     private ObjectProperty<Word> selectedWord;
     private ObservableList<Word> words;
-    private ArrayList<String> wordsList;
+    private ArrayList<String> invalidWordsList;
 
     public WordController() {
         super();
         words = FXCollections.observableArrayList();
         selectedWord = new SimpleObjectProperty<>();
-        wordsList = new ArrayList<>();
+        invalidWordsList = new ArrayList<>();
     }
 
     public Word getSelectedWord() {
@@ -70,6 +70,10 @@ public class WordController extends Controller {
         return true;
     }
 
+    /**
+     * @param word to check if already exists in wordlist
+     * @return true if word exists
+     */
     public boolean wordInList(String word) {
         for (Word w : words) {
             if (w.getWord().equals(word.toLowerCase())) {
@@ -79,18 +83,25 @@ public class WordController extends Controller {
         return false;
     }
 
-    public ArrayList<String> getWordsList() {
-        return wordsList;
+    public ArrayList<String> getInvalidWordsList() {
+        return invalidWordsList;
     }
 
-    public ArrayList<String> existingWords(ArrayList<String> words) {
+    /**
+     * @param words list of invalid words to be submitted
+     * @return the list of words that is invalid and have not yet been submitted
+     */
+    public ArrayList<String> filterWords(ArrayList<String> words) {
+        //First add al words to the wordsList and net filter the existingWords out of it.
+        //So this methode returns a list with only the non existing words and creates
+        //a list with the existing words so we can show both lists in the view
         ArrayList<String> result = new ArrayList<>();
-        wordsList.forEach(String::toLowerCase);
+        invalidWordsList.forEach(String::toLowerCase);
         for (String s : words) {
-            wordsList.add(s);
-            if (wordInList(s)) {
+            invalidWordsList.add(s); //Add all submitted words
+            if (wordInList(s)) { //if word is already submitted add it to the return list.
                 result.add(s);
-                wordsList.remove(s);
+                invalidWordsList.remove(s); // remove it from the return list.
             }
         }
         return result;

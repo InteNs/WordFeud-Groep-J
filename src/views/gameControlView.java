@@ -230,22 +230,33 @@ public class gameControlView extends View {
         }
     }
 
+    /**
+     * Plays a word and shows invalid words for submission
+     */
     @FXML
     public void playWord() {
-        ArrayList<String> words = gameController.playWord(gameController.getSelectedGame());
-        if (words == null) return;
-        ArrayList<String> existingWords = wordController.existingWords(words);
-        ArrayList<Word> submittedWords = new ArrayList<>();
-        words = wordController.getWordsList();
-        if (words.isEmpty())
+        ArrayList<Word> wordsForSubmit = new ArrayList<>(); //the list with the new words that will be submitted
+        //get al invalid words
+        ArrayList<String> invalidWords = gameController.playWord(gameController.getSelectedGame());
+        if (invalidWords == null) return;
+        //get the words that where already submitted in the db.
+        ArrayList<String> existingWords = wordController.filterWords(invalidWords);
+        //Set words to only the non existing words (filtering is done in wordController.filterWords()
+        invalidWords = wordController.getInvalidWordsList();
+        if (invalidWords.isEmpty())
             parent.reload();
         else {
-            SubmitWordView submitWordView = new SubmitWordView(words, existingWords, parent);
-            words.clear();
+            SubmitWordView submitWordView = new SubmitWordView(invalidWords, existingWords, parent);
+            invalidWords.clear();
             existingWords.clear();
-            for (String w : submitWordView.submitWords())
-                submittedWords.add(wordController.createWord(w.toLowerCase(), gameController.getSelectedGame().getLanguage().toString()));
-            wordController.submitWords(submittedWords);
+            //Loop trough the words the user has selected to submit and submit them
+            for (String w : submitWordView.submitWords()) {
+                wordsForSubmit.add(wordController.createWord(w.toLowerCase(), gameController.getSelectedGame().getLanguage().toString()));
+            }
+            //submit the words
+            if (wordsForSubmit.size() > 0) {
+                wordController.submitWords(wordsForSubmit);
+            }
             parent.reload();
         }
     }
