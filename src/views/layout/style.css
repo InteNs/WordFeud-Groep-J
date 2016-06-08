@@ -28,6 +28,9 @@
     -fx-background-image: url("../../resources/icons/refresh.png");
 }
 
+.custom-toggle:disabled {
+    -fx-opacity: 1;
+}
 .Logout {
     -fx-background-image: url("../../resources/icons/power.png");
 }

@@ -85,6 +85,7 @@ public class MainView extends View implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setControl(false);
         setContent(loginView);
+        threadToggle.setDisable(true);
         /*
         Put your viewController in this list for it
         get access to parent, and have it's constructor called
