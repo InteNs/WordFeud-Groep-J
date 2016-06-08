@@ -1,15 +1,22 @@
 package services;
 
 import enumerations.Role;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Tab;
 import models.User;
 import views.MainView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
+
+import org.omg.CORBA.PRIVATE_MEMBER;
 
 /**
  * Created by Christoph on 6-6-2016.
  */
 public class TabService {
+    
     public static void hideForbiddenTabs(MainView mainView, User user){
         // games tab
         if ((user.hasRole(Role.ADMINISTRATOR) || user.hasRole(Role.MODERATOR)) && !user.hasRole(Role.PLAYER) && !user.hasRole(Role.OBSERVER)){
@@ -63,6 +70,16 @@ public class TabService {
         // no roles no tabs
         if (user.getRoles().filtered(role -> role != null).isEmpty()){
             mainView.control.getTabs().clear();
+        }
+    }
+    
+    public static void addTabListeners(MainView mainView){
+        ObservableList<Tab> tabs = mainView.control.getTabs();
+        HashMap<Tab,String> tabNameBuffer = new HashMap<>();
+        
+        for (Tab tab : mainView.control.getTabs()){
+            tabNameBuffer.put(tab, tab.getText());
+            tab.setText("       ");
         }
     }
 }
