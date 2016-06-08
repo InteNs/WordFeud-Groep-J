@@ -6,15 +6,8 @@ import javafx.scene.control.Tab;
 import models.User;
 import views.MainView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
-import org.omg.CORBA.PRIVATE_MEMBER;
-
-/**
- * Created by Christoph on 6-6-2016.
- */
 public class TabService {
 
     public static void hideForbiddenTabs(MainView mainView, User user){
