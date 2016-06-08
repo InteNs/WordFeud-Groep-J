@@ -42,9 +42,10 @@ public class CompetitionListView extends View {
         filterText = competition -> competition.toString().toLowerCase().contains(filterField.getText().toLowerCase());
         filterOwned = competition -> competition.getOwner().equals(session.getCurrentUser());
 
-        filterField.textProperty().addListener(observable ->
-                filteredCompetitions.setPredicate(filterText)
-        );
+        filterField.textProperty().addListener(observable -> {
+                    filteredCompetitions.setPredicate(null);
+                    filteredCompetitions.setPredicate(filterText);
+                });
 
         competitionList.setItems(filteredCompetitions);
 
