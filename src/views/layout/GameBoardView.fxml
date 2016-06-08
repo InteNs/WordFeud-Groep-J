@@ -6,11 +6,14 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.Group?>
 <VBox fx:id="root" alignment="CENTER" stylesheets="@style.css" xmlns="http://javafx.com/javafx/null"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.GameBoardView">
     <StackPane VBox.vgrow="ALWAYS" prefWidth="2000" prefHeight="2000" alignment="CENTER" fx:id="stackPane">
-        <GridPane alignment="CENTER" fx:id="gameBoardGrid"/>
-        <Pane fx:id="bubblePane" pickOnBounds="false" focusTraversable="true"/>
+        <Group fx:id="scaleGroup">
+            <GridPane alignment="CENTER" fx:id="gameBoardGrid"/>
+            <Pane fx:id="bubblePane" pickOnBounds="false" focusTraversable="true"/>
+        </Group>
     </StackPane>
     <HBox fx:id="playerRackGrid" alignment="CENTER" minHeight="84" minWidth="608" spacing="6.0">
         <padding>

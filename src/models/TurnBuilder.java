@@ -22,6 +22,7 @@ public class TurnBuilder {
     private Integer score;
     private ObservableList<Tile> pot;
     private Field bubbleField;
+    private boolean validAction;
 
 
     public TurnBuilder(Field[][] gameBoard, ObservableList<Tile> currentRack) {
@@ -38,15 +39,36 @@ public class TurnBuilder {
         this.fieldsChanged = FXCollections.observableArrayList();
     }
 
-    public Field getBubbleField() {
+    public ArrayList<Field> getBubbleField() {
+        ArrayList<Field> bubbleFields = new ArrayList<>();
        if (!listOfFieldsWithWords.isEmpty()){
-           return listOfFieldsWithWords.get(0).get(listOfFieldsWithWords.get(0).size()-1);
+           int highScore = 0;
+           int score = 0;
+           ArrayList<Field> wordToReturn = new ArrayList<>();
+           for (ArrayList<Field> listOfFieldsWithWord : listOfFieldsWithWords) {
+               score = calculateWordScore(listOfFieldsWithWord);
+               if (score > highScore){
+                   highScore = score;
+                   wordToReturn = listOfFieldsWithWord;
+               }
+           }
+           bubbleFields.add(wordToReturn.get(0));
+           bubbleFields.add(wordToReturn.get(wordToReturn.size()-1));
+           return bubbleFields;
        }
         return null;
     }
 
     public void setBubbleField(Field bubbleField) {
         this.bubbleField = bubbleField;
+    }
+
+    public boolean isValidAction() {
+        return validAction;
+    }
+
+    public void setValidAction(boolean validAction) {
+        this.validAction = validAction;
     }
 
     public ArrayList<Turn> buildBeginTurns(Game selectedGame) {
@@ -193,6 +215,7 @@ public class TurnBuilder {
         if (fieldsChanged.size() == 0 || startFieldIsEmpty())
             validTurn = false;
 
+
         if (validTurn) {
             /** fetch first X and all X coords */
             int x = fieldsChanged.get(0).getX();
@@ -283,10 +306,14 @@ public class TurnBuilder {
         if (this.getCurrentRack() != null)
             System.out.println(validTurn);
 
-        if (validTurn)
+        if (validTurn) {
+            setValidAction(validTurn);
             return fixedAxis;
-        else
+        }
+        else {
+            setValidAction(validTurn);
             return null;
+        }
     }
 
     private boolean gameboardIsEmpty() {

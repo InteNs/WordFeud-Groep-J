@@ -15,8 +15,8 @@ public class ScoreOverlay extends StackPane {
     private StackPane layout;
 
     public void setCircleInformation(int x, int y, int score){
-        this.setLayoutX(x);
-        this.setLayoutY(y);
+        this.setLayoutX(x + 35);
+        this.setLayoutY(y + 35);
         createCircle(score);
     }
 
@@ -30,6 +30,7 @@ public class ScoreOverlay extends StackPane {
         layout.setFocusTraversable(true);
         layout.setPickOnBounds(false);
         layout.getChildren().addAll(scoreBubble,scoreToDisplay);
+        this.getChildren().clear();
         this.getChildren().add(layout);
     }
 
@@ -37,17 +38,17 @@ public class ScoreOverlay extends StackPane {
         Text text = new Text(string);
         text.setBoundsType(TextBoundsType.VISUAL);
         text.setStyle(
-                "-fx-font-family: \"Verdana\";" +
-//                        "-fx-font-style: bold;" +
+                "-fx-font-family: \"Arial Rounded MT Bold\";" +
+                        "-fx-font-style: italic;" +
                         "-fx-font-size: 15px;"
         );
-
         return text;
     }
 
     private Circle encircle(Text text) {
         Circle circle = new Circle();
-        circle.setFill(Color.ORCHID);
+        circle.setFill(Color.YELLOW);
+        circle.setStroke(Color.BLACK);
         final double PADDING = 5;
         circle.setRadius(getWidth(text) / 2 + PADDING);
 
