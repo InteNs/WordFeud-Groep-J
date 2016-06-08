@@ -245,13 +245,8 @@ public class MainView extends View implements Initializable {
     }
 
     public void doThread() {
-        if (threadToggle.isSelected()) {
-            refreshService.startRefresh();
             spin(true);
-        } else {
-            refreshService.stopRefresh();
-            spin(false);
-        }
+            refreshService.startRefresh();
 
     }
     private void spin(boolean spin) {

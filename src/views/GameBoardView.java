@@ -261,6 +261,7 @@ public class GameBoardView extends View {
         displayGameBoard(game, turn);
         displayPlayerRack(game, turn);
         game.getTurnBuilder().getFieldsChanged().addListener((ListChangeListener<? super Field>) observable -> {
+            bubblePane.getChildren().clear();
             if (observable.getList().isEmpty() || !gameController.getSelectedGame().getTurnBuilder().isValidAction()) {
                 scoreOverlay.setVisible(false);
             } else {
