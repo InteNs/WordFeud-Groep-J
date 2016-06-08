@@ -86,11 +86,10 @@ public class GameController extends Controller {
     public ObservableList<Game> getIncomingChallenges(User opponent) {
         return games.filtered(game ->
                 game.getGameState() == GameState.REQUEST
-                        && game.getOpponent().equals(opponent));
+                        && game.getOpponent().equals(opponent) && game.getReactionType() == ReactionType.UNKNOWN);
     }
 
-    public void loadGame(Game game, Role gameMode) {
-
+    public void loadGame(Game game) {
         if (game == null) return;
         if (!Objects.deepEquals(game.getTurns(), fetchedTurns)) fetch();
 
@@ -101,29 +100,23 @@ public class GameController extends Controller {
         difference.removeAll(game.getTurns());
         game.getTurns().addAll(difference);
         game.setMessages(fetchedMessages);
-        game.setGameMode(gameMode);
     }
 
     @Override
     public void refresh() {
+
         if (games.contains(getSelectedGame())) {
             Game previousGame = getSelectedGame();
-            if (previousGame.getTurns().size() < fetchedTurns.size()) {
+            if (previousGame.getTurns().size() != fetchedTurns.size()) {
                 Game game = games.get(games.indexOf(previousGame));
-                loadGame(game, getCurrentRole());
-
+                loadGame(game);
                 setSelectedGame(game);
-
-                if (game.getTurns().contains(getSelectedTurn())) {
-                    Turn turn = game.getTurns().get(game.getTurns().indexOf(getSelectedTurn()));
-                    if (getCurrentRole() == Role.PLAYER) {
-                        setSelectedTurn(game.getLastTurn());
-                    } else
-                        setSelectedTurn(turn);
-                }
+                setSelectedTurn(game.getLastTurn());
+                checkForEndGame(game);
             }
+            getSelectedGame().getTurnBuilder().setPot(fetchedPot);
+            getSelectedGame().setMessages(fetchedMessages);
         }
-
         getOutgoingChallenges(getSessionController().getCurrentUser())
                 .stream()
                 .filter(game -> game.getReactionType() == ReactionType.ACCEPTED
@@ -158,7 +151,7 @@ public class GameController extends Controller {
     }
 
     public void setBoardState(Game game, Turn turn) {
-        game.setBoardStateTo(turn, getSessionController().getCurrentUser());
+        game.setBoardStateTo(turn, getSessionController().getCurrentUser(), getCurrentRole());
     }
 
     public void placeTile(Game game, Field field, Tile tile) {
@@ -200,6 +193,9 @@ public class GameController extends Controller {
     }
 
     private void checkForEndGame(Game selectedGame) {
+        if (!selectedGame.getLastTurn().getUser().equals(getSessionController().getCurrentUser()))
+            return;
+
         switch (selectedGame.getLastTurn().getType()) {
             case PASS:
                 if (isThirdPass(selectedGame)) {
@@ -226,7 +222,8 @@ public class GameController extends Controller {
     private void buildEndTurns(Game selectedGame) {
         for (Turn turn : selectedGame.getTurnBuilder().buildEndTurns(
                 selectedGame.getLastTurn(),
-                selectedGame.getTurns().get(selectedGame.getTurns().size() - 2))) {
+                selectedGame.getTurns().get(selectedGame.getTurns().size() - 2),
+                selectedGame)) {
             gameDAO.insertTurn(selectedGame, turn);
             selectedGame.addTurn(turn);
         }
@@ -252,8 +249,6 @@ public class GameController extends Controller {
                 getSessionController().getCurrentUser(), turnType
         );
         gameDAO.insertTurn(selectedGame, newTurn);
-        selectedGame.addTurn(newTurn);
-        checkForEndGame(selectedGame);
     }
 
     private boolean isThirdPass(Game selectedGame) {
@@ -268,10 +263,13 @@ public class GameController extends Controller {
         selectedGame.getTurnBuilder().fillCurrentRack(selectedGame.getPot());
         insertTurn(selectedGame, TurnType.SWAP);
     }
-
+    
     public int challenge(Language language, User requester, User receiver, Competition comp) {
+        /**Check if challenger is in the same competition as the receiver */
         if (isUserInSelectedComp(requester, comp)) {
+            /**Check if the two players arent playing a game in the selected competition already */
             if (!this.playingGame(requester, receiver, comp)) {
+                /**Check if the challenger is not inviting themselves */
                 if (validInvite(requester, receiver)) {
                     Game game = new Game(
                             0, 0, comp.getId(),

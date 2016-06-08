@@ -18,6 +18,15 @@ public class potView extends View {
 
     private MainView mainView;
 
+    /**
+     *
+     * @param pot
+     * @param resourceFactory
+     * @param mainview
+     *
+     * Creates a view for the current pot. When clicked on the view, the view closes.
+     * View always opens in the center of the Mainview
+     */
     public potView(ObservableList<Tile> pot, ResourceFactory resourceFactory, MainView mainview) {
 
         this.mainView = mainview;

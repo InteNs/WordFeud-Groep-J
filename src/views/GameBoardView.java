@@ -4,10 +4,8 @@ import enumerations.Role;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.effect.SepiaTone;
 import javafx.scene.input.ClipboardContent;
@@ -21,33 +19,25 @@ import models.Turn;
 import views.components.FieldTileNode;
 import views.components.ScoreOverlay;
 import views.subviews.JokerView;
-
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 public class GameBoardView extends View {
 
-    ObservableList<FieldTileNode> nodes;
+    private ObservableList<FieldTileNode> nodes;
     private ScoreOverlay scoreOverlay;
-    @FXML
-    private VBox root;
-    @FXML
-    private StackPane stackPane;
-    @FXML
-    private GridPane gameBoardGrid;
-    @FXML
-    private HBox playerRackGrid;
-    @FXML
-    private Tile tileBeingDragged;
-    @FXML
-    private Pane bubblePane;
-    @FXML
-    private Group scaleGroup;
+    @FXML private VBox root;
+    @FXML private StackPane stackPane;
+    @FXML private GridPane gameBoardGrid;
+    @FXML private HBox playerRackGrid;
+    @FXML private Tile tileBeingDragged;
+    @FXML private Pane bubblePane;
 
-    public void displayGameBoard(Game selectedGame, Turn selectedTurn) {
+    private void displayGameBoard(Game selectedGame, Turn selectedTurn) {
         Field[][] gameBoard = selectedGame.getTurnBuilder().getGameBoard();
         gameBoardGrid.getChildren().clear();
-        for (int y = 0; y < gameBoard.length; y++)
+        for (int y = 0; y < gameBoard.length; y++) {
             for (int x = 0; x < gameBoard.length; x++) {
                 FieldTileNode fieldNode = new FieldTileNode(gameBoard[x][y], resourceFactory);
                 GridPane.setConstraints(fieldNode, y, x);
@@ -57,7 +47,7 @@ public class GameBoardView extends View {
                     fieldNode.setEffect(new SepiaTone(1));
                 }
 
-                if (selectedGame.isLastTurn(selectedTurn) && selectedGame.getGameMode() == Role.PLAYER) {
+                if (selectedGame.isLastTurn(selectedTurn) && gameController.getCurrentRole() == Role.PLAYER) {
                     fieldNode.setOnDragOver(event -> {
                         if (fieldNode.getField().getTile() == null)
                             event.acceptTransferModes(TransferMode.MOVE);
@@ -70,7 +60,8 @@ public class GameBoardView extends View {
                         fieldNode.setCursor(Cursor.OPEN_HAND);
                         gameController.placeTile(selectedGame, fieldNode.getField(), tileBeingDragged);
                         event.setDropCompleted(true);
-                        if (gameController.isJokerTile(tileBeingDragged)) {
+                        // Checks if the tile placed is a joker, gets selected tile from jokerview and replaces it
+                        if (tileBeingDragged.isJokerTile()) {
                             JokerView jokerView = new JokerView(resourceFactory, parent);
                             char choice = jokerView.jokerChoice();
                             tileBeingDragged.replaceJoker(choice);
@@ -100,9 +91,10 @@ public class GameBoardView extends View {
                     });
                 }
             }
+        }
     }
 
-    public void displayPlayerRack(Game selectedGame, Turn selectedTurn) {
+    private void displayPlayerRack(Game selectedGame, Turn selectedTurn) {
         nodes = FXCollections.observableArrayList();
         playerRackGrid.getChildren().setAll(nodes);
 
@@ -114,9 +106,9 @@ public class GameBoardView extends View {
             nodes.add(tileNode);
             tileNode.setCursor(Cursor.OPEN_HAND);
 
-            if (selectedGame.isLastTurn(selectedTurn) && selectedGame.getGameMode() == Role.PLAYER) {
+            if (selectedGame.isLastTurn(selectedTurn) && gameController.getCurrentRole() == Role.PLAYER) {
                 tileNode.setOnDragDetected(event -> {
-                    if (tileNode.isPlaceHolder())
+                    if (tileNode.isEmptyRackNode())
                         return;
                     prepareDrag(tileNode);
                     tileBeingDragged = tileNode.getTile();
@@ -133,31 +125,32 @@ public class GameBoardView extends View {
                 });
 
                 tileNode.setOnDragDropped(event -> {
-                    if (tileNode.isPlaceHolder()) {
+                    if (tileNode.isEmptyRackNode()) {
+                        //place the tile in the empty node
                         tileNode.setTile(tileBeingDragged);
                         if (tileNode.getTile().getCharacter().equals('?')) {
                             tileBeingDragged.replaceJoker(null);
                             tileNode.redrawImage();
                         }
                     } else {
-                        FilteredList<FieldTileNode> emptys = nodes.filtered(FieldTileNode::isPlaceHolder);
-                        ArrayList<FieldTileNode> sorted = emptys.stream().sorted((o1, o2) -> {
-                            int diff1 = Math.abs(nodes.indexOf(o1) - nodes.indexOf(tileNode));
-                            int diff2 = Math.abs(nodes.indexOf(o2) - nodes.indexOf(tileNode));
-                            if (diff1 > diff2) return 1;
-                            else return -1;
-                        }).collect(Collectors.toCollection(ArrayList<FieldTileNode>::new));
+                        //find closest empty rack node
+                        FieldTileNode emptyRackNode = nodes.stream()
+                                .filter(FieldTileNode::isEmptyRackNode)
+                                .sorted(distanceToNode(tileNode))
+                                .collect(Collectors.toCollection(ArrayList<FieldTileNode>::new))
+                                .get(0);
 
-                        FieldTileNode place = sorted.get(0);
-                        if (nodes.indexOf(place) > nodes.indexOf(tileNode)) {
-                            nodes.remove(place);
-                            nodes.add(nodes.indexOf(tileNode), place);
-                            place.setTile(tileBeingDragged);
+                        //remove empty rack node and add at the place the user dropped the tile
+                        //the remove will shift the tiles to that direction
+                        if (nodes.indexOf(emptyRackNode) > nodes.indexOf(tileNode)) {
+                            nodes.remove(emptyRackNode);
+                            nodes.add(nodes.indexOf(tileNode), emptyRackNode);
+                            emptyRackNode.setTile(tileBeingDragged);
 
                         } else {
-                            nodes.remove(place);
-                            nodes.add(nodes.indexOf(tileNode) + 1, place);
-                            place.setTile(tileBeingDragged);
+                            nodes.remove(emptyRackNode);
+                            nodes.add(nodes.indexOf(tileNode) + 1, emptyRackNode);
+                            emptyRackNode.setTile(tileBeingDragged);
                         }
                     }
 
@@ -174,12 +167,26 @@ public class GameBoardView extends View {
         });
     }
 
+    /**
+     * returns a comparator comparing the distance to the given node in the (rack)
+     * nodes arrayList
+     * @param tileNode the target
+     * @return
+     */
+    private Comparator<FieldTileNode> distanceToNode(FieldTileNode tileNode) {
+        return (o1, o2) -> {
+            int diff1 = Math.abs(nodes.indexOf(o1) - nodes.indexOf(tileNode));
+            int diff2 = Math.abs(nodes.indexOf(o2) - nodes.indexOf(tileNode));
+            if (diff1 > diff2) return 1;
+            else return -1;
+        };
+    }
+
     public void clearBoard() {
         //get changed fields
         ObservableList<Field> fields = gameController.getFieldsChanged(gameController.getSelectedGame());
         //for every blank space in rack
-        nodes.stream()
-                .filter(FieldTileNode::isPlaceHolder)
+        nodes.stream().filter(FieldTileNode::isEmptyRackNode)
                 .forEach(fieldTileNode -> {
                     if (fields.isEmpty()) return;
                     Field field = fields.get(0);
@@ -206,7 +213,7 @@ public class GameBoardView extends View {
 
     private void setCurrentRack(Game game, ObservableList<FieldTileNode> tileNodes) {
         gameController.setPlayerRack(game, tileNodes.stream()
-                .filter(fieldTileNode -> !fieldTileNode.isPlaceHolder())
+                .filter(fieldTileNode -> !fieldTileNode.isEmptyRackNode())
                 .map(FieldTileNode::getTile)
                 .collect(Collectors.toList())
         );
@@ -221,6 +228,7 @@ public class GameBoardView extends View {
 
     @Override
     public void refresh() {
+
     }
 
     @Override
@@ -230,20 +238,23 @@ public class GameBoardView extends View {
 
     @Override
     public void constructor() {
+        root.setOnMousePressed(event -> parent.setTab(parent.gameControlView));
 
-        gameController.selectedTurnProperty().addListener((observable, oldValue, selectedTurn) -> {
-            if (selectedTurn != null) {
-                showTurn(gameController.getSelectedGame(), selectedTurn);
+        gameController.selectedTurnProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                showTurn(gameController.getSelectedGame(), newValue);
             }
         });
+
         gameController.currentRoleProperty().addListener((observable, oldValue, newValue) -> {
             if (gameController.getSelectedGame() != null && gameController.getSelectedTurn() != null) {
                 showTurn(gameController.getSelectedGame(), gameController.getSelectedTurn());
             }
         });
-
         scoreOverlay = new ScoreOverlay();
-}
+    }
+
+
 
     private void showTurn(Game game, Turn turn) {
         gameController.setBoardState(game, turn);
@@ -292,21 +303,13 @@ public class GameBoardView extends View {
         }
     }
 
-    private void sizeBoard() {
-//        double base = 1.0;
-//        double norm = 600;
-//        double min = Math.min(stackPane.getWidth(), stackPane.getHeight());
-//        gameBoardGrid.setScaleX(base * min / norm);
-//        gameBoardGrid.setScaleY(base * min / norm);
-//        bubblePane.setScaleX(base * min / norm);
-//        bubblePane.setScaleY(base * min / norm);
-    }
 
+
+    // Checks the gameboard for jokers, the highlights them
     public void showJokers() {
-        for (Node field : gameBoardGrid.getChildren()) {
-            FieldTileNode fieldnode = (FieldTileNode) field;
-            if ((fieldnode.getField().getTile() != null) && gameController.isJokerTile(fieldnode.getField().getTile()))
-                fieldnode.highLight();
-        }
+        gameBoardGrid.getChildren().stream()
+                .map(node -> ((FieldTileNode) node))
+                .filter(node -> node.getField().containsJoker())
+                .forEach(FieldTileNode::highLight);
     }
 }

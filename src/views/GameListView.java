@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import models.Competition;
 import models.Game;
 import views.components.GameCell;
@@ -15,6 +16,7 @@ import java.util.function.Predicate;
 
 public class GameListView extends View {
 
+    @FXML private HBox comboBox;
     @FXML private SplitPane lists;
     @FXML private Accordion gameLists;
     @FXML private Accordion compGameLists;
@@ -38,6 +40,10 @@ public class GameListView extends View {
         setViewingMode(false, null);
         applyViewingMode(false);
         showCompGames(competitionController.getSelectedCompetition(), false);
+        myGamesList.refresh();
+        allCompGamesList.refresh();
+        allGamesList.refresh();
+        myCompGamesList.refresh();
     }
 
     @Override
@@ -47,6 +53,9 @@ public class GameListView extends View {
 
     @Override
     public void constructor() {
+
+        userRoleBox.prefWidthProperty().bind(comboBox.widthProperty().divide(2));
+        gameStateBox.prefWidthProperty().bind(comboBox.widthProperty().divide(2));
         filteredGames = new FilteredList<>(gameController.getGames());
 
         gameStateBox.getItems().setAll(GameState.PLAYING, GameState.FINISHED, GameState.RESIGNED);
@@ -71,7 +80,7 @@ public class GameListView extends View {
         //add action listeners to lists
         myGamesList.setOnMouseClicked(event -> selectGame(myGamesList.getSelectionModel().getSelectedItem()));
         allGamesList.setOnMouseClicked(event -> selectGame(allGamesList.getSelectionModel().getSelectedItem()));
-        compGameLists.setOnMouseClicked(event -> selectGame(myCompGamesList.getSelectionModel().getSelectedItem()));
+        myCompGamesList.setOnMouseClicked(event -> selectGame(myCompGamesList.getSelectionModel().getSelectedItem()));
         allCompGamesList.setOnMouseClicked(event -> selectGame(allCompGamesList.getSelectionModel().getSelectedItem()));
 
         //fill all lists and select default viewing mode
@@ -93,7 +102,6 @@ public class GameListView extends View {
                 .addListener((o, oldValue, newValue) -> {
                     if (!Objects.equals(newValue, oldValue)) showCompGames(newValue, true);
                 });
-
     }
 
     private void applyViewingMode(boolean isNew) {
@@ -142,8 +150,9 @@ public class GameListView extends View {
     }
 
     private void setChoiceBoxes() {
-        ObservableList<Role> roles = session.getCurrentUser().getRoles().filtered(role ->
-                role == Role.OBSERVER || role == Role.PLAYER).sorted();
+        ObservableList<Role> roles = session.getCurrentUser().getRoles()
+                .filtered(role -> role == Role.OBSERVER || role == Role.PLAYER)
+                .sorted();
         if (userRoleBox.getItems().size() != roles.size()) {
             Role previous = userRoleBox.getValue();
             userRoleBox.getItems().setAll(roles);
@@ -164,7 +173,6 @@ public class GameListView extends View {
                 userRoleBox.getSelectionModel().select(Role.OBSERVER);
             if (select != null) userRoleBox.getSelectionModel().select(select);
         }
-
     }
 
     private void filter(GameState state) {
@@ -174,8 +182,9 @@ public class GameListView extends View {
     private void selectGame(Game game) {
         if (game != null) {
             gameController.setSelectedGame(game);
-            gameController.loadGame(gameController.getSelectedGame(),gameController.getCurrentRole());
+            gameController.loadGame(gameController.getSelectedGame());
             gameController.setSelectedTurn(game.getLastTurn());
+            parent.reload();
             parent.setContent(parent.gameBoardView);
             parent.setTab(parent.gameControlView);
         }

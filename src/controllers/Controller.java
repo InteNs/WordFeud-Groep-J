@@ -7,7 +7,7 @@ import database.access.WordDAO;
 
 import java.util.Observable;
 
-public abstract class Controller extends Observable {
+public abstract class Controller {
 
     protected UserDAO userDAO;
     protected GameDAO gameDAO;

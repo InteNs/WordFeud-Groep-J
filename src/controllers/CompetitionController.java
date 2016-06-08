@@ -16,6 +16,7 @@ public class CompetitionController extends Controller {
     private ArrayList<Competition> fetched;
     private ObservableList<Competition> competitions;
     private ObjectProperty<Competition> selectedCompetition;
+    private ArrayList<Pair<String, Integer>> topPlayers;
 
     public CompetitionController() {
         super();
@@ -24,11 +25,7 @@ public class CompetitionController extends Controller {
     }
 
     public boolean addUserInCompetition(User user, Competition competition) {
-        if (competitionDAO.insertPlayer(user, competition)) {
-            competition.addPlayer(user);
-            return true;
-        }
-        return false;
+        return competitionDAO.insertPlayer(user, competition);
     }
 
     public boolean isUserInCompetition(User thisUser, Competition thisCompetition) {
@@ -47,12 +44,20 @@ public class CompetitionController extends Controller {
         return selectedCompetition;
     }
 
+    /**
+     * @param user owner of the competition
+     * @return competition found by owner
+     */
     public Competition getCompetition(User user) {
         for (Competition competition : competitions)
             if (competition.getOwner().equals(user)) return competition;
         return null;
     }
 
+    /**
+     * @param id of competitiom
+     * @return competition found by ID
+     */
     public Competition getCompetition(int id) {
         for (Competition competition : competitions)
             if (competition.getId() == id) return competition;
@@ -60,8 +65,12 @@ public class CompetitionController extends Controller {
     }
 
     public boolean isValidCompetitionName(String competitionName) {
-        return competitionName.length() >= 5 & competitionName.length() <= 25
-                && competitionName.matches("[a-zA-Z0-9]+");
+        if(competitionName.matches(".*\\w.*")) {
+            if (competitionName.trim().length() >= 5 && competitionName.length() <= 25) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean createCompetition(String competitionName) {
@@ -76,8 +85,8 @@ public class CompetitionController extends Controller {
         return competitions;
     }
 
-    public ObservableList<Competition> getCompetitions(User user) {
-        return competitions.filtered(competition -> competition.getPlayers().contains(user));
+    public ArrayList<Pair<String, Integer>> getTopPlayers(){
+        return topPlayers;
     }
 
     @Override
@@ -89,8 +98,9 @@ public class CompetitionController extends Controller {
         competitions.forEach(competition ->
                 competition.setGames(getGameController().getGames(competition)));
 
-        if(competitions.contains(getSelectedCompetition()))
+        if(competitions.contains(getSelectedCompetition())) {
             setSelectedCompetition(competitions.get(competitions.indexOf(getSelectedCompetition())));
+        }
     }
 
     @Override
@@ -103,6 +113,7 @@ public class CompetitionController extends Controller {
     public void fetch() {
         fetched = competitionDAO.selectCompetitions();
         playerMap = competitionDAO.getPlayerMap();
+        if(getSelectedCompetition() != null) topPlayers = competitionDAO.getTopPlayers(getSelectedCompetition());
         competitionDAO.close();
     }
 

@@ -2,6 +2,7 @@ package database.access;
 
 import database.SQL;
 import enumerations.Role;
+import models.Stat;
 import models.User;
 
 import java.sql.ResultSet;
@@ -84,13 +85,12 @@ public class UserDAO extends DAO {
     public void setAllStats(List<User> users) {
         ResultSet records = null;
         try {
-            records = database.select(SQL.ALL.WINSLOSES);
+            records = database.select(SQL.ALL.STATS);
 
             while (records.next()) {
                 for (User user : users) {
                     if (user.getName().equals(records.getString("account_naam"))) {
-                        user.setWins(records.getInt("wins"));
-                        user.setLoses(records.getInt("lost"));
+                        user.addStat(new Stat(records.getInt("competitie_id"),records.getInt("aantal_gewonnen_spellen"),records.getInt("aantal_verloren_spellen"),records.getInt("aantal_gespeelde_spellen"),records.getDouble("gemiddelde_score")));
                     }
                 }
             }

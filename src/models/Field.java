@@ -36,6 +36,10 @@ public class Field {
         this.tile = tile;
     }
 
+    public boolean containsJoker() {
+        return tile != null && tile.isJokerTile();
+    }
+
     @Override
     public String toString() {
        if (tile==null)

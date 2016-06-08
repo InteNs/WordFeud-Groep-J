@@ -66,9 +66,13 @@ public class Tile {
         return y;
     }
 
+    public boolean isJokerTile() {
+        return character == '?';
+    }
+
     @Override
     public String toString() {
-        if (character == '?')
+        if (isJokerTile())
             if (replacedJokerCharacter == null) {
                 return "blank"; // Placeholder value for Joker
             } else {

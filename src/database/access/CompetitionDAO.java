@@ -61,4 +61,22 @@ public class CompetitionDAO extends DAO {
         }
         return pairs;
     }
+
+    public ArrayList<Pair<String, Integer>> getTopPlayers(Competition comp){
+        ArrayList<Pair<String, Integer>> pairs = new ArrayList<>();
+        ResultSet records = null;
+        try {
+            records = database.select(SQL.SELECT.TOPPLAYERS, comp.getId());
+            while(records.next()){
+                pairs.add(new Pair<>(
+                        records.getString("account_naam"),
+                        records.getInt("aantal_gewonnen_spellen")
+                ));
+            }
+        } catch (SQLException | NullPointerException e) {
+            if (!recordsAreNull(e, records))
+                printError(e);
+        }
+        return pairs;
+    }
 }

@@ -31,6 +31,7 @@ public class RegisterView extends View {
     public void constructor() {
     }
 
+    // Gets input from user, checks it & opens login view / shows failed login label
     @FXML
     public void register() {
         if (!userController.userExists(userNameField.getText())) {
@@ -56,7 +57,11 @@ public class RegisterView extends View {
         clear();
     }
 
-    // Check if username meets the requirements (5 -25 char)
+    /**
+     *
+     * @param username gets the input from the "gebruikersnaam"
+     * @return true if username meets the requirements (5 -25 char)
+     */
     private boolean checkUserName(String username) {
         if (userController.isValidUsername(username)) {
             usernameReq.setTextFill(Color.web("#000000"));
@@ -70,7 +75,12 @@ public class RegisterView extends View {
 
     }
 
-    // Check if username meets the requirements (pass 1 = pass2, length: 5 - 25 )
+    /**
+     *
+     * @param password1 = input from user in passwordfield1
+     * @param password2 = input from user in passwordfield2
+     * @return true if username meets the requirements (pass 1 = pass2, length: 5 - 25 )
+     */
     private boolean checkPassword(String password1, String password2) {
         if (password1.equals(password2)) {
             if (userController.isValidPassword(password1)) {

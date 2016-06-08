@@ -1,7 +1,9 @@
 package views;
 
 
+import controllers.SessionController;
 import enumerations.Role;
+import enumerations.WordStatus;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -16,6 +18,7 @@ import models.*;
 import views.components.ChatCell;
 import views.components.FieldTileNode;
 import views.subviews.SubmitWordView;
+import views.subviews.SwapTileView;
 import views.subviews.potView;
 
 import java.util.ArrayList;
@@ -26,7 +29,6 @@ public class gameControlView extends View {
 
     @FXML private ListView<Message> chatList;
     @FXML private ListView<Turn> turnList;
-    @FXML private HBox buttonBox;
     @FXML private Button playButton;
     @FXML private Button passButton;
     @FXML private Button swapButton;
@@ -69,7 +71,7 @@ public class gameControlView extends View {
                 });
 
         extraFunctionsButton.setOnMouseClicked(event ->
-                contextMenu.show(extraFunctionsButton, event.getScreenX(), event.getScreenY())
+                        contextMenu.show(extraFunctionsButton, event.getScreenX(), event.getScreenY())
         );
 
         turnSpinner.valueProperty().addListener((o, oldValue, newValue) -> {
@@ -87,7 +89,8 @@ public class gameControlView extends View {
         gameController.selectedGameProperty()
                 .addListener((o, oldValue, newValue) -> {
                     if (!Objects.equals(oldValue, newValue) && newValue != null)
-                        gameController.loadGame(newValue, gameController.getCurrentRole());
+                        gameController.loadGame(newValue);
+                    chatTextArea.setText(null);
                     showGame(newValue, true);
                 });
     }
@@ -96,9 +99,10 @@ public class gameControlView extends View {
         chatList.setItems(newGame.getMessages());
         if (isNew) chatList.scrollTo(chatList.getItems().size());
         turnSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(newGame.getTurns()));
-        turnList.setItems(newGame.getTurns());
-        if (newGame.getGameMode() == Role.PLAYER) selectTurn(newGame.getLastTurn());
-        else if (newGame.getGameMode() == Role.OBSERVER) {
+        turnList.getItems().setAll(newGame.getTurns());
+        if (gameController.getCurrentRole() == Role.PLAYER)
+            selectTurn(newGame.getLastTurn());
+        else if (gameController.getCurrentRole() == Role.OBSERVER) {
             if (newGame.getTurns().contains(gameController.getSelectedTurn())) {
                 selectTurn(gameController.getSelectedTurn());
                 //turnList.scrollTo(gameController.getSelectedTurn());
@@ -117,18 +121,14 @@ public class gameControlView extends View {
         }
         if (gameController.getSelectedGame().getPot().size() < 1) {
             potButton.setDisable(true);
-            System.out.println(gameController.getSelectedGame().getPot());
         }
         if (gameController.getSelectedGame().getPot().size() > 0) {
             potButton.setDisable(false);
         }
-
     }
 
     private void selectTurn(Turn newValue) {
-        if (newValue == null) return;
         gameController.setSelectedTurn(newValue);
-        setPotLabel(gameController.getSelectedGame());
         turnSpinner.getValueFactory().setValue(newValue);
         turnList.getSelectionModel().select(newValue);
         Game game = gameController.getSelectedGame();
@@ -231,19 +231,34 @@ public class gameControlView extends View {
         }
     }
 
+    /**
+     * Plays a word and shows invalid words for submission
+     */
     @FXML
     public void playWord() {
-        ArrayList<String> words = gameController.playWord(gameController.getSelectedGame());
-        if (words == null) return;
-        if (words.isEmpty())
+        ArrayList<Word> wordsForSubmit = new ArrayList<>(); //the list with the new words that will be submitted.
+        //Get al invalid words.
+        ArrayList<String> invalidWords = gameController.playWord(gameController.getSelectedGame());
+        if (invalidWords == null) return;
+        //Get the words that where already submitted in the database.
+        ArrayList<String> existingWords = wordController.filterWords(invalidWords);
+        //Set words to only the non existing words (filtering is done in wordController.filterWords().
+        invalidWords = wordController.getInvalidWordsList();
+        if (invalidWords.isEmpty())
             parent.reload();
         else {
-            SubmitWordView submitWordView = new SubmitWordView(
-                    words,
-                    gameController.getSelectedGame().getLanguage(),
-                    session.getCurrentUser()
-            );
-            wordController.submitWords(submitWordView.getWordList());
+            SubmitWordView submitWordView = new SubmitWordView(invalidWords, existingWords, parent);
+            invalidWords.clear();
+            existingWords.clear();
+            //Loop trough the words the user has selected to submit and add them to the list.
+            for (String w : submitWordView.submitWords()) {
+                wordsForSubmit.add(wordController.createWord(w.toLowerCase(), gameController.getSelectedGame().getLanguage().toString()));
+            }
+            //submit the words.
+            if (wordsForSubmit.size() > 0) {
+                wordController.submitWords(wordsForSubmit);
+            }
+            parent.reload();
         }
     }
 

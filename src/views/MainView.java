@@ -2,10 +2,13 @@ package views;
 
 import controllers.ControllerFactory;
 import database.Database;
+import enumerations.Role;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -17,7 +20,9 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import main.Main;
 import services.RefreshService;
+import services.TabService;
 
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,8 +48,12 @@ public class MainView extends View implements Initializable {
     @FXML public Tab gameControlView;
     @FXML public Tab userListView;
     @FXML public Tab gameListView;
+    @FXML public Tab competitionListView;
+    @FXML public Tab challengeListView;
+    @FXML public Tab wordListView;
     @FXML public Pane wordInfoView;
     @FXML public ToggleButton controlToggle;
+    @FXML public Label userLabel;
 
     /*Declare your viewControllers here*/
     @FXML private UserListView userListViewController;
@@ -109,6 +118,7 @@ public class MainView extends View implements Initializable {
         controllerFactory.refreshControllers();
         //load views
         views.forEach(View::constructor);
+
         //enable control
         toolBar.setDisable(false);
 
@@ -119,6 +129,8 @@ public class MainView extends View implements Initializable {
         threadToggle.setSelected(true);
         doThread();
 
+        TabService.hideForbiddenTabs(this, session.getCurrentUser());
+        userLabel.setText(session.getCurrentUser().getName());
     }
 
     @Override
@@ -195,6 +207,7 @@ public class MainView extends View implements Initializable {
             if (newValue == gameControlView) setContent(gameBoardView);
         });
 
+        session.getCurrentUser().getRoles().addListener((ListChangeListener<? super Role>) e -> TabService.hideForbiddenTabs(this, session.getCurrentUser()));
 
         Rotate rotationTransform = new Rotate(0, threadToggle.getWidth() / 2, threadToggle.getHeight() / 2);
         threadToggle.getTransforms().add(rotationTransform);
@@ -214,6 +227,7 @@ public class MainView extends View implements Initializable {
     }
 
     public void changePass() {
+        passwordChangeViewController.clear();
         setContent(passwordChangeView);
     }
 
