@@ -2,6 +2,7 @@ package views;
 
 
 import controllers.SessionController;
+import enumerations.GameState;
 import enumerations.Role;
 import enumerations.WordStatus;
 import javafx.collections.ObservableList;
@@ -97,6 +98,7 @@ public class gameControlView extends View {
 
     private void showGame(Game newGame, boolean isNew) {
         chatList.setItems(newGame.getMessages());
+
         if (isNew) chatList.scrollTo(chatList.getItems().size());
         turnSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(newGame.getTurns()));
         turnList.getItems().setAll(newGame.getTurns());
@@ -124,6 +126,9 @@ public class gameControlView extends View {
         }
         if (gameController.getSelectedGame().getPot().size() > 0) {
             potButton.setDisable(false);
+        }
+        if (newGame.getGameState() == GameState.FINISHED || newGame.getGameState() == GameState.RESIGNED){
+            disableGameControls(true,true);
         }
     }
 
