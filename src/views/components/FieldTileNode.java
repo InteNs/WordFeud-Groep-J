@@ -46,8 +46,6 @@ public class FieldTileNode extends ImageView {
         this.setFitWidth(size);
     }
 
-
-
     /**
      * Used to build the playerRack
      */

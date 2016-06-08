@@ -37,7 +37,7 @@ public class GameCell extends ListCell<Game> {
 
             switch (game.getGameState()) {
                 case FINISHED:
-                    lastTurnLabel.setText(game.getWinner() + " heeft gewonnen!");
+                    lastTurnLabel.setText(game.getWinner() + " heeft gewonnen met " + game.getWinnerScore() + " punten!");
                     break;
                 case RESIGNED:
                     if (game.getOpponentScore() == 0)
