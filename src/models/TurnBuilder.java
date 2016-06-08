@@ -19,8 +19,10 @@ public class TurnBuilder {
     private ObservableList<Tile> currentRack;
     private ObservableList<Field> fieldsChanged;
     private ArrayList<ArrayList<Field>> listOfFieldsWithWords;
-    private int score;
+    private Integer score;
     private ObservableList<Tile> pot;
+    private Field bubbleField;
+    private boolean validAction;
 
 
     public TurnBuilder(Field[][] gameBoard, ObservableList<Tile> currentRack) {
@@ -35,6 +37,38 @@ public class TurnBuilder {
     public TurnBuilder() {
         this.listOfFieldsWithWords = new ArrayList<>();
         this.fieldsChanged = FXCollections.observableArrayList();
+    }
+
+    public ArrayList<Field> getBubbleField() {
+        ArrayList<Field> bubbleFields = new ArrayList<>();
+       if (!listOfFieldsWithWords.isEmpty()){
+           int highScore = 0;
+           int score = 0;
+           ArrayList<Field> wordToReturn = new ArrayList<>();
+           for (ArrayList<Field> listOfFieldsWithWord : listOfFieldsWithWords) {
+               score = calculateWordScore(listOfFieldsWithWord);
+               if (score > highScore){
+                   highScore = score;
+                   wordToReturn = listOfFieldsWithWord;
+               }
+           }
+           bubbleFields.add(wordToReturn.get(0));
+           bubbleFields.add(wordToReturn.get(wordToReturn.size()-1));
+           return bubbleFields;
+       }
+        return null;
+    }
+
+    public void setBubbleField(Field bubbleField) {
+        this.bubbleField = bubbleField;
+    }
+
+    public boolean isValidAction() {
+        return validAction;
+    }
+
+    public void setValidAction(boolean validAction) {
+        this.validAction = validAction;
     }
 
     public ArrayList<Turn> buildBeginTurns(Game selectedGame) {
@@ -64,10 +98,10 @@ public class TurnBuilder {
                 subtractFromSecondToLastTurn -= tile.getValue();
 
             if (lastTurn.getRack().isEmpty())
-                subtractFromLastTurn += subtractFromSecondToLastTurn;
+                subtractFromLastTurn -= subtractFromSecondToLastTurn;
 
             if (secondToLastTurn.getRack().isEmpty())
-                subtractFromSecondToLastTurn += subtractFromLastTurn;
+                subtractFromSecondToLastTurn -= subtractFromLastTurn;
 
             if ((nominalChallenger + subtractFromLastTurn) < 0){
                 int difference = subtractFromLastTurn - nominalChallenger;
@@ -92,8 +126,10 @@ public class TurnBuilder {
         this.gameBoard = gameBoard;
         this.fieldsChanged = fieldsChanged;
         verifyAndCalculate();
-        if (!listOfFieldsWithWords.isEmpty())
+        if (!listOfFieldsWithWords.isEmpty()) {
+            //gets the last field of the primary word found
             return getWordsFoundThisTurn().get(0);
+        }
         return null;
     }
 
@@ -122,6 +158,11 @@ public class TurnBuilder {
     }
 
     public int getScore() {
+        if (score == null){
+            score = 0;
+        } else {
+            return score;
+        }
         return score;
     }
 
@@ -184,6 +225,7 @@ public class TurnBuilder {
         /** if nothing is placed or the startTile is empty -> invalidate turn */
         if (fieldsChanged.size() == 0 || startFieldIsEmpty())
             validTurn = false;
+
 
         if (validTurn) {
             /** fetch first X and all X coords */
@@ -272,10 +314,14 @@ public class TurnBuilder {
                 validTurn = false;
         }
 
-        if (validTurn)
+        if (validTurn) {
+            setValidAction(validTurn);
             return fixedAxis;
-        else
+        }
+        else {
+            setValidAction(validTurn);
             return null;
+        }
     }
 
     private boolean gameboardIsEmpty() {

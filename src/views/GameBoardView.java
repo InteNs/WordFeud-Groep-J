@@ -11,31 +11,28 @@ import javafx.scene.effect.SepiaTone;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import models.Field;
 import models.Game;
 import models.Tile;
 import models.Turn;
 import views.components.FieldTileNode;
+import views.components.ScoreOverlay;
 import views.subviews.JokerView;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
 public class GameBoardView extends View {
 
-    private static final double BASE = 1.0;
-    private static final double NORM = 600;
     private ObservableList<FieldTileNode> nodes;
+    private ScoreOverlay scoreOverlay;
     @FXML private VBox root;
     @FXML private StackPane stackPane;
     @FXML private GridPane gameBoardGrid;
     @FXML private HBox playerRackGrid;
     @FXML private Tile tileBeingDragged;
+    @FXML private Pane bubblePane;
 
     private void displayGameBoard(Game selectedGame, Turn selectedTurn) {
         Field[][] gameBoard = selectedGame.getTurnBuilder().getGameBoard();
@@ -242,8 +239,6 @@ public class GameBoardView extends View {
     @Override
     public void constructor() {
         root.setOnMousePressed(event -> parent.setTab(parent.gameControlView));
-        stackPane.widthProperty().addListener(e -> sizeBoard());
-        stackPane.heightProperty().addListener(e -> sizeBoard());
 
         gameController.selectedTurnProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -256,19 +251,59 @@ public class GameBoardView extends View {
                 showTurn(gameController.getSelectedGame(), gameController.getSelectedTurn());
             }
         });
+        scoreOverlay = new ScoreOverlay();
     }
+
+
 
     private void showTurn(Game game, Turn turn) {
         gameController.setBoardState(game, turn);
         displayGameBoard(game, turn);
         displayPlayerRack(game, turn);
+        game.getTurnBuilder().getFieldsChanged().addListener((ListChangeListener<? super Field>) observable -> {
+            if (observable.getList().isEmpty() || !gameController.getSelectedGame().getTurnBuilder().isValidAction()) {
+                scoreOverlay.setVisible(false);
+            } else {
+               if (!bubblePane.getChildren().isEmpty()) {
+                   bubblePaneInfo();
+                   scoreOverlay.setVisible(true);
+               } else {
+                   bubblePaneInfo();
+                   bubblePane.getChildren().add(scoreOverlay);
+               }
+            }
+        });
     }
 
-    private void sizeBoard() {
-        double minSize = Math.min(stackPane.getWidth(), stackPane.getHeight());
-        gameBoardGrid.setScaleX(BASE * minSize / NORM);
-        gameBoardGrid.setScaleY(BASE * minSize / NORM);
+    private void bubblePaneInfo(){
+        int layoutX = 0;
+        int layoutY = 0;
+        int scoreToShow = gameController.getSelectedGame().getTurnBuilder().getScore();
+        if (scoreToShow > 0 && gameController.getSelectedGame().getTurnBuilder().isValidAction()){
+            int xPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().get(gameController.getSelectedGame().getTurnBuilder().getBubbleField().size()-1).getX();
+            int yPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().get(gameController.getSelectedGame().getTurnBuilder().getBubbleField().size()-1).getY();
+
+            if (xPosInGameBoard == 14){
+                xPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().get(0).getX();
+                yPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().get(0).getY();
+                layoutX = (int)findNodeInGrid(xPosInGameBoard,yPosInGameBoard).getLayoutX() - 40;
+            } else {
+                layoutX = (int)findNodeInGrid(xPosInGameBoard,yPosInGameBoard).getLayoutX();
+            }
+
+            if (yPosInGameBoard == 14) {
+                xPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().get(0).getX();
+                yPosInGameBoard = gameController.getSelectedGame().getTurnBuilder().getBubbleField().get(0).getY();
+                layoutY = (int) findNodeInGrid(xPosInGameBoard, yPosInGameBoard).getLayoutY() - 40;
+            } else {
+                layoutY = (int) findNodeInGrid(xPosInGameBoard, yPosInGameBoard).getLayoutY();
+            }
+
+            scoreOverlay.setCircleInformation(layoutX, layoutY, scoreToShow);
+        }
     }
+
+
 
     // Checks the gameboard for jokers, the highlights them
     public void showJokers() {
