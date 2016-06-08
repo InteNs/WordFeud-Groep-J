@@ -40,12 +40,19 @@ public class UserInfoView extends View {
         if (newValue == null) return;
         userNameLabel.setText(newValue.toString());
         passwordLabel.setText("wachtwoord: " + newValue.getPassword());
-
-        if (!session.getCurrentUser().hasRole(Role.ADMINISTRATOR)) {
+        rolesPane.setDisable(true);
+        if (session.getCurrentUser().hasRole(Role.ADMINISTRATOR) || session.getCurrentUser().getName().equals(newValue.getName())) {
+            if(session.getCurrentUser().hasRole(Role.ADMINISTRATOR)){
+                rolesPane.setDisable(false);
+            }
+            rolesPane.setVisible(true);
+            passwordLabel.setVisible(true);
+            getRoles(newValue);
+        } else {
             rolesPane.setVisible(false);
             passwordLabel.setVisible(false);
         }
-        getRoles(newValue);
+
     }
 
     private void getRoles(User selectedUser) {

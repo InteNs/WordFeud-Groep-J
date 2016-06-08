@@ -49,9 +49,6 @@ public class UserListView extends View {
 
         allUsersList.setItems(filteredUsers);
 
-        if (!session.getCurrentUser().hasRole(Role.ADMINISTRATOR))
-            lists.getItems().remove(allUsersPane);
-
         competitionController.selectedCompetitionProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.deepEquals(oldValue)) {
                 compUsersList.setItems(filteredUsers.filtered(filterComp));
