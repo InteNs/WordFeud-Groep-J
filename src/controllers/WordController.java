@@ -16,7 +16,7 @@ public class WordController extends Controller {
 
     private ArrayList<Word> fetched;
     private ObjectProperty<Word> selectedWord;
-    private ObservableList<Word> words;
+    private ObservableList<Word> words; //Complete wordlist with all submitted words in it.
     private ArrayList<String> invalidWordsList;
 
     public WordController() {
@@ -54,13 +54,12 @@ public class WordController extends Controller {
         fetched = wordDAO.getWords();
         wordDAO.close();
     }
-
     public ObservableList<Word> getWords(WordStatus status) {
 
         return words.filtered(word -> word.getStatus() == status);
     }
 
-    public ObservableList<Word> getUserWords(User user) {
+    public ObservableList<Word> getWords(User user) {
         return words.filtered(word -> word.getOwner().equals(user.toString()));
     }
 
