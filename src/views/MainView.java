@@ -227,6 +227,7 @@ public class MainView extends View implements Initializable {
     }
 
     public void changePass() {
+        passwordChangeViewController.clear();
         setContent(passwordChangeView);
     }
 

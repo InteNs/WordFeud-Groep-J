@@ -1,9 +1,7 @@
 package views;
 
 
-import controllers.SessionController;
 import enumerations.Role;
-import enumerations.WordStatus;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -11,7 +9,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import models.*;
@@ -90,6 +87,7 @@ public class gameControlView extends View {
                 .addListener((o, oldValue, newValue) -> {
                     if (!Objects.equals(oldValue, newValue) && newValue != null)
                         gameController.loadGame(newValue);
+                    chatTextArea.setText(null);
                     showGame(newValue, true);
                 });
     }
@@ -104,7 +102,6 @@ public class gameControlView extends View {
         else if (gameController.getCurrentRole() == Role.OBSERVER) {
             if (newGame.getTurns().contains(gameController.getSelectedTurn())) {
                 selectTurn(gameController.getSelectedTurn());
-                //turnList.scrollTo(gameController.getSelectedTurn());
             } else {
                 selectTurn(newGame.getLastTurn());
                 turnList.scrollTo(newGame.getLastTurn());
@@ -230,22 +227,33 @@ public class gameControlView extends View {
         }
     }
 
+    /**
+     * Plays a word and shows invalid words for submission
+     */
     @FXML
     public void playWord() {
-        ArrayList<String> words = gameController.playWord(gameController.getSelectedGame());
-        if (words == null) return;
-        ArrayList<String> existingWords = wordController.existingWords(words);
-        ArrayList<Word> submittedWords = new ArrayList<>();
-        words = wordController.getWordsList();
-        if (words.isEmpty())
+        ArrayList<Word> wordsForSubmit = new ArrayList<>(); //the list with the new words that will be submitted.
+        //Get al invalid words.
+        ArrayList<String> invalidWords = gameController.playWord(gameController.getSelectedGame());
+        if (invalidWords == null) return;
+        //Get the words that where already submitted in the database.
+        ArrayList<String> existingWords = wordController.filterWords(invalidWords);
+        //Set words to only the non existing words (filtering is done in wordController.filterWords().
+        invalidWords = wordController.getInvalidWordsList();
+        if (invalidWords.isEmpty())
             parent.reload();
         else {
-            SubmitWordView submitWordView = new SubmitWordView(words, existingWords, parent);
-            words.clear();
+            SubmitWordView submitWordView = new SubmitWordView(invalidWords, existingWords, parent);
+            invalidWords.clear();
             existingWords.clear();
-            for (String w : submitWordView.submitWords())
-                submittedWords.add(wordController.createWord(w.toLowerCase(), gameController.getSelectedGame().getLanguage().toString()));
-            wordController.submitWords(submittedWords);
+            //Loop trough the words the user has selected to submit and add them to the list.
+            for (String w : submitWordView.submitWords()) {
+                wordsForSubmit.add(wordController.createWord(w.toLowerCase(), gameController.getSelectedGame().getLanguage().toString()));
+            }
+            //submit the words.
+            if (wordsForSubmit.size() > 0) {
+                wordController.submitWords(wordsForSubmit);
+            }
             parent.reload();
         }
     }

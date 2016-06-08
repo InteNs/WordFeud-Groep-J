@@ -87,6 +87,12 @@ public class UserController extends Controller {
         return password.length() >= 5 && password.length() <= 25 && (!password.contains(" "));
     }
 
+    /**
+     * @param user to change role
+     * @param role role to change
+     * @param enabled
+     * Sets or removes a role to a user.
+     */
     public void setRole(User user, Role role, Boolean enabled) {
         if (enabled) {
             userDAO.insertUserRole(user, role);
@@ -106,10 +112,6 @@ public class UserController extends Controller {
         userDAO.updatePassword(user, password);
     }
 
-    public void setAllStats(){
-        userDAO.setAllStats(users);
-    }
-
     @Override
     public void refresh() {
         if (users.contains(getSelectedUser())) setSelectedUser(users.get(users.indexOf(getSelectedUser())));
@@ -125,6 +127,7 @@ public class UserController extends Controller {
     @Override
     public void fetch() {
         fetched = userDAO.selectUsers();
+        userDAO.setAllStats(fetched);
         userDAO.close();
     }
 }

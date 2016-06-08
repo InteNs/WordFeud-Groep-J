@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Game {
 
@@ -44,24 +45,24 @@ public class Game {
         this.turnBuilder = new TurnBuilder();
 
         turns.addListener((ListChangeListener<? super Turn>) observable ->
-                this.lastTurnNumber = getLastTurn().getId()
+            this.lastTurnNumber = getLastTurn().getId()
         );
-    }
-
-    public int getOpponentScore() {
-        return opponentScore;
     }
 
     public void setOpponentScore(int score) {
         opponentScore = score;
     }
 
-    public int getChallengerScore() {
-        return challengerScore;
-    }
-
     public void setChallengerScore(int score) {
         challengerScore = score;
+    }
+
+    public int getOpponentScore() {
+        return opponentScore;
+    }
+
+    public int getChallengerScore() {
+        return challengerScore;
     }
 
     public boolean isGame() {
@@ -71,8 +72,7 @@ public class Game {
     }
 
     public boolean isActive() {
-        return gameState == GameState.PLAYING
-                || (gameState == GameState.REQUEST && reactionType != ReactionType.REJECTED);
+        return gameState == GameState.PLAYING || (gameState == GameState.REQUEST && reactionType != ReactionType.REJECTED);
     }
 
     public int getId() {
@@ -89,6 +89,11 @@ public class Game {
 
     public ObservableList<Turn> getTurns() {
         return turns;
+    }
+
+    public void setTurns(ArrayList<Turn> turns) {
+        this.turns.setAll(turns);
+        this.turns.removeIf(Objects::isNull);
     }
 
     public Turn getLastTurn() {
@@ -140,6 +145,16 @@ public class Game {
 
     public Language getLanguage() {
         return language;
+    }
+
+    public int setMessages(ArrayList<Message> messages) {
+        int diff = 0;
+        if (this.messages != null) {
+            diff = messages.size() - this.messages.size();
+            this.messages.setAll(messages);
+        }
+
+        return diff;
     }
 
     /**
@@ -201,6 +216,10 @@ public class Game {
         return turnBuilder;
     }
 
+    public void setTurnBuilder(TurnBuilder turnBuilder) {
+        this.turnBuilder = turnBuilder;
+    }
+
     public boolean hasPlayer(User user) {
         return getPlayers().contains(user);
     }
@@ -214,7 +233,7 @@ public class Game {
     }
 
     public int getWinnerScore() {
-        return (opponentScore > challengerScore) ? opponentScore : challengerScore;
+       return  (opponentScore > challengerScore) ? opponentScore : challengerScore;
     }
 
     private Field[][] cloneGameBoard(Field[][] emptyGameBoard) {

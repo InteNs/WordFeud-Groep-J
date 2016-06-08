@@ -40,10 +40,6 @@ public class Turn {
         this.amountSwapped = amountSwapped;
     }
 
-    public void setType(TurnType type) {
-        this.type = type;
-    }
-
     public int getId() {
         return id;
     }
@@ -102,8 +98,14 @@ public class Turn {
     public String toString() {
         switch (type) {
             case BEGIN:
-                return "";
+                return user + " heeft het rekje " + getRackString() + " gekregen";
             case END:
+                if (score == 0)
+                    return user + " heeft geen punten aftrek gekregen";
+                if (score < 0)
+                    return user + " heeft " + Math.abs(score) + " punten aftrek gekregen";
+                if (score > 0)
+                    return user + " heeft " + score + " punten erbij gekregen";
                 return "";
             case PASS:
                 return user + " heeft gepast ";
@@ -127,6 +129,14 @@ public class Turn {
 
         return id == turn.id && gameId == turn.gameId;
 
+    }
+
+    private String getRackString() {
+        StringBuilder rackString = new StringBuilder("|");
+        rack.forEach(tile ->
+            rackString.append(tile.getCharacter()).append("|")
+        );
+        return rackString.toString();
     }
 
     @Override
