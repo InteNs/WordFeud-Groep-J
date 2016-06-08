@@ -54,11 +54,6 @@ public class WordController extends Controller {
         fetched = wordDAO.getWords();
         wordDAO.close();
     }
-
-    public ObservableList<Word> getWords() {
-
-        return words;
-    }
     public ObservableList<Word> getWords(WordStatus status) {
 
         return words.filtered(word -> word.getStatus() == status);
