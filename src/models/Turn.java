@@ -30,7 +30,7 @@ public class Turn {
         this.placedTiles = new ArrayList<>();
     }
 
-    public Turn(int id, int score, User user, TurnType type, ArrayList<Tile> placedTiles, ArrayList<Tile> playerRack){
+    public Turn(int id, int score, User user, TurnType type, ArrayList<Tile> placedTiles, ArrayList<Tile> playerRack) {
         this(id, score, user, type);
         this.rack = playerRack;
         this.placedTiles = placedTiles;
@@ -54,6 +54,10 @@ public class Turn {
 
     public TurnType getType() {
         return type;
+    }
+
+    public void setType(TurnType type) {
+        this.type = type;
     }
 
     public void addPlacedTile(Tile tile) {
@@ -81,7 +85,7 @@ public class Turn {
     }
 
     public ArrayList<Tile> getPlacedTiles() {
-        if (placedTiles==null)
+        if (placedTiles == null)
             return new ArrayList<Tile>();
 
         return placedTiles;
@@ -94,11 +98,12 @@ public class Turn {
             return new ArrayList<>();
         }
     }
+
     @Override
     public String toString() {
         switch (type) {
             case BEGIN:
-                return user + " heeft het rekje " + getRackString() + " gekregen";
+                return "";
             case END:
                 if (score == 0)
                     return user + " heeft geen punten aftrek gekregen";
@@ -106,7 +111,6 @@ public class Turn {
                     return user + " heeft " + Math.abs(score) + " punten aftrek gekregen";
                 if (score > 0)
                     return user + " heeft " + score + " punten erbij gekregen";
-                return "";
             case PASS:
                 return user + " heeft gepast ";
             case RESIGN:
@@ -129,14 +133,6 @@ public class Turn {
 
         return id == turn.id && gameId == turn.gameId;
 
-    }
-
-    private String getRackString() {
-        StringBuilder rackString = new StringBuilder("|");
-        rack.forEach(tile ->
-            rackString.append(tile.getCharacter()).append("|")
-        );
-        return rackString.toString();
     }
 
     @Override

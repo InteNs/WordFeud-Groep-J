@@ -1,7 +1,9 @@
 package views;
 
 
+import controllers.SessionController;
 import enumerations.Role;
+import enumerations.WordStatus;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -9,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import models.*;
@@ -102,6 +105,7 @@ public class gameControlView extends View {
         else if (gameController.getCurrentRole() == Role.OBSERVER) {
             if (newGame.getTurns().contains(gameController.getSelectedTurn())) {
                 selectTurn(gameController.getSelectedTurn());
+                //turnList.scrollTo(gameController.getSelectedTurn());
             } else {
                 selectTurn(newGame.getLastTurn());
                 turnList.scrollTo(newGame.getLastTurn());
