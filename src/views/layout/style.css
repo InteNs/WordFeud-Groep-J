@@ -2,11 +2,17 @@
     -fx-background-color: #DDDDDD;
     -fx-border-color:     #BDBDBD;
     -fx-border-width:     0 0 1 0;
-    -fx-pref-height: 30;
+    -fx-pref-height: 43;
 }
 
 .tab-pane .tab-header-area .tab {
-    -fx-pref-height: 25;
+    -fx-pref-height: 38;
+}
+
+.tab {
+	-fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-pref-height: 36;
 }
 
 .user-info .check-box {
@@ -66,6 +72,30 @@
 }
 .close-tab:selected {
     -fx-background-image: url("../../resources/icons/eye-visible.png");
+}
+
+.game-list{
+	-fx-background-image: url("../../resources/icons/Dice-2-icon.png");
+}
+
+.user-list{
+	-fx-background-image: url("../../resources/icons/Administrator-icon.png");
+}
+
+.comp-list{
+	-fx-background-image: url("../../resources/icons/File-ClipboardFileText-icon.png");
+}
+
+.chal-list{
+	-fx-background-image: url("../../resources/icons/Email-icon.png");
+}
+
+.word-list{
+	-fx-background-image: url("../../resources/icons/Book-icon.png");
+}
+
+.game-cont{
+	-fx-background-image: url("../../resources/icons/Chess-Board-icon.png");
 }
 
 .game-label {
