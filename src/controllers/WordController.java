@@ -92,9 +92,9 @@ public class WordController extends Controller {
      * @return the list of words that is invalid and have not yet been submitted
      */
     public ArrayList<String> filterWords(ArrayList<String> words) {
-        //First add al words to the wordsList and net filter the existingWords out of it.
-        //So this methode returns a list with only the non existing words and creates
-        //a list with the existing words so we can show both lists in the view
+        //First add al words to the wordsList and then filter the existingWords out of it.
+        //This methode returns a list with only the non existing words and creates
+        //a list with the existing words to show both lists in the view.
         ArrayList<String> result = new ArrayList<>();
         invalidWordsList.forEach(String::toLowerCase);
         for (String s : words) {

@@ -235,13 +235,13 @@ public class gameControlView extends View {
      */
     @FXML
     public void playWord() {
-        ArrayList<Word> wordsForSubmit = new ArrayList<>(); //the list with the new words that will be submitted
-        //get al invalid words
+        ArrayList<Word> wordsForSubmit = new ArrayList<>(); //the list with the new words that will be submitted.
+        //Get al invalid words.
         ArrayList<String> invalidWords = gameController.playWord(gameController.getSelectedGame());
         if (invalidWords == null) return;
-        //get the words that where already submitted in the db.
+        //Get the words that where already submitted in the database.
         ArrayList<String> existingWords = wordController.filterWords(invalidWords);
-        //Set words to only the non existing words (filtering is done in wordController.filterWords()
+        //Set words to only the non existing words (filtering is done in wordController.filterWords().
         invalidWords = wordController.getInvalidWordsList();
         if (invalidWords.isEmpty())
             parent.reload();
@@ -249,11 +249,11 @@ public class gameControlView extends View {
             SubmitWordView submitWordView = new SubmitWordView(invalidWords, existingWords, parent);
             invalidWords.clear();
             existingWords.clear();
-            //Loop trough the words the user has selected to submit and submit them
+            //Loop trough the words the user has selected to submit and add them to the list.
             for (String w : submitWordView.submitWords()) {
                 wordsForSubmit.add(wordController.createWord(w.toLowerCase(), gameController.getSelectedGame().getLanguage().toString()));
             }
-            //submit the words
+            //submit the words.
             if (wordsForSubmit.size() > 0) {
                 wordController.submitWords(wordsForSubmit);
             }
