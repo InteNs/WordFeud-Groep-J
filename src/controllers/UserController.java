@@ -87,6 +87,12 @@ public class UserController extends Controller {
         return password.length() >= 5 && password.length() <= 25 && (!password.contains(" "));
     }
 
+    /**
+     * @param user to change role
+     * @param role role to change
+     * @param enabled
+     * Sets or removes a role to a user.
+     */
     public void setRole(User user, Role role, Boolean enabled) {
         if (enabled) {
             userDAO.insertUserRole(user, role);
