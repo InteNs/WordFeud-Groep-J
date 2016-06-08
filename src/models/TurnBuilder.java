@@ -98,10 +98,10 @@ public class TurnBuilder {
                 subtractFromSecondToLastTurn -= tile.getValue();
 
             if (lastTurn.getRack().isEmpty())
-                subtractFromLastTurn += subtractFromSecondToLastTurn;
+                subtractFromLastTurn -= subtractFromSecondToLastTurn;
 
             if (secondToLastTurn.getRack().isEmpty())
-                subtractFromSecondToLastTurn += subtractFromLastTurn;
+                subtractFromSecondToLastTurn -= subtractFromLastTurn;
 
             if ((nominalChallenger + subtractFromLastTurn) < 0){
                 int difference = subtractFromLastTurn - nominalChallenger;
