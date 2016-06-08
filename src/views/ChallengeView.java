@@ -115,8 +115,10 @@ public class ChallengeView extends View {
         userController.selectedUserProperty().addListener((observable, oldValue, newValue) -> {
             if (!Objects.equals(oldValue, newValue)) {
                 selectedComp = competitionController.getSelectedCompetition();
-                if (!selectedComp.hasUser(newValue)) return;
-                setStats(newValue, selectedComp);
+                if (selectedComp != null) {
+                    if (!selectedComp.hasUser(newValue)) return;
+                    setStats(newValue, selectedComp);
+                }
                 clear();
             }
         });
