@@ -219,6 +219,7 @@ public class MainView extends View implements Initializable {
                 ))
         );
         rotationAnimation.setCycleCount(Animation.INDEFINITE);
+        TabService.addTabListeners(this);
     }
 
     public void setApplicationLoader(Main applicationLoader) {
