@@ -65,8 +65,12 @@ public class CompetitionController extends Controller {
     }
 
     public boolean isValidCompetitionName(String competitionName) {
-        return competitionName.length() >= 5 & competitionName.length() <= 25
-                && competitionName.matches("[a-zA-Z0-9]+");
+        if(competitionName.matches(".*\\w.*")) {
+            if (competitionName.trim().length() >= 5 && competitionName.length() <= 25) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean createCompetition(String competitionName) {
