@@ -257,6 +257,7 @@ public class GameBoardView extends View {
 
 
     private void showTurn(Game game, Turn turn) {
+        bubblePane.getChildren().clear();
         gameController.setBoardState(game, turn);
         displayGameBoard(game, turn);
         displayPlayerRack(game, turn);
