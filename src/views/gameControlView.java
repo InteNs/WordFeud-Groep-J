@@ -90,6 +90,7 @@ public class gameControlView extends View {
                 .addListener((o, oldValue, newValue) -> {
                     if (!Objects.equals(oldValue, newValue) && newValue != null)
                         gameController.loadGame(newValue);
+                    chatTextArea.setText(null);
                     showGame(newValue, true);
                 });
     }
