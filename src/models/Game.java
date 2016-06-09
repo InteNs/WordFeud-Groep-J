@@ -83,6 +83,10 @@ public class Game {
         return messages;
     }
 
+    public void setMessages(ArrayList<Message> messages) {
+        this.messages.setAll(messages);
+    }
+
     public ObservableList<Turn> getTurns() {
         return turns;
     }
@@ -198,10 +202,8 @@ public class Game {
                     rack = turns.get(turns.indexOf(turn) - 1).getRack();
                 }
                 turnBuilder = new TurnBuilder(gameBoard, FXCollections.observableArrayList(rack));
-                //turnBuilder.setPot(pot);
                 break;
             }
-
         }
     }
 

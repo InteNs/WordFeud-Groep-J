@@ -84,6 +84,13 @@ public class GameDAO extends DAO {
         return returnList;
     }
 
+    /**
+     * fetches all the turns for a game from the database
+     * fetches the tiles with proper ID as well
+     *
+     * @param game the game that has to be loaded
+     * @return the turns for the given game
+     */
     public ArrayList<Turn> selectTurns(Game game) {
         ArrayList<Turn> turns = new ArrayList<>();
         ArrayList<Tile> tiles = new ArrayList<>();
@@ -92,6 +99,7 @@ public class GameDAO extends DAO {
         try {
             tileRecords = database.select(SQL.SELECT.LETTERSFORGAME, game.getId());
             records = database.select(SQL.SELECT.TURNSFORGAME, game.getId());
+            //first fetch all the tiles
             while (tileRecords.next()) {
                 tiles.add(new Tile(
                         tileRecords.getInt("id"),
@@ -102,6 +110,7 @@ public class GameDAO extends DAO {
             game.setAllTiles(tiles);
 
             while (records.next()) {
+                // fetch the new turn
                 Turn turn = new Turn(
                         game.getId(),
                         records.getInt("beurt"),
@@ -109,17 +118,20 @@ public class GameDAO extends DAO {
                         new User(records.getString("account_naam")),
                         TurnType.getFor(records.getString("aktie_type"))
                 );
+                // if the turn was previously fetched use the previous one from here on out
                 if (turns.contains(turn))
                     turn = turns.get(turns.indexOf(turn));
                 else
                     turns.add(turn);
 
+                // find the placed tiles from the turn in the fetched tiles and assign
                 if (records.getInt("gelegd_id") > 0) {
                     for (Tile tile : tiles) {
                         if (tile.getId() == records.getInt("gelegd_id")) {
                             if (!turn.hasPlacedTile(tile)) {
                                 tile.setX(records.getInt("tegel_x") - 1);
                                 tile.setY(records.getInt("tegel_y") - 1);
+                                // handle joker
                                 if (records.getString("blancoletterkarakter") != null)
                                     tile.replaceJoker(records.getString("blancoletterkarakter").charAt(0));
                                 turn.addPlacedTile(tile);
@@ -128,6 +140,7 @@ public class GameDAO extends DAO {
                         }
                     }
                 }
+                // find the rack tiles from the turn in fetched tiles and assign
                 if (records.getInt("plank_id") > 0) {
                     for (Tile tile : tiles) {
                         if (tile.getId() == records.getInt("plank_id")) {
@@ -145,6 +158,12 @@ public class GameDAO extends DAO {
         return turns;
     }
 
+    /**
+     * fetches the empty board for a game
+     *
+     * @param boardType the layout to fetch
+     * @return returns a 2D field array
+     */
     public Field[][] selectFieldsForBoard(BoardType boardType) {
         Field[][] fields = new Field[15][15];
         ResultSet records = null;
@@ -170,6 +189,13 @@ public class GameDAO extends DAO {
         );
     }
 
+    /**
+     * looks up words for validating played words
+     *
+     * @param game               the game to check words for ( uses the language )
+     * @param wordsFoundThisTurn a string array of words it needs to check
+     * @return returns an arraylist with pairs of strings, and a boolean whether it was found or not
+     */
     public ArrayList<Pair<String, Boolean>> selectWords(Game game, ArrayList<String> wordsFoundThisTurn) {
         ArrayList<Pair<String, Boolean>> results = new ArrayList<>();
         wordsFoundThisTurn.forEach(s -> {
@@ -178,7 +204,14 @@ public class GameDAO extends DAO {
         return results;
     }
 
+    /**
+     * inserts new turn into database
+     *
+     * @param game the current game
+     * @param turn the turn to be inserted
+     */
     public void insertTurn(Game game, Turn turn) {
+        // first insert the turn itself
         database.insert(SQL.INSERT.INSERTTURN,
                 turn.getId(),
                 game.getId(),
@@ -186,13 +219,17 @@ public class GameDAO extends DAO {
                 turn.getScore(),
                 TurnType.format(turn.getType())
         );
+
         if (!turn.getRack().isEmpty()) {
+            // if the turn has tiles on rack, build the query for insertion
             StringBuilder insertRackQuery = new StringBuilder(SQL.INSERT.INSERTRACKTILES);
             ArrayList<Object> insertRackvalues = new ArrayList<>();
             turn.getRack().forEach(tile -> {
+                // for every tile add to query and add the values
                 insertRackQuery.append("(?,?,?),");
                 insertRackvalues.addAll(Arrays.asList(game.getId(), tile.getId(), turn.getId()));
             });
+            // end the query
             insertRackQuery.deleteCharAt(insertRackQuery.length() - 1);
             insertRackQuery.append((";"));
 
@@ -200,16 +237,6 @@ public class GameDAO extends DAO {
         }
 
         switch (turn.getType()) {
-            case BEGIN:
-                break;
-            case END:
-                break;
-            case PASS:
-                break;
-            case RESIGN:
-                break;
-            case SWAP:
-                break;
             case WORD:
                 StringBuilder insertPlacedQuery = new StringBuilder(SQL.INSERT.INSERTPLACEDTILES);
                 ArrayList<Object> insertPlacedValues = new ArrayList<>();
@@ -229,20 +256,25 @@ public class GameDAO extends DAO {
                 insertPlacedQuery.append(";");
                 database.insert(insertPlacedQuery.toString(), insertPlacedValues);
                 break;
-            case UNDEFINED:
-                break;
         }
     }
 
+    /**
+     * creates a new pot for a new game
+     *
+     * @param selectedGame the given game
+     */
     public void createPot(Game selectedGame) {
         StringBuilder insertLettersForPotQuery = new StringBuilder(SQL.INSERT.LETTERSFORPOT);
         ArrayList<Object> insertLettersForPotValues = new ArrayList<>();
         ResultSet records = null;
 
         try {
+            // first fetch the needed tile info from 'lettertype'
             records = database.select(SQL.SELECT.LETTERSFORNEWGAME, selectedGame.getLanguage().toString());
             int idCounter = 1;
             while (records.next()) {
+                //loop through amount and build the query for the pot
                 int amountOfLetter = records.getInt("aantal");
                 for (int i = 0; i < amountOfLetter; i++) {
                     insertLettersForPotQuery.append("(?,?,?,?),");
@@ -275,6 +307,12 @@ public class GameDAO extends DAO {
         database.update(SQL.UPDATE.UPDATEREACTIONTYPE, ReactionType.format(reactionType), selectedGame.getId());
     }
 
+    /**
+     * fetches the current pot for a game
+     *
+     * @param selectedGame the game
+     * @return returns arrayList of tiles for the pot
+     */
     public ArrayList<Tile> selectPot(Game selectedGame) {
         ArrayList<Tile> returnList = new ArrayList<>();
         ResultSet result = null;

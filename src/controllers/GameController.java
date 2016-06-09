@@ -117,8 +117,8 @@ public class GameController extends Controller {
             getSelectedGame().getTurnBuilder().setPot(fetchedPot);
             getSelectedGame().setMessages(fetchedMessages);
         }
-        getOutgoingChallenges(getSessionController().getCurrentUser())
-                .stream()
+        // filter out going challenges on reaction type and gamestate
+        getOutgoingChallenges(getSessionController().getCurrentUser()).stream()
                 .filter(game -> game.getReactionType() == ReactionType.ACCEPTED
                         && game.getGameState() == GameState.REQUEST)
                 .forEach(game -> {
@@ -169,10 +169,6 @@ public class GameController extends Controller {
     public void sendMessage(Game game, User user, String text) {
         game.sendMessage(user, text);
         gameDAO.insertMessage(game, user, text);
-    }
-
-    public boolean isJokerTile(Tile tile) {
-        return tile.getCharacter() == '?';
     }
 
     public ArrayList<String> playWord(Game selectedGame) {
@@ -257,9 +253,11 @@ public class GameController extends Controller {
     }
 
     public void swapTiles(ObservableList<FieldTileNode> swapTiles, Game selectedGame) {
+        // remove tiles to swap
         for (FieldTileNode field : swapTiles) {
             selectedGame.getTurnBuilder().getCurrentRack().remove(field.getTile());
         }
+        // fill rack back up to 7
         selectedGame.getTurnBuilder().fillCurrentRack(selectedGame.getPot());
         insertTurn(selectedGame, TurnType.SWAP);
     }
@@ -280,7 +278,7 @@ public class GameController extends Controller {
                             language,
                             ReactionType.UNKNOWN);
                     games.add(game);
-                    gameDAO.createGame(comp.getId(), requester.getName(), language, receiver.getName());
+                    gameDAO.createGame(comp, requester.getName(), language, receiver);
                     return 0;
                 } else {
                     return 1;
