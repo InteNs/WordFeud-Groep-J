@@ -58,7 +58,6 @@ public class gameControlView extends View {
     public void clear() {
 
     }
-
     @Override
     public void constructor() {
         chatList.setCellFactory(param -> new ChatCell(param, session.getCurrentUser()));
