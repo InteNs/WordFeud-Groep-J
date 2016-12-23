@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="581.0" prefWidth="324.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <children>
+      <HBox alignment="CENTER_RIGHT" prefHeight="82.0" prefWidth="324.0" style="-fx-spacing: 5; -fx-padding: 5;">
+         <children>
+            <Button fx:id="testbutton" lineSpacing="5.0" mnemonicParsing="false" onAction="#doStuff" text="Button" />
+            <Button alignment="CENTER_RIGHT" lineSpacing="5.0" mnemonicParsing="false" text="Button" />
+         </children>
+      </HBox>
+      <TabPane prefHeight="603.0" prefWidth="324.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Gebruikers">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="148.0" prefWidth="324.0">
+                     <children>
+                        <Button fx:id="ShowPieChart" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#showPieChart" text="Button" />
+                        <PieChart fx:id="TestGraph" layoutX="40.0" layoutY="149.0" prefHeight="206.0" prefWidth="251.0" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Woorden">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</VBox>
