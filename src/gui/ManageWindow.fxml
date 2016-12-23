@@ -1,0 +1,22 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0">
+        <items>
+            <Button mnemonicParsing="false" text="Profiel" />
+            <Button mnemonicParsing="false" text="Invites" />
+        </items>
+      </ToolBar>
+      <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <tabs>
+            <Tab text="Gebruikers" />
+            <Tab text="Competities" />
+            <Tab text="Spellen" />
+            <Tab text="Woorden" />
+            <Tab text="Chat" />
+        </tabs>
+      </TabPane>
+   </children>
+</VBox>
